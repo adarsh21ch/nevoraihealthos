@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { checkAdminStatus, getTenants } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/admin/")({
   beforeLoad: async () => {
     try {
       const { isAdmin } = await checkAdminStatus();
