@@ -197,17 +197,17 @@ function Index() {
             <div className="absolute bottom-0 right-0 w-80 h-80 bg-linear-to-br from-blue-600/10 to-transparent rounded-full -mb-20 -mr-20 group-hover:scale-125 transition-transform duration-700" />
           </div>
 
-          <div className="md:col-span-4 p-12 rounded-[3rem] bg-slate-900 text-white border border-slate-800 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+          <div className="md:col-span-4 p-12 bg-blue-600 text-white border border-blue-500 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden shadow-2xl">
             <div className="relative z-10">
-              <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-blue-400 mb-10 group-hover:rotate-12 transition-transform">
+              <div className="w-16 h-16 bg-white/20 border border-white/30 flex items-center justify-center text-white mb-10 group-hover:rotate-12 transition-transform">
                 <Zap className="w-8 h-8" />
               </div>
-              <h4 className="text-3xl font-bold mb-6">Smart Program Engine</h4>
-              <p className="text-slate-400 text-lg leading-relaxed">
-                Visual workflow builder for health journeys. Automate tasks, follow-ups, and biometric tracking.
+              <h4 className="text-4xl font-black mb-6 uppercase italic tracking-tighter leading-none">Smart <br/> Logic.</h4>
+              <p className="text-blue-100 text-lg leading-relaxed font-medium">
+                Visual workflow builder for health journeys. Automated biometric tracking at scale.
               </p>
-              <div className="mt-10 pt-10 border-t border-white/10 flex items-center justify-between">
-                <span className="text-sm font-bold opacity-60">Learn more</span>
+              <div className="mt-10 pt-10 border-t border-white/20 flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">View Specs</span>
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
