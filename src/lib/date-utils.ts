@@ -18,7 +18,8 @@ export function getISTDate(): Date {
  */
 export function getISTDateString(): string {
   const istDate = getISTDate();
-  return istDate.toISOString().split('T')[0];
+  const parts = istDate.toISOString().split('T');
+  return parts[0] || '';
 }
 
 /**
