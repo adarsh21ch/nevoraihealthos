@@ -114,8 +114,10 @@ function OnboardingWizard() {
       if (!customer?.id) throw new Error("Customer not found");
       
       const heightVal = isHeightMetric 
-        ? parseFloat(formData.height) 
-        : (parseFloat(formData.height.split("'")[0]) * 30.48 + parseFloat(formData.height.split("'")[1]) * 2.54);
+        ? (formData.height ? parseFloat(formData.height) : 0)
+        : (formData.height.includes("'") 
+            ? (parseFloat(formData.height.split("'")[0] || "0") * 30.48 + parseFloat(formData.height.split("'")[1] || "0") * 2.54)
+            : (parseFloat(formData.height) * 30.48));
 
       const { error: customerError } = await supabase
         .from("customers")
@@ -133,8 +135,8 @@ function OnboardingWizard() {
         .from("enrollments")
         .insert({
           customer_id: customer.id,
-          program_id: formData.program_id,
-          start_date: formData.start_date,
+          program_id: formData.program_id as string,
+          start_date: formData.start_date as string,
         });
       if (enrollmentError) throw enrollmentError;
 
