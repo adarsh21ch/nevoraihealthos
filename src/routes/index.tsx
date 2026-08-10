@@ -153,13 +153,13 @@ function Index() {
 
       {/* Trusted By Section */}
       <section className="py-24 px-6 relative">
-        <div className="max-w-7xl mx-auto border-y border-slate-200/50 py-16">
-          <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-16">
-            Empowering global health brands
+        <div className="max-w-7xl mx-auto border-y border-white/5 py-16">
+          <p className="text-center text-[9px] font-black uppercase tracking-[0.5em] text-slate-500 mb-16">
+            Global Infrastructure Powering 500+ Health Brands
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-32 opacity-30 grayscale contrast-[0.8]">
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-32 opacity-20 grayscale brightness-200">
             {['VITAMINS+', 'HEALTHCORE', 'BIOSTRIDE', 'WELLNESS CO.', 'PURELIFE'].map((name) => (
-              <span key={name} className="font-black text-3xl tracking-tighter text-slate-900">{name}</span>
+              <span key={name} className="font-black text-3xl tracking-tighter text-white uppercase italic">{name}</span>
             ))}
           </div>
         </div>
