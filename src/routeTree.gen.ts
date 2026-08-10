@@ -17,6 +17,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
+import { Route as AuthenticatedPTenantSlugJourneyRouteImport } from './routes/_authenticated/p.$tenantSlug.journey'
 import { Route as AuthenticatedPTenantSlugTodayRouteImport } from './routes/_authenticated/p.$tenantSlug.today'
 import { Route as AdminContentProgramsProgramIdDaysRouteImport } from './routes/admin/content/programs/$programId/days'
 
@@ -61,6 +62,12 @@ const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
   path: '/p/$tenantSlug/join',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPTenantSlugJourneyRoute =
+  AuthenticatedPTenantSlugJourneyRouteImport.update({
+    id: '/journey',
+    path: '/journey',
+    getParentRoute: () => AuthenticatedPTenantSlugRoute,
+  } as any)
 const AuthenticatedPTenantSlugTodayRoute =
   AuthenticatedPTenantSlugTodayRouteImport.update({
     id: '/today',
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
   '/p/$tenantSlug/today': typeof AuthenticatedPTenantSlugTodayRoute
   '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
@@ -95,6 +103,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
   '/p/$tenantSlug/today': typeof AuthenticatedPTenantSlugTodayRoute
   '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
@@ -108,6 +117,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/_authenticated/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
   '/_authenticated/p/$tenantSlug/today': typeof AuthenticatedPTenantSlugTodayRoute
   '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/p/$tenantSlug'
     | '/p/$tenantSlug/join'
+    | '/p/$tenantSlug/journey'
     | '/p/$tenantSlug/today'
     | '/admin/content/programs/$programId/days'
   fileRoutesByTo: FileRoutesByTo
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/p/$tenantSlug'
     | '/p/$tenantSlug/join'
+    | '/p/$tenantSlug/journey'
     | '/p/$tenantSlug/today'
     | '/admin/content/programs/$programId/days'
   id:
@@ -146,6 +158,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/_authenticated/p/$tenantSlug'
     | '/p/$tenantSlug/join'
+    | '/_authenticated/p/$tenantSlug/journey'
     | '/_authenticated/p/$tenantSlug/today'
     | '/admin/content/programs/$programId/days'
   fileRoutesById: FileRoutesById
@@ -219,6 +232,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PTenantSlugJoinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/p/$tenantSlug/journey': {
+      id: '/_authenticated/p/$tenantSlug/journey'
+      path: '/journey'
+      fullPath: '/p/$tenantSlug/journey'
+      preLoaderRoute: typeof AuthenticatedPTenantSlugJourneyRouteImport
+      parentRoute: typeof AuthenticatedPTenantSlugRoute
+    }
     '/_authenticated/p/$tenantSlug/today': {
       id: '/_authenticated/p/$tenantSlug/today'
       path: '/today'
@@ -250,11 +270,13 @@ const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
 )
 
 interface AuthenticatedPTenantSlugRouteChildren {
+  AuthenticatedPTenantSlugJourneyRoute: typeof AuthenticatedPTenantSlugJourneyRoute
   AuthenticatedPTenantSlugTodayRoute: typeof AuthenticatedPTenantSlugTodayRoute
 }
 
 const AuthenticatedPTenantSlugRouteChildren: AuthenticatedPTenantSlugRouteChildren =
   {
+    AuthenticatedPTenantSlugJourneyRoute: AuthenticatedPTenantSlugJourneyRoute,
     AuthenticatedPTenantSlugTodayRoute: AuthenticatedPTenantSlugTodayRoute,
   }
 

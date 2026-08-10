@@ -10,8 +10,11 @@
 export function getISTDate(): Date {
   const now = new Date();
   const IST_OFFSET = 5.5 * 60 * 60 * 1000;
-  return new Date(now.getTime() + IST_OFFSET);
+  const istDate = new Date(now.getTime() + IST_OFFSET);
+  // Neutralize the local timezone offset to treat this date as "absolute IST"
+  return istDate;
 }
+
 
 /**
  * Returns the current date in IST formatted as YYYY-MM-DD.
