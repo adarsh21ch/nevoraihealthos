@@ -14,7 +14,7 @@ function DashboardLayout() {
   };
 
   const navItems = [
-    { name: "Overview", icon: LayoutDashboard, path: "/dashboard" },
+    { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
     { name: "Tenants", icon: Building2, path: "/admin" },
     { name: "Usage metrics", icon: TrendingUp, path: "/dashboard/metrics" },
     { name: "Platform config", icon: Settings, path: "/dashboard/config" },
