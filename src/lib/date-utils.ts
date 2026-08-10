@@ -23,8 +23,13 @@ export function getISTDateString(): string {
  * @returns The current program day number (1-indexed)
  */
 export function getProgramDayNumber(startDate: string): number {
-  const [ty, tm, td] = getISTDateString().split('-').map(Number);
-  const [sy, sm, sd] = startDate.slice(0, 10).split('-').map(Number);
+  const tParts = getISTDateString().split('-').map(Number);
+  const sParts = startDate.slice(0, 10).split('-').map(Number);
+  
+  if (tParts.length < 3 || sParts.length < 3) return 1;
+
+  const [ty, tm, td] = tParts as [number, number, number];
+  const [sy, sm, sd] = sParts as [number, number, number];
   
   // Use Date.UTC to get absolute timestamp difference without local timezone interference
   const diff = Date.UTC(ty, tm - 1, td) - Date.UTC(sy, sm - 1, sd);
