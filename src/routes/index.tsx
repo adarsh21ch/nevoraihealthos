@@ -268,14 +268,16 @@ function Index() {
               <motion.div 
                 animate={{ y: [0, -20, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-10 -right-10 z-30 px-6 py-4 glass-card rounded-2xl flex items-center gap-4 border-emerald-100 shadow-2xl"
+                className="absolute -top-6 -right-6 z-30 px-6 py-4 bg-blue-600 text-white border border-blue-500 shadow-2xl"
               >
-                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System Health</div>
-                  <div className="text-sm font-bold text-slate-900">100% Operational</div>
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 bg-white/20 flex items-center justify-center text-white">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-[8px] font-black uppercase tracking-[0.3em] opacity-70">Realtime Ops</div>
+                    <div className="text-xs font-black uppercase italic tracking-widest">Active Scale</div>
+                  </div>
                 </div>
               </motion.div>
             </div>
