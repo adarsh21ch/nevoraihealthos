@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 export const createCustomerAccount = createServerFn({ method: "POST" })
@@ -92,14 +93,22 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // 1. Look up customers
-    const { data: customer, error } = await supabaseAdmin
-      .from("customers")
-      .select("email, phone")
-      .or(`fbo_id.eq.${data.identifier},email.eq.${data.identifier},phone.eq.${data.identifier}`)
-      .maybeSingle();
+    // Sequential lookups to avoid injection in .or()
+    const tryFind = async (column: 'fbo_id' | 'email' | 'phone') => {
+      const { data: customer } = await supabaseAdmin
+        .from("customers")
+        .select("email, phone")
+        .eq(column, data.identifier)
+        .maybeSingle();
+      return customer;
+    };
 
-    if (error || !customer) {
+    const customer =
+      (await tryFind("fbo_id")) ??
+      (await tryFind("email")) ??
+      (await tryFind("phone"));
+
+    if (!customer) {
       return { found: false };
     }
 
@@ -114,12 +123,24 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   });
 
 export const adminResetCustomerPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     customerId: z.string().uuid(),
   }).parse(data))
-  .handler(async ({ data }) => {
+  .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
+    // Check authorization using the RLS-protected function via request-scoped client
+    const { data: canAccess, error: accessError } = await supabase.rpc("can_access_customer", { 
+      _uid: userId,
+      _customer_id: data.customerId 
+    });
+
+    if (accessError || !canAccess) {
+      throw new Error("Unauthorized");
+    }
+
     const { data: customer, error: customerError } = await supabaseAdmin
       .from("customers")
       .select("user_id")
