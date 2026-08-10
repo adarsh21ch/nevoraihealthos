@@ -16,6 +16,24 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Health OS | Customer Portals for Wellness Distributors" },
+      {
+        name: "description",
+        content:
+          "Share one join link, onboard customers, and track their program day by day. Built for independent wellness distributors in India.",
+      },
+      { property: "og:title", content: "Health OS | Customer Portals for Wellness Distributors" },
+      {
+        property: "og:description",
+        content:
+          "One place to onboard customers and follow their program day by day, instead of chat threads and spreadsheets.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
@@ -45,7 +63,7 @@ function Index() {
           </motion.div>
           
           <div className="hidden md:flex items-center gap-10">
-            {['Infrastructure', 'Solutions', 'Pricing', 'Developers'].map((item, i) => (
+            {['Infrastructure', 'Solutions', 'Pricing'].map((item, i) => (
               <motion.a 
                 key={item}
                 initial={{ opacity: 0, y: -10 }}
@@ -54,7 +72,7 @@ function Index() {
                 href={`#${item.toLowerCase()}`} 
                 className="text-[13px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider"
                 onClick={(e) => {
-                  if (['solutions', 'pricing', 'developers'].includes(item.toLowerCase())) {
+                  if (['infrastructure', 'solutions', 'pricing'].includes(item.toLowerCase())) {
                     e.preventDefault();
                     const element = document.getElementById(item.toLowerCase());
                     if (element) {
@@ -100,7 +118,7 @@ function Index() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            Next-Gen Infrastructure for Health
+            Built for wellness distributors in India
           </motion.div>
           
           <motion.h1 
@@ -109,7 +127,7 @@ function Index() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
           >
-            Empower your health business with <span className="relative inline-block">intelligence<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-blue-500/20 rounded-full" /></span>.
+            Run your wellness business without the <span className="relative inline-block">WhatsApp chaos<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-blue-500/20 rounded-full" /></span>.
           </motion.h1>
           
           <motion.p 
@@ -118,7 +136,7 @@ function Index() {
             transition={{ delay: 0.2 }}
             className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-16 font-medium"
           >
-            The world's first multi-tenant orchestration layer designed specifically for health coaches and wellness distributors.
+            One place to onboard your customers, keep their details organised, and follow their program day by day — instead of scrolling through chat threads and spreadsheets.
           </motion.p>
 
           <motion.div 
@@ -131,13 +149,13 @@ function Index() {
               to="/login" 
               className="w-full sm:w-auto px-12 py-6 bg-slate-900 text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
             >
-              Start Building <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              Get Your Portal <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
               to="/p/demo/join" 
               className="w-full sm:w-auto px-12 py-6 glass-card text-slate-900 rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
             >
-              <Play className="w-5 h-5 fill-slate-900" /> Watch Demo
+              <Play className="w-5 h-5 fill-slate-900" /> See a Demo
             </Link>
           </motion.div>
         </motion.div>
@@ -257,7 +275,7 @@ function Index() {
 
           {[
             { title: "Biometric Intelligence", icon: <BarChart3 />, desc: "Real-time health trend analysis.", color: "bg-emerald-50 text-emerald-600" },
-            { title: "Secure Data Vault", icon: <ShieldCheck />, desc: "HIPAA-ready encrypted storage.", color: "bg-indigo-50 text-indigo-600" },
+            { title: "Private by Default", icon: <ShieldCheck />, desc: "Photos stay private to the customer unless they choose to share them.", color: "bg-indigo-50 text-indigo-600" },
             { title: "Global CDN", icon: <Globe />, desc: "Edge-delivery for global teams.", color: "bg-amber-50 text-amber-600" },
           ].map((item, i) => (
             <div key={i} className="md:col-span-4 p-10 rounded-[3rem] bg-white border border-slate-100 hover:border-slate-200 transition-all duration-300 group">
@@ -345,35 +363,39 @@ function Index() {
         </div>
       </section>
 
-      {/* Solutions & Developers Section */}
+      {/* Solutions Section */}
       <section id="solutions" className="py-32 px-6 bg-slate-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12">
-            <div id="developers" className="p-12 rounded-[3rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
-              <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em] mb-6">Developer API</h2>
-              <h3 className="text-4xl font-bold text-slate-900 mb-6">Built for scale.</h3>
+            <div className="p-12 rounded-[3rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
+              <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em] mb-6">For Distributors</h2>
+              <h3 className="text-4xl font-bold text-slate-900 mb-6">Your customers, organised.</h3>
               <p className="text-slate-500 text-lg mb-8">
-                Integrate your existing health tools with our robust API. Webhooks, real-time biometrics, and secure data pipelines.
+                Share one join link on WhatsApp. Your customer fills in their own details once, and you see everything in one clean list.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-slate-700 font-bold">
                   <CheckCircle2 className="w-5 h-5 text-blue-500" />
-                  <span>GraphQL & REST endpoints</span>
+                  <span>Join by FBO ID, email or phone</span>
                 </div>
                 <div className="flex items-center gap-3 text-slate-700 font-bold">
                   <CheckCircle2 className="w-5 h-5 text-blue-500" />
-                  <span>Real-time WebSocket events</span>
+                  <span>Day-by-day program checklists</span>
+                </div>
+                <div className="flex items-center gap-3 text-slate-700 font-bold">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500" />
+                  <span>Works on any phone browser</span>
                 </div>
               </div>
             </div>
             <div className="p-12 rounded-[3rem] bg-slate-900 text-white shadow-sm hover:shadow-xl transition-all duration-500">
-              <h2 className="text-[11px] font-black text-blue-400 uppercase tracking-[0.2em] mb-6">Enterprise Solutions</h2>
-              <h3 className="text-4xl font-bold mb-6">Tailored for teams.</h3>
+              <h2 className="text-[11px] font-black text-blue-400 uppercase tracking-[0.2em] mb-6">For Teams</h2>
+              <h3 className="text-4xl font-bold mb-6">Your own branded portal.</h3>
               <p className="text-slate-400 text-lg mb-8">
-                Custom orchestration layers for large-scale health organizations and multi-country distribution networks.
+                Every distributor gets a separate portal with their own customers. Add mentors to your team and give each one only what they need to see.
               </p>
               <Button className="rounded-full bg-white text-slate-900 hover:bg-slate-100 font-bold px-8 py-6 h-auto text-lg" asChild>
-                <a href="mailto:teamnevorai@gmail.com">Contact Solutions Team</a>
+                <a href="mailto:teamnevorai@gmail.com">Email Us</a>
               </Button>
             </div>
           </div>
@@ -392,15 +414,15 @@ function Index() {
             <div className="relative z-10">
               <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em] mb-6 text-center">Transparent Pricing</h2>
               <h3 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-8">
-                Custom solutions for your growth.
+                Pricing based on your team size.
               </h3>
               <p className="text-slate-500 text-xl mb-12 font-medium">
-                We believe in tailored pricing that matches your specific health ecosystem requirements. Let's discuss your vision over a call.
+                Tell us how many customers and mentors you work with, and we'll share a plan that fits. Email us and we'll set up a call.
               </p>
               <div className="flex flex-col gap-6 items-center">
                 <Button className="rounded-full bg-slate-900 text-white hover:bg-slate-800 font-bold px-12 py-8 h-auto text-2xl group shadow-xl" asChild>
-                  <a href="tel:+9188888888">
-                    Book a Call Now <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" />
+                  <a href="mailto:teamnevorai@gmail.com">
+                    Email Us <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" />
                   </a>
                 </Button>
                 <div className="space-y-2">
@@ -427,20 +449,20 @@ function Index() {
               className="relative z-10"
             >
               <h2 className="text-5xl md:text-8xl font-bold text-white tracking-tighter mb-12 leading-[0.9]">
-                Start your next health venture today.
+                Move your business off chat threads.
               </h2>
               <p className="text-xl md:text-2xl text-slate-400 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">
-                Everything you need to launch, scale, and manage health programs globally.
+                One link to onboard customers, one place to track their program.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                 <Link 
                   to="/login" 
                   className="w-full sm:w-auto px-16 py-8 bg-white text-slate-900 rounded-[2.5rem] text-2xl font-black hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center gap-4"
                 >
-                  Get Started for Free <ArrowRight className="w-8 h-8" />
+                  Get Started <ArrowRight className="w-8 h-8" />
                 </Link>
-                <a href="mailto:sales@healthos.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
-                  Talk to our sales team
+                <a href="mailto:teamnevorai@gmail.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
+                  teamnevorai@gmail.com
                 </a>
               </div>
             </motion.div>
@@ -475,7 +497,7 @@ function Index() {
             
             <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-16">
               {[
-                { title: "Platform", links: ["Infrastructure", "Program Builder", "API Docs", "Changelog"] },
+                { title: "Platform", links: ["Infrastructure", "Solutions", "Pricing"] },
                 { title: "Company", links: ["About Us", "Contact", "Privacy Policy", "Terms"] },
                 { title: "Resources", links: ["Community", "Guides", "Help Center", "Status"] }
               ].map((group) => (
