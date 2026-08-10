@@ -57,17 +57,16 @@ function Index() {
           </div>
           
           <div className="flex items-center gap-6">
-            <Link to="/login" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
+            <Link to="/login" className="text-[11px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em]">
               Sign In
             </Link>
             <Link 
               to="/login" 
-              className="group relative px-6 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] transition-all overflow-hidden"
+              className="group relative px-6 py-2.5 bg-blue-600 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)]"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                Join <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </span>
-              <div className="absolute inset-0 bg-linear-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           </div>
         </div>
