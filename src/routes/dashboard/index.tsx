@@ -36,15 +36,15 @@ function DashboardOverview() {
         ))}
       </div>
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="glass-card bg-slate-900/50 border-slate-800/50">
         <CardHeader>
-          <CardTitle>Infrastructure Health</CardTitle>
+          <CardTitle className="text-lg font-medium text-slate-300">Infrastructure Health</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
            {['Database', 'WhatsApp API', 'Auth Service', 'Storage'].map(service => (
-             <div key={service} className="flex justify-between items-center p-3 rounded-lg bg-slate-950 border border-slate-800">
-                <span className="text-sm">{service}</span>
-                <span className="flex items-center gap-2 text-xs text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-500"/> Stable</span>
+             <div key={service} className="flex justify-between items-center p-4 rounded-xl bg-slate-950/50 border border-slate-800/50 hover:border-slate-700/50 transition-colors">
+                <span className="text-sm text-slate-300">{service}</span>
+                <span className="flex items-center gap-2 text-xs text-emerald-400 font-medium"><span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"/> Stable</span>
              </div>
            ))}
         </CardContent>
