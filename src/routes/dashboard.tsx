@@ -53,11 +53,11 @@ function DashboardLayout() {
 
       {/* Main */}
       <div className="flex-1 flex flex-col">
-        <header className="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-900/50 backdrop-blur">
-          <div className="text-sm text-slate-400">TEAMNEVORAI@GMAIL.COM</div>
-          <div className="flex items-center gap-4">
-             <Button variant="ghost" size="icon"><Bell className="h-5 w-5" /></Button>
-             <Button variant="ghost" size="icon"><HelpCircle className="h-5 w-5" /></Button>
+        <header className="h-16 border-b border-slate-800/50 flex items-center justify-between px-8 bg-slate-900/30 backdrop-blur-xl">
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">TEAMNEVORAI@GMAIL.COM</div>
+          <div className="flex items-center gap-2">
+             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white"><Bell className="h-4 w-4" /></Button>
+             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white"><HelpCircle className="h-4 w-4" /></Button>
           </div>
         </header>
 
