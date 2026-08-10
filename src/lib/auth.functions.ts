@@ -134,7 +134,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     // Check authorization using the RLS-protected function via request-scoped client
     const { data: canAccess, error: accessError } = await supabase.rpc("can_access_customer", { 
       _uid: userId,
-      _customer_id: data.customerId 
+      _customer: data.customerId 
     });
 
     if (accessError || !canAccess) {
