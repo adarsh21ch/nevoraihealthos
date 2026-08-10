@@ -156,37 +156,40 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="glass-card bg-slate-900/50 border-slate-800/50">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-slate-800 hover:bg-slate-800/50">
-                <TableHead className="text-slate-400">Name</TableHead>
+              <TableRow className="border-slate-800/50 hover:bg-slate-800/20">
+                <TableHead className="text-slate-400 pl-6">Name</TableHead>
                 <TableHead className="text-slate-400">Slug</TableHead>
                 <TableHead className="text-slate-400">Owner</TableHead>
                 <TableHead className="text-slate-400">Status</TableHead>
-                <TableHead className="text-slate-400 text-right">Actions</TableHead>
+                <TableHead className="text-slate-400 text-right pr-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tenants.map((tenant: any) => (
-                <TableRow key={tenant.id} className="border-slate-800 hover:bg-slate-800/50">
-                  <TableCell className="font-medium">{tenant.name}</TableCell>
+                <TableRow key={tenant.id} className="border-slate-800/50 hover:bg-slate-800/20 transition-colors">
+                  <TableCell className="font-medium pl-6 text-slate-100">{tenant.name}</TableCell>
                   <TableCell>
-                    <code className="text-xs bg-slate-950 border border-slate-800 px-2 py-1 rounded text-blue-400">/p/{tenant.slug}</code>
+                    <code className="text-xs bg-slate-950/50 border border-slate-800/50 px-2 py-1 rounded text-blue-400">/p/{tenant.slug}</code>
                   </TableCell>
-                  <TableCell>{tenant.owner_name}</TableCell>
+                  <TableCell className="text-slate-300">{tenant.owner_name}</TableCell>
                   <TableCell>
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      tenant.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                      tenant.status === 'active' 
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                        : 'bg-red-500/10 text-red-400 border-red-500/20'
                     }`}>
                       {tenant.status}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right pr-6">
                     <Button
                       variant="ghost"
                       size="sm"
+                      className="hover:bg-slate-800/50"
                       onClick={() => statusMutation.mutate({ 
                         id: tenant.id, 
                         status: tenant.status === 'active' ? 'suspended' : 'active' 
@@ -194,9 +197,9 @@ function AdminDashboard() {
                       disabled={statusMutation.isPending}
                     >
                       {tenant.status === 'active' ? (
-                        <PowerOff className="h-4 w-4 text-red-500" />
+                        <PowerOff className="h-4 w-4 text-red-400" />
                       ) : (
-                        <Power className="h-4 w-4 text-emerald-500" />
+                        <Power className="h-4 w-4 text-emerald-400" />
                       )}
                     </Button>
                   </TableCell>
@@ -204,8 +207,10 @@ function AdminDashboard() {
               ))}
               {tenants.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-slate-500">
-                    No tenants found.
+                  <TableCell colSpan={5} className="text-center py-12 text-slate-500">
+                    <div className="flex flex-col items-center gap-2">
+                      <p>No tenants found.</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
