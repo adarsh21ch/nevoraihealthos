@@ -23,18 +23,18 @@ function DashboardLayout() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-slate-800 bg-slate-900 flex flex-col">
+      <aside className="w-64 border-r border-slate-800/50 bg-slate-900 flex flex-col">
         <div className="p-6">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">H</div>
-            <span className="font-bold text-xl tracking-tight">Health OS</span>
+          <div className="flex items-center gap-3 mb-10">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-blue-900/20">H</div>
+            <span className="font-bold text-lg tracking-tight text-white">Health OS</span>
           </div>
-          <nav className="space-y-1">
+          <nav className="space-y-1.5">
             {navItems.map((item) => (
               <Button
                 key={item.name}
                 variant="ghost"
-                className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800"
+                className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200"
                 onClick={() => navigate({ to: item.path })}
               >
                 <item.icon className="mr-3 h-4 w-4" />
@@ -43,8 +43,8 @@ function DashboardLayout() {
             ))}
           </nav>
         </div>
-        <div className="mt-auto p-6 border-t border-slate-800">
-           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800" onClick={handleSignOut}>
+        <div className="mt-auto p-6 border-t border-slate-800/50">
+           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-900/10 transition-all duration-200" onClick={handleSignOut}>
              <LogOut className="mr-3 h-4 w-4" />
              Sign Out
            </Button>
