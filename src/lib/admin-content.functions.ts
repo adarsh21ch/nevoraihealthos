@@ -21,7 +21,7 @@ export const getAdminPrograms = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("programs")
-      .select("*")
+      .select("id, code, name, subtitle, duration_days, description, hero_image_url, next_program_code, sort_order, is_active")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -66,7 +66,7 @@ export const getAdminProducts = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("products")
-      .select("*")
+      .select("id, code, name, short_desc, why_in_program, how_to_use, common_mistakes, image_url, video_url, sort_order")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -197,7 +197,7 @@ export const getAdminTips = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("tips")
-      .select("*")
+      .select("id, category, title, body, sort_order")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -235,7 +235,7 @@ export const getAdminFAQs = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("faqs")
-      .select("*")
+      .select("id, category, question, answer, sort_order")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;

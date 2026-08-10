@@ -2,7 +2,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { getISTDateString } from "./date-utils";
+import { getISTDateString, getProgramDayNumber } from "./date-utils";
 import { Json } from "@/integrations/supabase/types";
 
 export type DayTask = {
@@ -109,6 +109,7 @@ export const toggleTaskCompletion = createServerFn({ method: "POST" })
       dayTaskId: z.string().uuid(),
       logDate: z.string(),
       completed: z.boolean(),
+      dayNumber: z.number().int(),
     })
   }).parse(data))
   .handler(async ({ context, data: input }) => {
@@ -120,7 +121,7 @@ export const toggleTaskCompletion = createServerFn({ method: "POST" })
       .upsert({
         enrollment_id: data.enrollmentId,
         log_date: data.logDate,
-        day_number: 0
+        day_number: data.dayNumber
       }, { onConflict: 'enrollment_id, log_date' })
       .select("id")
       .single();
@@ -153,6 +154,7 @@ export const updateDailyLog = createServerFn({ method: "POST" })
     data: z.object({
       enrollmentId: z.string().uuid(),
       logDate: z.string(),
+      dayNumber: z.number().int(),
       water_ml: z.number().optional(),
       mood: z.string().optional(),
     })
@@ -165,7 +167,7 @@ export const updateDailyLog = createServerFn({ method: "POST" })
       .upsert({
         enrollment_id: data.enrollmentId,
         log_date: data.logDate,
-        day_number: 0,
+        day_number: data.dayNumber,
         ...(data.water_ml !== undefined ? { water_ml: data.water_ml } : {}),
         ...(data.mood !== undefined ? { mood: data.mood } : {}),
       }, { onConflict: 'enrollment_id, log_date' });
