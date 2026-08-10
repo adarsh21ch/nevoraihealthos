@@ -169,13 +169,13 @@ function Index() {
       <section id="infrastructure" className="py-32 px-6 max-w-7xl mx-auto">
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em] mb-6">Foundational Layer</h2>
-            <h3 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1]">
-              Engineered for the future of wellness.
+            <h2 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em] mb-6 italic">Engineering Standard</h2>
+            <h3 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[0.85] uppercase italic">
+              Built for <br/> Massive Scale.
             </h3>
           </div>
-          <p className="text-slate-500 text-lg max-w-sm pb-2">
-            A specialized stack designed to handle the complexities of health data isolation, program automation, and patient engagement.
+          <p className="text-slate-400 text-lg max-w-sm pb-2 font-medium tracking-tight leading-snug">
+            We handle the technical complexity so you can focus on building your empire. Enterprise-grade isolation at every layer.
           </p>
         </div>
 
