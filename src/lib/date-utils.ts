@@ -7,22 +7,12 @@
 /**
  * Gets the current date in Asia/Kolkata (IST) as a Date object.
  */
-export function getISTDate(): Date {
-  const now = new Date();
-  const IST_OFFSET = 5.5 * 60 * 60 * 1000;
-  const istDate = new Date(now.getTime() + IST_OFFSET);
-  // Neutralize the local timezone offset to treat this date as "absolute IST"
-  return istDate;
-}
-
-
 /**
  * Returns the current date in IST formatted as YYYY-MM-DD.
  */
 export function getISTDateString(): string {
-  const istDate = getISTDate();
-  const parts = istDate.toISOString().split('T');
-  return parts[0] || '';
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' })
+    .format(new Date()); // YYYY-MM-DD
 }
 
 /**
@@ -32,17 +22,18 @@ export function getISTDateString(): string {
  * @param startDate The enrollment start date (YYYY-MM-DD)
  * @returns The current program day number (1-indexed)
  */
-export function getProgramDayNumber(startDate: string | Date): number {
-  const start = new Date(startDate);
-  start.setHours(0, 0, 0, 0);
+export function getProgramDayNumber(startDate: string): number {
+  const tParts = getISTDateString().split('-').map(Number);
+  const sParts = startDate.slice(0, 10).split('-').map(Number);
   
-  const istNow = getISTDate();
-  istNow.setHours(0, 0, 0, 0);
+  if (tParts.length < 3 || sParts.length < 3) return 1;
+
+  const [ty, tm, td] = tParts as [number, number, number];
+  const [sy, sm, sd] = sParts as [number, number, number];
   
-  const diffTime = istNow.getTime() - start.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  
-  return diffDays + 1;
+  // Use Date.UTC to get absolute timestamp difference without local timezone interference
+  const diff = Date.UTC(ty, tm - 1, td) - Date.UTC(sy, sm - 1, sd);
+  return Math.floor(diff / 86400000) + 1;
 }
 
 /**

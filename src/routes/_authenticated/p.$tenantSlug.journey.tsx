@@ -48,8 +48,7 @@ function JourneyPage() {
           // Completion stats for this day
           const dayTasks = dayInfo?.day_tasks || [];
           const dayCompletions = completions.filter(c => 
-            c.daily_logs.day_number === dayNum || // Assuming we store day_number in daily_logs correctly eventually
-            dayTasks.some(dt => dt.id === c.day_task_id)
+            c.daily_logs.day_number === dayNum
           );
           
           const completionRate = dayTasks.length > 0 
