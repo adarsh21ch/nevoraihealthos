@@ -79,24 +79,30 @@ function Index() {
           className="max-w-7xl mx-auto flex flex-col items-center relative z-10 text-center"
         >
           <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1 rounded-sm bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black tracking-[0.25em] uppercase mb-12"
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ 
+              type: "spring",
+              stiffness: 400,
+              damping: 10,
+              delay: 0.1
+            }}
+            className="inline-flex items-center gap-2 px-4 py-1 rounded-sm bg-blue-600 text-white text-[10px] font-black tracking-[0.25em] uppercase mb-12 shadow-[0_0_20px_rgba(37,99,235,0.4)]"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-200 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
             </span>
-            System v2.0 Released
+            System v2.0 Live
           </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-6xl md:text-[8rem] font-black tracking-[-0.06em] text-white leading-[0.85] mb-12 max-w-6xl uppercase italic"
+            className="text-6xl md:text-[9.5rem] font-black tracking-[-0.08em] text-white leading-[0.75] mb-12 max-w-7xl uppercase italic"
           >
-            Scale your <span className="text-blue-500">Health Empire</span>.
+            Scale <br/> <span className="text-blue-600">Empire</span>.
           </motion.h1>
           
           <motion.p 
@@ -214,11 +220,14 @@ function Index() {
           </div>
 
           {[
-            { title: "Bio Metrics", icon: <BarChart3 />, desc: "Real-time health intelligence.", color: "bg-slate-900 text-blue-500 border-white/5" },
-            { title: "Secure Vault", icon: <ShieldCheck />, desc: "Encrypted data architecture.", color: "bg-slate-900 text-blue-500 border-white/5" },
-            { title: "Global CDN", icon: <Globe />, desc: "Distributed edge delivery.", color: "bg-slate-900 text-blue-500 border-white/5" },
+            { title: "Bio Metrics", icon: <BarChart3 />, desc: "Real-time health intelligence.", color: "bg-slate-900 text-blue-500 border-white/5", value: "24.8k" },
+            { title: "Active Tenants", icon: <Users />, desc: "Global distribution power.", color: "bg-slate-900 text-blue-500 border-white/5", value: "512" },
+            { title: "Global CDN", icon: <Globe />, desc: "Distributed edge delivery.", color: "bg-slate-900 text-blue-500 border-white/5", value: "99.9%" },
           ].map((item, i) => (
-            <div key={i} className={`md:col-span-4 p-10 bg-slate-900 border ${item.color} hover:border-blue-500/30 transition-all duration-300 group`}>
+            <div key={i} className={`md:col-span-4 p-10 bg-slate-900 border ${item.color} hover:border-blue-500/30 transition-all duration-300 group relative overflow-hidden`}>
+              <div className="absolute top-4 right-6 text-4xl font-black text-white/5 italic select-none group-hover:text-blue-500/10 transition-colors">
+                {item.value}
+              </div>
               <div className={`w-14 h-14 bg-slate-800 border border-white/5 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform ${item.color.split(' ')[1]}`}>
                 {item.icon}
               </div>
