@@ -1,89 +1,70 @@
-import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
-import { getUserRole } from "@/lib/admin.functions";
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { LogOut, LayoutDashboard, Users, TrendingUp, Package, BookOpen } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
-  component: DashboardPlaceholder,
+  component: DashboardLayout,
 });
 
-function DashboardPlaceholder() {
+function DashboardLayout() {
   const navigate = useNavigate();
-  
+
   const handleSignOut = async () => {
     navigate({ to: "/" });
   };
 
+  const navItems = [
+    { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
+    { name: "Tenants", icon: Building2, path: "/admin" },
+    { name: "Usage metrics", icon: TrendingUp, path: "/dashboard/metrics" },
+    { name: "Platform config", icon: Settings, path: "/dashboard/config" },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <header className="bg-white border-b px-8 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">H</div>
-          <span className="font-bold text-xl tracking-tight">Health OS</span>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex">
+      {/* Sidebar */}
+      <aside className="w-64 border-r border-slate-800 bg-slate-900 flex flex-col">
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">H</div>
+            <span className="font-bold text-xl tracking-tight">Health OS</span>
+          </div>
+          <nav className="space-y-1">
+            {navItems.map((item) => (
+              <Button
+                key={item.name}
+                variant="ghost"
+                className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800"
+                onClick={() => navigate({ to: item.path })}
+              >
+                <item.icon className="mr-3 h-4 w-4" />
+                {item.name}
+              </Button>
+            ))}
+          </nav>
         </div>
-        <Button variant="ghost" size="sm" onClick={handleSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
-          Sign Out
-        </Button>
-      </header>
+        <div className="mt-auto p-6 border-t border-slate-800">
+           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800" onClick={handleSignOut}>
+             <LogOut className="mr-3 h-4 w-4" />
+             Sign Out
+           </Button>
+        </div>
+      </aside>
 
-      <main className="flex-1 p-8 max-w-7xl mx-auto w-full space-y-8">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="p-6 bg-white rounded-xl border shadow-sm space-y-2">
-            <div className="flex justify-between items-start">
-              <Users className="text-muted-foreground h-5 w-5" />
-              <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">+12%</span>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Active Customers</p>
-              <h3 className="text-2xl font-bold">128</h3>
-            </div>
+      {/* Main */}
+      <div className="flex-1 flex flex-col">
+        <header className="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-900/50 backdrop-blur">
+          <div className="text-sm text-slate-400">TEAMNEVORAI@GMAIL.COM</div>
+          <div className="flex items-center gap-4">
+             <Button variant="ghost" size="icon"><Bell className="h-5 w-5" /></Button>
+             <Button variant="ghost" size="icon"><HelpCircle className="h-5 w-5" /></Button>
           </div>
-          <div className="p-6 bg-white rounded-xl border shadow-sm space-y-2">
-            <div className="flex justify-between items-start">
-              <TrendingUp className="text-muted-foreground h-5 w-5" />
-              <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded">High</span>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Adherence Rate</p>
-              <h3 className="text-2xl font-bold">92%</h3>
-            </div>
-          </div>
-          <div className="p-6 bg-white rounded-xl border shadow-sm space-y-2">
-            <div className="flex justify-between items-start">
-              <Package className="text-muted-foreground h-5 w-5" />
-              <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-0.5 rounded">3 Due</span>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Reorders</p>
-              <h3 className="text-2xl font-bold">14</h3>
-            </div>
-          </div>
-          <div className="p-6 bg-white rounded-xl border shadow-sm space-y-2">
-            <div className="flex justify-between items-start">
-              <BookOpen className="text-muted-foreground h-5 w-5" />
-              <span className="text-xs font-medium text-slate-600 bg-slate-50 px-2 py-0.5 rounded">Active</span>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Active Program</p>
-              <h3 className="text-2xl font-bold text-ellipsis overflow-hidden whitespace-nowrap">Clean 9 Express</h3>
-            </div>
-          </div>
-        </div>
+        </header>
 
-        <div className="bg-white rounded-xl border p-12 text-center space-y-4">
-          <h2 className="text-2xl font-bold">Distributor Dashboard Coming Soon</h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            We are currently building Phase 6: The Distributor Dashboard. 
-            Soon you will be able to manage your customers, track their progress, and handle reorders from this screen.
-          </p>
-          <div className="pt-4">
-            <Button disabled variant="outline">Learn More about Phase 6</Button>
-          </div>
-        </div>
-      </main>
+        <main className="flex-1 overflow-y-auto p-8">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

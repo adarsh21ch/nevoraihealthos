@@ -76,26 +76,21 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Platform Administration</h1>
-          <p className="text-muted-foreground">Manage tenants and global configuration.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Tenants</h1>
+          <p className="text-slate-400 mt-1">Manage branding, features, pricing and domain.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </Button>
-          <Button variant="outline" asChild><Link to="/admin/content">Manage Global Content</Link></Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                New Tenant
+                Onboard client
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="bg-slate-900 border-slate-800">
               <DialogHeader>
                 <DialogTitle>Create New Tenant</DialogTitle>
               </DialogHeader>
@@ -161,39 +156,32 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Tenants</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Card className="bg-slate-900 border-slate-800">
+        <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Owner</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="border-slate-800 hover:bg-slate-800/50">
+                <TableHead className="text-slate-400">Name</TableHead>
+                <TableHead className="text-slate-400">Slug</TableHead>
+                <TableHead className="text-slate-400">Owner</TableHead>
+                <TableHead className="text-slate-400">Status</TableHead>
+                <TableHead className="text-slate-400 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tenants.map((tenant: any) => (
-                <TableRow key={tenant.id}>
+                <TableRow key={tenant.id} className="border-slate-800 hover:bg-slate-800/50">
                   <TableCell className="font-medium">{tenant.name}</TableCell>
                   <TableCell>
-                    <code className="text-xs bg-muted px-1 py-0.5 rounded">/p/{tenant.slug}</code>
+                    <code className="text-xs bg-slate-950 border border-slate-800 px-2 py-1 rounded text-blue-400">/p/{tenant.slug}</code>
                   </TableCell>
                   <TableCell>{tenant.owner_name}</TableCell>
                   <TableCell>
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      tenant.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      tenant.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
                     }`}>
                       {tenant.status}
                     </span>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
-                    {new Date(tenant.created_at).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -208,7 +196,7 @@ function AdminDashboard() {
                       {tenant.status === 'active' ? (
                         <PowerOff className="h-4 w-4 text-red-500" />
                       ) : (
-                        <Power className="h-4 w-4 text-green-500" />
+                        <Power className="h-4 w-4 text-emerald-500" />
                       )}
                     </Button>
                   </TableCell>
@@ -216,7 +204,7 @@ function AdminDashboard() {
               ))}
               {tenants.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-slate-500">
                     No tenants found.
                   </TableCell>
                 </TableRow>
