@@ -9,12 +9,32 @@
  * Note: The time part will be adjusted to the current IST time.
  */
 export function getISTDate(): Date {
-  // Current UTC time
   const now = new Date();
+  // Using Intl to get the current time in IST
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: false
+  });
   
-  // Asia/Kolkata is UTC+5:30
-  const IST_OFFSET = 5.5 * 60 * 60 * 1000;
-  return new Date(now.getTime() + IST_OFFSET);
+  const parts = formatter.formatToParts(now);
+  const partValues: Record<string, string> = {};
+  parts.forEach(p => partValues[p.type] = p.value);
+  
+  // Construct a date object representing that time locally
+  return new Date(
+    parseInt(partValues.year),
+    parseInt(partValues.month) - 1,
+    parseInt(partValues.day),
+    parseInt(partValues.hour),
+    parseInt(partValues.minute),
+    parseInt(partValues.second)
+  );
 }
 
 /**
@@ -22,7 +42,10 @@ export function getISTDate(): Date {
  */
 export function getISTDateString(): string {
   const istDate = getISTDate();
-  return istDate.toISOString().split('T')[0];
+  const year = istDate.getFullYear();
+  const month = String(istDate.getMonth() + 1).padStart(2, '0');
+  const day = String(istDate.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 /**
