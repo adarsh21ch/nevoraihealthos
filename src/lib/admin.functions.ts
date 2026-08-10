@@ -107,7 +107,11 @@ export const createTenant = createServerFn({ method: "POST" })
         role: "owner"
       });
 
-    if (profileError) throw profileError;
+    if (profileError) {
+      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+      await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
+      throw profileError;
+    }
 
     return { success: true, tenant };
   });
