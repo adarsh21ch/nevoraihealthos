@@ -261,13 +261,67 @@ function ProductsTab({ products, isLoading, onSave }: any) {
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold">Short Description</label>
-              <Input type="file" onChange={e => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  // Compression logic will go here in next pass
-                  setEditingProduct({ ...editingProduct, image_url: URL.createObjectURL(file) });
-                }
-              }} />
+              <Input value={editingProduct?.short_desc || ""} onChange={e => setEditingProduct({ ...editingProduct, short_desc: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold">Image URL (Public Assets)</label>
+              <div className="flex gap-2">
+                <Input value={editingProduct?.image_url || ""} onChange={e => setEditingProduct({ ...editingProduct, image_url: e.target.value })} placeholder="https://..." />
+                <Button type="button" variant="outline" size="sm" onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.onchange = async (e: any) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    
+                    const toastId = toast.loading("Compressing and uploading...");
+                    try {
+                      // Client-side compression
+                      const img = new Image();
+                      img.src = URL.createObjectURL(file);
+                      await new Promise(resolve => img.onload = resolve);
+                      
+                      const canvas = document.createElement('canvas');
+                      const MAX_WIDTH = 1200;
+                      let width = img.width;
+                      let height = img.height;
+                      if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                      }
+                      canvas.width = width;
+                      canvas.height = height;
+                      const ctx = canvas.getContext('2d');
+                      ctx?.drawImage(img, 0, 0, width, height);
+                      
+                      const blob = await new Promise<Blob | null>(resolve => 
+                        canvas.toBlob(blob => resolve(blob), 'image/webp', 0.85)
+                      );
+                      if (!blob) throw new Error("Compression failed");
+                      
+                      const fileName = `${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi, '_')}.webp`;
+                      const { data, error } = await supabase.storage
+                        .from('public-assets')
+                        .upload(fileName, blob, { cacheControl: '31536000', upsert: true });
+                        
+                      if (error) throw error;
+                      
+                      const { data: { publicUrl } } = supabase.storage
+                        .from('public-assets')
+                        .getPublicUrl(data.path);
+                        
+                      setEditingProduct({ ...editingProduct, image_url: publicUrl });
+                      toast.success("Image uploaded", { id: toastId });
+                    } catch (err: any) {
+                      toast.error(err.message || "Upload failed", { id: toastId });
+                    }
+                  };
+                  input.click();
+                }}>
+                  Upload
+                </Button>
+              </div>
             </div>
             <Button type="submit" className="w-full" disabled={mutation.isPending}>
               {mutation.isPending ? <Loader2 className="animate-spin h-4 w-4" /> : "Save Product"}
