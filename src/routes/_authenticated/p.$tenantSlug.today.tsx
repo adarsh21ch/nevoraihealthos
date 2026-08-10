@@ -47,7 +47,8 @@ function TodayPage() {
           enrollmentId: enrollment.id,
           dayTaskId: taskId,
           logDate: data.todayStr,
-          completed: !isCompleted
+          completed: !isCompleted,
+          dayNumber: dayNumber
         }
       });
       queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] });
@@ -64,6 +65,7 @@ function TodayPage() {
         data: {
           enrollmentId: enrollment.id,
           logDate: data.todayStr,
+          dayNumber: dayNumber,
           water_ml: newWater
         }
       });
@@ -79,6 +81,7 @@ function TodayPage() {
         data: {
           enrollmentId: enrollment.id,
           logDate: data.todayStr,
+          dayNumber: dayNumber,
           mood
         }
       });
