@@ -283,20 +283,20 @@ function Index() {
             </div>
 
             <div className="space-y-12">
-              <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight">Beautifully simple for coaches, powerful for teams.</h2>
-              <div className="space-y-8">
+              <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] uppercase italic">Pure performance. <br/> Zero overhead.</h2>
+              <div className="space-y-10">
                 {[
-                  { t: "Whitelabel Everything", d: "Your brand, your logo, your colors. Completely invisible infrastructure." },
-                  { t: "Automated Day-to-Day", d: "From onboarding to Day 90 follow-ups, everything runs on autopilot." },
-                  { t: "Enterprise Permissions", d: "Roles for Admins, Distributors, Mentors, and Customers." }
+                  { t: "Whitelabel Infrastructure", d: "Your brand at the forefront. Our tech invisible in the background." },
+                  { t: "Automated Workflows", d: "Biometric triggers and smart follow-ups operating 24/7." },
+                  { t: "High-Security Auth", d: "Military-grade encryption for sensitive patient health data." }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-6 group">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
-                      {i + 1}
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center font-black text-xs uppercase italic">
+                      0{i + 1}
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{item.t}</h4>
-                      <p className="text-slate-500 leading-relaxed">{item.d}</p>
+                      <h4 className="text-xl font-black text-white mb-2 group-hover:text-blue-500 transition-colors uppercase italic tracking-tight">{item.t}</h4>
+                      <p className="text-slate-400 font-medium tracking-tight leading-relaxed">{item.d}</p>
                     </div>
                   </div>
                 ))}
