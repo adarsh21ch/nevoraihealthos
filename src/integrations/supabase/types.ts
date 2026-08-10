@@ -18,13 +18,15 @@ export type Database = {
         Row: {
           age: number | null
           created_at: string
+          email: string | null
+          fbo_id: string
           gender: string | null
           goal_weight_kg: number | null
           health_consent_at: string | null
           height_cm: number | null
           id: string
           name: string
-          phone: string
+          phone: string | null
           referred_by_customer_id: string | null
           tenant_id: string
           user_id: string | null
@@ -32,13 +34,15 @@ export type Database = {
         Insert: {
           age?: number | null
           created_at?: string
+          email?: string | null
+          fbo_id: string
           gender?: string | null
           goal_weight_kg?: number | null
           health_consent_at?: string | null
           height_cm?: number | null
           id?: string
           name: string
-          phone: string
+          phone?: string | null
           referred_by_customer_id?: string | null
           tenant_id: string
           user_id?: string | null
@@ -46,13 +50,15 @@ export type Database = {
         Update: {
           age?: number | null
           created_at?: string
+          email?: string | null
+          fbo_id?: string
           gender?: string | null
           goal_weight_kg?: number | null
           health_consent_at?: string | null
           height_cm?: number | null
           id?: string
           name?: string
-          phone?: string
+          phone?: string | null
           referred_by_customer_id?: string | null
           tenant_id?: string
           user_id?: string | null
@@ -602,6 +608,32 @@ export type Database = {
             columns: ["day_task_id"]
             isOneToOne: false
             referencedRelation: "day_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_signup_credentials: {
+        Row: {
+          access_code: string
+          created_at: string
+          tenant_id: string
+        }
+        Insert: {
+          access_code: string
+          created_at?: string
+          tenant_id: string
+        }
+        Update: {
+          access_code?: string
+          created_at?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_signup_credentials_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]

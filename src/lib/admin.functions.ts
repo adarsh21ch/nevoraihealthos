@@ -44,7 +44,8 @@ export const createTenant = createServerFn({ method: "POST" })
     slug: z.string().min(3),
     name: z.string().min(3),
     ownerEmail: z.string().email(),
-    ownerName: z.string().min(1)
+    ownerName: z.string().min(1),
+    accessCode: z.string().min(4)
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
@@ -55,9 +56,6 @@ export const createTenant = createServerFn({ method: "POST" })
       throw new Error("Unauthorized");
     }
 
-    // We must use supabaseAdmin for auth.admin.createUser and inserting into profiles (if needed)
-    // although RLS allows authenticated to select profiles, it might not allow insert.
-    // Actually, creating a tenant owner should be atomic.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 1. Create tenant row
@@ -75,9 +73,20 @@ export const createTenant = createServerFn({ method: "POST" })
 
     if (tenantError) throw tenantError;
 
-    // 2. Create auth user
-    // We generate a temporary password or let them reset it. 
-    // For now, let's just create the user.
+    // 2. Create signup credentials
+    const { error: credsError } = await supabaseAdmin
+      .from("tenant_signup_credentials")
+      .insert({
+        tenant_id: tenant.id,
+        access_code: data.accessCode
+      });
+
+    if (credsError) {
+      await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
+      throw credsError;
+    }
+
+    // 3. Create auth user
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: data.ownerEmail,
       email_confirm: true,
@@ -85,12 +94,11 @@ export const createTenant = createServerFn({ method: "POST" })
     });
 
     if (authError) {
-      // Rollback tenant creation? 
       await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
       throw authError;
     }
 
-    // 3. Create profile link
+    // 4. Create profile link
     const { error: profileError } = await supabaseAdmin
       .from("profiles")
       .insert({
