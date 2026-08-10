@@ -13,9 +13,7 @@ function DashboardPlaceholder() {
   const navigate = useNavigate();
   
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate({ to: "/login" });
-    toast.success("Signed out successfully");
+    navigate({ to: "/" });
   };
 
   return (
