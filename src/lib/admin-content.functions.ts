@@ -44,11 +44,14 @@ export const saveProgram = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const cleanRest = Object.fromEntries(
+      Object.entries(rest).map(([k, v]) => [k, v === undefined ? null : v])
+    );
     if (id) {
-      const { error } = await context.supabase.from("programs").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("programs").update(cleanRest).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("programs").insert(rest);
+      const { error } = await context.supabase.from("programs").insert(cleanRest);
       if (error) throw error;
     }
     return { success: true };
@@ -85,11 +88,14 @@ export const saveProduct = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const cleanRest = Object.fromEntries(
+      Object.entries(rest).map(([k, v]) => [k, v === undefined ? null : v])
+    );
     if (id) {
-      const { error } = await context.supabase.from("products").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("products").update(cleanRest).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("products").insert(rest);
+      const { error } = await context.supabase.from("products").insert(cleanRest);
       if (error) throw error;
     }
     return { success: true };
@@ -126,11 +132,14 @@ export const saveProgramDay = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const cleanRest = Object.fromEntries(
+      Object.entries(rest).map(([k, v]) => [k, v === undefined ? null : v])
+    );
     if (id) {
-      const { error } = await context.supabase.from("program_days").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("program_days").update(cleanRest).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("program_days").insert(rest);
+      const { error } = await context.supabase.from("program_days").insert(cleanRest);
       if (error) throw error;
     }
     return { success: true };
@@ -141,7 +150,7 @@ export const saveDayTask = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
     id: z.string().uuid().optional(),
     program_day_id: z.string().uuid(),
-    product_id: z.string().uuid().nullable(),
+    product_id: z.string().uuid().nullable().optional(),
     time_slot: z.string(),
     suggested_time: z.string().optional(),
     title: z.string().min(1),
@@ -153,11 +162,14 @@ export const saveDayTask = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const cleanRest = Object.fromEntries(
+      Object.entries(rest).map(([k, v]) => [k, v === undefined ? null : v])
+    );
     if (id) {
-      const { error } = await context.supabase.from("day_tasks").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("day_tasks").update(cleanRest).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("day_tasks").insert(rest);
+      const { error } = await context.supabase.from("day_tasks").insert(cleanRest);
       if (error) throw error;
     }
     return { success: true };
