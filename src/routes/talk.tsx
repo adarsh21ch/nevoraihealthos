@@ -40,11 +40,11 @@ function TalkPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
+      const response = await fetch(`${import.meta.env["VITE_SUPABASE_URL"]}/functions/v1/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${import.meta.env["VITE_SUPABASE_ANON_KEY"]}`,
         },
         body: JSON.stringify({
           message: input,
@@ -100,7 +100,7 @@ function TalkPage() {
       </header>
 
       <div className="flex-1 overflow-hidden relative">
-        <ScrollArea className="h-full px-4 py-8" viewportRef={scrollRef}>
+        <ScrollArea className="h-full px-4 py-8" ref={scrollRef}>
           <div className="max-w-2xl mx-auto space-y-8">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
