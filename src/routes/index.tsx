@@ -330,65 +330,54 @@ function Index() {
                 >
                   Join the Network <ArrowRight className="w-8 h-8" />
                 </Link>
-                <a href="mailto:sales@healthos.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
-                  Talk to our sales team
+                <a href="mailto:sales@healthos.com" className="text-slate-900 font-black border-b border-slate-950/20 hover:border-slate-950 transition-all pb-1 text-lg uppercase italic tracking-widest">
+                  Contact Sales
                 </a>
               </div>
             </motion.div>
-
-            {/* Background glowing effects */}
-            <div className="absolute top-0 right-0 w-[60%] h-[100%] bg-blue-600 rounded-full blur-[160px] opacity-20 -mr-[20%]" />
-            <div className="absolute bottom-0 left-0 w-[60%] h-[100%] bg-indigo-600 rounded-full blur-[160px] opacity-20 -ml-[20%]" />
           </div>
         </div>
       </section>
 
-      {/* Refined Footer */}
-      <footer className="py-32 px-6 bg-white border-t border-slate-100">
+      {/* Footer */}
+      <footer className="py-24 px-6 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-20 mb-32">
-            <div className="lg:col-span-5 space-y-10">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">H</div>
-                <span className="text-2xl font-bold tracking-tight text-slate-900">Health OS</span>
+          <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
+            <div className="space-y-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/20 italic">H</div>
+                <span className="text-xl font-black tracking-tight text-white uppercase italic">Health OS</span>
               </div>
-              <p className="text-slate-500 text-lg leading-relaxed max-w-sm font-medium">
-                The premier infrastructure for modern health programs and wellness distribution at scale.
+              <p className="text-slate-500 text-sm font-medium tracking-tight max-w-xs uppercase italic">
+                Empowering the next generation of wellness entrepreneurs globally.
               </p>
-              <div className="flex gap-4">
-                {[Users, Globe, ShieldCheck].map((Icon, i) => (
-                  <div key={i} className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:border-slate-200 transition-all cursor-pointer">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                ))}
-              </div>
             </div>
-            
-            <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-16">
-              {[
-                { title: "Platform", links: ["Infrastructure", "Program Builder", "API Docs", "Changelog"] },
-                { title: "Company", links: ["About Us", "Contact", "Privacy Policy", "Terms"] },
-                { title: "Resources", links: ["Community", "Guides", "Help Center", "Status"] }
-              ].map((group) => (
-                <div key={group.title} className="space-y-8">
-                  <h5 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">{group.title}</h5>
-                  <ul className="space-y-5">
-                    {group.links.map(link => (
-                      <li key={link}>
-                        <a href="#" className="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">{link}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+            <div className="flex flex-wrap gap-20">
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Systems</h4>
+                <ul className="space-y-2">
+                  {['Infrastructure', 'Edge Logic', 'Vault', 'API'].map(i => (
+                    <li key={i}><a href="#" className="text-[10px] font-black text-slate-600 hover:text-white transition-colors uppercase italic">{i}</a></li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Access</h4>
+                <ul className="space-y-2">
+                  <li><Link to="/login" className="text-[10px] font-black text-slate-600 hover:text-white transition-colors uppercase italic">Login</Link></li>
+                  <li><a href="/admin" className="text-[10px] font-black text-slate-600 hover:text-white transition-colors uppercase italic">Console</a></li>
+                </ul>
+              </div>
             </div>
           </div>
-          
-          <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p className="text-slate-400 text-sm font-medium">© 2026 Health OS Platform. All rights reserved.</p>
-            <div className="flex items-center gap-8">
-              <Link to="/login" className="text-sm font-bold text-slate-900">Staff Portal</Link>
-              <a href="/admin" className="text-sm font-bold text-slate-900">Admin Console</a>
+          <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/5 gap-8">
+            <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest italic">
+              © 2026 Health OS. Enterprise Standard.
+            </p>
+            <div className="flex gap-8">
+              {['Status', 'Privacy', 'Terms'].map(i => (
+                <a key={i} href="#" className="text-[10px] font-black text-slate-600 hover:text-white transition-colors uppercase italic">{i}</a>
+              ))}
             </div>
           </div>
         </div>
