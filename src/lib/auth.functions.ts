@@ -69,6 +69,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
         fbo_id: data.fbo_id,
         email: data.email || null,
         phone: data.phone || null,
+        name: "", // Initial empty name, will be filled in onboarding wizard step 1
       });
 
     if (customerError) {
@@ -95,7 +96,7 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
     const { data: customer, error } = await supabaseAdmin
       .from("customers")
       .select("email, phone")
-      .or(`fbo_id.eq."${data.identifier}",email.eq."${data.identifier}",phone.eq."${data.identifier}"`)
+      .or(`fbo_id.eq.${data.identifier},email.eq.${data.identifier},phone.eq.${data.identifier}`)
       .maybeSingle();
 
     if (error || !customer) {
@@ -103,12 +104,10 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
     }
 
     // Determine real auth identity
-    // Signup logic prefers email if both provided, or whatever was used.
-    // In our case, the 'email' field in customers table matches the auth email if used.
     if (customer.email) {
-      return { found: true, method: 'email', value: customer.email };
+      return { found: true, method: 'email' as const, value: customer.email };
     } else if (customer.phone) {
-      return { found: true, method: 'phone', value: customer.phone };
+      return { found: true, method: 'phone' as const, value: customer.phone };
     }
 
     return { found: false };
@@ -119,8 +118,6 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     customerId: z.string().uuid(),
   }).parse(data))
   .handler(async ({ data }) => {
-    // This would be called by a distributor for their own customer
-    // For now, using simplified logic as requested for Phase 2
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     const { data: customer, error: customerError } = await supabaseAdmin
@@ -129,7 +126,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
       .eq("id", data.customerId)
       .single();
       
-    if (customerError || !customer) throw new Error("Customer not found");
+    if (customerError || !customer || !customer.user_id) throw new Error("Customer not found");
 
     const tempPassword = Math.random().toString(36).slice(-8);
     
@@ -142,3 +139,4 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
 
     return { success: true, tempPassword };
   });
+
