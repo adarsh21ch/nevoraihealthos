@@ -116,15 +116,15 @@ function Index() {
           >
             <Link 
               to="/login" 
-              className="w-full sm:w-auto px-12 py-6 bg-slate-900 text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
+              className="w-full sm:w-auto px-12 py-6 bg-white text-slate-950 rounded-lg text-xl font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center gap-3 group"
             >
-              Start Building <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              Get Started <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </Link>
             <Link 
               to="/p/demo/join" 
-              className="w-full sm:w-auto px-12 py-6 glass-card text-slate-900 rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
+              className="w-full sm:w-auto px-12 py-6 bg-slate-800/50 backdrop-blur-md border border-white/10 text-white rounded-lg text-xl font-black uppercase tracking-widest hover:bg-slate-700 transition-all flex items-center gap-3 group"
             >
-              <Play className="w-5 h-5 fill-slate-900" /> Watch Demo
+              <Play className="w-5 h-5 fill-white" /> Live Demo
             </Link>
           </motion.div>
         </motion.div>
