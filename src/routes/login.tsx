@@ -52,7 +52,11 @@ function LoginPage() {
       }
       toast.success("Welcome back!");
     } catch (error: any) {
-      toast.error(error.message || "Invalid credentials");
+      console.error("Login error details:", error);
+      const message = error.message || "Invalid credentials";
+      toast.error(message === "Invalid login credentials" 
+        ? "Invalid email or password. Please try again." 
+        : message);
     } finally {
       setLoading(false);
     }
