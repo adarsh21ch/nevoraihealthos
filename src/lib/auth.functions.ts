@@ -1,0 +1,144 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+export const createCustomerAccount = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({
+    tenant_slug: z.string(),
+    access_code: z.string(),
+    fbo_id: z.string(),
+    email: z.string().email().optional().nullable(),
+    phone: z.string().optional().nullable(),
+    password: z.string().min(6),
+  }).refine(data => data.email || data.phone, {
+    message: "At least one of email or phone is required",
+    path: ["email"]
+  }).parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Resolve tenant by slug
+    const { data: tenant, error: tenantError } = await supabaseAdmin
+      .from("tenants")
+      .select("id")
+      .eq("slug", data.tenant_slug)
+      .single();
+
+    if (tenantError || !tenant) {
+      throw new Error("Invalid tenant or access code");
+    }
+
+    // Check access code
+    const { data: creds, error: credsError } = await supabaseAdmin
+      .from("tenant_signup_credentials")
+      .select("access_code")
+      .eq("tenant_id", tenant.id)
+      .single();
+
+    if (credsError || creds.access_code !== data.access_code) {
+      throw new Error("Invalid tenant or access code");
+    }
+
+    // 2. Check if fbo_id exists
+    const { data: existingCustomer } = await supabaseAdmin
+      .from("customers")
+      .select("id")
+      .eq("fbo_id", data.fbo_id)
+      .maybeSingle();
+
+    if (existingCustomer) {
+      throw new Error("Already registered — try logging in");
+    }
+
+    // 3. Create Auth User
+    const signupMethod = data.email ? 'email' : 'phone';
+    const signupValue = data.email || data.phone!;
+    
+    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+      ...(data.email ? { email: data.email, email_confirm: true } : { phone: data.phone!, phone_confirm: true }),
+      password: data.password,
+    });
+
+    if (authError) throw authError;
+
+    // 4. Create Customer Row
+    const { error: customerError } = await supabaseAdmin
+      .from("customers")
+      .insert({
+        tenant_id: tenant.id,
+        user_id: authUser.user.id,
+        fbo_id: data.fbo_id,
+        email: data.email || null,
+        phone: data.phone || null,
+      });
+
+    if (customerError) {
+      // Cleanup auth user on failure
+      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+      throw customerError;
+    }
+
+    return { 
+      success: true, 
+      method: signupMethod, 
+      value: signupValue 
+    };
+  });
+
+export const resolveLoginIdentifier = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({
+    identifier: z.string(),
+  }).parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Look up customers
+    const { data: customer, error } = await supabaseAdmin
+      .from("customers")
+      .select("email, phone")
+      .or(`fbo_id.eq."${data.identifier}",email.eq."${data.identifier}",phone.eq."${data.identifier}"`)
+      .maybeSingle();
+
+    if (error || !customer) {
+      return { found: false };
+    }
+
+    // Determine real auth identity
+    // Signup logic prefers email if both provided, or whatever was used.
+    // In our case, the 'email' field in customers table matches the auth email if used.
+    if (customer.email) {
+      return { found: true, method: 'email', value: customer.email };
+    } else if (customer.phone) {
+      return { found: true, method: 'phone', value: customer.phone };
+    }
+
+    return { found: false };
+  });
+
+export const adminResetCustomerPassword = createServerFn({ method: "POST" })
+  .inputValidator((data) => z.object({
+    customerId: z.string().uuid(),
+  }).parse(data))
+  .handler(async ({ data }) => {
+    // This would be called by a distributor for their own customer
+    // For now, using simplified logic as requested for Phase 2
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    const { data: customer, error: customerError } = await supabaseAdmin
+      .from("customers")
+      .select("user_id")
+      .eq("id", data.customerId)
+      .single();
+      
+    if (customerError || !customer) throw new Error("Customer not found");
+
+    const tempPassword = Math.random().toString(36).slice(-8);
+    
+    const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
+      customer.user_id,
+      { password: tempPassword }
+    );
+
+    if (authError) throw authError;
+
+    return { success: true, tempPassword };
+  });
