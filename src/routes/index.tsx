@@ -156,16 +156,43 @@ function Index() {
         </div>
       </header>
 
-      {/* Trusted By Section */}
-      <section className="py-24 px-6 relative">
-        <div className="max-w-7xl mx-auto border-y border-slate-200/50 py-16">
-          <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-16">
-            Empowering global health brands
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-32 opacity-30 grayscale contrast-[0.8]">
-            {['VITAMINS+', 'HEALTHCORE', 'BIOSTRIDE', 'WELLNESS CO.', 'PURELIFE'].map((name) => (
-              <span key={name} className="font-black text-3xl tracking-tighter text-slate-900">{name}</span>
-            ))}
+      {/* Trusted By Section - Animated Marquee */}
+      <section className="py-12 px-6 relative overflow-hidden bg-white/30 backdrop-blur-sm border-y border-slate-200/50">
+        <div className="max-w-7xl mx-auto flex items-center">
+          <div className="flex-shrink-0 pr-12 border-r border-slate-200/50 hidden lg:block">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+              Global Brands
+            </p>
+          </div>
+          
+          <div className="flex-1 relative">
+            <div className="flex overflow-hidden group">
+              <motion.div 
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ 
+                  duration: 25, 
+                  repeat: Infinity, 
+                  ease: "linear",
+                  repeatType: "loop"
+                }}
+                className="flex items-center gap-20 md:gap-32 whitespace-nowrap pl-12"
+              >
+                {[
+                  'VITAMINS+', 'HEALTHCORE', 'BIOSTRIDE', 'WELLNESS CO.', 'PURELIFE',
+                  'VITAMINS+', 'HEALTHCORE', 'BIOSTRIDE', 'WELLNESS CO.', 'PURELIFE'
+                ].map((name, i) => (
+                  <span 
+                    key={`${name}-${i}`} 
+                    className="font-black text-2xl md:text-3xl tracking-tighter text-slate-900 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all cursor-default"
+                  >
+                    {name}
+                  </span>
+                ))}
+              </motion.div>
+            </div>
+            {/* Gradient Fades for the marquee */}
+            <div className="absolute inset-y-0 left-0 w-20 bg-linear-to-r from-[#fcfbf8] to-transparent z-10" />
+            <div className="absolute inset-y-0 right-0 w-20 bg-linear-to-l from-[#fcfbf8] to-transparent z-10" />
           </div>
         </div>
       </section>
