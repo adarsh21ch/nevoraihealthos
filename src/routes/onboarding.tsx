@@ -145,10 +145,10 @@ function OnboardingWizard() {
         _start_date: formData.start_date,
         _weight_kg: parseFloat(formData.weight),
         _waist_cm: parseFloat(formData.waist),
-        _hip_cm: formData.hip ? parseFloat(formData.hip) : null,
-        _chest_cm: formData.chest ? parseFloat(formData.chest) : null,
-        _thigh_cm: formData.thigh ? parseFloat(formData.thigh) : null,
-        _arm_cm: formData.arm ? parseFloat(formData.arm) : null,
+        _hip_cm: formData.hip ? parseFloat(formData.hip) : undefined,
+        _chest_cm: formData.chest ? parseFloat(formData.chest) : undefined,
+        _thigh_cm: formData.thigh ? parseFloat(formData.thigh) : undefined,
+        _arm_cm: formData.arm ? parseFloat(formData.arm) : undefined,
       });
 
       if (error) throw error;
