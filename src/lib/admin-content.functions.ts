@@ -112,7 +112,7 @@ export const getProgramDays = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data: days, error } = await context.supabase
       .from("program_days")
-      .select("*, day_tasks(*)")
+      .select("id, program_id, day_number, title, focus, motivation, meal_guidance, tip, day_tasks(id, program_day_id, product_id, time_slot, suggested_time, title, dosage, instructions, is_optional, sort_order)")
       .eq("program_id", data.programId)
       .order("day_number", { ascending: true });
     if (error) throw error;
