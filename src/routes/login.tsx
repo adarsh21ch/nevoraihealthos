@@ -81,9 +81,9 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center p-4 bg-muted/30">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Staff Login</CardTitle>
+          <CardTitle className="text-2xl font-bold">Health OS Login</CardTitle>
           <CardDescription>
-            Enter your email and password to access the platform.
+            Enter your credentials to access your dashboard.
           </CardDescription>
         </CardHeader>
         <CardContent>
