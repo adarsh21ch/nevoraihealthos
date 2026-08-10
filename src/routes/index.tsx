@@ -90,6 +90,9 @@ function Index() {
             <Link to="/dashboard" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
               Dashboard
             </Link>
+            <Link to="/admin" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
+              Admin
+            </Link>
             <Link 
               to="/dashboard" 
 
