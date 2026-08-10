@@ -134,7 +134,9 @@ function AdminDashboard() {
                   value={formData.ownerEmail}
                   onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
                 />
+              </div>
               <div className="space-y-2">
+
                 <label className="text-sm font-medium">Access Code</label>
                 <Input 
                   required
