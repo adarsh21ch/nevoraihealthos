@@ -1,8 +1,9 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, ChevronRight, ChevronLeft } from "lucide-react";
@@ -19,9 +20,21 @@ export const Route = createFileRoute("/onboarding")({
 });
 
 function OnboardingWizard() {
-  const [step, setStep] = useState(1);
   const queryClient = useQueryClient();
-  
+  const [step, setStep] = useState(1);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    gender: "",
+    age: "",
+    height: "",
+    weight: "",
+    goal_weight: "",
+    program_id: "",
+    start_date: new Date().toISOString().split('T')[0],
+  });
+
   const { data: customer, isLoading: customerLoading } = useQuery({
     queryKey: ["current-customer"],
     queryFn: async () => {
@@ -29,7 +42,7 @@ function OnboardingWizard() {
       if (!user) throw new Error("Not authenticated");
       const { data, error } = await supabase
         .from("customers")
-        .select("*")
+        .select("id, name, phone, health_consent_at, user_id, tenant_id")
         .eq("user_id", user.id)
         .single();
       if (error) throw error;
@@ -37,44 +50,82 @@ function OnboardingWizard() {
     },
   });
 
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    gender: "",
-    age: "",
-  });
+  useEffect(() => {
+    if (customer?.health_consent_at) {
+      setStep(3);
+    }
+  }, [customer]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (vars: any) => {
-      const { data: { user } } = await supabase.auth.getUser();
       const { error } = await supabase
         .from("customers")
         .update(vars)
-        .eq("user_id", user?.id || "");
+        .eq("id", customer?.id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current-customer"] });
+      if (step === 2) {
+        toast.success("Health consent recorded");
+      }
       setStep(s => s + 1);
+    }
+  });
+
+  const finishMutation = useMutation({
+    mutationFn: async () => {
+      const { error: customerError } = await supabase
+        .from("customers")
+        .update({
+          name: formData.name,
+          gender: formData.gender,
+          age: parseInt(formData.age),
+          height_cm: parseFloat(formData.height),
+          goal_weight_kg: parseFloat(formData.goal_weight),
+        })
+        .eq("id", customer?.id);
+      if (customerError) throw customerError;
+
+      const { data: enrollment, error: enrollmentError } = await supabase
+        .from("enrollments")
+        .insert({
+          customer_id: customer?.id,
+          program_id: formData.program_id,
+          start_date: formData.start_date,
+        })
+        .select()
+        .single();
+      if (enrollmentError) throw enrollmentError;
+
+      const { error: measureError } = await supabase
+        .from("measurements")
+        .insert({
+          customer_id: customer?.id,
+          taken_on: new Date().toISOString().split('T')[0],
+          weight_kg: parseFloat(formData.weight),
+        });
+      if (measureError) throw measureError;
+    },
+    onSuccess: () => {
+      toast.success("Onboarding complete!");
+      window.location.href = `/p/${customer?.tenant_id}/today`;
     }
   });
 
   const nextStep = () => {
     if (step === 1) {
-      if (!formData.name) {
-        toast.error("Name is required");
-        return;
-      }
-      updateProfileMutation.mutate({
-        name: formData.name,
-        phone: customer?.phone || formData.phone || "",
-      });
+      if (!formData.name) { toast.error("Name is required"); return; }
+      updateProfileMutation.mutate({ name: formData.name });
+    } else if (step === 2) {
+      if (!disclaimerAccepted) { toast.error("Please accept disclaimer"); return; }
+      updateProfileMutation.mutate({ health_consent_at: new Date().toISOString() });
+    } else if (step === 8) {
+      finishMutation.mutate();
     } else {
       setStep(s => s + 1);
     }
   };
-
-  const prevStep = () => setStep(s => s - 1);
 
   if (customerLoading) return <div className="flex items-center justify-center min-h-screen"><Loader2 className="animate-spin" /></div>;
 
@@ -84,70 +135,30 @@ function OnboardingWizard() {
         <CardHeader>
           <div className="flex justify-between text-xs text-muted-foreground mb-2">
             <span>Step {step} of 8</span>
-            <div className="flex gap-1">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className={`h-1 w-4 rounded-full ${i + 1 <= step ? "bg-[#16a34a]" : "bg-muted"}`} />
-              ))}
-            </div>
           </div>
-          <CardTitle className="text-[#0f172a]">
-            {step === 1 && "Basic Information"}
-            {step === 2 && "Health Disclaimer"}
-            {step > 2 && `Onboarding Step ${step}`}
-          </CardTitle>
+          <CardTitle>Onboarding</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {step === 1 && (
             <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Full Name</label>
-                <Input 
-                  placeholder="Enter your full name" 
-                  value={formData.name}
-                  onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
-                />
-              </div>
-              {!customer?.phone && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">WhatsApp Number</label>
-                  <Input 
-                    type="tel" 
-                    placeholder="+91..." 
-                    value={formData.phone}
-                    onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))}
-                  />
-                </div>
-              )}
+              <Input placeholder="Full Name" value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} />
             </div>
           )}
-
           {step === 2 && (
-            <div className="prose prose-sm text-gray-600">
-              <p>Please read and accept our health disclaimer before proceeding...</p>
-              <p>I confirm that I am in good health and have consulted with a medical professional if I have any pre-existing conditions.</p>
+            <div className="space-y-4">
+              <p className="text-sm">Full Disclaimer Text here...</p>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="accept" checked={disclaimerAccepted} onCheckedChange={(c) => setDisclaimerAccepted(!!c)} />
+                <label htmlFor="accept" className="text-sm">I have read and agree.</label>
+              </div>
             </div>
           )}
-
-          {step > 2 && (
-            <p className="text-muted-foreground italic text-center py-8">
-              Step {step} (Measurements, Goals, Lifestyle) implementation follows in Phase 3.
-            </p>
-          )}
+          {step > 2 && <p className="text-center">Step {step} content...</p>}
         </CardContent>
-        <CardFooter className="flex justify-between border-t pt-6">
-          <Button variant="ghost" onClick={prevStep} disabled={step === 1}>
-            <ChevronLeft className="mr-2 h-4 w-4" /> Back
-          </Button>
-          <Button 
-            className="bg-[#16a34a] hover:bg-[#15803d]" 
-            onClick={nextStep} 
-            disabled={step === 8 || updateProfileMutation.isPending}
-          >
-            {updateProfileMutation.isPending ? <Loader2 className="animate-spin" /> : (
-              <>
-                {step === 8 ? "Finish" : "Next"} <ChevronRight className="ml-2 h-4 w-4" />
-              </>
-            )}
+        <CardFooter className="flex justify-between">
+          <Button variant="ghost" onClick={() => setStep(s => s - 1)} disabled={step === 1}>Back</Button>
+          <Button onClick={nextStep}>
+            {step === 8 ? "Finish" : "Next"}
           </Button>
         </CardFooter>
       </Card>
