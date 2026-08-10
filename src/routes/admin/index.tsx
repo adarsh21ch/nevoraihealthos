@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, Link } from "@tanstack/react-router";
+import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { checkAdminStatus, getTenants } from "@/lib/admin.functions";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -10,17 +10,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, LogOut } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/")({
   beforeLoad: async () => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw redirect({ to: "/login" });
+      }
+
       const { isAdmin } = await checkAdminStatus();
       if (!isAdmin) {
         throw redirect({ to: "/" });
       }
     } catch (e) {
-      throw redirect({ to: "/" });
+      if ((e as any).status === 307 || (e as any).status === 302) throw e;
+      throw redirect({ to: "/login" });
     }
   },
   loader: async () => {
@@ -33,6 +40,7 @@ export const Route = createFileRoute("/admin/")({
 
 function AdminDashboard() {
   const { tenants: initialTenants } = Route.useLoaderData();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
@@ -75,11 +83,24 @@ function AdminDashboard() {
     },
   });
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
+    toast.success("Signed out successfully");
+  };
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Platform Administration</h1>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Platform Administration</h1>
+          <p className="text-muted-foreground">Manage tenants and global configuration.</p>
+        </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={handleSignOut}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign Out
+          </Button>
           <Button variant="outline" asChild><Link to="/admin/content">Manage Global Content</Link></Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
