@@ -1,0 +1,244 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
+/**
+ * Platform Admin functions for managing global programs, products, and tenant status.
+ */
+
+const adminAuth = async (context: any) => {
+  const { supabase, userId } = context;
+  const { data: isAdmin, error } = await supabase.rpc("is_platform_admin", { _uid: userId });
+  if (error || !isAdmin) throw new Error("Unauthorized: Platform Admin access required");
+  return true;
+};
+
+// --- Programs ---
+
+export const getAdminPrograms = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await adminAuth(context);
+    const { data, error } = await context.supabase
+      .from("programs")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return data;
+  });
+
+export const saveProgram = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid().optional(),
+    code: z.string().min(2),
+    name: z.string().min(2),
+    subtitle: z.string().optional(),
+    duration_days: z.number().int().min(1),
+    description: z.string().optional(),
+    hero_image_url: z.string().optional(),
+    next_program_code: z.string().optional(),
+    sort_order: z.number().int().default(0),
+    is_active: z.boolean().default(true)
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { id, ...rest } = data;
+    if (id) {
+      const { error } = await context.supabase.from("programs").update(rest).eq("id", id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("programs").insert(rest);
+      if (error) throw error;
+    }
+    return { success: true };
+  });
+
+// --- Products ---
+
+export const getAdminProducts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await adminAuth(context);
+    const { data, error } = await context.supabase
+      .from("products")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return data;
+  });
+
+export const saveProduct = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid().optional(),
+    code: z.string().min(2),
+    name: z.string().min(2),
+    short_desc: z.string().optional(),
+    why_in_program: z.string().optional(),
+    how_to_use: z.string().optional(),
+    common_mistakes: z.string().optional(),
+    image_url: z.string().optional(),
+    video_url: z.string().optional(),
+    sort_order: z.number().int().default(0)
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { id, ...rest } = data;
+    if (id) {
+      const { error } = await context.supabase.from("products").update(rest).eq("id", id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("products").insert(rest);
+      if (error) throw error;
+    }
+    return { success: true };
+  });
+
+// --- Program Days & Tasks ---
+
+export const getProgramDays = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ programId: z.string().uuid() }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { data: days, error } = await context.supabase
+      .from("program_days")
+      .select("*, day_tasks(*)")
+      .eq("program_id", data.programId)
+      .order("day_number", { ascending: true });
+    if (error) throw error;
+    return days;
+  });
+
+export const saveProgramDay = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid().optional(),
+    program_id: z.string().uuid(),
+    day_number: z.number().int(),
+    title: z.string().min(1),
+    focus: z.string().optional(),
+    motivation: z.string().optional(),
+    meal_guidance: z.string().optional(),
+    tip: z.string().optional()
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { id, ...rest } = data;
+    if (id) {
+      const { error } = await context.supabase.from("program_days").update(rest).eq("id", id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("program_days").insert(rest);
+      if (error) throw error;
+    }
+    return { success: true };
+  });
+
+export const saveDayTask = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid().optional(),
+    program_day_id: z.string().uuid(),
+    product_id: z.string().uuid().nullable(),
+    time_slot: z.string(),
+    suggested_time: z.string().optional(),
+    title: z.string().min(1),
+    dosage: z.string().optional(),
+    instructions: z.string().optional(),
+    is_optional: z.boolean().default(false),
+    sort_order: z.number().int().default(0)
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { id, ...rest } = data;
+    if (id) {
+      const { error } = await context.supabase.from("day_tasks").update(rest).eq("id", id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("day_tasks").insert(rest);
+      if (error) throw error;
+    }
+    return { success: true };
+  });
+
+export const deleteDayTask = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ id: z.string().uuid() }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { error } = await context.supabase.from("day_tasks").delete().eq("id", data.id);
+    if (error) throw error;
+    return { success: true };
+  });
+
+// --- Tips & FAQs ---
+
+export const getAdminTips = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await adminAuth(context);
+    const { data, error } = await context.supabase
+      .from("tips")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return data;
+  });
+
+export const saveTip = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid().optional(),
+    category: z.string(),
+    title: z.string(),
+    body: z.string(),
+    sort_order: z.number().int()
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { id, ...rest } = data;
+    if (id) {
+      const { error } = await context.supabase.from("tips").update(rest).eq("id", id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("tips").insert(rest);
+      if (error) throw error;
+    }
+    return { success: true };
+  });
+
+export const getAdminFAQs = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await adminAuth(context);
+    const { data, error } = await context.supabase
+      .from("faqs")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return data;
+  });
+
+export const saveFAQ = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid().optional(),
+    category: z.string().optional(),
+    question: z.string(),
+    answer: z.string(),
+    sort_order: z.number().int()
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { id, ...rest } = data;
+    if (id) {
+      const { error } = await context.supabase.from("faqs").update(rest).eq("id", id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("faqs").insert(rest);
+      if (error) throw error;
+    }
+    return { success: true };
+  });
