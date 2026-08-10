@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -27,6 +28,10 @@ import { Route as AdminContentProgramsProgramIdDaysRouteImport } from './routes/
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -56,9 +61,9 @@ const AdminContentRoute = AdminContentRouteImport.update({
 } as any)
 const AuthenticatedPTenantSlugRoute =
   AuthenticatedPTenantSlugRouteImport.update({
-    id: '/_authenticated/p/$tenantSlug',
+    id: '/p/$tenantSlug',
     path: '/p/$tenantSlug',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
   id: '/p/$tenantSlug/join',
@@ -137,6 +142,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
@@ -187,6 +193,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/dashboard'
     | '/login'
     | '/onboarding'
@@ -204,12 +211,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
-  AuthenticatedPTenantSlugRoute: typeof AuthenticatedPTenantSlugRouteWithChildren
   PTenantSlugJoinRoute: typeof PTenantSlugJoinRoute
 }
 
@@ -220,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -262,7 +276,7 @@ declare module '@tanstack/react-router' {
       path: '/p/$tenantSlug'
       fullPath: '/p/$tenantSlug'
       preLoaderRoute: typeof AuthenticatedPTenantSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/p/$tenantSlug/join': {
       id: '/p/$tenantSlug/join'
@@ -316,19 +330,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AdminContentRouteChildren {
-  AdminContentProgramsProgramIdDaysRoute: typeof AdminContentProgramsProgramIdDaysRoute
-}
-
-const AdminContentRouteChildren: AdminContentRouteChildren = {
-  AdminContentProgramsProgramIdDaysRoute:
-    AdminContentProgramsProgramIdDaysRoute,
-}
-
-const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
-  AdminContentRouteChildren,
-)
-
 interface AuthenticatedPTenantSlugRouteChildren {
   AuthenticatedPTenantSlugGuideRoute: typeof AuthenticatedPTenantSlugGuideRoute
   AuthenticatedPTenantSlugJourneyRoute: typeof AuthenticatedPTenantSlugJourneyRoute
@@ -352,14 +353,39 @@ const AuthenticatedPTenantSlugRouteWithChildren =
     AuthenticatedPTenantSlugRouteChildren,
   )
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedPTenantSlugRoute: typeof AuthenticatedPTenantSlugRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedPTenantSlugRoute: AuthenticatedPTenantSlugRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+interface AdminContentRouteChildren {
+  AdminContentProgramsProgramIdDaysRoute: typeof AdminContentProgramsProgramIdDaysRoute
+}
+
+const AdminContentRouteChildren: AdminContentRouteChildren = {
+  AdminContentProgramsProgramIdDaysRoute:
+    AdminContentProgramsProgramIdDaysRoute,
+}
+
+const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
+  AdminContentRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   AdminContentRoute: AdminContentRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
-  AuthenticatedPTenantSlugRoute: AuthenticatedPTenantSlugRouteWithChildren,
   PTenantSlugJoinRoute: PTenantSlugJoinRoute,
 }
 export const routeTree = rootRouteImport
