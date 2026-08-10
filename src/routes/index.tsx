@@ -52,6 +52,15 @@ function Index() {
                 transition={{ delay: i * 0.1 }}
                 href={`#${item.toLowerCase()}`} 
                 className="text-[13px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider"
+                onClick={(e) => {
+                  if (['solutions', 'pricing', 'developers'].includes(item.toLowerCase())) {
+                    e.preventDefault();
+                    const element = document.getElementById(item.toLowerCase());
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }
+                }}
               >
                 {item}
               </motion.a>
