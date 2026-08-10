@@ -13,6 +13,7 @@ import {
   Play
 } from "lucide-react";
 import { useRef } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: Index,
