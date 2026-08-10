@@ -143,7 +143,7 @@ function AdminDashboard() {
                   onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
                 />
               </div>
-            </div>
+
               <Button type="submit" className="w-full" disabled={createMutation.isPending}>
                 {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Tenant"}
               </Button>
