@@ -26,7 +26,7 @@
 }
 
 @utility text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-slate-900 via-slate-800 to-slate-900;
+  @apply bg-clip-text text-transparent bg-linear-to-b from-white via-slate-200 to-slate-400;
 }
 
 @utility animate-float {
