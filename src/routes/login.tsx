@@ -154,7 +154,7 @@ function LoginPage() {
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-blue-500 transition-colors" />
                     <Input
                       type="email"
-                      placeholder="name@healthos.com"
+                      placeholder="teamnevorai@gmail.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
