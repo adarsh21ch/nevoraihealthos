@@ -12,44 +12,6 @@ export const getUserRole = createServerFn({ method: "GET" })
   .handler(async () => {
     return { role: "platform_admin", tenantSlug: null };
   });
-    
-    // Check if customer
-    const { data: customer } = await supabase
-      .from("customers")
-      .select("tenant_id, tenants(slug)")
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    if (customer) {
-      return {
-        role: "customer",
-        tenantId: customer.tenant_id,
-        tenantSlug: (customer.tenants as any)?.slug
-      };
-    }
-
-    // Check if tenant owner/member (Staff)
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("role, tenant_id, tenants(slug)")
-      .eq("user_id", userId)
-      .maybeSingle();
-      
-    if (error) {
-      console.error("Error fetching user profile:", error);
-      return { role: "guest", tenantSlug: null };
-    }
-    
-    if (profile) {
-      return { 
-        role: profile.role, 
-        tenantId: profile.tenant_id,
-        tenantSlug: (profile.tenants as any)?.slug 
-      };
-    }
-    
-    return { role: "guest", tenantSlug: null };
-  });
 
 export const getTenants = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
