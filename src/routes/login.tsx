@@ -12,11 +12,13 @@ export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
-      const { role } = await getUserRole();
+      const { role, tenantSlug } = await getUserRole();
       if (role === "platform_admin") {
         throw redirect({ to: "/admin" });
       } else if (role === "owner" || role === "staff") {
         throw redirect({ to: "/dashboard" });
+      } else if (tenantSlug) {
+        throw redirect({ to: `/p/${tenantSlug}/today` });
       }
       throw redirect({ to: "/" });
     }
@@ -42,11 +44,13 @@ function LoginPage() {
 
       if (error) throw error;
 
-      const { role } = await getUserRole();
+      const { role, tenantSlug } = await getUserRole();
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
       } else if (role === "owner" || role === "staff") {
         navigate({ to: "/dashboard" });
+      } else if (tenantSlug) {
+        navigate({ to: `/p/${tenantSlug}/today` });
       } else {
         navigate({ to: "/" });
       }

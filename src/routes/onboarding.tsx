@@ -171,6 +171,8 @@ function OnboardingWizard() {
       toast.success("Onboarding complete!");
       if (customer?.tenants?.slug) {
         navigate({ to: `/p/${customer.tenants.slug}/today` });
+      } else {
+        navigate({ to: "/" });
       }
     },
     onError: (err) => {

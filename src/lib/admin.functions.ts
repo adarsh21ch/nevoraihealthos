@@ -25,9 +25,24 @@ export const getUserRole = createServerFn({ method: "GET" })
     
     // Check if platform admin
     const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
-    if (isAdmin) return { role: "platform_admin" };
+    if (isAdmin) return { role: "platform_admin", tenantSlug: null };
     
-    // Check if tenant owner/member
+    // Check if customer
+    const { data: customer } = await supabase
+      .from("customers")
+      .select("tenant_id, tenants(slug)")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (customer) {
+      return {
+        role: "customer",
+        tenantId: customer.tenant_id,
+        tenantSlug: (customer.tenants as any)?.slug
+      };
+    }
+
+    // Check if tenant owner/member (Staff)
     const { data: profile, error } = await supabase
       .from("profiles")
       .select("role, tenant_id, tenants(slug)")
@@ -36,7 +51,7 @@ export const getUserRole = createServerFn({ method: "GET" })
       
     if (error) {
       console.error("Error fetching user profile:", error);
-      return { role: "guest" };
+      return { role: "guest", tenantSlug: null };
     }
     
     if (profile) {
@@ -47,7 +62,7 @@ export const getUserRole = createServerFn({ method: "GET" })
       };
     }
     
-    return { role: "guest" };
+    return { role: "guest", tenantSlug: null };
   });
 
 export const getTenants = createServerFn({ method: "GET" })
