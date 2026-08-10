@@ -261,7 +261,13 @@ function ProductsTab({ products, isLoading, onSave }: any) {
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold">Short Description</label>
-              <Input value={editingProduct?.short_desc || ""} onChange={e => setEditingProduct({ ...editingProduct, short_desc: e.target.value })} />
+              <Input type="file" onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  // Compression logic will go here in next pass
+                  setEditingProduct({ ...editingProduct, image_url: URL.createObjectURL(file) });
+                }
+              }} />
             </div>
             <Button type="submit" className="w-full" disabled={mutation.isPending}>
               {mutation.isPending ? <Loader2 className="animate-spin h-4 w-4" /> : "Save Product"}
