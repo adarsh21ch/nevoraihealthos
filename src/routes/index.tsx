@@ -16,6 +16,24 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Health OS | Customer Portals for Wellness Distributors" },
+      {
+        name: "description",
+        content:
+          "Share one join link, onboard customers, and track their program day by day. Built for independent wellness distributors in India.",
+      },
+      { property: "og:title", content: "Health OS | Customer Portals for Wellness Distributors" },
+      {
+        property: "og:description",
+        content:
+          "One place to onboard customers and follow their program day by day, instead of chat threads and spreadsheets.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
