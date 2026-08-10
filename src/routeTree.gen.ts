@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
+import { Route as AdminContentProgramsProgramIdDaysRouteImport } from './routes/admin/content/programs/$programId/days'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -29,42 +31,79 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/admin/content',
+  path: '/admin/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
   id: '/p/$tenantSlug/join',
   path: '/p/$tenantSlug/join',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminContentProgramsProgramIdDaysRoute =
+  AdminContentProgramsProgramIdDaysRouteImport.update({
+    id: '/programs/$programId/days',
+    path: '/programs/$programId/days',
+    getParentRoute: () => AdminContentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/admin/content': typeof AdminContentRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/admin/' | '/p/$tenantSlug/join'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/admin/content'
+    | '/admin/'
+    | '/p/$tenantSlug/join'
+    | '/admin/content/programs/$programId/days'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/admin' | '/p/$tenantSlug/join'
-  id: '__root__' | '/' | '/onboarding' | '/admin/' | '/p/$tenantSlug/join'
+  to:
+    | '/'
+    | '/onboarding'
+    | '/admin/content'
+    | '/admin'
+    | '/p/$tenantSlug/join'
+    | '/admin/content/programs/$programId/days'
+  id:
+    | '__root__'
+    | '/'
+    | '/onboarding'
+    | '/admin/content'
+    | '/admin/'
+    | '/p/$tenantSlug/join'
+    | '/admin/content/programs/$programId/days'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRoute
+  AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
   PTenantSlugJoinRoute: typeof PTenantSlugJoinRoute
 }
@@ -92,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/admin/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/p/$tenantSlug/join': {
       id: '/p/$tenantSlug/join'
       path: '/p/$tenantSlug/join'
@@ -99,12 +145,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PTenantSlugJoinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/content/programs/$programId/days': {
+      id: '/admin/content/programs/$programId/days'
+      path: '/programs/$programId/days'
+      fullPath: '/admin/content/programs/$programId/days'
+      preLoaderRoute: typeof AdminContentProgramsProgramIdDaysRouteImport
+      parentRoute: typeof AdminContentRoute
+    }
   }
 }
+
+interface AdminContentRouteChildren {
+  AdminContentProgramsProgramIdDaysRoute: typeof AdminContentProgramsProgramIdDaysRoute
+}
+
+const AdminContentRouteChildren: AdminContentRouteChildren = {
+  AdminContentProgramsProgramIdDaysRoute:
+    AdminContentProgramsProgramIdDaysRoute,
+}
+
+const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
+  AdminContentRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
+  AdminContentRoute: AdminContentRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
   PTenantSlugJoinRoute: PTenantSlugJoinRoute,
 }
