@@ -67,7 +67,7 @@ function OnboardingWizard() {
       }
       updateProfileMutation.mutate({
         name: formData.name,
-        phone: customer?.phone || formData.phone,
+        phone: customer?.phone || formData.phone || "",
       });
     } else {
       setStep(s => s + 1);
