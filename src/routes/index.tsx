@@ -396,15 +396,15 @@ function Index() {
             <div className="relative z-10">
               <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em] mb-6 text-center">Transparent Pricing</h2>
               <h3 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-8">
-                Custom solutions for your growth.
+                Pricing based on your team size.
               </h3>
               <p className="text-slate-500 text-xl mb-12 font-medium">
-                We believe in tailored pricing that matches your specific health ecosystem requirements. Let's discuss your vision over a call.
+                Tell us how many customers and mentors you work with, and we'll share a plan that fits. Email us and we'll set up a call.
               </p>
               <div className="flex flex-col gap-6 items-center">
                 <Button className="rounded-full bg-slate-900 text-white hover:bg-slate-800 font-bold px-12 py-8 h-auto text-2xl group shadow-xl" asChild>
-                  <a href="tel:+9188888888">
-                    Book a Call Now <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" />
+                  <a href="mailto:teamnevorai@gmail.com">
+                    Email Us <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" />
                   </a>
                 </Button>
                 <div className="space-y-2">
@@ -431,20 +431,20 @@ function Index() {
               className="relative z-10"
             >
               <h2 className="text-5xl md:text-8xl font-bold text-white tracking-tighter mb-12 leading-[0.9]">
-                Start your next health venture today.
+                Move your business off chat threads.
               </h2>
               <p className="text-xl md:text-2xl text-slate-400 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">
-                Everything you need to launch, scale, and manage health programs globally.
+                One link to onboard customers, one place to track their program.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                 <Link 
                   to="/login" 
                   className="w-full sm:w-auto px-16 py-8 bg-white text-slate-900 rounded-[2.5rem] text-2xl font-black hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center gap-4"
                 >
-                  Get Started for Free <ArrowRight className="w-8 h-8" />
+                  Get Started <ArrowRight className="w-8 h-8" />
                 </Link>
-                <a href="mailto:sales@healthos.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
-                  Talk to our sales team
+                <a href="mailto:teamnevorai@gmail.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
+                  teamnevorai@gmail.com
                 </a>
               </div>
             </motion.div>
@@ -479,7 +479,7 @@ function Index() {
             
             <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-16">
               {[
-                { title: "Platform", links: ["Infrastructure", "Program Builder", "API Docs", "Changelog"] },
+                { title: "Platform", links: ["Infrastructure", "Solutions", "Pricing"] },
                 { title: "Company", links: ["About Us", "Contact", "Privacy Policy", "Terms"] },
                 { title: "Resources", links: ["Community", "Guides", "Help Center", "Status"] }
               ].map((group) => (
