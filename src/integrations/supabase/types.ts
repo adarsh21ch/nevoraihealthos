@@ -826,6 +826,7 @@ export type Database = {
         Returns: undefined
       }
       current_customer_ids: { Args: { _uid: string }; Returns: string[] }
+      get_ist_day_number: { Args: { _start_date: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
