@@ -25,8 +25,10 @@ function Index() {
     offset: ["start start", "end end"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.05], [1, 0.95]);
+  // We remove the scroll-based opacity/scale effects that cause the white-out issues
+  // while keeping the structure for other future animations if needed.
+  const opacity = useTransform(scrollYProgress, [0, 0.05], [1, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.05], [1, 1]);
 
   return (
     <div ref={containerRef} className="flex flex-col min-h-screen bg-[#fcfbf8] selection:bg-blue-100 selection:text-blue-900">
