@@ -18,6 +18,38 @@ export const checkAdminStatus = createServerFn({ method: "GET" })
     return { isAdmin: !!data };
   });
 
+export const getUserRole = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    
+    // Check if platform admin
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (isAdmin) return { role: "platform_admin" };
+    
+    // Check if tenant owner/member
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("role, tenant_id, tenants(slug)")
+      .eq("user_id", userId)
+      .maybeSingle();
+      
+    if (error) {
+      console.error("Error fetching user profile:", error);
+      return { role: "guest" };
+    }
+    
+    if (profile) {
+      return { 
+        role: profile.role, 
+        tenantId: profile.tenant_id,
+        tenantSlug: (profile.tenants as any)?.slug 
+      };
+    }
+    
+    return { role: "guest" };
+  });
+
 export const getTenants = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
