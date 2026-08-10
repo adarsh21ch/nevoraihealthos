@@ -6,19 +6,6 @@ import { toast } from "sonner";
 import { LogOut, LayoutDashboard, Users, TrendingUp, Package, BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
-  beforeLoad: async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      throw redirect({ to: "/login" });
-    }
-    const { role } = await getUserRole();
-    if (role === "platform_admin") {
-      throw redirect({ to: "/admin" });
-    }
-    if (role === "guest") {
-      throw redirect({ to: "/" });
-    }
-  },
   component: DashboardPlaceholder,
 });
 
@@ -26,9 +13,7 @@ function DashboardPlaceholder() {
   const navigate = useNavigate();
   
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate({ to: "/login" });
-    toast.success("Signed out successfully");
+    navigate({ to: "/" });
   };
 
   return (

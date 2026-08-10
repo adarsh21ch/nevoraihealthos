@@ -12,8 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
@@ -37,16 +35,6 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -110,8 +98,6 @@ const AdminContentProgramsProgramIdDaysRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -126,8 +112,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -144,8 +128,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -162,8 +144,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
-    | '/login'
-    | '/onboarding'
     | '/admin/content'
     | '/admin/'
     | '/p/$tenantSlug'
@@ -178,8 +158,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dashboard'
-    | '/login'
-    | '/onboarding'
     | '/admin/content'
     | '/admin'
     | '/p/$tenantSlug'
@@ -195,8 +173,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/dashboard'
-    | '/login'
-    | '/onboarding'
     | '/admin/content'
     | '/admin/'
     | '/_authenticated/p/$tenantSlug'
@@ -213,8 +189,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
-  OnboardingRoute: typeof OnboardingRoute
   AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
   PTenantSlugJoinRoute: typeof PTenantSlugJoinRoute
@@ -241,20 +215,6 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -382,8 +342,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   DashboardRoute: DashboardRoute,
-  LoginRoute: LoginRoute,
-  OnboardingRoute: OnboardingRoute,
   AdminContentRoute: AdminContentRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
   PTenantSlugJoinRoute: PTenantSlugJoinRoute,
