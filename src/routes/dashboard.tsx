@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardLayout,
@@ -15,6 +15,7 @@ function DashboardLayout() {
 
   const navItems = [
     { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
+    { name: "Talk", icon: Sparkles, path: "/talk" },
     { name: "Tenants", icon: Building2, path: "/admin" },
     { name: "Usage metrics", icon: TrendingUp, path: "/dashboard/metrics" },
     { name: "Platform config", icon: Settings, path: "/dashboard/config" },
