@@ -838,7 +838,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_platform_admin: { Args: { _uid: string }; Returns: boolean }
+      is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
       is_tenant_member: {
         Args: { _tenant: string; _uid: string }
         Returns: boolean
