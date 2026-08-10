@@ -80,7 +80,10 @@ function AdminDashboard() {
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Platform Administration</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <div className="flex gap-2">
+          <Button variant="outline" asChild><Link to="/admin/content">Manage Global Content</Link></Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />

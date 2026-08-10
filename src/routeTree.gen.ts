@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/admin/content',
+  path: '/admin/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
   id: '/p/$tenantSlug/join',
   path: '/p/$tenantSlug/join',
@@ -38,12 +44,14 @@ const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin': typeof AdminIndexRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
 }
@@ -51,20 +59,29 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/admin/' | '/p/$tenantSlug/join'
+  fullPaths:
+    '/' | '/onboarding' | '/admin/content' | '/admin/' | '/p/$tenantSlug/join'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/admin' | '/p/$tenantSlug/join'
-  id: '__root__' | '/' | '/onboarding' | '/admin/' | '/p/$tenantSlug/join'
+  to: '/' | '/onboarding' | '/admin/content' | '/admin' | '/p/$tenantSlug/join'
+  id:
+    | '__root__'
+    | '/'
+    | '/onboarding'
+    | '/admin/content'
+    | '/admin/'
+    | '/p/$tenantSlug/join'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRoute
+  AdminContentRoute: typeof AdminContentRoute
   AdminIndexRoute: typeof AdminIndexRoute
   PTenantSlugJoinRoute: typeof PTenantSlugJoinRoute
 }
@@ -92,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/admin/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/p/$tenantSlug/join': {
       id: '/p/$tenantSlug/join'
       path: '/p/$tenantSlug/join'
@@ -105,6 +129,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
+  AdminContentRoute: AdminContentRoute,
   AdminIndexRoute: AdminIndexRoute,
   PTenantSlugJoinRoute: PTenantSlugJoinRoute,
 }
