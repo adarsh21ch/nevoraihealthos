@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, Save, ChevronLeft, Clock } from "lucide-react";
 
-import { checkAdminStatus } from "@/lib/admin.functions";
+import { checkAdminStatus, getUserRole } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { redirect } from "@tanstack/react-router";
 
@@ -23,8 +23,11 @@ export const Route = createFileRoute("/admin/content/programs/$programId/days")(
         throw redirect({ to: "/login" });
       }
 
-      const { isAdmin } = await checkAdminStatus();
-      if (!isAdmin) {
+      const { role } = await getUserRole();
+      if (role !== "platform_admin") {
+        if (role === "owner" || role === "staff") {
+          throw redirect({ to: "/dashboard" });
+        }
         throw redirect({ to: "/" });
       }
     } catch (e) {

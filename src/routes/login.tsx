@@ -6,18 +6,19 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { checkAdminStatus } from "@/lib/admin.functions";
+import { checkAdminStatus, getUserRole } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async ({ search }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
-      const { isAdmin } = await checkAdminStatus();
-      if (isAdmin) {
+      const { role } = await getUserRole();
+      if (role === "platform_admin") {
         throw redirect({ to: "/admin" });
+      } else if (role === "owner" || role === "staff") {
+        throw redirect({ to: "/dashboard" });
       }
-      // For now, redirect to /admin as placeholder for /dashboard
-      throw redirect({ to: "/admin" });
+      throw redirect({ to: "/" });
     }
   },
   component: LoginPage,
@@ -41,12 +42,13 @@ function LoginPage() {
 
       if (error) throw error;
 
-      const { isAdmin } = await checkAdminStatus();
-      if (isAdmin) {
+      const { role } = await getUserRole();
+      if (role === "platform_admin") {
         navigate({ to: "/admin" });
+      } else if (role === "owner" || role === "staff") {
+        navigate({ to: "/dashboard" });
       } else {
-        // Redirect to /admin until /dashboard is built
-        navigate({ to: "/admin" });
+        navigate({ to: "/" });
       }
       toast.success("Welcome back!");
     } catch (error: any) {
@@ -76,12 +78,12 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/30">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-[#fcfbf8]">
+      <Card className="w-full max-w-md border-none shadow-2xl shadow-slate-200 rounded-[32px] p-4">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Staff Login</CardTitle>
+          <CardTitle className="text-2xl font-bold">Health OS Login</CardTitle>
           <CardDescription>
-            Enter your email and password to access the platform.
+            Enter your credentials to access your dashboard.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -105,8 +107,8 @@ function LoginPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Sign In"}
+            <Button type="submit" className="w-full h-12 rounded-2xl bg-[#0f172a] hover:bg-slate-800 transition-all font-bold text-lg" disabled={loading}>
+              {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Sign In"}
             </Button>
             <div className="text-center">
               <button
