@@ -1,5 +1,16 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { checkAdminStatus, getTenants } from "@/lib/admin.functions";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { createTenant, updateTenantStatus } from "@/lib/admin.functions";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { Loader2, Plus, Power, PowerOff } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
   beforeLoad: async () => {
@@ -19,18 +30,6 @@ export const Route = createFileRoute("/admin/")({
   },
   component: AdminDashboard,
 });
-
-import { useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { createTenant, updateTenantStatus } from "@/lib/admin.functions";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff } from "lucide-react";
 
 function AdminDashboard() {
   const { tenants: initialTenants } = Route.useLoaderData();
@@ -83,80 +82,76 @@ function AdminDashboard() {
         <div className="flex gap-2">
           <Button variant="outline" asChild><Link to="/admin/content">Manage Global Content</Link></Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-
-
-
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              New Tenant
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Tenant</DialogTitle>
-            </DialogHeader>
-            <form 
-              className="space-y-4 pt-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                createMutation.mutate(formData);
-              }}
-            >
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Tenant Name</label>
-                <Input 
-                  required
-                  placeholder="e.g. FitLife Mumbai"
-                  value={formData.name}
-                  onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">URL Slug</label>
-                <Input 
-                  required
-                  placeholder="e.g. fitlife-mumbai"
-                  value={formData.slug}
-                  onChange={e => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Owner Name</label>
-                <Input 
-                  required
-                  placeholder="e.g. John Doe"
-                  value={formData.ownerName}
-                  onChange={e => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Owner Email</label>
-                <Input 
-                  required
-                  type="email"
-                  placeholder="owner@example.com"
-                  value={formData.ownerEmail}
-                  onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-
-                <label className="text-sm font-medium">Access Code</label>
-                <Input 
-                  required
-                  placeholder="e.g. JOIN2026"
-                  value={formData.accessCode}
-                  onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
-                />
-              </div>
-
-              <Button type="submit" className="w-full" disabled={createMutation.isPending}>
-                {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Tenant"}
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                New Tenant
               </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Tenant</DialogTitle>
+              </DialogHeader>
+              <form 
+                className="space-y-4 pt-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  createMutation.mutate(formData);
+                }}
+              >
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Tenant Name</label>
+                  <Input 
+                    required
+                    placeholder="e.g. FitLife Mumbai"
+                    value={formData.name}
+                    onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">URL Slug</label>
+                  <Input 
+                    required
+                    placeholder="e.g. fitlife-mumbai"
+                    value={formData.slug}
+                    onChange={e => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Owner Name</label>
+                  <Input 
+                    required
+                    placeholder="e.g. John Doe"
+                    value={formData.ownerName}
+                    onChange={e => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Owner Email</label>
+                  <Input 
+                    required
+                    type="email"
+                    placeholder="owner@example.com"
+                    value={formData.ownerEmail}
+                    onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Access Code</label>
+                  <Input 
+                    required
+                    placeholder="e.g. JOIN2026"
+                    value={formData.accessCode}
+                    onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={createMutation.isPending}>
+                  {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Tenant"}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <Card>
