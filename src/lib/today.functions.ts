@@ -3,6 +3,32 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getISTDateString } from "./date-utils";
+import { Json } from "@/integrations/supabase/types";
+
+export type DayTask = {
+  id: string;
+  program_day_id: string;
+  product_id: string | null;
+  title: string;
+  dosage: string | null;
+  time_slot: string | null;
+  sort_order: number;
+  product_name?: string;
+  product_image?: string;
+};
+
+export type ProgramDayContent = {
+  day_number: number;
+  program_day: {
+    id: string;
+    program_id: string;
+    day_number: number;
+    title: string | null;
+    motivation: string | null;
+    meal_guidance: string | null;
+  } | null;
+  tasks: DayTask[] | null;
+};
 
 export const getTodayData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -12,7 +38,6 @@ export const getTodayData = createServerFn({ method: "GET" })
   .handler(async ({ context, data: input }) => {
     const { supabase, userId } = context;
 
-    // 1. Resolve tenant
     const { data: tenant, error: tenantErr } = await supabase
       .from("tenants")
       .select("id, name, slug")
@@ -20,7 +45,6 @@ export const getTodayData = createServerFn({ method: "GET" })
       .single();
     if (tenantErr || !tenant) throw new Error("Tenant not found");
 
-    // 2. Load customer & verify tenant
     const { data: customer, error: customerErr } = await supabase
       .from("customers")
       .select("id, tenant_id, health_consent_at")
@@ -29,7 +53,6 @@ export const getTodayData = createServerFn({ method: "GET" })
 
     if (customerErr || !customer) throw new Error("Customer not found");
     if (customer.tenant_id !== tenant.id) {
-        // Find their actual tenant slug
         const { data: correctTenant } = await supabase
             .from("tenants")
             .select("slug")
@@ -42,7 +65,6 @@ export const getTodayData = createServerFn({ method: "GET" })
       return { redirect: "/onboarding" };
     }
 
-    // 3. Get active enrollment
     const { data: enrollment, error: enrollErr } = await supabase
       .from("enrollments")
       .select("id, program_id, start_date, programs(duration_days, name)")
@@ -55,9 +77,6 @@ export const getTodayData = createServerFn({ method: "GET" })
     }
 
     const todayStr = getISTDateString();
-    
-    // 4. Get Today's content and completions
-    // We fetch: daily_log, completions, program_day, day_tasks
     
     const [logRes, dayContentRes] = await Promise.all([
         supabase.from("daily_logs")
@@ -78,28 +97,30 @@ export const getTodayData = createServerFn({ method: "GET" })
         enrollment,
         todayStr,
         dailyLog: logRes.data,
-        dayContent: dayContentRes.data,
+        dayContent: dayContentRes.data as unknown as ProgramDayContent,
     };
   });
 
 export const toggleTaskCompletion = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
-    enrollmentId: z.string().uuid(),
-    dayTaskId: z.string().uuid(),
-    logDate: z.string(),
-    completed: z.boolean(),
+    data: z.object({
+      enrollmentId: z.string().uuid(),
+      dayTaskId: z.string().uuid(),
+      logDate: z.string(),
+      completed: z.boolean(),
+    })
   }).parse(data))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data: input }) => {
     const { supabase } = context;
+    const { data } = input;
 
-    // UPSERT daily log first
     const { data: log, error: logErr } = await supabase
       .from("daily_logs")
       .upsert({
         enrollment_id: data.enrollmentId,
         log_date: data.logDate,
-        day_number: 0 // Placeholder, we should compute this or change schema
+        day_number: 0
       }, { onConflict: 'enrollment_id, log_date' })
       .select("id")
       .single();
@@ -129,19 +150,22 @@ export const toggleTaskCompletion = createServerFn({ method: "POST" })
 export const updateDailyLog = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
-    enrollmentId: z.string().uuid(),
-    logDate: z.string(),
-    water_ml: z.number().optional(),
-    mood: z.string().optional(),
+    data: z.object({
+      enrollmentId: z.string().uuid(),
+      logDate: z.string(),
+      water_ml: z.number().optional(),
+      mood: z.string().optional(),
+    })
   }).parse(data))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data: input }) => {
     const { supabase } = context;
+    const { data } = input;
     const { error } = await supabase
       .from("daily_logs")
       .upsert({
         enrollment_id: data.enrollmentId,
         log_date: data.logDate,
-        day_number: 0, // Placeholder
+        day_number: 0,
         ...(data.water_ml !== undefined ? { water_ml: data.water_ml } : {}),
         ...(data.mood !== undefined ? { mood: data.mood } : {}),
       }, { onConflict: 'enrollment_id, log_date' });

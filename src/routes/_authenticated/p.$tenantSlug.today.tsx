@@ -1,12 +1,11 @@
 
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useServerFn } from '@tanstack/react-start';
-import { getTodayData, toggleTaskCompletion, updateDailyLog } from '@/lib/today.functions';
-import { CheckCircle2, Circle, Droplets, Info, AlertCircle } from 'lucide-react';
+import { getTodayData, toggleTaskCompletion, updateDailyLog, ProgramDayContent, DayTask } from '@/lib/today.functions';
+import { CheckCircle2, Circle, Droplets, Info, Calendar, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/today')({
   component: TodayPage,
@@ -16,42 +15,40 @@ function TodayPage() {
   const { tenantSlug } = Route.useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const getToday = useServerFn(getTodayData);
-  const toggleTask = useServerFn(toggleTaskCompletion);
-  const updateLog = useServerFn(updateDailyLog);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['today', tenantSlug],
-    queryFn: () => getToday({ tenantSlug }),
+    queryFn: () => getTodayData({ data: { tenantSlug } }),
   });
 
-  // Handle redirects
   useEffect(() => {
-    if (data?.redirect) {
+    if (data && 'redirect' in data && data.redirect) {
       navigate({ to: data.redirect });
     }
   }, [data, navigate]);
 
   if (isLoading) return <div className="p-8 text-center text-slate-400">Loading your day...</div>;
   if (error) return <div className="p-8 text-center text-red-500">Error loading data</div>;
-  if (data?.redirect || !data) return null;
+  if (!data || 'redirect' in data) return null;
 
   const { enrollment, dayContent, dailyLog, tenant } = data;
-  const dayNumber = dayContent?.day_number || 0;
+  const typedDayContent = dayContent as ProgramDayContent;
+  const dayNumber = typedDayContent?.day_number || 0;
   const duration = enrollment.programs?.duration_days || 0;
   
-  // Progress calculation
-  const totalTasks = dayContent?.tasks?.length || 0;
+  const totalTasks = typedDayContent?.tasks?.length || 0;
   const completedTasks = dailyLog?.task_completions?.length || 0;
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const handleToggleTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      await toggleTask({
-        enrollmentId: enrollment.id,
-        dayTaskId: taskId,
-        logDate: data.todayStr,
-        completed: !isCompleted
+      await toggleTaskCompletion({
+        data: {
+          enrollmentId: enrollment.id,
+          dayTaskId: taskId,
+          logDate: data.todayStr,
+          completed: !isCompleted
+        }
       });
       queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] });
     } catch (err) {
@@ -63,10 +60,12 @@ function TodayPage() {
     const currentWater = dailyLog?.water_ml || 0;
     const newWater = currentWater + 250;
     try {
-      await updateLog({
-        enrollmentId: enrollment.id,
-        logDate: data.todayStr,
-        water_ml: newWater
+      await updateDailyLog({
+        data: {
+          enrollmentId: enrollment.id,
+          logDate: data.todayStr,
+          water_ml: newWater
+        }
       });
       queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] });
     } catch (err) {
@@ -76,10 +75,12 @@ function TodayPage() {
 
   const handleMoodSelect = async (mood: string) => {
     try {
-      await updateLog({
-        enrollmentId: enrollment.id,
-        logDate: data.todayStr,
-        mood
+      await updateDailyLog({
+        data: {
+          enrollmentId: enrollment.id,
+          logDate: data.todayStr,
+          mood
+        }
       });
       queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] });
       toast.success(`Feeling ${mood}!`);
@@ -113,8 +114,7 @@ function TodayPage() {
     );
   }
 
-  // Group tasks by slot
-  const tasksBySlot = dayContent?.tasks?.reduce((acc: any, task: any) => {
+  const tasksBySlot = typedDayContent?.tasks?.reduce((acc: Record<string, DayTask[]>, task) => {
     const slot = task.time_slot || 'anytime';
     if (!acc[slot]) acc[slot] = [];
     acc[slot].push(task);
@@ -125,7 +125,6 @@ function TodayPage() {
 
   return (
     <div className="max-w-md mx-auto px-6 pt-12 pb-8">
-      {/* Header */}
       <div className="flex justify-between items-start mb-10">
         <div>
           <h1 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">
@@ -156,15 +155,14 @@ function TodayPage() {
         </div>
       </div>
 
-      {dayContent?.program_day?.motivation && (
+      {typedDayContent?.program_day?.motivation && (
         <div className="bg-[#16a34a]/5 border border-[#16a34a]/10 rounded-3xl p-6 mb-10">
           <p className="text-[#16a34a] italic text-lg leading-relaxed">
-            "{dayContent.program_day.motivation}"
+            "{typedDayContent.program_day.motivation}"
           </p>
         </div>
       )}
 
-      {/* Checklist */}
       <div className="space-y-10">
         {slotsOrder.map(slot => {
           const slotTasks = tasksBySlot?.[slot];
@@ -176,10 +174,10 @@ function TodayPage() {
                 {slot.replace('_', ' ')}
               </h3>
               <div className="space-y-3">
-                {slotTasks.map((task: any) => {
+                {slotTasks.map((task) => {
                   const isCompleted = dailyLog?.task_completions?.some(
                     (c: any) => c.day_task_id === task.id
-                  );
+                  ) || false;
                   return (
                     <div 
                       key={task.id}
@@ -230,7 +228,6 @@ function TodayPage() {
         })}
       </div>
 
-      {/* Water Tracker */}
       <div className="mt-12 bg-blue-50/50 rounded-3xl p-6 border border-blue-100">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
@@ -260,7 +257,6 @@ function TodayPage() {
         </div>
       </div>
 
-      {/* Mood Selector */}
       <div className="mt-6 bg-slate-50 rounded-3xl p-6 border border-slate-100">
         <h3 className="font-bold text-slate-900 mb-4">How are you feeling?</h3>
         <div className="flex gap-3">
@@ -281,42 +277,17 @@ function TodayPage() {
         </div>
       </div>
 
-      {/* Meal Guidance */}
-      {dayContent?.program_day?.meal_guidance && (
+      {typedDayContent?.program_day?.meal_guidance && (
         <div className="mt-6 bg-amber-50/50 rounded-3xl p-6 border border-amber-100">
           <div className="flex items-center gap-2 mb-4">
             <Info className="w-5 h-5 text-amber-500" />
             <h3 className="font-bold text-slate-900">Meal Guidance</h3>
           </div>
           <p className="text-sm text-amber-900/70 leading-relaxed font-medium">
-            {dayContent.program_day.meal_guidance}
+            {typedDayContent.program_day.meal_guidance}
           </p>
         </div>
       )}
     </div>
-  );
-}
-
-function Trophy(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-      <path d="M4 22h16" />
-      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-    </svg>
   );
 }
