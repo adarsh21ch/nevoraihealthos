@@ -214,16 +214,16 @@ function Index() {
           </div>
 
           {[
-            { title: "Biometric Intelligence", icon: <BarChart3 />, desc: "Real-time health trend analysis.", color: "bg-emerald-50 text-emerald-600" },
-            { title: "Secure Data Vault", icon: <ShieldCheck />, desc: "HIPAA-ready encrypted storage.", color: "bg-indigo-50 text-indigo-600" },
-            { title: "Global CDN", icon: <Globe />, desc: "Edge-delivery for global teams.", color: "bg-amber-50 text-amber-600" },
+            { title: "Bio Metrics", icon: <BarChart3 />, desc: "Real-time health intelligence.", color: "bg-slate-900 text-blue-500 border-white/5" },
+            { title: "Secure Vault", icon: <ShieldCheck />, desc: "Encrypted data architecture.", color: "bg-slate-900 text-blue-500 border-white/5" },
+            { title: "Global CDN", icon: <Globe />, desc: "Distributed edge delivery.", color: "bg-slate-900 text-blue-500 border-white/5" },
           ].map((item, i) => (
-            <div key={i} className="md:col-span-4 p-10 rounded-[3rem] bg-white border border-slate-100 hover:border-slate-200 transition-all duration-300 group">
-              <div className={`w-14 h-14 rounded-2xl ${item.color} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
+            <div key={i} className={`md:col-span-4 p-10 bg-slate-900 border ${item.color} hover:border-blue-500/30 transition-all duration-300 group`}>
+              <div className={`w-14 h-14 bg-slate-800 border border-white/5 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform ${item.color.split(' ')[1]}`}>
                 {item.icon}
               </div>
-              <h4 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h4>
-              <p className="text-slate-500">{item.desc}</p>
+              <h4 className="text-xl font-black text-white mb-3 uppercase italic tracking-tighter">{item.title}</h4>
+              <p className="text-slate-400 font-medium tracking-tight">{item.desc}</p>
             </div>
           ))}
         </div>
