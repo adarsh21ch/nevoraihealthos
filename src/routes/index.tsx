@@ -240,23 +240,24 @@ function Index() {
                 viewport={{ once: true }}
                 className="relative z-20"
               >
-                <div className="glass-card rounded-[2.5rem] p-4 shadow-3xl">
-                  <div className="bg-slate-50 rounded-[2rem] overflow-hidden border border-slate-100 aspect-video relative">
-                    <div className="absolute top-4 left-4 right-4 flex justify-between items-center px-4 py-2 bg-white/80 backdrop-blur-md rounded-full border border-slate-100">
+                <div className="bg-slate-900 border border-white/10 p-4 shadow-3xl overflow-hidden relative group">
+                  <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                  <div className="bg-slate-950 rounded-lg overflow-hidden border border-white/5 aspect-video relative">
+                    <div className="absolute top-4 left-4 right-4 flex justify-between items-center px-4 py-2 bg-slate-900 border border-white/5 rounded-md">
                       <div className="flex gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-400" />
-                        <div className="w-2 h-2 rounded-full bg-amber-400" />
-                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-700" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-700" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-700" />
                       </div>
-                      <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Dashboard Preview</div>
-                      <div className="w-4 h-4 rounded-full bg-slate-100" />
+                      <div className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">Core Interface v2</div>
+                      <div className="w-3 h-3 rounded-full bg-slate-800" />
                     </div>
                     <div className="mt-20 px-10">
-                      <div className="h-6 w-1/3 bg-slate-200 rounded-full mb-4 animate-pulse" />
-                      <div className="h-4 w-1/2 bg-slate-100 rounded-full mb-8 animate-pulse" />
+                      <div className="h-4 w-1/3 bg-slate-800 rounded-sm mb-4 animate-pulse" />
+                      <div className="h-2 w-1/2 bg-slate-900 rounded-sm mb-8 animate-pulse" />
                       <div className="grid grid-cols-3 gap-4">
                         {[1, 2, 3].map(i => (
-                          <div key={i} className="h-24 bg-white rounded-2xl border border-slate-100 animate-pulse delay-[200ms]" />
+                          <div key={i} className="h-24 bg-slate-900 border border-white/5 animate-pulse delay-[200ms]" />
                         ))}
                       </div>
                     </div>
