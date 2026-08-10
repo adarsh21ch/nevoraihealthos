@@ -32,6 +32,45 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+
+  const routeAfterAuth = async () => {
+    const { role, tenantSlug } = await getUserRole();
+    if (role === "platform_admin") {
+      navigate({ to: "/admin" });
+    } else if (role === "owner" || role === "staff") {
+      navigate({ to: "/dashboard" });
+    } else if (tenantSlug) {
+      navigate({ to: `/p/${tenantSlug}/today` });
+    } else {
+      navigate({ to: "/" });
+    }
+  };
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: window.location.origin + "/login" },
+      });
+      if (error) throw error;
+
+      if (data.session) {
+        toast.success("Account created. Welcome!");
+        await routeAfterAuth();
+      } else {
+        toast.success("Account created. Check your email to confirm, then sign in.");
+        setMode("signin");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Could not create account");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,16 +83,7 @@ function LoginPage() {
 
       if (error) throw error;
 
-      const { role, tenantSlug } = await getUserRole();
-      if (role === "platform_admin") {
-        navigate({ to: "/admin" });
-      } else if (role === "owner" || role === "staff") {
-        navigate({ to: "/dashboard" });
-      } else if (tenantSlug) {
-        navigate({ to: `/p/${tenantSlug}/today` });
-      } else {
-        navigate({ to: "/" });
-      }
+      await routeAfterAuth();
       toast.success("Welcome back!");
     } catch (error: any) {
       console.error("Login error details:", error);
