@@ -17,7 +17,10 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
+import { Route as AuthenticatedPTenantSlugGuideRouteImport } from './routes/_authenticated/p.$tenantSlug.guide'
 import { Route as AuthenticatedPTenantSlugJourneyRouteImport } from './routes/_authenticated/p.$tenantSlug.journey'
+import { Route as AuthenticatedPTenantSlugKitRouteImport } from './routes/_authenticated/p.$tenantSlug.kit'
+import { Route as AuthenticatedPTenantSlugProgressRouteImport } from './routes/_authenticated/p.$tenantSlug.progress'
 import { Route as AuthenticatedPTenantSlugTodayRouteImport } from './routes/_authenticated/p.$tenantSlug.today'
 import { Route as AdminContentProgramsProgramIdDaysRouteImport } from './routes/admin/content/programs/$programId/days'
 
@@ -62,10 +65,28 @@ const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
   path: '/p/$tenantSlug/join',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPTenantSlugGuideRoute =
+  AuthenticatedPTenantSlugGuideRouteImport.update({
+    id: '/guide',
+    path: '/guide',
+    getParentRoute: () => AuthenticatedPTenantSlugRoute,
+  } as any)
 const AuthenticatedPTenantSlugJourneyRoute =
   AuthenticatedPTenantSlugJourneyRouteImport.update({
     id: '/journey',
     path: '/journey',
+    getParentRoute: () => AuthenticatedPTenantSlugRoute,
+  } as any)
+const AuthenticatedPTenantSlugKitRoute =
+  AuthenticatedPTenantSlugKitRouteImport.update({
+    id: '/kit',
+    path: '/kit',
+    getParentRoute: () => AuthenticatedPTenantSlugRoute,
+  } as any)
+const AuthenticatedPTenantSlugProgressRoute =
+  AuthenticatedPTenantSlugProgressRouteImport.update({
+    id: '/progress',
+    path: '/progress',
     getParentRoute: () => AuthenticatedPTenantSlugRoute,
   } as any)
 const AuthenticatedPTenantSlugTodayRoute =
@@ -90,7 +111,10 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
+  '/p/$tenantSlug/kit': typeof AuthenticatedPTenantSlugKitRoute
+  '/p/$tenantSlug/progress': typeof AuthenticatedPTenantSlugProgressRoute
   '/p/$tenantSlug/today': typeof AuthenticatedPTenantSlugTodayRoute
   '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
@@ -103,7 +127,10 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
+  '/p/$tenantSlug/kit': typeof AuthenticatedPTenantSlugKitRoute
+  '/p/$tenantSlug/progress': typeof AuthenticatedPTenantSlugProgressRoute
   '/p/$tenantSlug/today': typeof AuthenticatedPTenantSlugTodayRoute
   '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
@@ -117,7 +144,10 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
+  '/_authenticated/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/_authenticated/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
+  '/_authenticated/p/$tenantSlug/kit': typeof AuthenticatedPTenantSlugKitRoute
+  '/_authenticated/p/$tenantSlug/progress': typeof AuthenticatedPTenantSlugProgressRoute
   '/_authenticated/p/$tenantSlug/today': typeof AuthenticatedPTenantSlugTodayRoute
   '/admin/content/programs/$programId/days': typeof AdminContentProgramsProgramIdDaysRoute
 }
@@ -132,7 +162,10 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/p/$tenantSlug'
     | '/p/$tenantSlug/join'
+    | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
+    | '/p/$tenantSlug/kit'
+    | '/p/$tenantSlug/progress'
     | '/p/$tenantSlug/today'
     | '/admin/content/programs/$programId/days'
   fileRoutesByTo: FileRoutesByTo
@@ -145,7 +178,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/p/$tenantSlug'
     | '/p/$tenantSlug/join'
+    | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
+    | '/p/$tenantSlug/kit'
+    | '/p/$tenantSlug/progress'
     | '/p/$tenantSlug/today'
     | '/admin/content/programs/$programId/days'
   id:
@@ -158,7 +194,10 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/_authenticated/p/$tenantSlug'
     | '/p/$tenantSlug/join'
+    | '/_authenticated/p/$tenantSlug/guide'
     | '/_authenticated/p/$tenantSlug/journey'
+    | '/_authenticated/p/$tenantSlug/kit'
+    | '/_authenticated/p/$tenantSlug/progress'
     | '/_authenticated/p/$tenantSlug/today'
     | '/admin/content/programs/$programId/days'
   fileRoutesById: FileRoutesById
@@ -232,11 +271,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PTenantSlugJoinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/p/$tenantSlug/guide': {
+      id: '/_authenticated/p/$tenantSlug/guide'
+      path: '/guide'
+      fullPath: '/p/$tenantSlug/guide'
+      preLoaderRoute: typeof AuthenticatedPTenantSlugGuideRouteImport
+      parentRoute: typeof AuthenticatedPTenantSlugRoute
+    }
     '/_authenticated/p/$tenantSlug/journey': {
       id: '/_authenticated/p/$tenantSlug/journey'
       path: '/journey'
       fullPath: '/p/$tenantSlug/journey'
       preLoaderRoute: typeof AuthenticatedPTenantSlugJourneyRouteImport
+      parentRoute: typeof AuthenticatedPTenantSlugRoute
+    }
+    '/_authenticated/p/$tenantSlug/kit': {
+      id: '/_authenticated/p/$tenantSlug/kit'
+      path: '/kit'
+      fullPath: '/p/$tenantSlug/kit'
+      preLoaderRoute: typeof AuthenticatedPTenantSlugKitRouteImport
+      parentRoute: typeof AuthenticatedPTenantSlugRoute
+    }
+    '/_authenticated/p/$tenantSlug/progress': {
+      id: '/_authenticated/p/$tenantSlug/progress'
+      path: '/progress'
+      fullPath: '/p/$tenantSlug/progress'
+      preLoaderRoute: typeof AuthenticatedPTenantSlugProgressRouteImport
       parentRoute: typeof AuthenticatedPTenantSlugRoute
     }
     '/_authenticated/p/$tenantSlug/today': {
@@ -270,13 +330,20 @@ const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
 )
 
 interface AuthenticatedPTenantSlugRouteChildren {
+  AuthenticatedPTenantSlugGuideRoute: typeof AuthenticatedPTenantSlugGuideRoute
   AuthenticatedPTenantSlugJourneyRoute: typeof AuthenticatedPTenantSlugJourneyRoute
+  AuthenticatedPTenantSlugKitRoute: typeof AuthenticatedPTenantSlugKitRoute
+  AuthenticatedPTenantSlugProgressRoute: typeof AuthenticatedPTenantSlugProgressRoute
   AuthenticatedPTenantSlugTodayRoute: typeof AuthenticatedPTenantSlugTodayRoute
 }
 
 const AuthenticatedPTenantSlugRouteChildren: AuthenticatedPTenantSlugRouteChildren =
   {
+    AuthenticatedPTenantSlugGuideRoute: AuthenticatedPTenantSlugGuideRoute,
     AuthenticatedPTenantSlugJourneyRoute: AuthenticatedPTenantSlugJourneyRoute,
+    AuthenticatedPTenantSlugKitRoute: AuthenticatedPTenantSlugKitRoute,
+    AuthenticatedPTenantSlugProgressRoute:
+      AuthenticatedPTenantSlugProgressRoute,
     AuthenticatedPTenantSlugTodayRoute: AuthenticatedPTenantSlugTodayRoute,
   }
 
