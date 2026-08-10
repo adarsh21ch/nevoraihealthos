@@ -45,11 +45,11 @@ function Index() {
             {['Infrastructure', 'Solutions', 'Pricing', 'Developers'].map((item, i) => (
               <motion.a 
                 key={item}
-                initial={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.05 }}
                 href={`#${item.toLowerCase()}`} 
-                className="text-[13px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider"
+                className="text-[11px] font-black text-slate-400 hover:text-white transition-colors uppercase tracking-[0.2em]"
               >
                 {item}
               </motion.a>
