@@ -1,6 +1,43 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss";
 @source "../src";
-@import "tw-animate-css";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Georgia", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-brand-50: oklch(0.975 0.015 250);
+  --color-brand-100: oklch(0.93 0.035 250);
+  --color-brand-500: oklch(0.6 0.15 250);
+  --color-brand-600: oklch(0.5 0.18 250);
+  --color-brand-900: oklch(0.2 0.05 250);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@utility glass-card {
+  @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl shadow-slate-200/50;
+}
+
+@utility text-gradient {
+  @apply bg-clip-text text-transparent bg-linear-to-r from-slate-900 via-slate-800 to-slate-900;
+}
+
+@utility animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
 
 @custom-variant dark (&:is(.dark *));
 

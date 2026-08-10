@@ -1,186 +1,394 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { 
+  ArrowRight, 
+  ShieldCheck, 
+  Zap, 
+  BarChart3, 
+  Globe, 
+  Users, 
+  Layers,
+  ChevronRight,
+  CheckCircle2,
+  Play
+} from "lucide-react";
+import { useRef } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.05], [1, 0.95]);
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#fcfbf8]">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
-        <div className="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-[#0f172a] rounded-lg flex items-center justify-center text-white font-bold text-lg">H</div>
-            <span className="text-xl font-bold tracking-tighter text-[#0f172a]">Health OS</span>
+    <div ref={containerRef} className="flex flex-col min-h-screen bg-[#fcfbf8] selection:bg-blue-100 selection:text-blue-900">
+      <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/50 backdrop-blur-2xl border-b border-slate-200/50">
+        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2.5 group cursor-pointer"
+          >
+            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">H</div>
+            <span className="text-xl font-bold tracking-tight text-slate-900">Health OS</span>
+          </motion.div>
+          
+          <div className="hidden md:flex items-center gap-10">
+            {['Infrastructure', 'Solutions', 'Pricing', 'Developers'].map((item, i) => (
+              <motion.a 
+                key={item}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                href={`#${item.toLowerCase()}`} 
+                className="text-[13px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider"
+              >
+                {item}
+              </motion.a>
+            ))}
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-gray-500 hover:text-[#0f172a] transition-colors">Features</a>
-            <a href="#solutions" className="text-sm font-medium text-gray-500 hover:text-[#0f172a] transition-colors">Solutions</a>
-            <a href="#pricing" className="text-sm font-medium text-gray-500 hover:text-[#0f172a] transition-colors">Pricing</a>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-[#0f172a] transition-colors">
+          
+          <div className="flex items-center gap-6">
+            <Link to="/login" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
               Sign In
             </Link>
             <Link 
               to="/login" 
-              className="px-5 py-2 bg-[#0f172a] text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-all shadow-sm"
+              className="group relative px-6 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] transition-all overflow-hidden"
             >
-              Get Started
+              <span className="relative z-10 flex items-center gap-2">
+                Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-linear-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-8 overflow-hidden text-center">
-        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold tracking-wider uppercase mb-8 border border-blue-100">
-            Introducing Health OS 2.0
-          </div>
+      <header className="relative pt-40 pb-20 md:pt-60 md:pb-40 px-6 overflow-hidden">
+        <motion.div 
+          style={{ opacity, scale }}
+          className="max-w-7xl mx-auto flex flex-col items-center relative z-10 text-center"
+        >
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/50 border border-blue-100 text-blue-700 text-[11px] font-black tracking-[0.15em] uppercase mb-10 backdrop-blur-sm shadow-sm"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+            Next-Gen Infrastructure for Health
+          </motion.div>
           
-          <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-[#0f172a] leading-[1.05] mb-8 max-w-5xl">
-            Empower your health business with <span className="text-blue-600">intelligence</span>.
-          </h1>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
+          >
+            Empower your health business with <span className="relative inline-block">intelligence<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-blue-500/20 rounded-full" /></span>.
+          </motion.h1>
           
-          <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto leading-relaxed mb-12">
-            The multi-tenant infrastructure for health coaches and distributors to scale personalized wellness programs globally.
-          </p>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-16 font-medium"
+          >
+            The world's first multi-tenant orchestration layer designed specifically for health coaches and wellness distributors.
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          >
             <Link 
               to="/login" 
-              className="w-full sm:w-auto px-10 py-5 bg-[#0f172a] text-white rounded-2xl text-lg font-semibold hover:bg-slate-800 hover:scale-[1.02] transition-all shadow-2xl shadow-slate-200"
+              className="w-full sm:w-auto px-12 py-6 bg-slate-900 text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
             >
-              Start Building for Free
+              Start Building <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
               to="/p/demo/join" 
-              className="w-full sm:w-auto px-10 py-5 bg-white border border-slate-200 text-[#0f172a] rounded-2xl text-lg font-semibold hover:bg-slate-50 hover:scale-[1.02] transition-all"
+              className="w-full sm:w-auto px-12 py-6 glass-card text-slate-900 rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
             >
-              Explore Demo
+              <Play className="w-5 h-5 fill-slate-900" /> Watch Demo
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-0 pointer-events-none opacity-40">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-[120px]"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-50 rounded-full blur-[120px]"></div>
+        {/* Dynamic Background Elements */}
+        <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              x: [0, 50, 0],
+              y: [0, 30, 0]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-blue-100/40 rounded-full blur-[160px]" 
+          />
+          <motion.div 
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              x: [0, -50, 0],
+              y: [0, -30, 0]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-50/40 rounded-full blur-[160px]" 
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20" />
         </div>
       </header>
 
-      {/* Stats/Logo Cloud */}
-      <section className="py-12 px-8 bg-white border-y border-slate-50">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          <div className="font-black text-2xl text-slate-400">VITAMINS+</div>
-          <div className="font-black text-2xl text-slate-400">HEALTHCORE</div>
-          <div className="font-black text-2xl text-slate-400">BIOSTRIDE</div>
-          <div className="font-black text-2xl text-slate-400">WELLNESS CO.</div>
+      {/* Trusted By Section */}
+      <section className="py-24 px-6 relative">
+        <div className="max-w-7xl mx-auto border-y border-slate-200/50 py-16">
+          <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-16">
+            Empowering global health brands
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-32 opacity-30 grayscale contrast-[0.8]">
+            {['VITAMINS+', 'HEALTHCORE', 'BIOSTRIDE', 'WELLNESS CO.', 'PURELIFE'].map((name) => (
+              <span key={name} className="font-black text-3xl tracking-tighter text-slate-900">{name}</span>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section id="features" className="py-24 px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4">Core Infrastructure</h2>
-          <h3 className="text-4xl md:text-5xl font-bold text-[#0f172a]">Built for Scale.</h3>
+      {/* Core Infrastructure - Grid Layout */}
+      <section id="infrastructure" className="py-32 px-6 max-w-7xl mx-auto">
+        <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="max-w-2xl">
+            <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em] mb-6">Foundational Layer</h2>
+            <h3 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1]">
+              Engineered for the future of wellness.
+            </h3>
+          </div>
+          <p className="text-slate-500 text-lg max-w-sm pb-2">
+            A specialized stack designed to handle the complexities of health data isolation, program automation, and patient engagement.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
+        <div className="grid md:grid-cols-12 gap-6">
+          <div className="md:col-span-8 p-12 rounded-[3rem] bg-white border border-slate-100 hover:shadow-2xl hover:shadow-blue-50/50 transition-all duration-500 group relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-10 group-hover:scale-110 transition-transform duration-500">
+                <Layers className="w-8 h-8" />
+              </div>
+              <h4 className="text-3xl font-bold text-slate-900 mb-6">Multi-Tenant Orchestration</h4>
+              <p className="text-slate-500 text-lg leading-relaxed max-w-md">
+                Launch unlimited distributor-branded portals on a single core. Complete data isolation with zero infrastructure overhead.
+              </p>
+              <div className="mt-12 flex gap-4">
+                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">RLS Isolated</div>
+                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">Dynamic Theming</div>
+              </div>
+            </div>
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-linear-to-br from-blue-50 to-transparent rounded-full -mb-20 -mr-20 group-hover:scale-125 transition-transform duration-700" />
+          </div>
+
+          <div className="md:col-span-4 p-12 rounded-[3rem] bg-slate-900 text-white border border-slate-800 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-blue-400 mb-10 group-hover:rotate-12 transition-transform">
+                <Zap className="w-8 h-8" />
+              </div>
+              <h4 className="text-3xl font-bold mb-6">Smart Program Engine</h4>
+              <p className="text-slate-400 text-lg leading-relaxed">
+                Visual workflow builder for health journeys. Automate tasks, follow-ups, and biometric tracking.
+              </p>
+              <div className="mt-10 pt-10 border-t border-white/10 flex items-center justify-between">
+                <span className="text-sm font-bold opacity-60">Learn more</span>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </div>
+            </div>
+          </div>
+
           {[
-            {
-              title: "Multi-Tenant Architecture",
-              desc: "Dedicated workspaces for every distributor with complete data isolation and custom branding.",
-              icon: "🏢"
-            },
-            {
-              title: "Smart Program Builder",
-              desc: "Design complex health journeys with automated tasks, meal guidance, and supplement tracking.",
-              icon: "⚡"
-            },
-            {
-              title: "Patient Adherence",
-              desc: "Real-time tracking of mood, water, and task completion with automated follow-ups for at-risk users.",
-              icon: "📈"
-            }
-          ].map((f, i) => (
-            <div key={i} className="p-8 rounded-3xl bg-white border border-slate-100 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-50/50 transition-all group">
-              <div className="text-4xl mb-6 group-hover:scale-110 transition-transform inline-block">{f.icon}</div>
-              <h4 className="text-xl font-bold text-[#0f172a] mb-4">{f.title}</h4>
-              <p className="text-slate-500 leading-relaxed">{f.desc}</p>
+            { title: "Biometric Intelligence", icon: <BarChart3 />, desc: "Real-time health trend analysis.", color: "bg-emerald-50 text-emerald-600" },
+            { title: "Secure Data Vault", icon: <ShieldCheck />, desc: "HIPAA-ready encrypted storage.", color: "bg-indigo-50 text-indigo-600" },
+            { title: "Global CDN", icon: <Globe />, desc: "Edge-delivery for global teams.", color: "bg-amber-50 text-amber-600" },
+          ].map((item, i) => (
+            <div key={i} className="md:col-span-4 p-10 rounded-[3rem] bg-white border border-slate-100 hover:border-slate-200 transition-all duration-300 group">
+              <div className={`w-14 h-14 rounded-2xl ${item.color} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
+                {item.icon}
+              </div>
+              <h4 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h4>
+              <p className="text-slate-500">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-8">
-        <div className="max-w-5xl mx-auto bg-[#0f172a] rounded-[40px] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">Ready to transform your health business?</h2>
-            <p className="text-xl text-slate-300 mb-12 max-w-2xl mx-auto">
-              Join 500+ distributors worldwide who are scaling their impact with Health OS.
-            </p>
-            <Link 
-              to="/login" 
-              className="inline-block px-10 py-5 bg-white text-[#0f172a] rounded-2xl text-lg font-bold hover:bg-slate-100 hover:scale-[1.05] transition-all"
-            >
-              Get Started for Free
-            </Link>
+      {/* Feature Showcase / Demo Mockup */}
+      <section className="py-32 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-24 items-center">
+            <div className="relative">
+              <motion.div 
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative z-20"
+              >
+                <div className="glass-card rounded-[2.5rem] p-4 shadow-3xl">
+                  <div className="bg-slate-50 rounded-[2rem] overflow-hidden border border-slate-100 aspect-video relative">
+                    <div className="absolute top-4 left-4 right-4 flex justify-between items-center px-4 py-2 bg-white/80 backdrop-blur-md rounded-full border border-slate-100">
+                      <div className="flex gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-400" />
+                        <div className="w-2 h-2 rounded-full bg-amber-400" />
+                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                      </div>
+                      <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Dashboard Preview</div>
+                      <div className="w-4 h-4 rounded-full bg-slate-100" />
+                    </div>
+                    <div className="mt-20 px-10">
+                      <div className="h-6 w-1/3 bg-slate-200 rounded-full mb-4 animate-pulse" />
+                      <div className="h-4 w-1/2 bg-slate-100 rounded-full mb-8 animate-pulse" />
+                      <div className="grid grid-cols-3 gap-4">
+                        {[1, 2, 3].map(i => (
+                          <div key={i} className="h-24 bg-white rounded-2xl border border-slate-100 animate-pulse delay-[200ms]" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              {/* Floating badges */}
+              <motion.div 
+                animate={{ y: [0, -20, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-10 -right-10 z-30 px-6 py-4 glass-card rounded-2xl flex items-center gap-4 border-emerald-100 shadow-2xl"
+              >
+                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System Health</div>
+                  <div className="text-sm font-bold text-slate-900">100% Operational</div>
+                </div>
+              </motion.div>
+            </div>
+
+            <div className="space-y-12">
+              <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight">Beautifully simple for coaches, powerful for teams.</h2>
+              <div className="space-y-8">
+                {[
+                  { t: "Whitelabel Everything", d: "Your brand, your logo, your colors. Completely invisible infrastructure." },
+                  { t: "Automated Day-to-Day", d: "From onboarding to Day 90 follow-ups, everything runs on autopilot." },
+                  { t: "Enterprise Permissions", d: "Roles for Admins, Distributors, Mentors, and Customers." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-6 group">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+                      {i + 1}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{item.t}</h4>
+                      <p className="text-slate-500 leading-relaxed">{item.d}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[100%] bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
-          <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[100%] bg-indigo-600 rounded-full blur-[100px] opacity-20"></div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-16 px-8 border-t border-slate-100 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#0f172a] rounded-lg flex items-center justify-center text-white font-bold">H</div>
-                <span className="text-xl font-bold tracking-tighter text-[#0f172a]">Health OS</span>
-              </div>
-              <p className="text-slate-400 max-w-xs leading-relaxed">
-                The leading infrastructure for modern health programs and wellness distribution.
+      {/* Modern CTA / Final Section */}
+      <section className="py-40 px-6">
+        <div className="max-w-6xl mx-auto relative group">
+          <div className="absolute inset-0 bg-slate-900 rounded-[4rem] transform -rotate-1 scale-[1.02] group-hover:rotate-0 transition-transform duration-700 -z-10 opacity-10" />
+          <div className="relative bg-slate-900 rounded-[4rem] p-16 md:p-32 text-center overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.3)]">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative z-10"
+            >
+              <h2 className="text-5xl md:text-8xl font-bold text-white tracking-tighter mb-12 leading-[0.9]">
+                Start your next health venture today.
+              </h2>
+              <p className="text-xl md:text-2xl text-slate-400 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">
+                Everything you need to launch, scale, and manage health programs globally.
               </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+                <Link 
+                  to="/login" 
+                  className="w-full sm:w-auto px-16 py-8 bg-white text-slate-900 rounded-[2.5rem] text-2xl font-black hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center gap-4"
+                >
+                  Get Started for Free <ArrowRight className="w-8 h-8" />
+                </Link>
+                <a href="mailto:sales@healthos.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
+                  Talk to our sales team
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Background glowing effects */}
+            <div className="absolute top-0 right-0 w-[60%] h-[100%] bg-blue-600 rounded-full blur-[160px] opacity-20 -mr-[20%]" />
+            <div className="absolute bottom-0 left-0 w-[60%] h-[100%] bg-indigo-600 rounded-full blur-[160px] opacity-20 -ml-[20%]" />
+          </div>
+        </div>
+      </section>
+
+      {/* Refined Footer */}
+      <footer className="py-32 px-6 bg-white border-t border-slate-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-20 mb-32">
+            <div className="lg:col-span-5 space-y-10">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">H</div>
+                <span className="text-2xl font-bold tracking-tight text-slate-900">Health OS</span>
+              </div>
+              <p className="text-slate-500 text-lg leading-relaxed max-w-sm font-medium">
+                The premier infrastructure for modern health programs and wellness distribution at scale.
+              </p>
+              <div className="flex gap-4">
+                {[Users, Globe, ShieldCheck].map((Icon, i) => (
+                  <div key={i} className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:border-slate-200 transition-all cursor-pointer">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                ))}
+              </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-24">
-              <div className="space-y-4">
-                <h5 className="font-bold text-[#0f172a]">Product</h5>
-                <ul className="space-y-3 text-sm text-slate-500">
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Infrastructure</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Program Builder</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">API</a></li>
-                </ul>
-              </div>
-              <div className="space-y-4">
-                <h5 className="font-bold text-[#0f172a]">Company</h5>
-                <ul className="space-y-3 text-sm text-slate-500">
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">About</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Contact</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Privacy</a></li>
-                </ul>
-              </div>
-              <div className="space-y-4">
-                <h5 className="font-bold text-[#0f172a]">Admin</h5>
-                <ul className="space-y-3 text-sm text-slate-500">
-                  <li><Link to="/login" className="hover:text-[#0f172a] transition-colors text-left">Login</Link></li>
-                  <li><a href="/admin" className="hover:text-[#0f172a] transition-colors text-left">Platform Admin</a></li>
-                </ul>
-              </div>
+            <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-16">
+              {[
+                { title: "Platform", links: ["Infrastructure", "Program Builder", "API Docs", "Changelog"] },
+                { title: "Company", links: ["About Us", "Contact", "Privacy Policy", "Terms"] },
+                { title: "Resources", links: ["Community", "Guides", "Help Center", "Status"] }
+              ].map((group) => (
+                <div key={group.title} className="space-y-8">
+                  <h5 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">{group.title}</h5>
+                  <ul className="space-y-5">
+                    {group.links.map(link => (
+                      <li key={link}>
+                        <a href="#" className="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">{link}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400 text-xs font-medium border-t border-slate-50 pt-8">
-            <p>© 2026 Health OS. All rights reserved.</p>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-[#0f172a] transition-colors">Twitter</a>
-              <a href="#" className="hover:text-[#0f172a] transition-colors">LinkedIn</a>
-              <a href="#" className="hover:text-[#0f172a] transition-colors">Github</a>
+          <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
+            <p className="text-slate-400 text-sm font-medium">© 2026 Health OS Platform. All rights reserved.</p>
+            <div className="flex items-center gap-8">
+              <Link to="/login" className="text-sm font-bold text-slate-900">Staff Portal</Link>
+              <a href="/admin" className="text-sm font-bold text-slate-900">Admin Console</a>
             </div>
           </div>
         </div>
