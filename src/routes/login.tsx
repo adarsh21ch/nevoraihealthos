@@ -172,11 +172,17 @@ function LoginPage() {
               <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors group mb-8">
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Home
               </Link>
-              <h2 className="text-4xl font-bold text-slate-900 tracking-tight">Sign In</h2>
-              <p className="text-slate-500 font-medium">Platform Admin & Staff Authentication</p>
+              <h2 className="text-4xl font-bold text-slate-900 tracking-tight">
+                {mode === "signin" ? "Sign In" : "Create Account"}
+              </h2>
+              <p className="text-slate-500 font-medium">
+                {mode === "signin"
+                  ? "Platform Admin & Staff Authentication"
+                  : "Register with your email and password"}
+              </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={mode === "signin" ? handleLogin : handleSignup} className="space-y-6">
               <div className="space-y-5">
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">Email Address</label>
@@ -196,14 +202,14 @@ function LoginPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between items-center px-1">
                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Password</label>
-                    <button
+                    {mode === "signin" && <button
                       type="button"
                       onClick={handleForgotPassword}
                       disabled={resetLoading}
                       className="text-[11px] font-black text-blue-600 hover:text-blue-700 uppercase tracking-widest disabled:opacity-50"
                     >
                       Reset
-                    </button>
+                    </button>}
                   </div>
                   <div className="relative group">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-blue-500 transition-colors" />
@@ -224,9 +230,21 @@ function LoginPage() {
                 className="w-full h-16 rounded-[2rem] bg-slate-900 text-white hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] transition-all font-bold text-xl shadow-xl shadow-slate-200" 
                 disabled={loading}
               >
-                {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : "Enter Dashboard"}
+                {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : mode === "signin" ? "Enter Dashboard" : "Create Account"}
               </Button>
             </form>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+                className="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                {mode === "signin"
+                  ? "Don't have an account? Create one"
+                  : "Already have an account? Sign in"}
+              </button>
+            </div>
 
             <div className="pt-10 border-t border-slate-100 flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 flex-shrink-0">
