@@ -30,15 +30,15 @@ function Index() {
 
   return (
     <div ref={containerRef} className="flex flex-col min-h-screen bg-[#0f172a] text-slate-100 selection:bg-blue-900 selection:text-white">
-      <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/50 backdrop-blur-2xl border-b border-slate-200/50">
+      <nav className="fixed top-0 left-0 right-0 z-[100] bg-slate-950/80 backdrop-blur-2xl border-b border-white/5">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             className="flex items-center gap-2.5 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">H</div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">Health OS</span>
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all duration-500">H</div>
+            <span className="text-xl font-black tracking-tight text-white uppercase italic">Health OS</span>
           </motion.div>
           
           <div className="hidden md:flex items-center gap-10">
