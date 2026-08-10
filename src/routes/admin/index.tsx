@@ -134,7 +134,16 @@ function AdminDashboard() {
                   value={formData.ownerEmail}
                   onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
                 />
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Access Code</label>
+                <Input 
+                  required
+                  placeholder="e.g. JOIN2026"
+                  value={formData.accessCode}
+                  onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
+                />
               </div>
+            </div>
               <Button type="submit" className="w-full" disabled={createMutation.isPending}>
                 {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Tenant"}
               </Button>
