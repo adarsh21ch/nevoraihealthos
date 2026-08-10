@@ -73,39 +73,39 @@ function Index() {
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-40 pb-20 md:pt-60 md:pb-40 px-6 overflow-hidden">
+      <header className="relative pt-48 pb-32 md:pt-64 md:pb-48 px-6 overflow-hidden">
         <motion.div 
           style={{ opacity, scale }}
           className="max-w-7xl mx-auto flex flex-col items-center relative z-10 text-center"
         >
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/50 border border-blue-100 text-blue-700 text-[11px] font-black tracking-[0.15em] uppercase mb-10 backdrop-blur-sm shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1 rounded-sm bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black tracking-[0.25em] uppercase mb-12"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            Next-Gen Infrastructure for Health
+            System v2.0 Released
           </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
+            className="text-6xl md:text-[8rem] font-black tracking-[-0.06em] text-white leading-[0.85] mb-12 max-w-6xl uppercase italic"
           >
-            Empower your health business with <span className="relative inline-block">intelligence<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-blue-500/20 rounded-full" /></span>.
+            Scale your <span className="text-blue-500">Health Empire</span>.
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-16 font-medium"
+            className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-16 font-medium tracking-tight"
           >
-            The world's first multi-tenant orchestration layer designed specifically for health coaches and wellness distributors.
+            High-performance infrastructure for the world's leading health brands and wellness distributors.
           </motion.p>
 
           <motion.div 
