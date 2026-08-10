@@ -143,8 +143,8 @@ function OnboardingWizard() {
       const { error: measureError } = await supabase
         .from("measurements")
         .insert({
-          customer_id: customer.id,
-          taken_on: new Date().toISOString().split('T')[0],
+          customer_id: customer.id as string,
+          taken_on: new Date().toISOString().split('T')[0] as string,
           weight_kg: parseFloat(formData.weight),
           waist_cm: parseFloat(formData.waist),
           hip_cm: formData.hip ? parseFloat(formData.hip) : null,
