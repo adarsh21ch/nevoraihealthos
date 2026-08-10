@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { checkAdminStatus, getTenants } from "@/lib/admin.functions";
+import { checkAdminStatus, getTenants, getUserRole } from "@/lib/admin.functions";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createTenant, updateTenantStatus } from "@/lib/admin.functions";
@@ -21,8 +21,11 @@ export const Route = createFileRoute("/admin/")({
         throw redirect({ to: "/login" });
       }
 
-      const { isAdmin } = await checkAdminStatus();
-      if (!isAdmin) {
+      const { role } = await getUserRole();
+      if (role !== "platform_admin") {
+        if (role === "owner" || role === "staff") {
+          throw redirect({ to: "/dashboard" });
+        }
         throw redirect({ to: "/" });
       }
     } catch (e) {
