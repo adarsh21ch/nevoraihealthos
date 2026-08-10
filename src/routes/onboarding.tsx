@@ -141,8 +141,8 @@ function OnboardingWizard() {
         _age: parseInt(formData.age),
         _height_cm: heightVal,
         _goal_weight_kg: parseFloat(formData.goal_weight),
-        _program_id: formData.program_id,
-        _start_date: formData.start_date,
+        _program_id: formData.program_id as string,
+        _start_date: formData.start_date as string,
         _weight_kg: parseFloat(formData.weight),
         _waist_cm: parseFloat(formData.waist),
         _hip_cm: formData.hip ? parseFloat(formData.hip) : undefined,
@@ -159,7 +159,7 @@ function OnboardingWizard() {
           .from("progress_photos")
           .insert({
             customer_id: customer.id,
-            taken_on: formData.start_date,
+            taken_on: formData.start_date as string,
             storage_path: uploadedPath,
             pose: 'front',
             share_consent: false
