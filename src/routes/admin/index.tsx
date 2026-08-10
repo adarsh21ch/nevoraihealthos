@@ -51,6 +51,7 @@ function AdminDashboard() {
     name: "",
     ownerEmail: "",
     ownerName: "",
+    accessCode: "",
   });
 
   const createMutation = useMutation({
@@ -58,7 +59,7 @@ function AdminDashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-tenants"] });
       setIsDialogOpen(false);
-      setFormData({ slug: "", name: "", ownerEmail: "", ownerName: "" });
+      setFormData({ slug: "", name: "", ownerEmail: "", ownerName: "", accessCode: "" });
       toast.success("Tenant and owner account created successfully");
     },
     onError: (error: any) => {
