@@ -50,7 +50,7 @@ function OnboardingWizard() {
       const { error } = await supabase
         .from("customers")
         .update(vars)
-        .eq("user_id", user?.id);
+        .eq("user_id", user?.id || "");
       if (error) throw error;
     },
     onSuccess: () => {
