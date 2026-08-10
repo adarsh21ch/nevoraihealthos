@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Loader2, ChevronRight, ChevronLeft, Camera } from "lucide-react";
+import { Loader2, ChevronRight, ChevronLeft, Camera, X, Check } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/onboarding")({
@@ -22,9 +22,15 @@ export const Route = createFileRoute("/onboarding")({
 
 function OnboardingWizard() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [isHeightMetric, setIsHeightMetric] = useState(true);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedPath, setUploadedPath] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     name: "",
     gender: "",
@@ -41,18 +47,18 @@ function OnboardingWizard() {
     arm: "",
   });
 
-  const { data: customer, isLoading: customerLoading } = useQuery({
+  const { data: customer, isLoading: customerLoading, error: customerError } = useQuery({
     queryKey: ["current-customer"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
       const { data, error } = await supabase
         .from("customers")
-        .select("id, name, phone, health_consent_at, user_id, tenant_id")
+        .select("id, name, phone, health_consent_at, user_id, tenant_id, tenants(slug)")
         .eq("user_id", user.id)
         .single();
       if (error) throw error;
-      return data;
+      return data as any;
     },
   });
 
@@ -82,17 +88,24 @@ function OnboardingWizard() {
     }
   });
 
+  // Redirect if already enrolled
   useEffect(() => {
-    if (enrollmentCount && enrollmentCount > 0 && customer?.tenant_id) {
-      window.location.href = `/p/${customer.tenant_id}/today`;
+    if (enrollmentCount && enrollmentCount > 0 && customer?.tenants?.slug) {
+      navigate({ to: `/p/${customer.tenants.slug}/today` });
     }
-  }, [enrollmentCount, customer]);
+  }, [enrollmentCount, customer, navigate]);
 
+  // Enforcement of health disclaimer
   useEffect(() => {
-    if (customer?.health_consent_at && step < 3) {
+    if (customerLoading) return;
+    
+    // Source of truth enforcement
+    if (!customer?.health_consent_at && step > 2) {
+      setStep(2);
+    } else if (customer?.health_consent_at && step < 3) {
       setStep(3);
     }
-  }, [customer, step]);
+  }, [customer, customerLoading, step]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (vars: any) => {
@@ -106,6 +119,9 @@ function OnboardingWizard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current-customer"] });
       setStep(s => s + 1);
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to update profile");
     }
   });
 
@@ -113,51 +129,48 @@ function OnboardingWizard() {
     mutationFn: async () => {
       if (!customer?.id) throw new Error("Customer not found");
       
-      const heightVal = isHeightMetric 
-        ? (formData.height ? parseFloat(formData.height) : 0)
-        : (formData.height.includes("'") 
-            ? (parseFloat(formData.height.split("'")[0] || "0") * 30.48 + parseFloat(formData.height.split("'")[1] || "0") * 2.54)
-            : (parseFloat(formData.height) * 30.48));
+      const heightVal = parseFloat(formData.height);
+      if (isNaN(heightVal) || heightVal < 90 || heightVal > 250) {
+        throw new Error("Please enter a valid height (90-250 cm)");
+      }
 
-      const { error: customerError } = await supabase
-        .from("customers")
-        .update({
-          name: formData.name,
-          gender: formData.gender,
-          age: parseInt(formData.age),
-          height_cm: heightVal,
-          goal_weight_kg: parseFloat(formData.goal_weight),
-        })
-        .eq("id", customer.id);
-      if (customerError) throw customerError;
+      const { error } = await supabase.rpc("complete_onboarding", {
+        _customer_id: customer.id,
+        _name: formData.name,
+        _gender: formData.gender,
+        _age: parseInt(formData.age),
+        _height_cm: heightVal,
+        _goal_weight_kg: parseFloat(formData.goal_weight),
+        _program_id: formData.program_id,
+        _start_date: formData.start_date,
+        _weight_kg: parseFloat(formData.weight),
+        _waist_cm: parseFloat(formData.waist),
+        _hip_cm: formData.hip ? parseFloat(formData.hip) : null,
+        _chest_cm: formData.chest ? parseFloat(formData.chest) : null,
+        _thigh_cm: formData.thigh ? parseFloat(formData.thigh) : null,
+        _arm_cm: formData.arm ? parseFloat(formData.arm) : null,
+      });
 
-      const { error: enrollmentError } = await supabase
-        .from("enrollments")
-        .insert({
-          customer_id: customer.id,
-          program_id: formData.program_id as string,
-          start_date: formData.start_date as string,
-        });
-      if (enrollmentError) throw enrollmentError;
+      if (error) throw error;
 
-      const { error: measureError } = await supabase
-        .from("measurements")
-        .insert({
-          customer_id: customer.id as string,
-          taken_on: new Date().toISOString().split('T')[0] as string,
-          weight_kg: parseFloat(formData.weight),
-          waist_cm: parseFloat(formData.waist),
-          hip_cm: formData.hip ? parseFloat(formData.hip) : null,
-          chest_cm: formData.chest ? parseFloat(formData.chest) : null,
-          thigh_cm: formData.thigh ? parseFloat(formData.thigh) : null,
-          arm_cm: formData.arm ? parseFloat(formData.arm) : null,
-        });
-      if (measureError) throw measureError;
+      // Create photo record if uploaded
+      if (uploadedPath) {
+        const { error: photoError } = await supabase
+          .from("progress_photos")
+          .insert({
+            customer_id: customer.id,
+            taken_on: formData.start_date,
+            storage_path: uploadedPath,
+            pose: 'front',
+            share_consent: false
+          });
+        if (photoError) console.error("Photo record failed:", photoError);
+      }
     },
     onSuccess: () => {
       toast.success("Onboarding complete!");
-      if (customer?.tenant_id) {
-        window.location.href = `/p/${customer.tenant_id}/today`;
+      if (customer?.tenants?.slug) {
+        navigate({ to: `/p/${customer.tenants.slug}/today` });
       }
     },
     onError: (err) => {
@@ -165,12 +178,90 @@ function OnboardingWizard() {
     }
   });
 
+  const toggleHeightUnit = () => {
+    const val = parseFloat(formData.height);
+    if (isNaN(val)) {
+      setIsHeightMetric(!isHeightMetric);
+      return;
+    }
+
+    if (isHeightMetric) {
+      // CM to FT/IN
+      const totalInches = val / 2.54;
+      const feet = Math.floor(totalInches / 12);
+      const inches = Math.round(totalInches % 12);
+      setFormData(p => ({ ...p, height: `${feet}.${inches}` }));
+    } else {
+      // FT.IN to CM
+      const [feetStr, inchesStr] = formData.height.split('.');
+      const feet = parseInt(feetStr || "0");
+      const inches = parseInt(inchesStr || "0");
+      const cm = Math.round((feet * 12 + inches) * 2.54);
+      setFormData(p => ({ ...p, height: cm.toString() }));
+    }
+    setIsHeightMetric(!isHeightMetric);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !customer?.id) return;
+
+    setIsUploading(true);
+    try {
+      // Client-side compression using canvas
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      await new Promise(resolve => img.onload = resolve);
+
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 1080;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      const blob = await new Promise<Blob | null>(resolve => 
+        canvas.toBlob(blob => resolve(blob), 'image/webp', 0.8)
+      );
+
+      if (!blob) throw new Error("Compression failed");
+
+      const fileName = `${Date.now()}_front.webp`;
+      const path = `${customer.id}/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from('progress-photos')
+        .upload(path, blob, {
+          cacheControl: '31536000',
+          upsert: true
+        });
+
+      if (error) throw error;
+
+      setUploadedPath(data.path);
+      setPhotoPreview(URL.createObjectURL(blob));
+      toast.success("Photo uploaded!");
+    } catch (err: any) {
+      toast.error("Upload failed: " + err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const nextStep = () => {
     if (step === 1) {
       if (!formData.name) { toast.error("Name is required"); return; }
       updateProfileMutation.mutate({ name: formData.name });
     } else if (step === 2) {
-      if (!disclaimerAccepted) { toast.error("Please accept disclaimer"); return; }
+      if (!disclaimerAccepted) return;
       updateProfileMutation.mutate({ health_consent_at: new Date().toISOString() });
     } else if (step === 3) {
       if (!formData.gender || !formData.age) { toast.error("All fields required"); return; }
@@ -194,6 +285,8 @@ function OnboardingWizard() {
   };
 
   if (customerLoading) return <div className="flex items-center justify-center min-h-screen"><Loader2 className="animate-spin" /></div>;
+  if (customerError) return <div className="flex items-center justify-center min-h-screen text-red-500">Error: {(customerError as any).message}</div>;
+  if (!customer) return <div className="flex items-center justify-center min-h-screen">Customer record not found. Please contact support.</div>;
 
   return (
     <div className="min-h-screen bg-[#fcfbf8] flex items-center justify-center p-4">
@@ -242,6 +335,7 @@ function OnboardingWizard() {
                   <li>Type 1 Diabetes or insulin-dependent Type 2</li>
                   <li>Kidney or liver disease</li>
                   <li>Heart conditions or high blood pressure</li>
+                  <li>Thyroid conditions</li>
                   <li>Active cancer or eating disorders</li>
                   <li>Any condition requiring prescription medication</li>
                 </ul>
@@ -261,162 +355,197 @@ function OnboardingWizard() {
             </div>
           )}
 
-          {step === 3 && (
-            <div className="space-y-6 pt-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Gender</label>
-                <Select value={formData.gender} onValueChange={v => setFormData(p => ({ ...p, gender: v }))}>
-                  <SelectTrigger className="h-12"><SelectValue placeholder="Select Gender" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Age</label>
-                <Input 
-                  type="number" 
-                  className="h-12" 
-                  placeholder="e.g. 32" 
-                  value={formData.age} 
-                  onChange={e => setFormData(p => ({ ...p, age: e.target.value }))} 
-                />
-              </div>
-            </div>
-          )}
+          {customer?.health_consent_at && (
+            <>
+              {step === 3 && (
+                <div className="space-y-6 pt-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Gender</label>
+                    <Select value={formData.gender} onValueChange={v => setFormData(p => ({ ...p, gender: v }))}>
+                      <SelectTrigger className="h-12"><SelectValue placeholder="Select Gender" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Age</label>
+                    <Input 
+                      type="number" 
+                      className="h-12" 
+                      placeholder="e.g. 32" 
+                      value={formData.age} 
+                      onChange={e => setFormData(p => ({ ...p, age: e.target.value }))} 
+                    />
+                  </div>
+                </div>
+              )}
 
-          {step === 4 && (
-            <div className="space-y-6 pt-4">
-              <div className="flex justify-end">
-                <Button variant="ghost" size="sm" onClick={() => setIsHeightMetric(!isHeightMetric)}>
-                  Switch to {isHeightMetric ? "ft/in" : "cm"}
-                </Button>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{isHeightMetric ? "Height (cm)" : "Height (ft'in)"}</label>
-                <Input 
-                  className="h-12 text-center text-2xl" 
-                  placeholder={isHeightMetric ? "175" : "5'9"} 
-                  value={formData.height} 
-                  onChange={e => setFormData(p => ({ ...p, height: e.target.value }))} 
-                />
-              </div>
-            </div>
-          )}
+              {step === 4 && (
+                <div className="space-y-6 pt-4">
+                  <div className="flex justify-end">
+                    <Button variant="ghost" size="sm" onClick={toggleHeightUnit}>
+                      Switch to {isHeightMetric ? "ft'in" : "cm"}
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">{isHeightMetric ? "Height (cm)" : "Height (ft.in)"}</label>
+                    <Input 
+                      className="h-12 text-center text-2xl" 
+                      placeholder={isHeightMetric ? "175" : "5.9"} 
+                      value={formData.height} 
+                      onChange={e => setFormData(p => ({ ...p, height: e.target.value }))} 
+                    />
+                    {!isHeightMetric && <p className="text-[10px] text-muted-foreground text-center">Use a dot to separate feet and inches (e.g. 5.9)</p>}
+                  </div>
+                </div>
+              )}
 
-          {step === 5 && (
-            <div className="space-y-6 pt-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Current Weight (kg)</label>
-                <Input 
-                  type="number" 
-                  step="0.1" 
-                  className="h-12 text-2xl text-center" 
-                  placeholder="85.5" 
-                  value={formData.weight} 
-                  onChange={e => setFormData(p => ({ ...p, weight: e.target.value }))} 
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Goal Weight (kg)</label>
-                <Input 
-                  type="number" 
-                  step="0.1" 
-                  className="h-12 text-2xl text-center" 
-                  placeholder="78.0" 
-                  value={formData.goal_weight} 
-                  onChange={e => setFormData(p => ({ ...p, goal_weight: e.target.value }))} 
-                />
-              </div>
-            </div>
-          )}
+              {step === 5 && (
+                <div className="space-y-6 pt-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Current Weight (kg)</label>
+                    <Input 
+                      type="number" 
+                      step="0.1" 
+                      className="h-12 text-2xl text-center" 
+                      placeholder="85.5" 
+                      value={formData.weight} 
+                      onChange={e => setFormData(p => ({ ...p, weight: e.target.value }))} 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Goal Weight (kg)</label>
+                    <Input 
+                      type="number" 
+                      step="0.1" 
+                      className="h-12 text-2xl text-center" 
+                      placeholder="78.0" 
+                      value={formData.goal_weight} 
+                      onChange={e => setFormData(p => ({ ...p, goal_weight: e.target.value }))} 
+                    />
+                  </div>
+                </div>
+              )}
 
-          {step === 6 && (
-            <div className="grid grid-cols-1 gap-3 pt-2">
-              {programs?.map(p => (
-                <div 
-                  key={p.id}
-                  onClick={() => setFormData(prev => ({ ...prev, program_id: p.id }))}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    formData.program_id === p.id 
-                    ? "border-[#16a34a] bg-green-50 shadow-sm" 
-                    : "border-slate-100 hover:border-slate-200"
-                  }`}
-                >
-                  <p className="font-bold text-[#0f172a]">{p.name}</p>
-                  <p className="text-xs text-muted-foreground">{p.subtitle}</p>
+              {step === 6 && (
+                <div className="grid grid-cols-1 gap-3 pt-2">
+                  {programs?.map(p => (
+                    <div 
+                      key={p.id}
+                      onClick={() => setFormData(prev => ({ ...prev, program_id: p.id }))}
+                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        formData.program_id === p.id 
+                        ? "border-[#16a34a] bg-green-50 shadow-sm" 
+                        : "border-slate-100 hover:border-slate-200"
+                      }`}
+                    >
+                      <p className="font-bold text-[#0f172a]">{p.name}</p>
+                      <p className="text-xs text-muted-foreground">{p.subtitle}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {step === 7 && (
-            <div className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-center block w-full">Pick your start date</label>
-                <Input 
-                  type="date" 
-                  className="h-12 text-center" 
-                  min={new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]}
-                  max={new Date().toISOString().split('T')[0]}
-                  value={formData.start_date} 
-                  onChange={e => setFormData(p => ({ ...p, start_date: e.target.value }))} 
-                />
-              </div>
-              <p className="text-xs text-center text-muted-foreground">You can set it up to 7 days in the past if you already started.</p>
-            </div>
-          )}
+              {step === 7 && (
+                <div className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-center block w-full">Pick your start date</label>
+                    <Input 
+                      type="date" 
+                      className="h-12 text-center" 
+                      min={new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]}
+                      max={new Date().toISOString().split('T')[0]}
+                      value={formData.start_date} 
+                      onChange={e => setFormData(p => ({ ...p, start_date: e.target.value }))} 
+                    />
+                  </div>
+                  <p className="text-xs text-center text-muted-foreground">You can set it up to 7 days in the past if you already started.</p>
+                </div>
+              )}
 
-          {step === 8 && (
-            <div className="space-y-6 pt-2 h-[350px] overflow-y-auto pr-2">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase">Weight (kg)*</label>
-                  <Input 
-                    type="number" 
-                    placeholder="85.5" 
-                    value={formData.weight} 
-                    onChange={e => setFormData(p => ({ ...p, weight: e.target.value }))} 
-                  />
+              {step === 8 && (
+                <div className="space-y-6 pt-2 h-[350px] overflow-y-auto pr-2">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase">Weight (kg)*</label>
+                      <Input 
+                        type="number" 
+                        placeholder="85.5" 
+                        value={formData.weight} 
+                        onChange={e => setFormData(p => ({ ...p, weight: e.target.value }))} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase">Waist (cm)*</label>
+                      <Input 
+                        type="number" 
+                        placeholder="90" 
+                        value={formData.waist} 
+                        onChange={e => setFormData(p => ({ ...p, waist: e.target.value }))} 
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold uppercase text-muted-foreground">Hip (cm)</label>
+                      <Input placeholder="cm" value={formData.hip} onChange={e => setFormData(p => ({ ...p, hip: e.target.value }))} />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold uppercase text-muted-foreground">Chest (cm)</label>
+                      <Input placeholder="cm" value={formData.chest} onChange={e => setFormData(p => ({ ...p, chest: e.target.value }))} />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold uppercase text-muted-foreground">Thigh (cm)</label>
+                      <Input placeholder="cm" value={formData.thigh} onChange={e => setFormData(p => ({ ...p, thigh: e.target.value }))} />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold uppercase text-muted-foreground">Arm (cm)</label>
+                      <Input placeholder="cm" value={formData.arm} onChange={e => setFormData(p => ({ ...p, arm: e.target.value }))} />
+                    </div>
+                  </div>
+                  
+                  <div className="pt-4 border-t">
+                    <p className="text-sm font-bold mb-2">Take your Day 0 photo</p>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      capture="environment" 
+                      className="hidden" 
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                    />
+                    <div 
+                      onClick={() => !isUploading && fileInputRef.current?.click()}
+                      className={`aspect-video bg-slate-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed transition-colors cursor-pointer ${
+                        photoPreview ? "border-green-200 bg-green-50" : "border-slate-200 hover:border-slate-300"
+                      }`}
+                    >
+                      {isUploading ? (
+                        <Loader2 className="h-8 w-8 text-slate-400 animate-spin" />
+                      ) : photoPreview ? (
+                        <div className="relative w-full h-full flex items-center justify-center p-2">
+                          <img src={photoPreview} alt="Preview" className="max-h-full rounded-lg" />
+                          <div className="absolute bottom-2 right-2 bg-green-500 text-white p-1 rounded-full">
+                            <Check className="h-4 w-4" />
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <Camera className="h-8 w-8 text-slate-400 mb-2" />
+                          <p className="text-[10px] text-slate-500 text-center px-6">
+                            This is the photo you'll want on Day 9. 10 seconds now.
+                          </p>
+                        </>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-2 text-center italic">(Optional, can be skipped)</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase">Waist (cm)*</label>
-                  <Input 
-                    type="number" 
-                    placeholder="90" 
-                    value={formData.waist} 
-                    onChange={e => setFormData(p => ({ ...p, waist: e.target.value }))} 
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-muted-foreground">Hip</label>
-                  <Input placeholder="cm" value={formData.hip} onChange={e => setFormData(p => ({ ...p, hip: e.target.value }))} />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-muted-foreground">Chest</label>
-                  <Input placeholder="cm" value={formData.chest} onChange={e => setFormData(p => ({ ...p, chest: e.target.value }))} />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-muted-foreground">Thigh</label>
-                  <Input placeholder="cm" value={formData.thigh} onChange={e => setFormData(p => ({ ...p, thigh: e.target.value }))} />
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t">
-                <p className="text-sm font-bold mb-2">Take your Day 0 photo</p>
-                <div className="aspect-video bg-slate-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-slate-200">
-                  <Camera className="h-8 w-8 text-slate-400 mb-2" />
-                  <p className="text-[10px] text-slate-500 text-center px-6">
-                    This is the photo you'll want on Day 9. 10 seconds now.
-                  </p>
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-2 text-center italic">(Optional, can be skipped)</p>
-              </div>
-            </div>
+              )}
+            </>
           )}
         </CardContent>
         
@@ -432,7 +561,12 @@ function OnboardingWizard() {
           <Button 
             className="bg-[#16a34a] hover:bg-[#15803d] px-8" 
             onClick={nextStep}
-            disabled={updateProfileMutation.isPending || finishMutation.isPending}
+            disabled={
+              updateProfileMutation.isPending || 
+              finishMutation.isPending || 
+              isUploading ||
+              (step === 2 && !disclaimerAccepted)
+            }
           >
             {updateProfileMutation.isPending || finishMutation.isPending ? (
               <Loader2 className="animate-spin h-4 w-4" />
