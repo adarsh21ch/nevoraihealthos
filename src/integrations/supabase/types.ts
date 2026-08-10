@@ -788,6 +788,25 @@ export type Database = {
         Args: { _customer: string; _uid: string }
         Returns: boolean
       }
+      complete_onboarding: {
+        Args: {
+          _age: number
+          _arm_cm?: number
+          _chest_cm?: number
+          _customer_id: string
+          _gender: string
+          _goal_weight_kg: number
+          _height_cm: number
+          _hip_cm?: number
+          _name: string
+          _program_id: string
+          _start_date: string
+          _thigh_cm?: number
+          _waist_cm: number
+          _weight_kg: number
+        }
+        Returns: undefined
+      }
       current_customer_ids: { Args: { _uid: string }; Returns: string[] }
       is_platform_admin: { Args: { _uid: string }; Returns: boolean }
       is_tenant_member: {
