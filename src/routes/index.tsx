@@ -4,6 +4,9 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+function Index() {
+  return (
+    <div className="flex flex-col min-h-screen bg-[#fcfbf8]">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2">
@@ -30,8 +33,8 @@ export const Route = createFileRoute("/")({
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
+      <header className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-8 overflow-hidden text-center">
+        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold tracking-wider uppercase mb-8 border border-blue-100">
             Introducing Health OS 2.0
           </div>
@@ -84,7 +87,7 @@ export const Route = createFileRoute("/")({
           <h3 className="text-4xl md:text-5xl font-bold text-[#0f172a]">Built for Scale.</h3>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
           {[
             {
               title: "Multi-Tenant Architecture",
@@ -126,7 +129,6 @@ export const Route = createFileRoute("/")({
               Get Started for Free
             </Link>
           </div>
-          {/* Background circles */}
           <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[100%] bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
           <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[100%] bg-indigo-600 rounded-full blur-[100px] opacity-20"></div>
         </div>
@@ -150,24 +152,24 @@ export const Route = createFileRoute("/")({
               <div className="space-y-4">
                 <h5 className="font-bold text-[#0f172a]">Product</h5>
                 <ul className="space-y-3 text-sm text-slate-500">
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors">Infrastructure</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors">Program Builder</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors">API</a></li>
+                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Infrastructure</a></li>
+                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Program Builder</a></li>
+                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">API</a></li>
                 </ul>
               </div>
               <div className="space-y-4">
                 <h5 className="font-bold text-[#0f172a]">Company</h5>
                 <ul className="space-y-3 text-sm text-slate-500">
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors">About</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors">Contact</a></li>
-                  <li><a href="#" className="hover:text-[#0f172a] transition-colors">Privacy</a></li>
+                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">About</a></li>
+                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Contact</a></li>
+                  <li><a href="#" className="hover:text-[#0f172a] transition-colors text-left">Privacy</a></li>
                 </ul>
               </div>
               <div className="space-y-4">
                 <h5 className="font-bold text-[#0f172a]">Admin</h5>
                 <ul className="space-y-3 text-sm text-slate-500">
-                  <li><Link to="/login" className="hover:text-[#0f172a] transition-colors">Login</Link></li>
-                  <li><a href="/admin" className="hover:text-[#0f172a] transition-colors">Platform Admin</a></li>
+                  <li><Link to="/login" className="hover:text-[#0f172a] transition-colors text-left">Login</Link></li>
+                  <li><a href="/admin" className="hover:text-[#0f172a] transition-colors text-left">Platform Admin</a></li>
                 </ul>
               </div>
             </div>
