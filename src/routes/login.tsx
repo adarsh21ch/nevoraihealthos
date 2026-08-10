@@ -6,18 +6,19 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { checkAdminStatus } from "@/lib/admin.functions";
+import { checkAdminStatus, getUserRole } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async ({ search }) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
-      const { isAdmin } = await checkAdminStatus();
-      if (isAdmin) {
+      const { role } = await getUserRole();
+      if (role === "platform_admin") {
         throw redirect({ to: "/admin" });
+      } else if (role === "owner" || role === "staff") {
+        throw redirect({ to: "/dashboard" });
       }
-      // For now, redirect to /admin as placeholder for /dashboard
-      throw redirect({ to: "/admin" });
+      throw redirect({ to: "/" });
     }
   },
   component: LoginPage,
@@ -41,12 +42,13 @@ function LoginPage() {
 
       if (error) throw error;
 
-      const { isAdmin } = await checkAdminStatus();
-      if (isAdmin) {
+      const { role } = await getUserRole();
+      if (role === "platform_admin") {
         navigate({ to: "/admin" });
+      } else if (role === "owner" || role === "staff") {
+        navigate({ to: "/dashboard" });
       } else {
-        // Redirect to /admin until /dashboard is built
-        navigate({ to: "/admin" });
+        navigate({ to: "/" });
       }
       toast.success("Welcome back!");
     } catch (error: any) {
