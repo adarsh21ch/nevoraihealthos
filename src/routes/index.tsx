@@ -29,7 +29,7 @@ function Index() {
   const scale = useTransform(scrollYProgress, [0, 0.05], [1, 0.95]);
 
   return (
-    <div ref={containerRef} className="flex flex-col min-h-screen bg-[#fcfbf8] selection:bg-blue-100 selection:text-blue-900">
+    <div ref={containerRef} className="flex flex-col min-h-screen bg-[#0f172a] text-slate-100 selection:bg-blue-900 selection:text-white">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/50 backdrop-blur-2xl border-b border-slate-200/50">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <motion.div 
