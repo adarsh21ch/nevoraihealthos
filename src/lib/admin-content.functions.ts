@@ -44,11 +44,15 @@ export const saveProgram = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const updateData: any = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== undefined) updateData[k] = v;
+    }
     if (id) {
-      const { error } = await context.supabase.from("programs").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("programs").update(updateData).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("programs").insert(rest);
+      const { error } = await context.supabase.from("programs").insert(updateData);
       if (error) throw error;
     }
     return { success: true };
@@ -85,11 +89,15 @@ export const saveProduct = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const updateData: any = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== undefined) updateData[k] = v;
+    }
     if (id) {
-      const { error } = await context.supabase.from("products").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("products").update(updateData).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("products").insert(rest);
+      const { error } = await context.supabase.from("products").insert(updateData);
       if (error) throw error;
     }
     return { success: true };
@@ -126,11 +134,15 @@ export const saveProgramDay = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const updateData: any = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== undefined) updateData[k] = v;
+    }
     if (id) {
-      const { error } = await context.supabase.from("program_days").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("program_days").update(updateData).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("program_days").insert(rest);
+      const { error } = await context.supabase.from("program_days").insert(updateData);
       if (error) throw error;
     }
     return { success: true };
@@ -153,11 +165,15 @@ export const saveDayTask = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const updateData: any = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== undefined) updateData[k] = v;
+    }
     if (id) {
-      const { error } = await context.supabase.from("day_tasks").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("day_tasks").update(updateData).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("day_tasks").insert(rest);
+      const { error } = await context.supabase.from("day_tasks").insert(updateData);
       if (error) throw error;
     }
     return { success: true };
@@ -199,11 +215,15 @@ export const saveTip = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const updateData: any = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== undefined) updateData[k] = v;
+    }
     if (id) {
-      const { error } = await context.supabase.from("tips").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("tips").update(updateData).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("tips").insert(rest);
+      const { error } = await context.supabase.from("tips").insert(updateData);
       if (error) throw error;
     }
     return { success: true };
@@ -233,11 +253,15 @@ export const saveFAQ = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await adminAuth(context);
     const { id, ...rest } = data;
+    const updateData: any = {};
+    for (const [k, v] of Object.entries(rest)) {
+      if (v !== undefined) updateData[k] = v;
+    }
     if (id) {
-      const { error } = await context.supabase.from("faqs").update(rest).eq("id", id);
+      const { error } = await context.supabase.from("faqs").update(updateData).eq("id", id);
       if (error) throw error;
     } else {
-      const { error } = await context.supabase.from("faqs").insert(rest);
+      const { error } = await context.supabase.from("faqs").insert(updateData);
       if (error) throw error;
     }
     return { success: true };
