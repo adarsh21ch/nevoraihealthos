@@ -23,14 +23,14 @@ function DashboardOverview() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.title} className="bg-slate-900 border-slate-800">
+          <Card key={stat.title} className="glass-card bg-slate-900/50 border-slate-800/50 hover:bg-slate-800/30 transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-slate-400">{stat.title}</CardTitle>
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-slate-500 mt-1">{stat.change}</p>
+              <div className="text-2xl font-bold text-white">{stat.value}</div>
+              <p className="text-xs text-slate-500 mt-1 font-medium">{stat.change}</p>
             </CardContent>
           </Card>
         ))}
