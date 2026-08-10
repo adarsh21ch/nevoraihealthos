@@ -309,26 +309,26 @@ function Index() {
       {/* Modern CTA / Final Section */}
       <section className="py-40 px-6">
         <div className="max-w-6xl mx-auto relative group">
-          <div className="absolute inset-0 bg-slate-900 rounded-[4rem] transform -rotate-1 scale-[1.02] group-hover:rotate-0 transition-transform duration-700 -z-10 opacity-10" />
-          <div className="relative bg-slate-900 rounded-[4rem] p-16 md:p-32 text-center overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.3)]">
+          <div className="absolute inset-0 bg-blue-600 transform -rotate-1 scale-[1.02] group-hover:rotate-0 transition-transform duration-700 -z-10" />
+          <div className="relative bg-white p-16 md:p-32 text-center overflow-hidden shadow-2xl">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="relative z-10"
             >
-              <h2 className="text-5xl md:text-8xl font-bold text-white tracking-tighter mb-12 leading-[0.9]">
-                Start your next health venture today.
+              <h2 className="text-5xl md:text-[9rem] font-black text-slate-950 tracking-[-0.06em] mb-12 leading-[0.8] uppercase italic">
+                Launch your <br/> Venture.
               </h2>
-              <p className="text-xl md:text-2xl text-slate-400 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">
-                Everything you need to launch, scale, and manage health programs globally.
+              <p className="text-xl md:text-2xl text-slate-600 mb-16 max-w-2xl mx-auto leading-relaxed font-bold tracking-tight uppercase italic">
+                Everything you need to scale health programs globally.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                 <Link 
                   to="/login" 
-                  className="w-full sm:w-auto px-16 py-8 bg-white text-slate-900 rounded-[2.5rem] text-2xl font-black hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center gap-4"
+                  className="w-full sm:w-auto px-16 py-8 bg-slate-950 text-white rounded-lg text-2xl font-black hover:bg-blue-600 transition-all flex items-center gap-4 uppercase italic tracking-widest shadow-2xl"
                 >
-                  Get Started for Free <ArrowRight className="w-8 h-8" />
+                  Join the Network <ArrowRight className="w-8 h-8" />
                 </Link>
                 <a href="mailto:sales@healthos.com" className="text-white font-bold border-b-2 border-white/20 hover:border-white transition-all pb-1 text-lg">
                   Talk to our sales team
