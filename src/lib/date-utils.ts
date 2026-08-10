@@ -6,35 +6,11 @@
 
 /**
  * Gets the current date in Asia/Kolkata (IST) as a Date object.
- * Note: The time part will be adjusted to the current IST time.
  */
 export function getISTDate(): Date {
   const now = new Date();
-  // Using Intl to get the current time in IST
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: false
-  });
-  
-  const parts = formatter.formatToParts(now);
-  const partValues: Record<string, string> = {};
-  parts.forEach(p => partValues[p.type] = p.value);
-  
-  // Construct a date object representing that time locally
-  return new Date(
-    parseInt(partValues.year),
-    parseInt(partValues.month) - 1,
-    parseInt(partValues.day),
-    parseInt(partValues.hour),
-    parseInt(partValues.minute),
-    parseInt(partValues.second)
-  );
+  const IST_OFFSET = 5.5 * 60 * 60 * 1000;
+  return new Date(now.getTime() + IST_OFFSET);
 }
 
 /**
@@ -42,16 +18,12 @@ export function getISTDate(): Date {
  */
 export function getISTDateString(): string {
   const istDate = getISTDate();
-  const year = istDate.getFullYear();
-  const month = String(istDate.getMonth() + 1).padStart(2, '0');
-  const day = String(istDate.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return istDate.toISOString().split('T')[0];
 }
 
 /**
  * Computes the day number of a program based on the enrollment start date.
  * day_number = (today - enrollment.start_date) + 1
- * Uses Asia/Kolkata time for "today".
  * 
  * @param startDate The enrollment start date (YYYY-MM-DD)
  * @returns The current program day number (1-indexed)
