@@ -15,9 +15,13 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/")({
   loader: async () => {
-    return {
-      tenants: await getTenants()
-    };
+    try {
+      const tenants = await getTenants();
+      return { tenants: tenants || [] };
+    } catch (e) {
+      console.error("Error loading tenants:", e);
+      return { tenants: [] };
+    }
   },
   component: AdminDashboard,
 });
