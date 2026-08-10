@@ -133,23 +133,21 @@ function Index() {
         <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
           <motion.div 
             animate={{ 
-              scale: [1, 1.2, 1],
-              x: [0, 50, 0],
-              y: [0, 30, 0]
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.4, 0.3]
             }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-blue-100/40 rounded-full blur-[160px]" 
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-[20%] -left-[10%] w-[80%] h-[80%] bg-blue-600/20 rounded-full blur-[160px]" 
           />
           <motion.div 
             animate={{ 
-              scale: [1.2, 1, 1.2],
-              x: [0, -50, 0],
-              y: [0, -30, 0]
+              scale: [1.1, 1, 1.1],
+              opacity: [0.2, 0.3, 0.2]
             }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-indigo-50/40 rounded-full blur-[160px]" 
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-[20%] -right-[10%] w-[80%] h-[80%] bg-indigo-600/20 rounded-full blur-[160px]" 
           />
-          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20" />
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
         </div>
       </header>
 
