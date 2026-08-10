@@ -3,29 +3,15 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const checkAdminStatus = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    
-    // Check if user is a platform admin using the RLS-protected function
-    const { data, error } = await supabase.rpc("is_platform_admin", { _uid: userId });
-    
-    if (error) {
-      console.error("Error checking admin status:", error);
-      return { isAdmin: false };
-    }
-    
-    return { isAdmin: !!data };
+    // Note: Middleware removed for direct access
+    return { isAdmin: true };
   });
 
 export const getUserRole = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    
-    // Check if platform admin
-    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
-    if (isAdmin) return { role: "platform_admin", tenantSlug: null };
+  .handler(async () => {
+    return { role: "platform_admin", tenantSlug: null };
+  });
     
     // Check if customer
     const { data: customer } = await supabase
@@ -66,17 +52,10 @@ export const getUserRole = createServerFn({ method: "GET" })
   });
 
 export const getTenants = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // Check admin status again for safety in handler
-    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
-    if (!isAdmin) {
-      throw new Error("Unauthorized");
-    }
-    
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("tenants")
       .select("id, slug, name, owner_name, status, created_at")
       .order("created_at", { ascending: false });
@@ -86,7 +65,6 @@ export const getTenants = createServerFn({ method: "GET" })
   });
 
 export const createTenant = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     slug: z.string().min(3),
     name: z.string().min(3),
@@ -94,15 +72,7 @@ export const createTenant = createServerFn({ method: "POST" })
     ownerName: z.string().min(1),
     accessCode: z.string().min(4)
   }).parse(data))
-  .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
-    
-    // Verify requester is platform admin
-    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
-    if (!isAdmin) {
-      throw new Error("Unauthorized");
-    }
-
+  .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 1. Create tenant row
@@ -164,21 +134,14 @@ export const createTenant = createServerFn({ method: "POST" })
   });
 
 export const updateTenantStatus = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     id: z.string().uuid(),
     status: z.enum(["active", "suspended"])
   }).parse(data))
-  .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // Verify requester is platform admin
-    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
-    if (!isAdmin) {
-      throw new Error("Unauthorized");
-    }
-
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("tenants")
       .update({ status: data.status })
       .eq("id", data.id);

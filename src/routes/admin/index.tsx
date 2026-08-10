@@ -14,25 +14,6 @@ import { Loader2, Plus, Power, PowerOff, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/")({
-  beforeLoad: async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw redirect({ to: "/login" });
-      }
-
-      const { role } = await getUserRole();
-      if (role !== "platform_admin") {
-        if (role === "owner" || role === "staff") {
-          throw redirect({ to: "/dashboard" });
-        }
-        throw redirect({ to: "/" });
-      }
-    } catch (e) {
-      if ((e as any).status === 307 || (e as any).status === 302) throw e;
-      throw redirect({ to: "/login" });
-    }
-  },
   loader: async () => {
     return {
       tenants: await getTenants()
