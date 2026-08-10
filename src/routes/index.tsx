@@ -180,21 +180,21 @@ function Index() {
         </div>
 
         <div className="grid md:grid-cols-12 gap-6">
-          <div className="md:col-span-8 p-12 rounded-[3rem] bg-white border border-slate-100 hover:shadow-2xl hover:shadow-blue-50/50 transition-all duration-500 group relative overflow-hidden">
+          <div className="md:col-span-8 p-12 bg-slate-900 border border-white/5 hover:border-blue-500/50 transition-all duration-500 group relative overflow-hidden shadow-2xl">
             <div className="relative z-10">
-              <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-10 group-hover:scale-110 transition-transform duration-500">
+              <div className="w-16 h-16 bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 mb-10 group-hover:scale-110 transition-transform duration-500">
                 <Layers className="w-8 h-8" />
               </div>
-              <h4 className="text-3xl font-bold text-slate-900 mb-6">Multi-Tenant Orchestration</h4>
-              <p className="text-slate-500 text-lg leading-relaxed max-w-md">
-                Launch unlimited distributor-branded portals on a single core. Complete data isolation with zero infrastructure overhead.
+              <h4 className="text-4xl font-black text-white mb-6 uppercase italic tracking-tighter">Multi-Tenant OS</h4>
+              <p className="text-slate-400 text-lg leading-relaxed max-w-md font-medium">
+                Launch thousands of distributor portals on a single core. Hard data isolation with zero infrastructure overhead.
               </p>
               <div className="mt-12 flex gap-4">
-                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">RLS Isolated</div>
-                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">Dynamic Theming</div>
+                <div className="px-4 py-2 bg-slate-800 text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 border border-white/5">DB Isolation</div>
+                <div className="px-4 py-2 bg-slate-800 text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 border border-white/5">Edge Logic</div>
               </div>
             </div>
-            <div className="absolute bottom-0 right-0 w-80 h-80 bg-linear-to-br from-blue-50 to-transparent rounded-full -mb-20 -mr-20 group-hover:scale-125 transition-transform duration-700" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-linear-to-br from-blue-600/10 to-transparent rounded-full -mb-20 -mr-20 group-hover:scale-125 transition-transform duration-700" />
           </div>
 
           <div className="md:col-span-4 p-12 rounded-[3rem] bg-slate-900 text-white border border-slate-800 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
