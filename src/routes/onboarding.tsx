@@ -52,7 +52,7 @@ function OnboardingPage() {
       if (!user) return null;
       const { data, error } = await supabase
         .from("customers")
-        .select("id, name, tenant_id, tenants(slug, name, tagline, logo_url, primary_color)")
+        .select("id, name, tenant_id, tenants(id, slug, name, tagline, logo_url, primary_color, custom_domain)")
         .eq("user_id", user.id)
         .maybeSingle();
       if (error) throw error;
@@ -149,6 +149,9 @@ function OnboardingPage() {
       if (rpcError) throw rpcError;
 
       if (tenantSlug) {
+        // If the tenant has a custom domain and we're NOT on it, 
+        // we should technically redirect to it, but for now we've ensured
+        // consistency in the root.
         navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug } });
       } else {
         navigate({ to: "/login" });
