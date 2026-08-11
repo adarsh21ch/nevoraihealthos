@@ -107,117 +107,117 @@ function JoinPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fcfbf8] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-[#0f172a]">Health OS</CardTitle>
-          <CardDescription>Join the program or sign in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="signup">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              <TabsTrigger value="login">Log In</TabsTrigger>
-            </TabsList>
+    <div className="min-h-screen bg-[#FCFBF8] flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-[400px] space-y-8">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mx-auto shadow-lg shadow-slate-200">H</div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Health OS</h1>
+          <p className="text-slate-500 font-medium">Distributor Portal for <span className="text-slate-900 font-bold">{tenantSlug}</span></p>
+        </div>
 
-            <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">FBO ID</label>
-                  <Input 
-                    required 
-                    placeholder="Your Forever Living ID"
-                    value={signupData.fboId}
-                    onChange={e => setSignupData(d => ({ ...d, fboId: e.target.value }))}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Email (Optional)</label>
-                    <Input 
-                      type="email" 
-                      placeholder="email@example.com"
-                      value={signupData.email}
-                      onChange={e => setSignupData(d => ({ ...d, email: e.target.value }))}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Phone (Optional)</label>
-                    <Input 
-                      type="tel" 
-                      placeholder="+91..."
-                      value={signupData.phone}
-                      onChange={e => setSignupData(d => ({ ...d, phone: e.target.value }))}
-                    />
-                  </div>
-                </div>
-                <p className="text-[10px] text-muted-foreground -mt-2">Provide at least one: email or phone.</p>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Access Code</label>
-                  <Input 
-                    required 
-                    placeholder="Provided by your distributor"
-                    value={signupData.accessCode}
-                    onChange={e => setSignupData(d => ({ ...d, accessCode: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Password</label>
-                  <Input 
-                    required 
-                    type="password"
-                    value={signupData.password}
-                    onChange={e => setSignupData(d => ({ ...d, password: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Confirm Password</label>
-                  <Input 
-                    required 
-                    type="password"
-                    value={signupData.confirmPassword}
-                    onChange={e => setSignupData(d => ({ ...d, confirmPassword: e.target.value }))}
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-[#16a34a] hover:bg-[#15803d]" disabled={loading}>
-                  {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Account"}
-                </Button>
-              </form>
-            </TabsContent>
+        <Tabs defaultValue="signup" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 p-1 bg-slate-100 rounded-xl h-11">
+            <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm font-bold text-xs uppercase tracking-widest">Sign Up</TabsTrigger>
+            <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm font-bold text-xs uppercase tracking-widest">Log In</TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Email, Phone, or FBO ID</label>
+          <TabsContent value="signup" className="space-y-4 pt-4">
+            <form onSubmit={handleSignup} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">FBO ID</label>
+                <Input 
+                  required 
+                  placeholder="Forever Living ID"
+                  value={signupData.fboId}
+                  onChange={e => setSignupData(d => ({ ...d, fboId: e.target.value }))}
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email or Phone</label>
+                <div className="grid grid-cols-2 gap-3">
                   <Input 
-                    required 
-                    placeholder="Enter your identifier"
-                    value={loginData.identifier}
-                    onChange={e => setLoginData(d => ({ ...d, identifier: e.target.value }))}
+                    type="email" 
+                    placeholder="Email"
+                    value={signupData.email}
+                    onChange={e => setSignupData(d => ({ ...d, email: e.target.value }))}
+                    className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                  />
+                  <Input 
+                    type="tel" 
+                    placeholder="Phone"
+                    value={signupData.phone}
+                    onChange={e => setSignupData(d => ({ ...d, phone: e.target.value }))}
+                    className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
                   />
                 </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <label className="text-sm font-medium">Password</label>
-                    <Button variant="link" className="px-0 text-xs h-auto" type="button" onClick={() => toast.info("If you only have a phone on file, contact your distributor. Otherwise, use reset link if email exists.")}>
-                      Forgot Password?
-                    </Button>
-                  </div>
-                  <Input 
-                    required 
-                    type="password"
-                    value={loginData.password}
-                    onChange={e => setLoginData(d => ({ ...d, password: e.target.value }))}
-                  />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Access Code</label>
+                <Input 
+                  required 
+                  placeholder="Provided by distributor"
+                  value={signupData.accessCode}
+                  onChange={e => setSignupData(d => ({ ...d, accessCode: e.target.value }))}
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                <Input 
+                  required 
+                  type="password"
+                  placeholder="Create password"
+                  value={signupData.password}
+                  onChange={e => setSignupData(d => ({ ...d, password: e.target.value }))}
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                />
+              </div>
+              <Button type="submit" className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 mt-2" disabled={loading}>
+                {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Create Customer Account"}
+              </Button>
+            </form>
+          </TabsContent>
+
+          <TabsContent value="login" className="space-y-4 pt-4">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Identifier</label>
+                <Input 
+                  required 
+                  placeholder="Email, Phone, or FBO ID"
+                  value={loginData.identifier}
+                  onChange={e => setLoginData(d => ({ ...d, identifier: e.target.value }))}
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center ml-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Password</label>
+                  <button type="button" className="text-[10px] font-bold text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors" onClick={() => toast.info("Contact your distributor for password assistance.")}>
+                    Forgot?
+                  </button>
                 </div>
-                <Button type="submit" className="w-full bg-[#16a34a] hover:bg-[#15803d]" disabled={loading}>
-                  {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Log In"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                <Input 
+                  required 
+                  type="password"
+                  placeholder="••••••••"
+                  value={loginData.password}
+                  onChange={e => setLoginData(d => ({ ...d, password: e.target.value }))}
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                />
+              </div>
+              <Button type="submit" className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 mt-2" disabled={loading}>
+                {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Enter Portal"}
+              </Button>
+            </form>
+          </TabsContent>
+        </Tabs>
+
+        <div className="pt-8 text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+          Secure Infrastructure &copy; 2026
+        </div>
+      </div>
     </div>
   );
 }
