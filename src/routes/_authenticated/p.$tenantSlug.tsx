@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
     const { data: tenant, error } = await supabase
       .from('tenants')
-      .select('id, name, slug, logo_url, primary_color, tagline')
+      .select('id, name, slug, logo_url, primary_color, tagline, whatsapp')
       .eq('slug', params.tenantSlug)
       .single();
     

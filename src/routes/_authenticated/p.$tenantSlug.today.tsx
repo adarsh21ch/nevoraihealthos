@@ -57,7 +57,7 @@ function TodayPage() {
         </div>
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Admin Portal View</h1>
         <p className="text-slate-500 mb-8">
-          You're signed in as an admin or owner. This is the customer portal for {data.tenant?.name || 'this tenant'}.
+          You're signed in as an admin or owner. This is the customer portal for {data?.tenant?.name || 'this tenant'}.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-xs">
           <Button asChild className="rounded-xl h-12 font-bold">
@@ -110,7 +110,7 @@ function TodayPage() {
   const { enrollment, dayContent, dailyLog, tenant } = data;
   const typedDayContent = dayContent as ProgramDayContent;
   const dayNumber = typedDayContent?.day_number || 0;
-  const duration = enrollment.programs?.duration_days || 0;
+  const duration = (enrollment as any)?.programs?.duration_days || 0;
   
   const totalTasks = typedDayContent?.tasks?.length || 0;
   const completedTasks = dailyLog?.task_completions?.length || 0;

@@ -119,7 +119,7 @@ export const getTestimonials = createServerFn({ method: "GET" })
 
     const { data, error } = await supabase
       .from("customers")
-      .select("id, name, progress_photos(id, storage_path, pose, taken_on)")
+      .select("id, name, share_consent, progress_photos(id, storage_path, pose, taken_on, share_consent)")
       .eq("tenant_id", tenantId)
       .eq("share_consent", true)
       .limit(50);
@@ -134,6 +134,7 @@ export const getTestimonials = createServerFn({ method: "GET" })
         name: c.name,
         progress_photos: await Promise.all(
           (c.progress_photos ?? [])
+            .filter((p: any) => p.share_consent)
             .sort((a: any, b: any) => a.taken_on.localeCompare(b.taken_on))
             .map(async (p: any) => {
               const { data: signed } = await supabaseAdmin.storage
