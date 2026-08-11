@@ -1,9 +1,8 @@
 import { createFileRoute, Outlet, useNavigate, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Layout, Package, MessageSquare } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, Building2, HelpCircle, Bell, Layout, Package, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin")({
   beforeLoad: async () => {
@@ -23,16 +22,15 @@ function AdminLayout() {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: "Tenants", icon: Building2, path: "/admin" },
-    { name: "Programs", icon: Layout, path: "/admin/content" },
-    { name: "Products", icon: Package, path: "/admin/content" },
-    { name: "Tips", icon: MessageSquare, path: "/admin/content" },
-    { name: "FAQs", icon: HelpCircle, path: "/admin/content" },
+    { name: "Performance", icon: LayoutDashboard, path: "/admin" },
+    { name: "Tenants", icon: Building2, path: "/admin/tenants" },
+    { name: "Programs", icon: Layout, path: "/admin/programs" },
+    { name: "Products", icon: Package, path: "/admin/products" },
+    { name: "Tips", icon: MessageSquare, path: "/admin/tips" },
   ];
 
   return (
     <div className="min-h-screen bg-surface text-ink flex font-sans">
-      {/* Sidebar */}
       <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-10">
@@ -73,7 +71,6 @@ function AdminLayout() {
         </div>
       </aside>
 
-      {/* Main */}
       <div className="flex-1 flex flex-col bg-surface">
         <header className="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
