@@ -5,6 +5,10 @@ import { toast } from 'sonner';
 export const Route = createFileRoute('/_authenticated')({
   ssr: false,
   beforeLoad: async ({ location }) => {
+    // 1. Get the current hostname and tenant ID from metadata if possible
+    // This allows dedicated domains like fat2fit.nevera.com to resolve correctly
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       throw redirect({
@@ -16,12 +20,10 @@ export const Route = createFileRoute('/_authenticated')({
     // Verify role based on path
     const { data: authContext, error } = await supabase.rpc('get_my_auth_context');
     if (error || !authContext) {
-      // Don't redirect if we are already authenticated but context fails
-      // Just let the route handle the "unauthorized" state or show a message
       return { authContext: null };
     }
 
-    const { role, tenant_slug, onboarding_complete } = authContext as any;
+    const { role, tenant_slug, onboarding_complete, tenant_id } = authContext as any;
 
     if (location.pathname.startsWith('/admin')) {
       if (role !== 'platform_admin') {

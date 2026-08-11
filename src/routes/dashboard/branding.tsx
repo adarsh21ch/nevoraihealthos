@@ -72,7 +72,7 @@ function BrandingPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
-      <h1 className="text-4xl font-bold tracking-tight text-slate-900">Branding</h1>
+      <h1 className="text-4xl font-bold tracking-tight text-slate-900">Settings</h1>
       <Card className="bg-white border-slate-100 rounded-[2.5rem] shadow-sm overflow-hidden">
         <CardContent className="p-10 space-y-8">
           <div className="grid md:grid-cols-2 gap-10">

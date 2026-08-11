@@ -15,7 +15,7 @@ export const Route = createFileRoute("/login")({
     if (!user) return;
 
     const { data: context } = await supabase.rpc("get_my_auth_context");
-    const { role, tenant_slug, onboarding_complete } = (context ?? {}) as any;
+    const { role, tenant_slug, onboarding_complete, tenant_id } = (context ?? {}) as any;
 
     if (role === "platform_admin") throw redirect({ to: "/admin" });
     if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
@@ -54,7 +54,7 @@ function LoginPage() {
       
       if (contextError) throw contextError;
 
-      const { role, tenant_slug, onboarding_complete } = context as any;
+      const { role, tenant_slug, onboarding_complete, tenant_id } = context as any;
 
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
