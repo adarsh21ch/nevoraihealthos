@@ -4,12 +4,13 @@ import { useServerFn } from '@tanstack/react-start';
 import { getProgramContent } from '@/lib/program-content.functions';
 import { 
   BookOpen, Lightbulb, HelpCircle, ChevronRight, 
-  Utensils, MessageCircle, Info, Search
+  Utensils, MessageCircle, Info, Search, Loader2
 } from 'lucide-react';
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/guide')({
   component: GuidePage,
