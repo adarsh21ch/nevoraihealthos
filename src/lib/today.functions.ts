@@ -2,8 +2,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { getISTDateString, getProgramDayNumber } from "./date-utils";
-import { Json } from "@/integrations/supabase/types";
+import { getISTDateString } from "./date-utils";
 
 export type DayTask = {
   id: string;
@@ -30,75 +29,99 @@ export type ProgramDayContent = {
   tasks: DayTask[] | null;
 };
 
+export type TodayDataResult = {
+  state: 'success' | 'not_a_customer' | 'tenant_not_found' | 'no_content' | 'error';
+  message?: string;
+  tenant?: any;
+  customer?: any;
+  enrollment?: any;
+  todayStr?: string;
+  dailyLog?: any;
+  dayContent?: ProgramDayContent;
+  redirect?: string;
+};
+
 export const getTodayData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     tenantSlug: z.string(),
   }).parse(data))
-  .handler(async ({ context, data: input }) => {
+  .handler(async ({ context, data: input }): Promise<TodayDataResult> => {
     const { supabase, userId } = context;
 
-    const { data: tenant, error: tenantErr } = await supabase
-      .from("tenants")
-      .select("id, name, slug, logo_url, whatsapp, primary_color, owner_name")
-      .eq("slug", input.tenantSlug)
-      .single();
-    if (tenantErr || !tenant) throw new Error("Tenant not found");
+    try {
+      const { data: tenant, error: tenantErr } = await supabase
+        .from("tenants")
+        .select("id, name, slug, logo_url, whatsapp, primary_color, owner_name")
+        .eq("slug", input.tenantSlug)
+        .single();
+      
+      if (tenantErr || !tenant) return { state: 'tenant_not_found' };
 
-    const { data: customer, error: customerErr } = await supabase
-      .from("customers")
-      .select("id, tenant_id, health_consent_at")
-      .eq("user_id", userId)
-      .single();
+      const { data: customer, error: customerErr } = await supabase
+        .from("customers")
+        .select("id, tenant_id, health_consent_at")
+        .eq("user_id", userId)
+        .single();
 
-    if (customerErr || !customer) throw new Error("Customer not found");
-    if (customer.tenant_id !== tenant.id) {
-        const { data: correctTenant } = await supabase
-            .from("tenants")
-            .select("slug")
-            .eq("id", customer.tenant_id)
-            .single();
-        return { redirect: `/p/${correctTenant?.slug}/today` };
+      if (customerErr || !customer) return { state: 'not_a_customer', tenant };
+
+      if (customer.tenant_id !== tenant.id) {
+          const { data: correctTenant } = await supabase
+              .from("tenants")
+              .select("slug")
+              .eq("id", customer.tenant_id)
+              .single();
+          return { state: 'success', redirect: `/p/${correctTenant?.slug}/today` };
+      }
+
+      if (!customer.health_consent_at) {
+        return { state: 'success', redirect: "/onboarding" };
+      }
+
+      const { data: enrollment, error: enrollErr } = await supabase
+        .from("enrollments")
+        .select("id, program_id, start_date, programs(duration_days, name, next_program_code)")
+        .eq("customer_id", customer.id)
+        .eq("status", "active")
+        .single();
+
+      if (enrollErr || !enrollment) {
+        return { state: 'success', redirect: "/onboarding" };
+      }
+
+      const todayStr = getISTDateString();
+      
+      const [logRes, dayContentRes] = await Promise.all([
+          supabase.from("daily_logs")
+              .select("id, water_ml, mood, task_completions(day_task_id)")
+              .eq("enrollment_id", enrollment.id)
+              .eq("log_date", todayStr)
+              .maybeSingle(),
+          supabase.rpc("get_program_day_with_tasks", {
+              _program_id: enrollment.program_id,
+              _date: todayStr,
+              _start_date: enrollment.start_date
+          })
+      ]);
+
+      const dayContent = dayContentRes.data as unknown as ProgramDayContent;
+      if (!dayContent?.program_day) {
+        return { state: 'no_content', tenant, enrollment };
+      }
+
+      return {
+          state: 'success',
+          tenant,
+          customer,
+          enrollment,
+          todayStr,
+          dailyLog: logRes.data,
+          dayContent,
+      };
+    } catch (e: any) {
+      return { state: 'error', message: e.message };
     }
-
-    if (!customer.health_consent_at) {
-      return { redirect: "/onboarding" };
-    }
-
-    const { data: enrollment, error: enrollErr } = await supabase
-      .from("enrollments")
-      .select("id, program_id, start_date, programs(duration_days, name, next_program_code)")
-      .eq("customer_id", customer.id)
-      .eq("status", "active")
-      .single();
-
-    if (enrollErr || !enrollment) {
-      return { redirect: "/onboarding" };
-    }
-
-    const todayStr = getISTDateString();
-    
-    const [logRes, dayContentRes] = await Promise.all([
-        supabase.from("daily_logs")
-            .select("id, water_ml, mood, task_completions(day_task_id)")
-            .eq("enrollment_id", enrollment.id)
-            .eq("log_date", todayStr)
-            .maybeSingle(),
-        supabase.rpc("get_program_day_with_tasks", {
-            _program_id: enrollment.program_id,
-            _date: todayStr,
-            _start_date: enrollment.start_date
-        })
-    ]);
-
-    return {
-        tenant,
-        customer,
-        enrollment,
-        todayStr,
-        dailyLog: logRes.data,
-        dayContent: dayContentRes.data as unknown as ProgramDayContent,
-    };
   });
 
 export const toggleTaskCompletion = createServerFn({ method: "POST" })
