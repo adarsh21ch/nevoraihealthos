@@ -88,6 +88,7 @@ function JoinPage() {
           fbo_id: fboId.trim(),
           email: mode === "email" ? contact.trim() : null,
           phone: mode === "phone" ? contact.trim() : null,
+          facebook_id: mode === "facebook" ? facebookId.trim() : null,
           password,
         },
       });
