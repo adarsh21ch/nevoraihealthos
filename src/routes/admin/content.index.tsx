@@ -60,7 +60,7 @@ function AdminContentManagement() {
           <FastListTab 
             data={tips} 
             isLoading={loadingTips} 
-            onSave={(data) => saveTip({ data })}
+            onSave={(data: any) => saveTip({ data })}
             queryKey={["admin-tips"]}
             columns={[
               { label: "Category", field: "category", type: "text" },
@@ -74,7 +74,7 @@ function AdminContentManagement() {
           <FastListTab 
             data={faqs} 
             isLoading={loadingFAQs} 
-            onSave={(data) => saveFAQ({ data })}
+            onSave={(data: any) => saveFAQ({ data })}
             queryKey={["admin-faqs"]}
             columns={[
               { label: "Category", field: "category", type: "text" },
