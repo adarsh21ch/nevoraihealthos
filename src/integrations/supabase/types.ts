@@ -78,6 +78,7 @@ export type Database = {
           share_consent: boolean | null
           tenant_id: string
           user_id: string | null
+          weight_kg: number | null
         }
         Insert: {
           age?: number | null
@@ -95,6 +96,7 @@ export type Database = {
           share_consent?: boolean | null
           tenant_id: string
           user_id?: string | null
+          weight_kg?: number | null
         }
         Update: {
           age?: number | null
@@ -112,6 +114,7 @@ export type Database = {
           share_consent?: boolean | null
           tenant_id?: string
           user_id?: string | null
+          weight_kg?: number | null
         }
         Relationships: [
           {
@@ -129,18 +132,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      customers_metrics_fix: {
-        Row: {
-          id: string | null
-        }
-        Insert: {
-          id?: string | null
-        }
-        Update: {
-          id?: string | null
-        }
-        Relationships: []
       }
       daily_logs: {
         Row: {

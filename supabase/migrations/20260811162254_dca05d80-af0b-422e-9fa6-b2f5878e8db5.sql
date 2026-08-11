@@ -1,0 +1,2 @@
+ALTER TABLE public.customers ADD COLUMN IF NOT EXISTS age integer, ADD COLUMN IF NOT EXISTS height_cm numeric, ADD COLUMN IF NOT EXISTS weight_kg numeric, ADD COLUMN IF NOT EXISTS gender text;
+DROP TABLE IF EXISTS public.customers_metrics_fix;
