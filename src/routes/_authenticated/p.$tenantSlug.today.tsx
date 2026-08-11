@@ -94,13 +94,17 @@ function TodayPage() {
 
   if (dayNumber > duration) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center">
-        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6">
+      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center space-y-8 animate-in fade-in duration-700">
+        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center">
           <Trophy className="w-12 h-12 text-green-600" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Congratulations!</h1>
-        <p className="text-slate-500 mb-8">You've successfully completed the {enrollment.programs?.name} program.</p>
-        <Link to={`/p/${tenantSlug}/journey` as any} className="text-green-600 font-bold underline">Review your Journey</Link>
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-slate-900 leading-tight">Program Complete!</h1>
+          <p className="text-slate-500 max-w-xs mx-auto">You've successfully finished the {enrollment.programs?.name} program. Time to celebrate!</p>
+        </div>
+        <Button asChild className="w-full h-14 bg-slate-900 text-white font-bold rounded-xl active:scale-95 transition-all">
+          <Link to={`/p/${tenantSlug}/complete` as any}>See my Results</Link>
+        </Button>
       </div>
     );
   }
