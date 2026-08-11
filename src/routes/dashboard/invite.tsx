@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { Users, Copy, QrCode, MessageSquare, ArrowLeft, RefreshCw, Shield } from "lucide-react";
+import { Users, Copy, QrCode, MessageSquare, ArrowLeft, RefreshCw, Shield, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
