@@ -127,7 +127,8 @@ function Index() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
           >
-            Run your wellness business without the <span className="relative inline-block">WhatsApp chaos<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-blue-500/20 rounded-full" /></span>.
+            Run your wellness business without the <span className="relative inline-block">WhatsApp chaos<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-slate-900/10 rounded-full" /></span>.
+
           </motion.h1>
           
           <motion.p 

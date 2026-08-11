@@ -105,211 +105,204 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
-      <div className="flex justify-between items-end">
+    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Shield className="h-3 w-3 text-zinc-500" />
-            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Admin Access Only</span>
+          <div className="flex items-center gap-2 mb-3">
+            <Shield className="h-3 w-3 text-slate-400" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Infrastructure Control</span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-white leading-none">Tenants</h1>
-          <p className="text-zinc-500 mt-2 font-light text-lg">Manage branding, infrastructure and accounts.</p>
+          <h1 className="text-5xl font-bold tracking-tight text-slate-900 leading-none">Tenants</h1>
+          <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Manage branding, deployment status, and administrative accounts for wellness distributors.</p>
         </div>
-        <div className="flex gap-2">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-white text-black hover:bg-zinc-200 font-bold rounded-xl h-11 px-6 shadow-xl shadow-white/5">
-                <Plus className="mr-2 h-4 w-4 stroke-[3px]" />
-                Onboard client
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-zinc-950 border-zinc-900 rounded-2xl max-w-lg">
-              <DialogHeader className="pb-4 border-b border-zinc-900">
-                <DialogTitle className="text-2xl font-bold text-white tracking-tight">Create New Tenant</DialogTitle>
-              </DialogHeader>
-              <form 
-                className="space-y-4 pt-4"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  createMutation.mutate(formData);
-                }}
-              >
-                <div className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Tenant Name</label>
-                    <Input 
-                      required
-                      placeholder="e.g. FitLife Mumbai"
-                      value={formData.name}
-                      onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">URL Slug</label>
-                      <Input 
-                        required
-                        placeholder="slug"
-                        value={formData.slug}
-                        onChange={e => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
-                        className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Access Code</label>
-                      <Input 
-                        required
-                        placeholder="JOIN2026"
-                        value={formData.accessCode}
-                        onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
-                        className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Owner Full Name</label>
-                    <Input 
-                      required
-                      placeholder="e.g. John Doe"
-                      value={formData.ownerName}
-                      onChange={e => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
-                      className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
-                    />
-                  </div>
-                  <div className="space-y-2 pb-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Owner Email</label>
-                    <Input 
-                      required
-                      type="email"
-                      placeholder="owner@example.com"
-                      value={formData.ownerEmail}
-                      onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                      className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
-                    />
-                  </div>
-                  <Button type="submit" className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold rounded-xl transition-all shadow-xl shadow-white/5" disabled={createMutation.isPending}>
-                    {createMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Deploy Infrastructure"}
-                  </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl h-12 px-8 shadow-xl shadow-slate-900/10">
+              <Plus className="mr-2 h-4 w-4 stroke-[3px]" />
+              Onboard Client
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-white border-slate-200 rounded-2xl max-w-lg shadow-2xl">
+            <DialogHeader className="pb-4 border-b border-slate-100">
+              <DialogTitle className="text-2xl font-bold text-slate-900 tracking-tight">New Tenant</DialogTitle>
+            </DialogHeader>
+            <form 
+              className="space-y-5 pt-6"
+              onSubmit={(e) => {
+                e.preventDefault();
+                createMutation.mutate(formData);
+              }}
+            >
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Tenant Name</label>
+                <Input 
+                  required
+                  placeholder="e.g. FitLife Mumbai"
+                  value={formData.name}
+                  onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">URL Slug</label>
+                  <Input 
+                    required
+                    placeholder="slug"
+                    value={formData.slug}
+                    onChange={e => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
+                    className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
+                  />
                 </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Access Code</label>
+                  <Input 
+                    required
+                    placeholder="JOIN2026"
+                    value={formData.accessCode}
+                    onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
+                    className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Owner Full Name</label>
+                <Input 
+                  required
+                  placeholder="e.g. John Doe"
+                  value={formData.ownerName}
+                  onChange={e => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
+                  className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Owner Email</label>
+                <Input 
+                  required
+                  type="email"
+                  placeholder="owner@example.com"
+                  value={formData.ownerEmail}
+                  onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
+                  className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
+                />
+              </div>
+              <Button type="submit" className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 mt-2" disabled={createMutation.isPending}>
+                {createMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Deploy Infrastructure"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <Card className="bg-zinc-900/10 border-zinc-900 rounded-2xl overflow-hidden shadow-2xl shadow-black">
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-zinc-900 bg-zinc-900/20 hover:bg-zinc-900/20">
-                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-8 py-4">Academy / Name</TableHead>
-                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest py-4">Access Point</TableHead>
-                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest py-4">Primary Owner</TableHead>
-                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest py-4 text-center">Operational Status</TableHead>
-                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-right pr-8 py-4">Control</TableHead>
+      <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-slate-100 bg-slate-50/50 hover:bg-slate-50/50">
+              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Distributor Academy</TableHead>
+              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Access Point</TableHead>
+              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Primary Owner</TableHead>
+              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Operational Status</TableHead>
+              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right pr-10 py-6">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tenants.map((tenant: any) => (
+              <TableRow key={tenant.id} className="border-slate-100 hover:bg-slate-50 transition-colors group">
+                <TableCell className="font-bold pl-10 py-7 text-slate-900 text-lg">{tenant.name}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <code className="text-[11px] font-bold bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-slate-500 group-hover:text-slate-900 transition-colors">/p/{tenant.slug}</code>
+                  </div>
+                </TableCell>
+                <TableCell className="text-slate-500 font-semibold">{tenant.owner_name}</TableCell>
+                <TableCell>
+                  <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
+                    tenant.status === 'active' 
+                      ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                      : 'bg-slate-100 text-slate-400 border-slate-200'
+                  }`}>
+                    {tenant.status === 'active' ? 'Operational' : 'Suspended'}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right pr-8 space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-all rounded-xl h-10 px-4"
+                    onClick={() => {
+                      setSelectedTenantId(tenant.id);
+                      setIsOwnerDialogOpen(true);
+                    }}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Authorize</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-slate-100 transition-all rounded-xl h-10 w-10 p-0"
+                    onClick={() => statusMutation.mutate({ 
+                      id: tenant.id, 
+                      status: tenant.status === 'active' ? 'suspended' : 'active' 
+                    })}
+                    disabled={statusMutation.isPending}
+                  >
+                    {tenant.status === 'active' ? (
+                      <PowerOff className="h-4 w-4 text-slate-300 hover:text-red-500 transition-colors" />
+                    ) : (
+                      <Power className="h-4 w-4 text-emerald-500" />
+                    )}
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tenants.map((tenant: any) => (
-                <TableRow key={tenant.id} className="border-zinc-900 hover:bg-zinc-900/20 transition-colors group">
-                  <TableCell className="font-bold pl-8 py-5 text-zinc-100 text-base">{tenant.name}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <code className="text-[11px] font-mono bg-zinc-950 border border-zinc-800 px-2.5 py-1 rounded-md text-zinc-400 group-hover:text-white transition-colors">/p/{tenant.slug}</code>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-zinc-400 font-medium">{tenant.owner_name}</TableCell>
-                  <TableCell className="text-center">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
-                      tenant.status === 'active' 
-                        ? 'bg-emerald-500/5 text-emerald-500 border-emerald-500/20' 
-                        : 'bg-zinc-900 text-zinc-500 border-zinc-800'
-                    }`}>
-                      {tenant.status === 'active' ? 'Operational' : 'Suspended'}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right pr-6 space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:bg-white hover:text-black transition-all rounded-lg h-9 w-9 p-0"
-                      onClick={() => {
-                        setSelectedTenantId(tenant.id);
-                        setIsOwnerDialogOpen(true);
-                      }}
-                      title="Create Tenant Owner"
-                    >
-                      <Shield className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:bg-zinc-800 transition-all rounded-lg h-9 w-9 p-0"
-                      onClick={() => statusMutation.mutate({ 
-                        id: tenant.id, 
-                        status: tenant.status === 'active' ? 'suspended' : 'active' 
-                      })}
-                      disabled={statusMutation.isPending}
-                    >
-                      {tenant.status === 'active' ? (
-                        <PowerOff className="h-4 w-4 text-zinc-500" />
-                      ) : (
-                        <Power className="h-4 w-4 text-emerald-500" />
-                      )}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {tenants.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-12 text-slate-500">
-                    <div className="flex flex-col items-center gap-2">
-                      <p>No tenants found.</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            ))}
+            {tenants.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-20 text-slate-400 font-medium">
+                  No managed tenants found in infrastructure.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
       <Dialog open={isOwnerDialogOpen} onOpenChange={setIsOwnerDialogOpen}>
-        <DialogContent className="bg-zinc-950 border-zinc-900 rounded-2xl max-w-md">
-          <DialogHeader className="pb-4 border-b border-zinc-900">
-            <DialogTitle className="text-2xl font-bold text-white tracking-tight">Create Tenant Owner Account</DialogTitle>
+        <DialogContent className="bg-white border-slate-200 rounded-2xl max-w-md shadow-2xl">
+          <DialogHeader className="pb-4 border-b border-slate-100">
+            <DialogTitle className="text-2xl font-bold text-slate-900 tracking-tight">Authorize Owner</DialogTitle>
           </DialogHeader>
           <form 
-            className="space-y-4 pt-6"
+            className="space-y-5 pt-6"
             onSubmit={(e) => {
               e.preventDefault();
               ownerMutation.mutate(ownerData);
             }}
           >
             <div className="space-y-2">
-              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Owner Email</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Owner Email</label>
               <Input 
                 required
                 type="email"
                 placeholder="owner@example.com"
                 value={ownerData.email}
                 onChange={e => setOwnerData(prev => ({ ...prev, email: e.target.value }))}
-                className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
               />
             </div>
-            <div className="space-y-2 pb-2">
-              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Initial Password</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Temporary Password</label>
               <Input 
                 required
                 type="password"
                 placeholder="Minimum 6 characters"
                 value={ownerData.password}
                 onChange={e => setOwnerData(prev => ({ ...prev, password: e.target.value }))}
-                className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                className="bg-slate-50 border-slate-200 text-slate-900 h-12 px-4 rounded-xl focus:ring-2 focus:ring-slate-900/5"
               />
             </div>
-            <Button type="submit" className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold rounded-xl transition-all shadow-xl shadow-white/5" disabled={ownerMutation.isPending}>
-              {ownerMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Authorize Owner"}
+            <Button type="submit" className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 mt-2" disabled={ownerMutation.isPending}>
+              {ownerMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Grant Access"}
             </Button>
           </form>
         </DialogContent>

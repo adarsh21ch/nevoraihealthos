@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { getJourneyData } from '@/lib/journey.functions';
 import { cn } from '@/lib/utils';
-import { CheckCircle2, Circle, Lock } from 'lucide-react';
+import { CheckCircle2, Circle, Lock, Trophy } from 'lucide-react';
 import { getProgramDayNumber } from '@/lib/date-utils';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/journey')({
@@ -27,15 +27,19 @@ function JourneyPage() {
   const duration = enrollment.programs?.duration_days || 0;
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-8">
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Your Journey</h1>
-        <p className="text-slate-500 font-medium">{enrollment.programs?.name}</p>
+    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500">
+      <header className="mb-12">
+        <div className="flex items-center gap-2 mb-3">
+           <Trophy className="w-4 h-4 text-slate-400" />
+           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Program Map</span>
+        </div>
+        <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Your Journey</h1>
+        <p className="text-slate-500 font-medium text-lg mt-2">{enrollment.programs?.name}</p>
       </header>
 
-      <div className="relative space-y-8">
+      <div className="relative space-y-6">
         {/* The vertical line */}
-        <div className="absolute left-6 top-2 bottom-2 w-px bg-slate-200 -z-10" />
+        <div className="absolute left-6 top-4 bottom-4 w-px bg-slate-100 -z-10" />
 
         {[...Array(duration)].map((_, i) => {
           const dayNum = i + 1;
@@ -45,7 +49,6 @@ function JourneyPage() {
           
           const dayInfo = programDays.find(d => d.day_number === dayNum);
           
-          // Completion stats for this day
           const dayTasks = dayInfo?.day_tasks || [];
           const dayCompletions = completions.filter(c => 
             c.daily_logs.day_number === dayNum
@@ -56,50 +59,51 @@ function JourneyPage() {
             : 0;
 
           return (
-            <div key={dayNum} className="flex gap-6 items-start">
+            <div key={dayNum} className="flex gap-6 items-center">
               <div className={cn(
-                "w-12 h-12 rounded-full flex items-center justify-center shrink-0 border-4 z-10 transition-all shadow-sm",
-                isToday ? "bg-white border-[#16a34a] scale-110" : 
+                "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border-2 z-10 transition-all",
+                isToday ? "bg-white border-[#16a34a] scale-110 shadow-lg shadow-[#16a34a]/10" : 
                 isPast ? "bg-[#16a34a] border-[#16a34a] text-white" : 
-                "bg-slate-100 border-slate-100 text-slate-400"
+                "bg-slate-50 border-slate-100 text-slate-300"
               )}>
                 {isPast ? (
                   <CheckCircle2 className="w-6 h-6" />
                 ) : isFuture ? (
-                  <Lock className="w-4 h-4" />
+                  <Lock className="w-4 h-4 opacity-50" />
                 ) : (
                   <span className="font-bold text-lg text-[#16a34a]">{dayNum}</span>
                 )}
               </div>
 
               <div className={cn(
-                "flex-1 p-6 rounded-3xl border transition-all",
-                isToday ? "bg-white border-[#16a34a]/20 shadow-lg shadow-[#16a34a]/5" :
-                isPast ? "bg-white border-slate-100 opacity-80" :
-                "bg-slate-50/50 border-transparent opacity-60"
+                "flex-1 p-5 rounded-[2rem] border transition-all",
+                isToday ? "bg-white border-slate-200 shadow-sm" :
+                isPast ? "bg-slate-50/50 border-slate-100 opacity-60" :
+                "bg-transparent border-transparent opacity-40"
               )}>
-                <div className="flex justify-between items-start mb-1">
-                  <h3 className={cn(
-                    "font-bold text-lg",
-                    isFuture ? "text-slate-400" : "text-slate-900"
-                  )}>
-                    Day {dayNum}
-                    {dayInfo?.title && <span className="ml-2 font-medium text-slate-500">— {dayInfo.title}</span>}
-                  </h3>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <h3 className={cn(
+                      "font-bold text-base leading-none",
+                      isFuture ? "text-slate-400" : "text-slate-900"
+                    )}>
+                      Day {dayNum}
+                    </h3>
+                    {dayInfo?.title && (
+                      <span className="text-xs font-medium text-slate-500 mt-1">{dayInfo.title}</span>
+                    )}
+                  </div>
                   {isPast && completionRate > 0 && (
-                    <span className="text-[10px] font-bold text-[#16a34a] bg-[#16a34a]/10 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold text-[#16a34a] bg-[#16a34a]/10 px-2 py-1 rounded-lg">
                       {completionRate}%
                     </span>
                   )}
+                  {isToday && (
+                    <span className="text-[10px] font-bold text-[#16a34a] uppercase tracking-widest animate-pulse">
+                      Active
+                    </span>
+                  )}
                 </div>
-                
-                {isToday && (
-                  <p className="text-sm text-[#16a34a] font-bold mt-2">Active now</p>
-                )}
-                
-                {isFuture && (
-                  <p className="text-xs text-slate-400 font-medium mt-1 italic">Locked until day {dayNum}</p>
-                )}
               </div>
             </div>
           );

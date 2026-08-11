@@ -127,15 +127,18 @@ function TodayPage() {
   const slotsOrder = ['morning', 'pre_lunch', 'lunch', 'evening', 'pre_dinner', 'dinner', 'bedtime', 'anytime'];
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-8">
-      <div className="flex justify-between items-start mb-10">
+    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500">
+      <div className="flex justify-between items-start mb-12">
         <div>
-          <h1 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">
-            {tenant.name}
-          </h1>
+          <div className="flex items-center gap-2 mb-2">
+             <div className="w-2 h-2 rounded-full bg-[#16a34a] shadow-[0_0_8px_rgba(22,163,74,0.3)]"></div>
+             <h1 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+               {tenant.name}
+             </h1>
+          </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-bold text-slate-900">Day {dayNumber}</span>
-            <span className="text-slate-400 font-medium">of {duration}</span>
+            <span className="text-4xl font-bold text-slate-900 tracking-tight">Day {dayNumber}</span>
+            <span className="text-slate-400 font-bold text-sm uppercase tracking-widest">/ {duration}</span>
           </div>
         </div>
         
@@ -143,37 +146,37 @@ function TodayPage() {
           <svg className="w-full h-full -rotate-90">
             <circle
               cx="32" cy="32" r="28"
-              fill="none" stroke="#f1f5f9" strokeWidth="6"
+              fill="none" stroke="#f1f5f9" strokeWidth="5"
             />
             <circle
               cx="32" cy="32" r="28"
-              fill="none" stroke="#16a34a" strokeWidth="6"
+              fill="none" stroke="#16a34a" strokeWidth="5"
               strokeDasharray={175.9}
               strokeDashoffset={175.9 * (1 - progressPercent / 100)}
               strokeLinecap="round"
               className="transition-all duration-1000"
             />
           </svg>
-          <span className="absolute text-[10px] font-bold text-slate-900">{progressPercent}%</span>
+          <span className="absolute text-[11px] font-bold text-slate-900">{progressPercent}%</span>
         </div>
       </div>
 
       {typedDayContent?.program_day?.motivation && (
-        <div className="bg-[#16a34a]/5 border border-[#16a34a]/10 rounded-3xl p-6 mb-10">
-          <p className="text-[#16a34a] italic text-lg leading-relaxed">
+        <div className="bg-slate-50 border border-slate-100 rounded-[2.5rem] p-8 mb-12">
+          <p className="text-slate-900 font-medium italic text-xl leading-relaxed">
             "{typedDayContent.program_day.motivation}"
           </p>
         </div>
       )}
 
-      <div className="space-y-10">
+      <div className="space-y-12">
         {slotsOrder.map(slot => {
           const slotTasks = tasksBySlot?.[slot];
           if (!slotTasks?.length) return null;
 
           return (
-            <div key={slot} className="space-y-4">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <div key={slot} className="space-y-5">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 ml-1">
                 {slot.replace('_', ' ')}
               </h3>
               <div className="space-y-3">
@@ -185,18 +188,20 @@ function TodayPage() {
                     <div 
                       key={task.id}
                       className={cn(
-                        "flex items-center gap-4 p-4 rounded-3xl border transition-all duration-200",
+                        "flex items-center gap-5 p-5 rounded-[2rem] border transition-all duration-300",
                         isCompleted ? "bg-slate-50 border-slate-100" : "bg-white border-slate-200 shadow-sm"
                       )}
                     >
                       <button 
                         onClick={() => handleToggleTask(task.id, isCompleted)}
-                        className="flex-shrink-0"
+                        className="flex-shrink-0 transition-transform active:scale-90"
                       >
                         {isCompleted ? (
-                          <CheckCircle2 className="w-8 h-8 text-[#16a34a] fill-[#16a34a]/10" />
+                          <CheckCircle2 className="w-9 h-9 text-[#16a34a]" />
                         ) : (
-                          <Circle className="w-8 h-8 text-slate-200" />
+                          <div className="w-9 h-9 rounded-full border-2 border-slate-100 flex items-center justify-center">
+                             <div className="w-4 h-4 rounded-full bg-slate-50"></div>
+                          </div>
                         )}
                       </button>
 
@@ -204,20 +209,20 @@ function TodayPage() {
                         <img 
                           src={task.product_image} 
                           alt={task.title}
-                          className="w-10 h-10 object-cover rounded-xl"
+                          className="w-12 h-12 object-cover rounded-2xl"
                           loading="lazy"
                         />
                       )}
 
                       <div className="flex-1 min-w-0">
                         <h4 className={cn(
-                          "font-bold text-slate-900 truncate",
+                          "font-bold text-slate-900 truncate leading-tight",
                           isCompleted && "text-slate-400 line-through decoration-1"
                         )}>
                           {task.title}
                         </h4>
                         {task.dosage && (
-                          <p className="text-xs text-slate-500 font-medium">
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
                             {task.dosage}
                           </p>
                         )}
@@ -231,13 +236,13 @@ function TodayPage() {
         })}
       </div>
 
-      <div className="mt-12 bg-blue-50/50 rounded-3xl p-6 border border-blue-100">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-2">
+      <div className="mt-16 bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100">
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
             <Droplets className="w-5 h-5 text-blue-500" />
             <h3 className="font-bold text-slate-900">Hydration</h3>
           </div>
-          <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+          <span className="text-[10px] font-bold text-blue-600 bg-blue-100/50 px-3 py-1.5 rounded-full uppercase tracking-widest">
             {(dailyLog?.water_ml || 0) / 1000}L / 2L
           </span>
         </div>
@@ -249,29 +254,29 @@ function TodayPage() {
                 key={i}
                 onClick={handleWaterClick}
                 className={cn(
-                  "w-8 h-10 rounded-lg flex items-center justify-center transition-all",
-                  isFilled ? "bg-blue-500 text-white" : "bg-white border border-blue-100 text-blue-200"
+                  "w-10 h-12 rounded-xl flex items-center justify-center transition-all active:scale-90",
+                  isFilled ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20" : "bg-white border border-slate-200 text-slate-200"
                 )}
               >
-                <Droplets className="w-4 h-4 fill-current" />
+                <Droplets className={cn("w-5 h-5", isFilled && "fill-current")} />
               </button>
             );
           })}
         </div>
       </div>
 
-      <div className="mt-6 bg-slate-50 rounded-3xl p-6 border border-slate-100">
-        <h3 className="font-bold text-slate-900 mb-4">How are you feeling?</h3>
+      <div className="mt-8 bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
+        <h3 className="font-bold text-slate-900 mb-6">How are you feeling?</h3>
         <div className="flex gap-3">
           {['Great', 'OK', 'Tough'].map(mood => (
             <button
               key={mood}
               onClick={() => handleMoodSelect(mood)}
               className={cn(
-                "flex-1 py-3 rounded-2xl font-bold text-sm transition-all border",
+                "flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all border",
                 dailyLog?.mood === mood 
-                  ? "bg-white border-slate-200 shadow-sm text-slate-900" 
-                  : "text-slate-400 border-transparent hover:text-slate-600"
+                  ? "bg-slate-900 border-slate-900 text-white shadow-lg shadow-slate-900/10" 
+                  : "bg-slate-50 text-slate-400 border-transparent hover:bg-slate-100"
               )}
             >
               {mood}
@@ -281,12 +286,14 @@ function TodayPage() {
       </div>
 
       {typedDayContent?.program_day?.meal_guidance && (
-        <div className="mt-6 bg-amber-50/50 rounded-3xl p-6 border border-amber-100">
-          <div className="flex items-center gap-2 mb-4">
-            <Info className="w-5 h-5 text-amber-500" />
+        <div className="mt-8 bg-slate-50/50 rounded-[2.5rem] p-8 border border-slate-100">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center border border-slate-100">
+               <Info className="w-5 h-5 text-slate-400" />
+            </div>
             <h3 className="font-bold text-slate-900">Meal Guidance</h3>
           </div>
-          <p className="text-sm text-amber-900/70 leading-relaxed font-medium">
+          <p className="text-sm text-slate-500 leading-relaxed font-medium italic">
             {typedDayContent.program_day.meal_guidance}
           </p>
         </div>
