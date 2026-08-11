@@ -22,9 +22,6 @@ const slugify = (input: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);
 
-const randomCode = () => Math.random().toString(36).slice(-8).toUpperCase();
-const randomPassword = () => Math.random().toString(36).slice(-10);
-
 function AdminTenants() {
   const queryClient = useQueryClient();
   const getTenantsFn = useServerFn(getTenants);
@@ -45,8 +42,8 @@ function AdminTenants() {
     name: "",
     ownerEmail: "",
     ownerName: "",
-    ownerPassword: randomPassword(),
-    accessCode: randomCode(),
+    ownerPassword: "",
+    accessCode: "",
     tagline: "",
     whatsapp: "",
     phone: "",
@@ -69,8 +66,8 @@ function AdminTenants() {
       setIsSuccessOpen(true);
       setFormData({
         name: "", ownerEmail: "", ownerName: "",
-        ownerPassword: randomPassword(),
-        accessCode: randomCode(),
+        ownerPassword: "",
+        accessCode: "",
         tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: "", customDomain: ""
       });
     },
