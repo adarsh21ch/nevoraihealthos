@@ -9,9 +9,23 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { createServerFn } from "@tanstack/react-start";
+import { resolveTenantHint } from "@/lib/tenant";
+import { getTenantByHint } from "@/lib/tenant.functions";
+import { TenantProvider } from "@/lib/tenant-context";
+import { TenantGate } from "@/components/site/TenantGate";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+
+const getRequestInfo = createServerFn({ method: "GET" }).handler(async ({ request }) => {
+  const url = new URL(request.url);
+  return {
+    hostname: url.hostname,
+    pathname: url.pathname,
+    search: url.search,
+  };
+});
 
 function NotFoundComponent() {
   return (
