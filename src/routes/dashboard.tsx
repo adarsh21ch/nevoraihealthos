@@ -52,7 +52,10 @@ function DashboardLayout() {
           </nav>
         </div>
         <div className="mt-auto p-6 border-t border-slate-800/50">
-           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-900/10 transition-all duration-200" onClick={handleSignOut}>
+           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-900/10 transition-all duration-200" onClick={async () => {
+             await supabase.auth.signOut();
+             navigate({ to: "/login" });
+           }}>
              <LogOut className="mr-3 h-4 w-4" />
              Sign Out
            </Button>
