@@ -23,10 +23,11 @@ function DashboardLayout() {
 
   const navItems = [
     { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
-    { name: "Tenants", icon: Building2, path: "/admin" },
-    { name: "Usage metrics", icon: TrendingUp, path: "/dashboard/metrics" },
-    { name: "Platform config", icon: Settings, path: "/dashboard/config" },
+    { name: "Tenants", icon: Building2, path: "/admin/" },
+    { name: "Usage metrics", icon: TrendingUp, path: "/dashboard/" },
+    { name: "Platform config", icon: Settings, path: "/dashboard/" },
   ];
+
 
   return (
     <div className="min-h-screen bg-[#FCFBF8] text-[#0F172A] flex font-sans">
