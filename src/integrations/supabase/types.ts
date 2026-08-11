@@ -130,6 +130,18 @@ export type Database = {
           },
         ]
       }
+      customers_metrics_fix: {
+        Row: {
+          id: string | null
+        }
+        Insert: {
+          id?: string | null
+        }
+        Update: {
+          id?: string | null
+        }
+        Relationships: []
+      }
       daily_logs: {
         Row: {
           created_at: string
