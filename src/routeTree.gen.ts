@@ -17,6 +17,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
+import { Route as AdminProductsRouteImport } from './routes/admin/products'
+import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
+import { Route as AdminTenantsRouteImport } from './routes/admin/tenants'
+import { Route as AdminTipsRouteImport } from './routes/admin/tips'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
 import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
@@ -26,7 +30,6 @@ import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder
 import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
-import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
 import { Route as AuthenticatedPTenantSlugGuideRouteImport } from './routes/_authenticated/p.$tenantSlug.guide'
 import { Route as AuthenticatedPTenantSlugJourneyRouteImport } from './routes/_authenticated/p.$tenantSlug.journey'
@@ -72,6 +75,26 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminContentRoute = AdminContentRouteImport.update({
   id: '/content',
   path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProgramsRoute = AdminProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTenantsRoute = AdminTenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTipsRoute = AdminTipsRouteImport.update({
+  id: '/tips',
+  path: '/tips',
   getParentRoute: () => AdminRoute,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
@@ -121,11 +144,6 @@ const DashboardCustomersCustomerIdRoute =
     path: '/$customerId',
     getParentRoute: () => DashboardCustomersRoute,
   } as any)
-const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
-  id: '/p/$tenantSlug/join',
-  path: '/p/$tenantSlug/join',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedPTenantSlugCompleteRoute =
   AuthenticatedPTenantSlugCompleteRouteImport.update({
     id: '/complete',
@@ -176,6 +194,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tenants': typeof AdminTenantsRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -186,7 +208,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
-  '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
@@ -200,6 +221,10 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tenants': typeof AdminTenantsRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -210,7 +235,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
-  '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
@@ -228,6 +252,10 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tenants': typeof AdminTenantsRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -238,7 +266,6 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
-  '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/_authenticated/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/_authenticated/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/_authenticated/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
@@ -256,6 +283,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/admin/products'
+    | '/admin/programs'
+    | '/admin/tenants'
+    | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -266,7 +297,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/p/$tenantSlug'
     | '/dashboard/customers/$customerId'
-    | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
     | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
@@ -280,6 +310,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/admin/products'
+    | '/admin/programs'
+    | '/admin/tenants'
+    | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -290,7 +324,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/p/$tenantSlug'
     | '/dashboard/customers/$customerId'
-    | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
     | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
@@ -307,6 +340,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/admin/products'
+    | '/admin/programs'
+    | '/admin/tenants'
+    | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -317,7 +354,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/_authenticated/p/$tenantSlug'
     | '/dashboard/customers/$customerId'
-    | '/p/$tenantSlug/join'
     | '/_authenticated/p/$tenantSlug/complete'
     | '/_authenticated/p/$tenantSlug/guide'
     | '/_authenticated/p/$tenantSlug/journey'
@@ -334,7 +370,6 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
-  PTenantSlugJoinRoute: typeof PTenantSlugJoinRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -393,6 +428,34 @@ declare module '@tanstack/react-router' {
       path: '/content'
       fullPath: '/admin/content'
       preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/programs': {
+      id: '/admin/programs'
+      path: '/programs'
+      fullPath: '/admin/programs'
+      preLoaderRoute: typeof AdminProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tenants': {
+      id: '/admin/tenants'
+      path: '/tenants'
+      fullPath: '/admin/tenants'
+      preLoaderRoute: typeof AdminTenantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tips': {
+      id: '/admin/tips'
+      path: '/tips'
+      fullPath: '/admin/tips'
+      preLoaderRoute: typeof AdminTipsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/dashboard/': {
@@ -457,13 +520,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/customers/$customerId'
       preLoaderRoute: typeof DashboardCustomersCustomerIdRouteImport
       parentRoute: typeof DashboardCustomersRoute
-    }
-    '/p/$tenantSlug/join': {
-      id: '/p/$tenantSlug/join'
-      path: '/p/$tenantSlug/join'
-      fullPath: '/p/$tenantSlug/join'
-      preLoaderRoute: typeof PTenantSlugJoinRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/p/$tenantSlug/complete': {
       id: '/_authenticated/p/$tenantSlug/complete'
@@ -570,11 +626,19 @@ const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminContentRoute: typeof AdminContentRouteWithChildren
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminProgramsRoute: typeof AdminProgramsRoute
+  AdminTenantsRoute: typeof AdminTenantsRoute
+  AdminTipsRoute: typeof AdminTipsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminContentRoute: AdminContentRouteWithChildren,
+  AdminProductsRoute: AdminProductsRoute,
+  AdminProgramsRoute: AdminProgramsRoute,
+  AdminTenantsRoute: AdminTenantsRoute,
+  AdminTipsRoute: AdminTipsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -622,7 +686,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
-  PTenantSlugJoinRoute: PTenantSlugJoinRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

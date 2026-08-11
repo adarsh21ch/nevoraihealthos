@@ -25,20 +25,25 @@ export const Route = createFileRoute('/_authenticated')({
     if (location.pathname.startsWith('/admin')) {
       if (role !== 'platform_admin') {
         toast.error("Access denied: Platform Admin only");
-        return { authContext }; // Stay put, don't redirect to login
+        throw redirect({ to: '/login' });
       }
     } else if (location.pathname.startsWith('/dashboard')) {
       if (role !== 'tenant_owner') {
         toast.error("Access denied: Tenant Owner only");
-        return { authContext };
+        throw redirect({ to: '/login' });
       }
     } else if (location.pathname.startsWith('/p/')) {
       const pathSegments = location.pathname.split('/');
       const urlTenantSlug = pathSegments[2];
       
+      // Platform Admins can view any tenant portal for testing/management
+      if (role === 'platform_admin') {
+        return { authContext };
+      }
+
       if (role === 'customer') {
         if (urlTenantSlug !== tenant_slug) {
-          throw redirect({ to: `/p/${tenant_slug}/today`, params: { tenantSlug: tenant_slug } } as any);
+          throw redirect({ to: `/p/${tenant_slug}/today` });
         }
         if (!onboarding_complete && !location.pathname.endsWith('/onboarding')) {
           throw redirect({ to: '/onboarding' });
@@ -48,8 +53,6 @@ export const Route = createFileRoute('/_authenticated')({
            toast.error("Access denied: Scoped to your own tenant");
            throw redirect({ to: '/dashboard' });
          }
-      } else if (role !== 'platform_admin') {
-        toast.error("Access denied");
       }
     }
     return { authContext };
