@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check, Key, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
@@ -30,6 +30,8 @@ function AdminTenants() {
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
+  const resetPasswordFn = useServerFn(resetTenantOwnerPassword);
+  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
 
   const { data: tenants = [], isLoading } = useQuery({
     queryKey: ["admin-tenants"],
@@ -40,6 +42,8 @@ function AdminTenants() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [createdTenantInfo, setCreatedTenantInfo] = useState<any>(null);
+  const [selectedTenant, setSelectedTenant] = useState<any>(null);
+  const [isManageOpen, setIsManageOpen] = useState(false);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -51,7 +55,8 @@ function AdminTenants() {
     whatsapp: "",
     phone: "",
     primaryColor: "#16a34a",
-    logoUrl: ""
+    logoUrl: "",
+    customDomain: ""
   });
 
   const createMutation = useMutation({
@@ -70,7 +75,7 @@ function AdminTenants() {
         name: "", ownerEmail: "", ownerName: "",
         ownerPassword: randomPassword(),
         accessCode: randomCode(),
-        tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: ""
+        tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: "", customDomain: ""
       });
     },
     onError: (error: any) => {
@@ -194,7 +199,7 @@ function AdminTenants() {
                   </span>
                 </TableCell>
                 <TableCell className="text-right pr-10 space-x-2">
-                  <Button variant="ghost" size="sm" className="rounded-xl h-10 px-3 text-slate-400 hover:text-slate-900"><Edit2 className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="sm" className="rounded-xl h-10 px-3 text-slate-400 hover:text-slate-900" onClick={() => { setSelectedTenant(tenant); setIsManageOpen(true); }}><Edit2 className="h-4 w-4" /></Button>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -259,6 +264,10 @@ function AdminTenants() {
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Logo</label>
                     <Input type="file" accept="image/*" onChange={handleUploadLogo} className="h-11 rounded-xl bg-slate-50 border-slate-200 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white" />
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Custom Domain <span className="text-slate-300">(optional)</span></label>
+                    <Input placeholder="fat2fit.nevorai.com" value={formData.customDomain} onChange={e => setFormData({ ...formData, customDomain: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -310,6 +319,87 @@ function AdminTenants() {
             </div>
 
             <Button onClick={() => setIsSuccessOpen(false)} className="w-full bg-slate-900 text-white font-bold rounded-xl h-12">Close & Continue</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Management Dialog */}
+      <Dialog open={isManageOpen} onOpenChange={setIsManageOpen}>
+        <DialogContent className="max-w-md bg-white rounded-[2rem] p-8 border-none shadow-2xl">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900">Manage Tenant</h2>
+              <p className="text-slate-500 font-medium mt-1">{selectedTenant?.name}</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Credentials</h3>
+                
+                <div className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full h-11 rounded-xl justify-start bg-white border-slate-200 text-slate-900 font-bold"
+                    onClick={async () => {
+                      const newPass = randomPassword();
+                      try {
+                        await resetPasswordFn({ data: { tenantId: selectedTenant.id, email: selectedTenant.email, newPassword: newPass } });
+                        toast.success(`Password reset to: ${newPass}`, { duration: 10000 });
+                        navigator.clipboard.writeText(newPass);
+                      } catch (e: any) {
+                        toast.error(e.message);
+                      }
+                    }}
+                  >
+                    <Key className="w-4 h-4 mr-3 text-slate-400" />
+                    Reset Owner Password
+                  </Button>
+
+                  <Button 
+                    variant="outline" 
+                    className="w-full h-11 rounded-xl justify-start bg-white border-slate-200 text-slate-900 font-bold"
+                    onClick={async () => {
+                      const newCode = randomCode();
+                      try {
+                        await rotateCodeFn({ data: { tenantId: selectedTenant.id, accessCode: newCode } });
+                        toast.success(`Access code rotated to: ${newCode}`);
+                      } catch (e: any) {
+                        toast.error(e.message);
+                      }
+                    }}
+                  >
+                    <Shield className="w-4 h-4 mr-3 text-slate-400" />
+                    Rotate Access Code
+                  </Button>
+                </div>
+              </div>
+
+              <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Status</h3>
+                <Button 
+                  className={`w-full h-11 rounded-xl font-bold ${
+                    selectedTenant?.status === 'active' 
+                      ? 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100' 
+                      : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                  }`}
+                  onClick={() => {
+                    statusMutation.mutate({ 
+                      id: selectedTenant.id, 
+                      status: selectedTenant.status === 'active' ? 'suspended' : 'active' 
+                    });
+                    setIsManageOpen(false);
+                  }}
+                >
+                  {selectedTenant?.status === 'active' ? (
+                    <><PowerOff className="w-4 h-4 mr-2" /> Suspend Platform</>
+                  ) : (
+                    <><Power className="w-4 h-4 mr-2" /> Activate Platform</>
+                  )}
+                </Button>
+              </div>
+            </div>
+            
+            <Button variant="ghost" onClick={() => setIsManageOpen(false)} className="w-full h-12 font-bold text-slate-400">Close</Button>
           </div>
         </DialogContent>
       </Dialog>

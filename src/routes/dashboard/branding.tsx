@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/dashboard/branding")({
   loader: async () => {
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { data: tenant } = await supabase.from('tenants').select('id, name, tagline, logo_url, primary_color, whatsapp').eq('id', (authContext as any).tenant_id).single();
+    const { data: tenant } = await supabase.from('tenants').select('id, name, tagline, logo_url, primary_color, whatsapp, custom_domain').eq('id', (authContext as any).tenant_id).single();
     return { tenant };
   },
   component: BrandingPage,
@@ -24,7 +24,8 @@ function BrandingPage() {
     tagline: tenant?.tagline || "",
     primaryColor: tenant?.primary_color || "#000000",
     logoUrl: tenant?.logo_url || "",
-    whatsapp: tenant?.whatsapp || ""
+    whatsapp: tenant?.whatsapp || "",
+    customDomain: tenant?.custom_domain || ""
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -35,8 +36,9 @@ function BrandingPage() {
       tagline: formData.tagline,
       primary_color: formData.primaryColor,
       logo_url: formData.logoUrl,
-      whatsapp: formData.whatsapp
-    }).eq('id', tenant?.id);
+      whatsapp: formData.whatsapp,
+      custom_domain: formData.customDomain
+    } as any).eq('id', tenant?.id);
 
     if (error) toast.error(error.message);
     else toast.success("Branding updated");
@@ -61,6 +63,14 @@ function BrandingPage() {
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">WhatsApp</Label>
                 <Input value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="h-12 rounded-xl" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Custom Domain</Label>
+                <div className="flex gap-2">
+                  <Input value={formData.customDomain} onChange={e => setFormData({...formData, customDomain: e.target.value})} className="h-12 rounded-xl flex-1" placeholder="yourbrand.com" />
+                  <Button variant="outline" className="h-12 rounded-xl" onClick={() => toast.info("DNS verification feature coming soon. Please contact support to verify your domain.")}>Verify</Button>
+                </div>
+                <p className="text-[10px] text-slate-400 font-bold tracking-tight">Point your CNAME to <code className="text-slate-900">domains.nevorai.com</code></p>
               </div>
             </div>
             <div className="space-y-6 text-center">
