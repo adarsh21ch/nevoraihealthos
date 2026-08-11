@@ -202,7 +202,11 @@ function AdminTenants() {
                   </span>
                 </TableCell>
                 <TableCell className="text-right pr-10 space-x-2">
-                  <Button variant="ghost" size="sm" className="rounded-xl h-10 px-3 text-slate-400 hover:text-slate-900" onClick={() => { setSelectedTenant(tenant); setIsManageOpen(true); }}><Edit2 className="h-4 w-4" /></Button>
+                  <Button asChild variant="ghost" size="sm" className="rounded-xl h-10 px-3 text-slate-400 hover:text-slate-900">
+                    <Link to="/admin/tenants/$tenantId" params={{ tenantId: tenant.id }} aria-label={`Manage ${tenant.name}`}>
+                      <Edit2 className="h-4 w-4" />
+                    </Link>
+                  </Button>
                   <Button 
                     variant="ghost" 
                     size="sm" 
