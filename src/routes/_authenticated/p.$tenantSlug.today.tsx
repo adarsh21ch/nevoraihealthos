@@ -5,7 +5,10 @@ import { getTodayData, toggleTaskCompletion, updateDailyLog, ProgramDayContent, 
 import { CheckCircle2, Circle, Droplets, Info, Calendar, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/today')({
   component: TodayPage,
