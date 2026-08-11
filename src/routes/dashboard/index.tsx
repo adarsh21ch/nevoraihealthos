@@ -15,33 +15,33 @@ function DashboardOverview() {
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">System Operational</span>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]"></span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Infrastructure Active</span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-white leading-none">Platform control</h1>
-          <p className="text-zinc-500 mt-2 font-light text-lg">Infrastructure signals across every tenant.</p>
+          <h1 className="text-5xl font-bold tracking-tight text-slate-900 leading-none">Dashboard</h1>
+          <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Health OS signals across managed client tenants.</p>
         </div>
-        <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest bg-zinc-900/30 px-3 py-1.5 rounded-lg border border-zinc-900/50">
-          Snapshot: {new Date().toLocaleDateString()}
+        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
+          Sync: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.title} className="bg-zinc-900/20 border-zinc-900 hover:bg-zinc-900/40 transition-all duration-300 rounded-2xl group cursor-default">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{stat.title}</CardTitle>
-              <stat.icon className="h-4 w-4 text-zinc-600 transition-colors group-hover:text-white" />
+          <Card key={stat.title} className="bg-white border-slate-100 hover:border-slate-200 transition-all duration-300 rounded-[2rem] group cursor-default shadow-sm hover:shadow-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-3 px-8 pt-8">
+              <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{stat.title}</CardTitle>
+              <stat.icon className="h-4 w-4 text-slate-300 transition-colors group-hover:text-slate-900" />
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-white tracking-tight">{stat.value}</div>
-              <div className="flex items-center gap-2 mt-2">
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  stat.change.includes('+') ? 'bg-emerald-500/10 text-emerald-500' : 'bg-zinc-800 text-zinc-400'
+            <CardContent className="px-8 pb-8">
+              <div className="text-4xl font-bold text-slate-900 tracking-tight">{stat.value}</div>
+              <div className="flex items-center gap-2 mt-3">
+                <span className={`text-[10px] font-bold px-3 py-1 rounded-full ${
+                  stat.change.includes('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-500'
                 }`}>
                   {stat.change}
                 </span>
@@ -52,34 +52,40 @@ function DashboardOverview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 bg-zinc-900/20 border-zinc-900 rounded-2xl overflow-hidden">
-          <CardHeader className="border-b border-zinc-900/50 bg-zinc-900/10 px-6 py-4">
-            <CardTitle className="text-sm font-bold text-zinc-300 uppercase tracking-widest">Infrastructure Health</CardTitle>
+        <Card className="lg:col-span-2 bg-white border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+          <CardHeader className="border-b border-slate-50 bg-slate-50/30 px-8 py-6">
+            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">System Availability</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 grid gap-4 md:grid-cols-2">
-            {['Database', 'WhatsApp API', 'Auth Service', 'Storage'].map(service => (
-              <div key={service} className="flex justify-between items-center p-4 rounded-xl bg-black border border-zinc-900 hover:border-zinc-800 transition-colors group">
-                <span className="text-sm font-medium text-zinc-400 group-hover:text-zinc-300">{service}</span>
-                <span className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 uppercase tracking-wider">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"/> stable
+          <CardContent className="p-8 grid gap-4 md:grid-cols-2">
+            {['Global Database', 'WhatsApp API', 'Auth Gateway', 'Asset Storage'].map(service => (
+              <div key={service} className="flex justify-between items-center p-5 rounded-2xl bg-white border border-slate-100 hover:border-slate-200 transition-colors group">
+                <span className="text-sm font-bold text-slate-500 group-hover:text-slate-900">{service}</span>
+                <span className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"/> online
                 </span>
               </div>
             ))}
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-900/20 border-zinc-900 rounded-2xl overflow-hidden flex flex-col">
-          <CardHeader className="border-b border-zinc-900/50 bg-zinc-900/10 px-6 py-4">
-            <CardTitle className="text-sm font-bold text-zinc-300 uppercase tracking-widest">Quick Actions</CardTitle>
+        <Card className="bg-white border-slate-100 rounded-[2.5rem] overflow-hidden flex flex-col shadow-sm">
+          <CardHeader className="border-b border-slate-50 bg-slate-50/30 px-8 py-6">
+            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Maintenance</CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-3 flex-1">
-             <button className="w-full h-11 bg-white text-black font-bold rounded-xl text-sm hover:bg-zinc-200 transition-colors">Onboard Client</button>
-             <button className="w-full h-11 bg-zinc-900 text-white font-bold rounded-xl text-sm hover:bg-zinc-800 transition-colors border border-zinc-800">System Report</button>
-             <div className="pt-4 mt-auto">
-                <p className="text-[10px] text-zinc-600 font-medium text-center leading-relaxed">
-                  Platform maintenance is scheduled for <br/>Sunday, 02:00 AM UTC
+          <CardContent className="p-8 space-y-4 flex-1">
+             <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Upcoming Window</p>
+                <p className="text-sm font-bold text-slate-900 leading-relaxed">
+                  Sunday, 02:00 AM UTC <br/>
+                  Duration: 15 mins
                 </p>
              </div>
+             <button className="w-full h-12 bg-slate-900 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
+               View Logs
+             </button>
+             <button className="w-full h-12 bg-white text-slate-500 font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-slate-50 transition-all border border-slate-100">
+               Audit Assets
+             </button>
           </CardContent>
         </Card>
       </div>
