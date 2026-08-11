@@ -46,6 +46,7 @@ function Index() {
   // redirect to the tenant's public landing or join page
   useEffect(() => {
     if (tenant) {
+      // Force immediate redirect to join flow for custom domains to ensure brand isolation
       navigate({ to: '/p/$tenantSlug/join', params: { tenantSlug: tenant.slug }, replace: true });
     }
   }, [tenant, navigate]);

@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_authenticated')({
 
     if (!user) {
       // If we're on a custom domain, redirect to their branded join page
-      if (tenant && isCustomDomain && location.pathname === '/') {
+      if (tenant && isCustomDomain) {
         throw redirect({ to: `/p/${tenant.slug}/join` as any });
       }
 

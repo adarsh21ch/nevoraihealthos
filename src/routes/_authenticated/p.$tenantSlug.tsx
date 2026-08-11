@@ -50,7 +50,7 @@ function TenantLayout() {
   const navItems = [
     { label: 'Today', icon: Home, href: `/p/${tenantSlug}/today` },
     { label: 'Journey', icon: Calendar, href: `/p/${tenantSlug}/journey` },
-    { label: 'Progress', icon: Trophy, href: `/p/${tenantSlug}/progress` },
+    { label: 'Diet', icon: Trophy, href: `/p/${tenantSlug}/diet` },
     { label: 'Kit', icon: Package, href: `/p/${tenantSlug}/kit` },
     { label: 'Guide', icon: BookOpen, href: `/p/${tenantSlug}/guide` },
   ];
