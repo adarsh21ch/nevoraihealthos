@@ -127,7 +127,7 @@ function ProgramsTab({ programs, isLoading, onSave }: any) {
                   <TableCell>{p.sort_order}</TableCell>
                   <TableCell className="text-right flex justify-end gap-2">
                     <Button variant="ghost" size="sm" asChild>
-                      <Link to={`/admin/content/programs/${p.id}/days`}>Build Days</Link>
+                      <Link to={`/admin/content/programs/${p.id}/days` as any}>Build Days</Link>
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => { setEditingProgram(p); setIsOpen(true); }}>
                       <Edit2 className="h-4 w-4" />
