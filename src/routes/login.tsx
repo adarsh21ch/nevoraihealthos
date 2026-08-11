@@ -16,11 +16,13 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -30,7 +32,6 @@ function LoginPage() {
 
       if (error) throw error;
 
-      // Get auth context
       const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
       
       if (contextError) throw contextError;
@@ -48,17 +49,17 @@ function LoginPage() {
           navigate({ to: "/onboarding" });
         }
       } else {
-        toast.error("Account not properly configured. Contact support.");
+        setError("Account not properly configured. Contact support.");
       }
     } catch (error: any) {
-      toast.error(error.message || "Incorrect email or password");
+      setError(error.message || "Incorrect email or password");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[#FCFBF8] font-sans">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-surface font-sans">
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
@@ -93,11 +94,16 @@ function LoginPage() {
           </div>
           
           <div className="space-y-2 text-center lg:text-left">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900">Sign in</h2>
-            <p className="text-slate-500 font-medium">Enter your credentials to access your dashboard.</p>
+            <h2 className="text-3xl font-bold tracking-tight text-ink">Sign in</h2>
+            <p className="text-muted font-medium">Enter your credentials to access your dashboard.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
+            {error && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-100 text-red-600 text-xs font-bold uppercase tracking-wider animate-in fade-in slide-in-from-top-1">
+                {error}
+              </div>
+            )}
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email or Identifier</Label>
               <Input
