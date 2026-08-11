@@ -274,12 +274,12 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
     return { success: true, newCode: data.accessCode };
   });
 
-export const resetTenantOwnerPassword = createServerFn({ method: "POST" })
+export const updateTenantOwnerCredentials = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     tenantId: z.string().uuid(),
-    email: z.string().email(),
-    newPassword: z.string().min(6)
+    email: z.string().email().optional(),
+    password: z.string().min(6).optional()
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { userId } = context;
@@ -299,12 +299,27 @@ export const resetTenantOwnerPassword = createServerFn({ method: "POST" })
 
     if (!profile) throw new Error("Owner not found");
 
+    const updates: any = {};
+    if (data.email) updates.email = data.email;
+    if (data.password) updates.password = data.password;
+
+    if (Object.keys(updates).length === 0) return { success: true };
+
     const { error } = await supabaseAdmin.auth.admin.updateUserById(
       profile.user_id,
-      { password: data.newPassword }
+      updates
     );
 
     if (error) throw error;
+    
+    // If email was updated, sync the tenants table email field as well
+    if (data.email) {
+      await supabaseAdmin
+        .from("tenants")
+        .update({ email: data.email })
+        .eq("id", data.tenantId);
+    }
+
     return { success: true };
   });
 
