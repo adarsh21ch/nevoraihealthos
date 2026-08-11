@@ -301,3 +301,32 @@ export const resetTenantOwnerPassword = createServerFn({ method: "POST" })
     if (error) throw error;
     return { success: true };
   });
+
+export const updateTenantDetails = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    id: z.string().uuid(),
+    name: z.string().optional(),
+    tagline: z.string().optional(),
+    primary_color: z.string().optional(),
+    logo_url: z.string().optional(),
+    custom_domain: z.string().optional(),
+    whatsapp: z.string().optional()
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 1. Verify caller is platform admin
+    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const { id, ...updates } = data;
+    const { error } = await supabaseAdmin
+      .from("tenants")
+      .update(updates as any)
+      .eq("id", id);
+
+    if (error) throw error;
+    return { success: true };
+  });
