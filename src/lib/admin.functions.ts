@@ -188,6 +188,34 @@ export const createTenant = createServerFn({ method: "POST" })
     }
   });
 
+export const getMyTenantAccessCode = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    // Resolve the caller's own tenant; credentials are never exposed to the client table-side
+    const { data: authContext } = await supabase.rpc("get_my_auth_context");
+    const ctx = authContext as { role?: string; tenant_id?: string } | null;
+    const tenantId = ctx?.tenant_id;
+
+    if (!tenantId || (ctx?.role !== "tenant_owner" && ctx?.role !== "platform_admin")) {
+      throw new Error("Unauthorized");
+    }
+
+    const { data: isMember } = await supabase.rpc("is_tenant_member", { _uid: userId, _tenant: tenantId });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (!isMember && !isAdmin) throw new Error("Unauthorized");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: creds } = await supabaseAdmin
+      .from("tenant_signup_credentials")
+      .select("access_code")
+      .eq("tenant_id", tenantId)
+      .maybeSingle();
+
+    return { accessCode: creds?.access_code ?? null };
+  });
+
 export const updateTenantStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
