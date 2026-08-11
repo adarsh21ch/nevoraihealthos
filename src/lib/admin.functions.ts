@@ -364,22 +364,57 @@ export const updateTenantOwnerCredentials = createServerFn({ method: "POST" })
       .select("user_id")
       .eq("tenant_id", data.tenantId)
       .eq("role", "owner")
-      .single();
-
-    if (!profile) throw new Error("Owner not found");
+      .maybeSingle();
 
     const updates: any = {};
     if (data.email) updates.email = data.email;
     if (data.password) updates.password = data.password;
 
-    if (Object.keys(updates).length === 0) return { success: true };
+    if (profile?.user_id) {
+      if (Object.keys(updates).length === 0) return { success: true };
 
-    const { error } = await supabaseAdmin.auth.admin.updateUserById(
-      profile.user_id,
-      updates
-    );
+      const { error } = await supabaseAdmin.auth.admin.updateUserById(
+        profile.user_id,
+        updates
+      );
+      if (error) throw error;
+    } else {
+      // 3b. Fallback: Create owner account if missing
+      if (!data.email || !data.password) {
+        throw new Error("Cannot create owner: Email and Password are required for first-time setup.");
+      }
 
-    if (error) throw error;
+      const { data: tenant } = await supabaseAdmin
+        .from("tenants")
+        .select("name, owner_name")
+        .eq("id", data.tenantId)
+        .single();
+
+      const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+        email: data.email,
+        password: data.password,
+        email_confirm: true,
+        user_metadata: { 
+          full_name: tenant?.owner_name || tenant?.name,
+          tenant_id: data.tenantId
+        }
+      });
+
+      if (authError) throw authError;
+
+      const { error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .insert({
+          user_id: authUser.user.id,
+          tenant_id: data.tenantId,
+          role: "owner"
+        });
+
+      if (profileError) {
+        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+        throw profileError;
+      }
+    }
     
     // If email was updated, sync the tenants table email field as well
     if (data.email) {

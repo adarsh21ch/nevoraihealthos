@@ -22,7 +22,7 @@ import { checkAdminStatus, getUserRole } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin/content")({
+export const Route = createFileRoute("/admin/content/")({
   component: AdminContentManagement,
 });
 
@@ -51,7 +51,7 @@ function AdminContentManagement() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Content Management</h1>
         <div className="flex gap-2">
-          <Button variant="outline" asChild><Link to="/admin">Back to Tenants</Link></Button>
+          <Button variant="outline" asChild><Link to="/admin/">Back to Performance</Link></Button>
         </div>
       </div>
 

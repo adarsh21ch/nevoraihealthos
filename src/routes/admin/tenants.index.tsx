@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/admin/tenants")({
+export const Route = createFileRoute("/admin/tenants/")({
   component: AdminTenants,
 });
 
@@ -172,11 +172,15 @@ function AdminTenants() {
             )}
             {tenants.map((tenant: any) => (
               <TableRow key={tenant.id} className="border-slate-100 hover:bg-slate-50 transition-colors group">
-                <TableCell className="font-bold pl-10 py-7 text-ink text-lg">
-                  <div className="flex items-center gap-3">
+                <TableCell className="pl-10 py-7">
+                  <Link 
+                    to="/admin/tenants/$tenantId" 
+                    params={{ tenantId: tenant.id }}
+                    className="flex items-center gap-3 font-bold text-ink text-lg hover:text-slate-600 transition-colors"
+                  >
                     {tenant.logo_url && <img src={tenant.logo_url} className="w-8 h-8 rounded-lg object-contain bg-slate-50 border" loading="lazy" alt="" />}
                     {tenant.name}
-                  </div>
+                  </Link>
                 </TableCell>
                 <TableCell>
                   <code className="text-[11px] font-bold bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-slate-500">/p/{tenant.slug}</code>

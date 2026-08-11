@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, ChevronLeft, ChevronRight, User, ExternalLink } from "lucide-react";
 
-export const Route = createFileRoute("/dashboard/customers")({
+export const Route = createFileRoute("/dashboard/customers/")({
   component: CustomersPage,
 });
 
@@ -69,12 +69,15 @@ function CustomersPage() {
                 return (
                   <TableRow key={customer.id} className="group hover:bg-slate-50/50 border-slate-50 transition-colors">
                     <TableCell className="px-8 py-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                      <Link 
+                        to={`/dashboard/customers/${customer.id}` as any}
+                        className="flex items-center gap-3 group/link"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover/link:bg-slate-200 transition-colors">
                           <User className="h-5 w-5" />
                         </div>
-                        <span className="font-bold text-slate-900">{customer.name}</span>
-                      </div>
+                        <span className="font-bold text-slate-900 group-hover/link:text-slate-600 transition-colors">{customer.name}</span>
+                      </Link>
                     </TableCell>
                     <TableCell className="py-5 font-medium text-slate-600">{program?.name || "No active program"}</TableCell>
                     <TableCell className="py-5">
