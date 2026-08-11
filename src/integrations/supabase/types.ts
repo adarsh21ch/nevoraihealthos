@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      customer_measurements: {
+        Row: {
+          arm_cm: number | null
+          chest_cm: number | null
+          created_at: string | null
+          customer_id: string
+          hip_cm: number | null
+          id: string
+          taken_on: string
+          thigh_cm: number | null
+          waist_cm: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          arm_cm?: number | null
+          chest_cm?: number | null
+          created_at?: string | null
+          customer_id: string
+          hip_cm?: number | null
+          id?: string
+          taken_on?: string
+          thigh_cm?: number | null
+          waist_cm?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          arm_cm?: number | null
+          chest_cm?: number | null
+          created_at?: string | null
+          customer_id?: string
+          hip_cm?: number | null
+          id?: string
+          taken_on?: string
+          thigh_cm?: number | null
+          waist_cm?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_measurements_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           age: number | null

@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
     const { data: tenant, error } = await supabase
       .from('tenants')
-      .select('id, name, slug, logo_url, primary_color, tagline, is_active')
+      .select('id, name, slug, logo_url, primary_color, tagline')
       .eq('slug', params.tenantSlug)
       .single();
     
@@ -37,16 +37,7 @@ function TenantLayout() {
     );
   }
 
-  if (tenant.is_active === false) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-[#FCFBF8] text-center">
-        <div className="max-w-md space-y-4">
-          <h1 className="text-2xl font-bold text-slate-900">Service Temporarily Unavailable</h1>
-          <p className="text-slate-500">{tenant.name} is currently updating their platform. Please check back later.</p>
-        </div>
-      </div>
-    );
-  }
+// Removed is_active check since column is removed
 
   const primaryColor = tenant.primary_color || '#16a34a';
 
