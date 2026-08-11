@@ -6,6 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 
+import { getDashboardStats } from "@/lib/dashboard.functions";
+import { useServerFn } from "@tanstack/react-start";
+
 export const Route = createFileRoute("/dashboard/")({
   loader: async () => {
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
@@ -14,37 +17,29 @@ export const Route = createFileRoute("/dashboard/")({
     // Scoped queries to this tenant
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('*')
+      .select('id, slug, name, owner_name, logo_url, tagline, primary_color')
       .eq('id', ctx.tenant_id)
       .single();
 
-    // Stats
-    const { count: customerCount } = await supabase
-      .from('customers')
-      .select('*', { count: 'exact', head: true })
-      .eq('tenant_id', ctx.tenant_id);
-
-    return { 
-      tenant, 
-      stats: {
-        activeCustomers: customerCount || 0,
-        completingThisWeek: 0,
-        atRisk: 0,
-        completedAllTime: 0
-      }
-    };
+    return { tenant };
   },
   component: DashboardOverview,
 });
 
 function DashboardOverview() {
-  const { tenant, stats } = useLoaderData({ from: '/dashboard/' });
+  const { tenant } = useLoaderData({ from: '/dashboard/' });
+  const fetchStats = useServerFn(getDashboardStats);
+
+  const { data: stats } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: () => fetchStats(),
+  });
 
   const statCards = [
-    { title: "Active Customers", value: stats.activeCustomers.toString(), icon: Users, color: "text-emerald-500" },
-    { title: "Completing this week", value: stats.completingThisWeek.toString(), icon: TrendingUp, color: "text-blue-500" },
-    { title: "At-risk (3+ days)", value: stats.atRisk.toString(), icon: Shield, color: "text-red-500" },
-    { title: "Completed all-time", value: stats.completedAllTime.toString(), icon: Info, color: "text-slate-500" },
+    { title: "Active Customers", value: stats?.activeCustomers?.toString() || "...", icon: Users, color: "text-emerald-500", path: "/dashboard/customers" },
+    { title: "Reorder Needed", value: stats?.reorder?.toString() || "...", icon: Package, color: "text-blue-500", path: "/dashboard/reorder" },
+    { title: "At-risk (3+ days)", value: stats?.atRisk?.toString() || "...", icon: Shield, color: "text-red-500", path: "/dashboard/at-risk" },
+    { title: "Completing This Week", value: stats?.completingThisWeek?.toString() || "0", icon: TrendingUp, color: "text-slate-500", path: "/dashboard/reorder" },
   ];
 
   const joinLink = `${window.location.origin}/p/${tenant?.slug}/join`;
@@ -64,7 +59,8 @@ function DashboardOverview() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
-          <Card key={stat.title} className="bg-white border-slate-100 rounded-[2rem] shadow-sm">
+          <Link key={stat.title} to={stat.path as any}>
+            <Card className="bg-white border-slate-100 rounded-[2rem] shadow-sm hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between pb-3 px-8 pt-8">
               <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{stat.title}</CardTitle>
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
@@ -73,6 +69,7 @@ function DashboardOverview() {
               <div className="text-4xl font-bold text-slate-900 tracking-tight">{stat.value}</div>
             </CardContent>
           </Card>
+        </Link>
         ))}
       </div>
 
