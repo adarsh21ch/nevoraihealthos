@@ -1,3 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { createFileRoute, useLoaderData, Link } from '@tanstack/react-query'; // Error here, should be react-router
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCompletionData, updateShareConsent, createReferral } from '@/lib/completion/completion.functions';
