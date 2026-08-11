@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_authenticated')({
     if (!user) {
       // If we're on a subdomain, redirect to the specific join page if they try to access /
       if (hostnameSlug && location.pathname === '/') {
-        throw redirect({ to: `/p/${hostnameSlug}/join` });
+        throw redirect({ to: `/p/${hostnameSlug}/join` as any });
       }
 
       throw redirect({
@@ -55,7 +55,7 @@ export const Route = createFileRoute('/_authenticated')({
         if (urlTenantSlug !== tenant_slug) {
           // If the customer tries to access a different tenant portal, redirect them back to their own
           toast.error(`Access denied: You are enrolled in ${tenant_slug}`);
-          throw redirect({ to: `/p/${tenant_slug}/today` });
+          throw redirect({ to: `/p/${tenant_slug}/today` as any });
         }
         if (!onboarding_complete && !location.pathname.endsWith('/onboarding')) {
           throw redirect({ to: '/onboarding' });
