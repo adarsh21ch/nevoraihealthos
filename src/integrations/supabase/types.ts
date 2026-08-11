@@ -713,24 +713,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_roles: {
-        Row: {
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
       whatsapp_otp_codes: {
         Row: {
           attempts: number
@@ -832,13 +814,6 @@ export type Database = {
         Args: { _date: string; _program_id: string; _start_date: string }
         Returns: Json
       }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
       is_tenant_member: {
         Args: { _tenant: string; _uid: string }
@@ -846,13 +821,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role:
-        | "admin"
-        | "moderator"
-        | "user"
-        | "platform_admin"
-        | "tenant_owner"
-        | "customer"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -979,15 +948,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: [
-        "admin",
-        "moderator",
-        "user",
-        "platform_admin",
-        "tenant_owner",
-        "customer",
-      ],
-    },
+    Enums: {},
   },
 } as const

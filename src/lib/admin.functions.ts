@@ -6,8 +6,8 @@ export const checkAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "platform_admin" });
-    if (error || !data) throw new Error("Unauthorized");
+    const { data: isAdmin, error } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (error || !isAdmin) throw new Error("Unauthorized");
     return { isAdmin: true };
   });
 
@@ -31,7 +31,7 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     
     // 1. Verify caller is platform admin
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "platform_admin" });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -45,20 +45,7 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
 
     if (authError) throw authError;
 
-    // 3. Assign role
-    const { error: roleError } = await supabaseAdmin
-      .from("user_roles")
-      .insert({
-        user_id: authUser.user.id,
-        role: "tenant_owner"
-      });
-
-    if (roleError) {
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
-      throw roleError;
-    }
-
-    // 4. Create profile link
+    // 3. Create profile link
     const { error: profileError } = await supabaseAdmin
       .from("profiles")
       .insert({
@@ -68,7 +55,6 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
       });
 
     if (profileError) {
-       // Roles table will cascade delete on user delete
        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
        throw profileError;
     }
