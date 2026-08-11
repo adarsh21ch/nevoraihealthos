@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useLoaderData } from '@tanstack/react-query';
+import { createFileRoute, Link, useLoaderData } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useState } from 'react';
@@ -6,9 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, ArrowRight, ShieldCheck, Zap, Smartphone } from 'lucide-react';
-import { createFileRoute as createTSRoute } from '@tanstack/react-router';
 
-export const Route = createTSRoute('/p/$tenantSlug/join')({
+export const Route = createFileRoute('/p/$tenantSlug/join')({
   loader: async ({ params }) => {
     const { data: tenant, error } = await supabase
       .from('tenants')
