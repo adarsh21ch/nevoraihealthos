@@ -82,7 +82,7 @@ function BrandingPage() {
           <div className="grid md:grid-cols-2 gap-10">
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Academy Name</Label>
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Brand / Website Name</Label>
                 <Input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="h-12 rounded-xl" />
               </div>
               <div className="space-y-2">
