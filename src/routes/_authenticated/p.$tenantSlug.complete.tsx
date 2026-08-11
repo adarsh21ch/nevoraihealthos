@@ -185,18 +185,24 @@ function CompletionPage() {
 
             <div className="grid grid-cols-2 gap-12 h-[700px]">
               <div className="rounded-[3rem] bg-slate-50 border-4 border-slate-100 flex items-center justify-center relative overflow-hidden">
-                {shareConsent ? (
-                   <div className="text-slate-300 text-2xl font-bold">Before Photo</div>
+                {shareConsent && (data as any).photos?.[0] ? (
+                   <img src={(data as any).photos[0].photo_url} className="w-full h-full object-cover" loading="lazy" alt="" />
                 ) : (
-                  <div className="text-slate-300 text-2xl font-bold uppercase tracking-widest italic opacity-20">Private</div>
+                  <div className="text-slate-300 text-2xl font-bold uppercase tracking-widest italic opacity-20">
+                    {shareConsent ? 'No Photos' : 'Private'}
+                  </div>
                 )}
+                {shareConsent && (data as any).photos?.[0] && <div className="absolute top-8 left-8 bg-black/40 backdrop-blur-md px-6 py-2 rounded-full text-xl font-bold text-white uppercase tracking-widest">Before</div>}
               </div>
               <div className="rounded-[3rem] bg-slate-50 border-4 border-[var(--accent)] flex items-center justify-center relative overflow-hidden">
-                {shareConsent ? (
-                  <div className="text-slate-300 text-2xl font-bold">After Photo</div>
+                {shareConsent && (data as any).photos?.length > 1 ? (
+                  <img src={(data as any).photos[(data as any).photos.length - 1].photo_url} className="w-full h-full object-cover" loading="lazy" alt="" />
                 ) : (
-                  <div className="text-slate-300 text-2xl font-bold uppercase tracking-widest italic opacity-20">Private</div>
+                  <div className="text-slate-300 text-2xl font-bold uppercase tracking-widest italic opacity-20">
+                    {shareConsent ? 'No Photos' : 'Private'}
+                  </div>
                 )}
+                {shareConsent && (data as any).photos?.length > 1 && <div className="absolute top-8 right-8 bg-[var(--accent)] px-6 py-2 rounded-full text-xl font-bold text-white uppercase tracking-widest">After</div>}
               </div>
             </div>
 
