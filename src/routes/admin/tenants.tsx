@@ -51,7 +51,8 @@ function AdminTenants() {
     whatsapp: "",
     phone: "",
     primaryColor: "#16a34a",
-    logoUrl: ""
+    logoUrl: "",
+    customDomain: ""
   });
 
   const createMutation = useMutation({
@@ -70,7 +71,7 @@ function AdminTenants() {
         name: "", ownerEmail: "", ownerName: "",
         ownerPassword: randomPassword(),
         accessCode: randomCode(),
-        tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: ""
+        tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: "", customDomain: ""
       });
     },
     onError: (error: any) => {
@@ -258,6 +259,10 @@ function AdminTenants() {
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Logo</label>
                     <Input type="file" accept="image/*" onChange={handleUploadLogo} className="h-11 rounded-xl bg-slate-50 border-slate-200 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Custom Domain <span className="text-slate-300">(optional)</span></label>
+                    <Input placeholder="fat2fit.nevorai.com" value={formData.customDomain} onChange={e => setFormData({ ...formData, customDomain: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
                   </div>
                 </div>
               </div>

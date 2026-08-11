@@ -73,7 +73,7 @@ export const getTenants = createServerFn({ method: "GET" })
     
     const { data, error } = await supabaseAdmin
       .from("tenants")
-      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
+      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, custom_domain, created_at")
       .order("created_at", { ascending: false })
       .limit(200);
       
@@ -102,7 +102,8 @@ export const createTenant = createServerFn({ method: "POST" })
     logoUrl: z.string().url().optional().or(z.literal("")),
     primaryColor: z.string().default("#16a34a"),
     accessCode: z.string().min(4),
-    ownerPassword: z.string().min(6)
+    ownerPassword: z.string().min(6),
+    customDomain: z.string().trim().optional()
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
@@ -112,7 +113,7 @@ export const createTenant = createServerFn({ method: "POST" })
     const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
-    // 1a. Derive a unique slug from the brand name — never asked of the operator
+    // 1a. Derive a unique slug from the brand name
     const base = slugify(data.name) || "tenant";
     let slug = base;
     for (let attempt = 0; attempt < 25; attempt++) {
@@ -138,6 +139,7 @@ export const createTenant = createServerFn({ method: "POST" })
         phone: data.phone || null,
         logo_url: data.logoUrl || null,
         primary_color: data.primaryColor,
+        custom_domain: data.customDomain || null,
         status: 'active'
       })
       .select('id, slug, name')
@@ -182,7 +184,6 @@ export const createTenant = createServerFn({ method: "POST" })
 
       return { success: true, tenant };
     } catch (err) {
-      // Cleanup tenant on any subsequent failure
       await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
       throw err;
     }
