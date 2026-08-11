@@ -36,7 +36,7 @@ function BrandingPage() {
       primary_color: formData.primaryColor,
       logo_url: formData.logoUrl,
       whatsapp: formData.whatsapp
-    }).eq('id', tenant.id);
+    }).eq('id', tenant?.id);
 
     if (error) toast.error(error.message);
     else toast.success("Branding updated");
