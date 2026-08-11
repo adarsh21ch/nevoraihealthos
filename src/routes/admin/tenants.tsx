@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { getTenants, createTenant, updateTenantStatus, rotateTenantAccessCode, resetTenantOwnerPassword } from "@/lib/admin.functions";
+import { getTenants, createTenant, updateTenantStatus, rotateTenantAccessCode, updateTenantOwnerCredentials } from "@/lib/admin.functions";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check, Key, Shield } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check, Key, Shield, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
@@ -30,7 +30,7 @@ function AdminTenants() {
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
-  const resetPasswordFn = useServerFn(resetTenantOwnerPassword);
+  const updateCredentialsFn = useServerFn(updateTenantOwnerCredentials);
   const rotateCodeFn = useServerFn(rotateTenantAccessCode);
 
   const { data: tenants = [], isLoading } = useQuery({
@@ -44,6 +44,9 @@ function AdminTenants() {
   const [createdTenantInfo, setCreatedTenantInfo] = useState<any>(null);
   const [selectedTenant, setSelectedTenant] = useState<any>(null);
   const [isManageOpen, setIsManageOpen] = useState(false);
+  const [isCredentialsOpen, setIsCredentialsOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   
   const [formData, setFormData] = useState({
     name: "",
@@ -343,19 +346,14 @@ function AdminTenants() {
                   <Button 
                     variant="outline" 
                     className="w-full h-11 rounded-xl justify-start bg-white border-slate-200 text-slate-900 font-bold"
-                    onClick={async () => {
-                      const newPass = randomPassword();
-                      try {
-                        await resetPasswordFn({ data: { tenantId: selectedTenant.id, email: selectedTenant.email, newPassword: newPass } });
-                        toast.success(`Password reset to: ${newPass}`, { duration: 10000 });
-                        navigator.clipboard.writeText(newPass);
-                      } catch (e: any) {
-                        toast.error(e.message);
-                      }
+                    onClick={() => {
+                      setNewEmail(selectedTenant.email || "");
+                      setNewPassword("");
+                      setIsCredentialsOpen(true);
                     }}
                   >
-                    <Key className="w-4 h-4 mr-3 text-slate-400" />
-                    Reset Owner Password
+                    <User className="w-4 h-4 mr-3 text-slate-400" />
+                    Edit Owner Credentials
                   </Button>
 
                   <Button 
@@ -403,6 +401,84 @@ function AdminTenants() {
             </div>
             
             <Button variant="ghost" onClick={() => setIsManageOpen(false)} className="w-full h-12 font-bold text-slate-400">Close</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Credentials Dialog */}
+      <Dialog open={isCredentialsOpen} onOpenChange={setIsCredentialsOpen}>
+        <DialogContent className="max-w-md bg-white rounded-[2rem] p-8 border-none shadow-2xl">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900">Owner Credentials</h2>
+              <p className="text-slate-500 font-medium mt-1">Update email or password for {selectedTenant?.name}</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Email</label>
+                <Input 
+                  type="email"
+                  value={newEmail} 
+                  onChange={e => setNewEmail(e.target.value)} 
+                  className="h-11 rounded-xl bg-slate-50 border-slate-200" 
+                  placeholder="owner@example.com"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest ml-1">New Password</label>
+                <div className="flex gap-2">
+                  <Input 
+                    type="text"
+                    value={newPassword} 
+                    onChange={e => setNewPassword(e.target.value)} 
+                    className="h-11 rounded-xl bg-slate-50 border-slate-200" 
+                    placeholder="Leave blank to keep current"
+                  />
+                  <Button 
+                    variant="outline" 
+                    type="button" 
+                    onClick={() => setNewPassword(randomPassword())}
+                    className="rounded-xl px-3 border-slate-200"
+                  >
+                    <Key className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <Button 
+                variant="ghost" 
+                onClick={() => setIsCredentialsOpen(false)} 
+                className="flex-1 h-12 font-bold text-slate-400"
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="flex-1 h-12 bg-slate-900 text-white font-bold rounded-xl"
+                onClick={async () => {
+                  const toastId = toast.loading("Updating credentials...");
+                  try {
+                    await updateCredentialsFn({ 
+                      data: { 
+                        tenantId: selectedTenant.id, 
+                        email: newEmail !== selectedTenant.email ? newEmail : undefined,
+                        password: newPassword || undefined
+                      } 
+                    });
+                    queryClient.invalidateQueries({ queryKey: ["admin-tenants"] });
+                    toast.success("Credentials updated successfully", { id: toastId });
+                    setIsCredentialsOpen(false);
+                    setIsManageOpen(false);
+                  } catch (e: any) {
+                    toast.error(e.message || "Failed to update credentials", { id: toastId });
+                  }
+                }}
+              >
+                Save Changes
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
