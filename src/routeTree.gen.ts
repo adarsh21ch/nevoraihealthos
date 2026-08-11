@@ -17,6 +17,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
+import { Route as AdminProductsRouteImport } from './routes/admin/products'
+import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
+import { Route as AdminTipsRouteImport } from './routes/admin/tips'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
 import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
@@ -72,6 +75,21 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminContentRoute = AdminContentRouteImport.update({
   id: '/content',
   path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProgramsRoute = AdminProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTipsRoute = AdminTipsRouteImport.update({
+  id: '/tips',
+  path: '/tips',
   getParentRoute: () => AdminRoute,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
@@ -176,6 +194,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -200,6 +221,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -228,6 +252,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -256,6 +283,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/admin/products'
+    | '/admin/programs'
+    | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -280,6 +310,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/admin/products'
+    | '/admin/programs'
+    | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -307,6 +340,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/admin/products'
+    | '/admin/programs'
+    | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -393,6 +429,27 @@ declare module '@tanstack/react-router' {
       path: '/content'
       fullPath: '/admin/content'
       preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/programs': {
+      id: '/admin/programs'
+      path: '/programs'
+      fullPath: '/admin/programs'
+      preLoaderRoute: typeof AdminProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tips': {
+      id: '/admin/tips'
+      path: '/tips'
+      fullPath: '/admin/tips'
+      preLoaderRoute: typeof AdminTipsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/dashboard/': {
@@ -570,11 +627,17 @@ const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminContentRoute: typeof AdminContentRouteWithChildren
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminProgramsRoute: typeof AdminProgramsRoute
+  AdminTipsRoute: typeof AdminTipsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminContentRoute: AdminContentRouteWithChildren,
+  AdminProductsRoute: AdminProductsRoute,
+  AdminProgramsRoute: AdminProgramsRoute,
+  AdminTipsRoute: AdminTipsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -627,3 +690,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
