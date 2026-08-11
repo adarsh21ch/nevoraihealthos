@@ -6,8 +6,8 @@ export const checkAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "platform_admin" });
-    if (error || !data) throw new Error("Unauthorized");
+    const { data: isAdmin, error } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (error || !isAdmin) throw new Error("Unauthorized");
     return { isAdmin: true };
   });
 
@@ -31,7 +31,7 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     
     // 1. Verify caller is platform admin
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "platform_admin" });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
