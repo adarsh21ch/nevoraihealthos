@@ -148,10 +148,10 @@ function CustomerDetailPage() {
                       <div key={log.id} className="p-6 flex items-center justify-between">
                          <div className="space-y-1">
                             <p className="font-bold text-slate-900">{format(new Date(log.logged_at), "EEEE, MMM d")}</p>
-                            <p className="text-xs text-slate-500">Weight: {log.weight}kg · Energy: {log.energy}/10</p>
+                            <p className="text-xs text-slate-500">Water: {log.water_ml ?? 0}ml{log.mood ? ` · Mood: ${log.mood}` : ""}</p>
                          </div>
                          <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                            Adherence: {log.adherence_score}%
+                            Day {log.day_number}
                          </div>
                       </div>
                     ))}
