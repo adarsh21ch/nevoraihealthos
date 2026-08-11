@@ -113,7 +113,7 @@ function OnboardingPage() {
     setStep((s) => Math.max(1, s - 1));
   };
 
-  const optional = (value: string) => (value.trim() === "" ? null : Number(value));
+  const optional = (value: string) => (value.trim() === "" ? undefined : Number(value));
 
   const finish = async () => {
     const message = validateStep();
