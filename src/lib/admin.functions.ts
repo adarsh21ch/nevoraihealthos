@@ -107,7 +107,7 @@ export const createTenant = createServerFn({ method: "POST" })
         owner_name: data.ownerName,
         email: data.ownerEmail,
         tagline: data.tagline,
-        whatsapp_number: data.whatsapp,
+        whatsapp: data.whatsapp,
         phone: data.phone,
         logo_url: data.logoUrl,
         primary_color: data.primaryColor,
