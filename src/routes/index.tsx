@@ -87,15 +87,11 @@ function Index() {
           </div>
           
           <div className="flex items-center gap-6">
-            <Link to="/dashboard" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
-              Dashboard
-            </Link>
-            <Link to="/admin" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
-              Admin
+            <Link to="/login" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
+              Login
             </Link>
             <Link 
-              to="/dashboard" 
-
+              to="/login" 
               className="group relative px-6 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] transition-all overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
@@ -150,13 +146,13 @@ function Index() {
             className="flex flex-col sm:flex-row items-center justify-center gap-6"
           >
             <Link 
-              to="/dashboard" 
+              to="/login" 
               className="w-full sm:w-auto px-12 py-6 bg-slate-900 text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
             >
               Get Your Portal <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
-              to="/admin" 
+              to="/login" 
               className="w-full sm:w-auto px-12 py-6 glass-card text-slate-900 rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
             >
               <ShieldCheck className="w-5 h-5 text-slate-900" /> Admin Access
