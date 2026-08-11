@@ -105,23 +105,27 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Tenants</h1>
-          <p className="text-slate-400 mt-1">Manage branding, features, pricing and domain.</p>
+          <div className="flex items-center gap-2 mb-2">
+            <Shield className="h-3 w-3 text-zinc-500" />
+            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Admin Access Only</span>
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-white leading-none">Tenants</h1>
+          <p className="text-zinc-500 mt-2 font-light text-lg">Manage branding, infrastructure and accounts.</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button className="bg-white text-black hover:bg-zinc-200 font-bold rounded-xl h-11 px-6 shadow-xl shadow-white/5">
+                <Plus className="mr-2 h-4 w-4 stroke-[3px]" />
                 Onboard client
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-slate-900 border-slate-800">
-              <DialogHeader>
-                <DialogTitle>Create New Tenant</DialogTitle>
+            <DialogContent className="bg-zinc-950 border-zinc-900 rounded-2xl max-w-lg">
+              <DialogHeader className="pb-4 border-b border-zinc-900">
+                <DialogTitle className="text-2xl font-bold text-white tracking-tight">Create New Tenant</DialogTitle>
               </DialogHeader>
               <form 
                 className="space-y-4 pt-4"
@@ -185,33 +189,35 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <Card className="glass-card bg-slate-900/50 border-slate-800/50">
+      <Card className="bg-zinc-900/10 border-zinc-900 rounded-2xl overflow-hidden shadow-2xl shadow-black">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-slate-800/50 hover:bg-slate-800/20">
-                <TableHead className="text-slate-400 pl-6">Name</TableHead>
-                <TableHead className="text-slate-400">Slug</TableHead>
-                <TableHead className="text-slate-400">Owner</TableHead>
-                <TableHead className="text-slate-400">Status</TableHead>
-                <TableHead className="text-slate-400 text-right pr-6">Actions</TableHead>
+              <TableRow className="border-zinc-900 bg-zinc-900/20 hover:bg-zinc-900/20">
+                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-8 py-4">Academy / Name</TableHead>
+                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest py-4">Access Point</TableHead>
+                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest py-4">Primary Owner</TableHead>
+                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest py-4 text-center">Operational Status</TableHead>
+                <TableHead className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-right pr-8 py-4">Control</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tenants.map((tenant: any) => (
-                <TableRow key={tenant.id} className="border-slate-800/50 hover:bg-slate-800/20 transition-colors">
-                  <TableCell className="font-medium pl-6 text-slate-100">{tenant.name}</TableCell>
+                <TableRow key={tenant.id} className="border-zinc-900 hover:bg-zinc-900/20 transition-colors group">
+                  <TableCell className="font-bold pl-8 py-5 text-zinc-100 text-base">{tenant.name}</TableCell>
                   <TableCell>
-                    <code className="text-xs bg-slate-950/50 border border-slate-800/50 px-2 py-1 rounded text-blue-400">/p/{tenant.slug}</code>
+                    <div className="flex items-center gap-2">
+                      <code className="text-[11px] font-mono bg-zinc-950 border border-zinc-800 px-2.5 py-1 rounded-md text-zinc-400 group-hover:text-white transition-colors">/p/{tenant.slug}</code>
+                    </div>
                   </TableCell>
-                  <TableCell className="text-slate-300">{tenant.owner_name}</TableCell>
-                  <TableCell>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                  <TableCell className="text-zinc-400 font-medium">{tenant.owner_name}</TableCell>
+                  <TableCell className="text-center">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
                       tenant.status === 'active' 
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                        : 'bg-red-500/10 text-red-400 border-red-500/20'
+                        ? 'bg-emerald-500/5 text-emerald-500 border-emerald-500/20' 
+                        : 'bg-zinc-900 text-zinc-500 border-zinc-800'
                     }`}>
-                      {tenant.status}
+                      {tenant.status === 'active' ? 'Operational' : 'Suspended'}
                     </span>
                   </TableCell>
                   <TableCell className="text-right pr-6 space-x-2">
