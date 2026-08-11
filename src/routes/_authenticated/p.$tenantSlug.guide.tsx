@@ -1,12 +1,12 @@
+
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
 import { getProgramContent } from '@/lib/program-content.functions';
 import { 
-  BookOpen, Lightbulb, HelpCircle, ChevronRight, 
-  Utensils, MessageCircle, Info, Search, Loader2
+  BookOpen, Lightbulb, HelpCircle, 
+  Utensils, MessageCircle, Loader2, Search
 } from 'lucide-react';
-import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
@@ -20,12 +20,12 @@ function GuidePage() {
   const { tenantSlug } = Route.useParams();
   const getContentFn = useServerFn(getProgramContent);
 
-  const { data: tips, isLoading: loadingTips } = useQuery({
+  const { data: tipsRes, isLoading: loadingTips } = useQuery({
     queryKey: ['guide-tips', tenantSlug],
     queryFn: () => getContentFn({ data: { tenantSlug, type: 'tips' } }),
   });
 
-  const { data: faqs, isLoading: loadingFaqs } = useQuery({
+  const { data: faqsRes, isLoading: loadingFaqs } = useQuery({
     queryKey: ['guide-faqs', tenantSlug],
     queryFn: () => getContentFn({ data: { tenantSlug, type: 'faqs' } }),
   });
@@ -63,7 +63,7 @@ function GuidePage() {
                 "Wait 20 minutes before and after taking your supplements to eat or drink anything other than water."
               </p>
             </div>
-
+            
             <div className="space-y-6">
                <h4 className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 ml-1">Sample Schedule</h4>
                <div className="space-y-4">
@@ -89,9 +89,14 @@ function GuidePage() {
         <TabsContent value="tips" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
            {loadingTips ? (
              <div className="py-20 text-center"><Loader2 className="animate-spin mx-auto text-slate-200" /></div>
+           ) : tipsRes?.state === 'no_content' ? (
+             <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-slate-100">
+                <Lightbulb className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">More tips coming soon</p>
+             </div>
            ) : (
              <div className="space-y-6">
-                {tips?.map((tip: any) => (
+                {tipsRes?.data?.map((tip: any) => (
                   <div key={tip.id} className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
                        <span className="text-[10px] font-bold text-blue-600 bg-blue-100/50 px-2 py-1 rounded-full uppercase tracking-widest">
@@ -104,12 +109,6 @@ function GuidePage() {
                     </p>
                   </div>
                 ))}
-                {(!tips || tips.length === 0) && (
-                   <div className="text-center py-20 bg-slate-50 rounded-[2.5rem] border border-slate-100">
-                      <Lightbulb className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                      <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">More tips coming soon</p>
-                   </div>
-                )}
              </div>
            )}
         </TabsContent>
@@ -117,6 +116,11 @@ function GuidePage() {
         <TabsContent value="faqs" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
            {loadingFaqs ? (
              <div className="py-20 text-center"><Loader2 className="animate-spin mx-auto text-slate-200" /></div>
+           ) : faqsRes?.state === 'no_content' ? (
+             <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-slate-100">
+                <HelpCircle className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No FAQs found</p>
+             </div>
            ) : (
              <div className="space-y-6">
                 <div className="relative mb-8">
@@ -125,7 +129,7 @@ function GuidePage() {
                 </div>
                 
                 <Accordion type="single" collapsible className="space-y-4">
-                  {faqs?.map((faq: any) => (
+                  {faqsRes?.data?.map((faq: any) => (
                     <AccordionItem key={faq.id} value={faq.id} className="border-none">
                       <AccordionTrigger className="flex items-center gap-5 p-6 bg-white border border-slate-100 rounded-[2rem] shadow-sm hover:no-underline text-left data-[state=open]:rounded-b-none transition-all">
                         <div className="flex-1">
@@ -141,13 +145,6 @@ function GuidePage() {
                     </AccordionItem>
                   ))}
                 </Accordion>
-
-                {(!faqs || faqs.length === 0) && (
-                   <div className="text-center py-20 bg-slate-50 rounded-[2.5rem] border border-slate-100">
-                      <HelpCircle className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                      <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No FAQs found</p>
-                   </div>
-                )}
              </div>
            )}
         </TabsContent>

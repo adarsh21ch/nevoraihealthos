@@ -19,8 +19,7 @@ function JourneyPage() {
   });
 
   if (isLoading) return <div className="p-8 text-center text-slate-400">Loading your journey...</div>;
-  if (error) return <div className="p-8 text-center text-red-500">Error loading journey</div>;
-  if (!data) return null;
+  if (error || data?.state !== 'success') return <div className="p-8 text-center text-red-500">Error loading journey: {data?.message || 'Unknown error'}</div>;
 
   const { enrollment, programDays, completions } = data;
   const currentDay = getProgramDayNumber(enrollment.start_date);
@@ -38,7 +37,6 @@ function JourneyPage() {
       </header>
 
       <div className="relative space-y-6">
-        {/* The vertical line */}
         <div className="absolute left-6 top-4 bottom-4 w-px bg-slate-100 -z-10" />
 
         {[...Array(duration)].map((_, i) => {
@@ -47,12 +45,12 @@ function JourneyPage() {
           const isToday = dayNum === currentDay;
           const isFuture = dayNum > currentDay;
           
-          const dayInfo = programDays.find(d => d.day_number === dayNum);
+          const dayInfo = programDays?.find((d: any) => d.day_number === dayNum);
           
           const dayTasks = dayInfo?.day_tasks || [];
-          const dayCompletions = completions.filter(c => 
+          const dayCompletions = completions?.filter((c: any) => 
             c.daily_logs.day_number === dayNum
-          );
+          ) || [];
           
           const completionRate = dayTasks.length > 0 
             ? Math.round((dayCompletions.length / dayTasks.length) * 100) 
