@@ -16,7 +16,7 @@ export const getTenantByHint = createServerFn({ method: "GET" })
     if (data.mode === 'slug') {
       query = query.eq('slug', data.value);
     } else {
-      query = query.eq('custom_domain', data.value);
+      query = query.eq('custom_domain' as any, data.value);
     }
     
     const { data: tenant, error } = await query.maybeSingle();
