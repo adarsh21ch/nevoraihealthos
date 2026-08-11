@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,24 @@ import { toast } from "sonner";
 import { Loader2, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
+  ssr: false,
+  beforeLoad: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: context } = await supabase.rpc("get_my_auth_context");
+    const { role, tenant_slug, onboarding_complete } = (context ?? {}) as any;
+
+    if (role === "platform_admin") throw redirect({ to: "/admin" });
+    if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
+    if (role === "customer" && tenant_slug) {
+      throw redirect(
+        onboarding_complete
+          ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
+          : { to: "/onboarding" },
+      );
+    }
+  },
   component: LoginPage,
 });
 
