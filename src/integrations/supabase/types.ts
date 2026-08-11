@@ -75,6 +75,7 @@ export type Database = {
           name: string
           phone: string | null
           referred_by_customer_id: string | null
+          share_consent: boolean | null
           tenant_id: string
           user_id: string | null
         }
@@ -91,6 +92,7 @@ export type Database = {
           name: string
           phone?: string | null
           referred_by_customer_id?: string | null
+          share_consent?: boolean | null
           tenant_id: string
           user_id?: string | null
         }
@@ -107,6 +109,7 @@ export type Database = {
           name?: string
           phone?: string | null
           referred_by_customer_id?: string | null
+          share_consent?: boolean | null
           tenant_id?: string
           user_id?: string | null
         }
