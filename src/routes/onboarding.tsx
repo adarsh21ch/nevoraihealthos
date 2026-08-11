@@ -52,7 +52,7 @@ function OnboardingPage() {
       if (!user) return null;
       const { data, error } = await supabase
         .from("customers")
-        .select("id, name, tenant_id, tenants(slug)")
+        .select("id, name, tenant_id, tenants(slug, name, tagline, logo_url, primary_color)")
         .eq("user_id", user.id)
         .maybeSingle();
       if (error) throw error;
@@ -164,9 +164,18 @@ function OnboardingPage() {
     <div className="min-h-screen bg-surface font-sans px-5 py-10 flex flex-col items-center">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 bg-ink text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto">
-            H
-          </div>
+          {(me as any)?.tenants?.logo_url ? (
+            <img 
+              src={(me as any).tenants.logo_url} 
+              alt={(me as any).tenants.name} 
+              className="w-16 h-16 rounded-2xl object-cover mx-auto border border-slate-100" 
+              loading="lazy" 
+            />
+          ) : (
+            <div className="w-14 h-14 bg-ink text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto">
+              {((me as any)?.tenants?.name || "H").charAt(0)}
+            </div>
+          )}
           <h1 className="text-3xl font-bold tracking-tight text-ink">Let's set up your profile</h1>
           <p className="text-muted font-medium">
             A few details so your coach can follow your progress day by day.
