@@ -32,7 +32,7 @@ function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FCFBF8] text-[#0F172A] flex font-sans">
+    <div className="min-h-screen bg-surface text-ink flex font-sans">
       <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-10">
@@ -73,7 +73,7 @@ function DashboardLayout() {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col bg-[#FCFBF8]">
+      <div className="flex-1 flex flex-col bg-surface">
         <header className="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
              <div className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 tracking-wider uppercase">
