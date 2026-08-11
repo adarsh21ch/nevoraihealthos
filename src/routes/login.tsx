@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -113,7 +113,7 @@ function LoginPage() {
           
           <div className="space-y-2 text-center lg:text-left">
             <h2 className="text-3xl font-bold tracking-tight text-ink">Sign in</h2>
-            <p className="text-muted font-medium">Enter your credentials to access your dashboard.</p>
+            <p className="text-muted font-medium">Access your personalized health portal.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -161,8 +161,13 @@ function LoginPage() {
             </Button>
           </form>
           
-          <div className="pt-8 text-center text-slate-400 text-[11px] font-bold uppercase tracking-widest">
-            Health OS &copy; 2026
+          <div className="pt-8 space-y-4 text-center">
+            <p className="text-xs text-slate-400 font-medium">
+              New here? <span className="text-ink font-bold">Contact your coach for an invite code.</span>
+            </p>
+            <div className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
+              Health OS &copy; 2026
+            </div>
           </div>
         </div>
       </div>

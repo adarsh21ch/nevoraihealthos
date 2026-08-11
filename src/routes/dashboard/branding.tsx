@@ -23,6 +23,7 @@ export const Route = createFileRoute("/dashboard/branding")({
 
 function BrandingPage() {
   const { tenant } = useLoaderData({ from: '/dashboard/branding' });
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const fetchAccessCode = useServerFn(getMyTenantAccessCode);
   const rotateCodeFn = useServerFn(rotateTenantAccessCode);
@@ -66,7 +67,10 @@ function BrandingPage() {
     } as any).eq('id', tenant?.id);
 
     if (error) toast.error(error.message);
-    else toast.success("Branding updated");
+    else {
+      toast.success("Settings updated");
+      navigate({ to: "." }); // Refresh loader data
+    }
     setIsSaving(false);
   };
 

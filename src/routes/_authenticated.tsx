@@ -10,7 +10,19 @@ export const Route = createFileRoute('/_authenticated')({
     const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
     
     const { data: { user } } = await supabase.auth.getUser();
+    
+    // Auto-detect tenant from hostname if using a custom subdomain
+    // e.g. fat2fit.nevera.com
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isSubdomain = hostname.includes('.nevera.com') && !hostname.startsWith('project--');
+    const hostnameSlug = isSubdomain ? hostname.split('.')[0] : null;
+
     if (!user) {
+      // If we're on a subdomain, redirect to the specific join page if they try to access /
+      if (hostnameSlug && location.pathname === '/') {
+        throw redirect({ to: `/p/${hostnameSlug}/join` });
+      }
+
       throw redirect({
         to: '/login',
         search: { redirect: location.href },
@@ -46,6 +58,8 @@ export const Route = createFileRoute('/_authenticated')({
 
       if (role === 'customer') {
         if (urlTenantSlug !== tenant_slug) {
+          // If the customer tries to access a different tenant portal, redirect them back to their own
+          toast.error(`Access denied: You are enrolled in ${tenant_slug}`);
           throw redirect({ to: `/p/${tenant_slug}/today` });
         }
         if (!onboarding_complete && !location.pathname.endsWith('/onboarding')) {
@@ -53,7 +67,8 @@ export const Route = createFileRoute('/_authenticated')({
         }
       } else if (role === 'tenant_owner') {
          if (urlTenantSlug !== tenant_slug) {
-           toast.error("Access denied: Scoped to your own tenant");
+           // Allow owners to see their own tenant portal
+           toast.error("Access denied: Scoped to your own website");
            throw redirect({ to: '/dashboard' });
          }
       }
