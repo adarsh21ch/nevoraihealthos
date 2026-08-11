@@ -154,14 +154,14 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const { data: customer, error } = await supabase
       .from("customers")
       .select(`
-        *,
+        id, name, phone, email, share_consent, user_id,
         customer_enrollments(
-          *,
-          programs(*)
+          id, day_number, status,
+          programs(id, name, duration_days)
         ),
-        daily_logs(*),
-        measurements(*),
-        progress_photos(*)
+        daily_logs(id, logged_at, weight, mood, energy, soreness, sleep, adherence_score),
+        measurements(id, weight, waist, hip, chest, thigh, arm, created_at),
+        progress_photos(id, photo_url, type, created_at)
       `)
       .eq("id", data.customerId)
       .eq("tenant_id", tenantId)
