@@ -65,7 +65,7 @@ function BrandingPage() {
             </div>
             <div className="space-y-6 text-center">
               <div className="w-32 h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
-                {formData.logoUrl ? <img src={formData.logoUrl} className="w-full h-full object-contain p-4" alt="" /> : <Upload className="w-8 h-8 text-slate-300" />}
+                {formData.logoUrl ? <img src={formData.logoUrl} className="w-full h-full object-contain p-4" loading="lazy" alt="" /> : <Upload className="w-8 h-8 text-slate-300" />}
               </div>
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Primary Color</Label>
