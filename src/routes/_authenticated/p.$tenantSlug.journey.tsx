@@ -62,8 +62,8 @@ function JourneyPage() {
             <div key={dayNum} className="flex gap-6 items-center">
               <div className={cn(
                 "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border-2 z-10 transition-all",
-                isToday ? "bg-white border-[#16a34a] scale-110 shadow-lg shadow-[#16a34a]/10" : 
-                isPast ? "bg-[#16a34a] border-[#16a34a] text-white" : 
+                isToday ? "bg-white border-accent scale-110 shadow-lg accent-shadow" : 
+                isPast ? "accent-bg border-accent text-white" : 
                 "bg-slate-50 border-slate-100 text-slate-300"
               )}>
                 {isPast ? (
@@ -71,7 +71,7 @@ function JourneyPage() {
                 ) : isFuture ? (
                   <Lock className="w-4 h-4 opacity-50" />
                 ) : (
-                  <span className="font-bold text-lg text-[#16a34a]">{dayNum}</span>
+                  <span className="font-bold text-lg accent-text">{dayNum}</span>
                 )}
               </div>
 
@@ -94,12 +94,12 @@ function JourneyPage() {
                     )}
                   </div>
                   {isPast && completionRate > 0 && (
-                    <span className="text-[10px] font-bold text-[#16a34a] bg-[#16a34a]/10 px-2 py-1 rounded-lg">
+                    <span className="text-[10px] font-bold accent-text accent-bg-soft px-2 py-1 rounded-lg">
                       {completionRate}%
                     </span>
                   )}
                   {isToday && (
-                    <span className="text-[10px] font-bold text-[#16a34a] uppercase tracking-widest animate-pulse">
+                    <span className="text-[10px] font-bold accent-text uppercase tracking-widest animate-pulse">
                       Active
                     </span>
                   )}

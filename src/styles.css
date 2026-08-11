@@ -64,11 +64,20 @@
     background-color: var(--accent, var(--color-accent));
   }
 
+  .accent-bg-soft {
+    background-color: color-mix(in srgb, var(--accent, var(--color-accent)) 10%, transparent);
+  }
+
   .accent-text {
     color: var(--accent, var(--color-accent));
   }
 
   .accent-border {
     border-color: var(--accent, var(--color-accent));
+  }
+
+  .accent-shadow {
+    --tw-shadow-color: color-mix(in srgb, var(--accent, var(--color-accent)) 20%, transparent);
+    box-shadow: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   }
 }

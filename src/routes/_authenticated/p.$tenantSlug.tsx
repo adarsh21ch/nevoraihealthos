@@ -81,12 +81,12 @@ function TenantLayout() {
                 to={item.href}
                 className={cn(
                   "flex flex-col items-center gap-1.5 transition-all active:scale-90",
-                  isActive ? "text-[var(--accent)]" : "text-slate-400"
+                  isActive ? "accent-text" : "text-slate-400"
                 )}
               >
                 <div className={cn(
                   "p-1.5 rounded-xl transition-colors",
-                  isActive && "bg-[var(--accent)]/10"
+                  isActive && "accent-bg-soft"
                 )}>
                   <item.icon className="w-6 h-6" />
                 </div>

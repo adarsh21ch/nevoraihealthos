@@ -88,7 +88,7 @@ function ProgressPage() {
         <div>
           <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Progress</h1>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-green-600 bg-green-100/50 px-2 py-1 rounded-full uppercase tracking-widest">
+            <span className="text-[10px] font-bold accent-text accent-bg-soft px-2 py-1 rounded-full uppercase tracking-widest">
               Live Transformation
             </span>
           </div>
@@ -130,7 +130,7 @@ function ProgressPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-12">
-        <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-xl shadow-slate-900/10">
+        <div className="bg-ink rounded-[2.5rem] p-6 text-white shadow-xl shadow-slate-900/10">
           <div className="flex justify-between items-start mb-4">
             <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">
               <Scale className="w-5 h-5 text-white" />
@@ -202,7 +202,7 @@ function ProgressPage() {
                   <Area 
                     type="monotone" 
                     dataKey={activeTab === 'weight' ? 'weight' : 'waist'} 
-                    stroke={activeTab === 'weight' ? '#0f172a' : '#3b82f6'} 
+                    stroke={activeTab === 'weight' ? 'var(--color-ink)' : 'var(--accent, #3b82f6)'} 
                     strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#colorValue)" 
