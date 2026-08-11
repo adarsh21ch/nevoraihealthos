@@ -6,7 +6,7 @@ export const Route = createFileRoute("/onboarding")({
 
 function OnboardingPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCFBF8] px-6 py-20 font-sans">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-surface px-6 py-20 font-sans">
       <div className="w-full max-w-sm space-y-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="space-y-4">
           <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center font-bold text-3xl mx-auto shadow-xl shadow-slate-200 mb-8">H</div>

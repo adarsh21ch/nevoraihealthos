@@ -27,11 +27,11 @@ function TenantLayout() {
 
   if (error || !tenant) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-[#FCFBF8] text-center">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-surface text-center">
         <div className="max-w-md space-y-4">
           <h1 className="text-2xl font-bold text-slate-900">Tenant Not Found</h1>
           <p className="text-slate-500">The distributor link you followed is invalid or has been moved.</p>
-          <Link to="/" className="text-[#16a34a] font-bold">Return Home</Link>
+          <Link to="/" className="accent-text font-bold">Return Home</Link>
         </div>
       </div>
     );
@@ -50,7 +50,7 @@ function TenantLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FCFBF8] pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
+    <div className="min-h-screen bg-surface pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {tenant.logo_url ? (
@@ -81,12 +81,12 @@ function TenantLayout() {
                 to={item.href}
                 className={cn(
                   "flex flex-col items-center gap-1.5 transition-all active:scale-90",
-                  isActive ? "text-[var(--accent)]" : "text-slate-400"
+                  isActive ? "accent-text" : "text-slate-400"
                 )}
               >
                 <div className={cn(
                   "p-1.5 rounded-xl transition-colors",
-                  isActive && "bg-[var(--accent)]/10"
+                  isActive && "accent-bg-soft"
                 )}>
                   <item.icon className="w-6 h-6" />
                 </div>

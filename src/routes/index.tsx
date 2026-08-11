@@ -50,7 +50,7 @@ function Index() {
   const scale = useTransform(scrollYProgress, [0, 0.05], [1, 1]);
 
   return (
-    <div ref={containerRef} className="flex flex-col min-h-screen bg-[#fcfbf8] selection:bg-blue-100 selection:text-blue-900">
+    <div ref={containerRef} className="flex flex-col min-h-screen bg-surface selection:bg-blue-100 selection:text-blue-900">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/50 backdrop-blur-2xl border-b border-slate-200/50">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <motion.div 
@@ -58,8 +58,8 @@ function Index() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2.5 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">H</div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">Health OS</span>
+            <div className="w-10 h-10 bg-ink rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">H</div>
+            <span className="text-xl font-bold tracking-tight text-ink">Health OS</span>
           </motion.div>
           
           <div className="hidden md:flex items-center gap-10">
@@ -70,7 +70,7 @@ function Index() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 href={`#${item.toLowerCase()}`} 
-                className="text-[13px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider"
+                className="text-[13px] font-semibold text-muted hover:text-ink transition-colors uppercase tracking-wider"
                 onClick={(e) => {
                   if (['infrastructure', 'solutions', 'pricing'].includes(item.toLowerCase())) {
                     e.preventDefault();
@@ -87,12 +87,12 @@ function Index() {
           </div>
           
           <div className="flex items-center gap-6">
-            <Link to="/login" className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
+            <Link to="/login" className="text-sm font-bold text-slate-600 hover:text-ink transition-colors">
               Login
             </Link>
             <Link 
               to="/login" 
-              className="group relative px-6 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] transition-all overflow-hidden"
+              className="group relative px-6 py-2.5 bg-ink text-white rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] transition-all overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -127,7 +127,7 @@ function Index() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
           >
-            Run your wellness business without the <span className="relative inline-block">WhatsApp chaos<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-slate-900/10 rounded-full" /></span>.
+            Run your wellness business without the <span className="relative inline-block">WhatsApp chaos<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-ink/10 rounded-full" /></span>.
 
           </motion.h1>
           
@@ -148,15 +148,15 @@ function Index() {
           >
             <Link 
               to="/login" 
-              className="w-full sm:w-auto px-12 py-6 bg-slate-900 text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
+              className="w-full sm:w-auto px-12 py-6 bg-ink text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
             >
               Get Your Portal <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
               to="/login" 
-              className="w-full sm:w-auto px-12 py-6 glass-card text-slate-900 rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
+              className="w-full sm:w-auto px-12 py-6 glass-card text-ink rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
             >
-              <ShieldCheck className="w-5 h-5 text-slate-900" /> Admin Access
+              <ShieldCheck className="w-5 h-5 text-ink" /> Admin Access
             </Link>
           </motion.div>
         </motion.div>
