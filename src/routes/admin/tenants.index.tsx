@@ -18,8 +18,7 @@ export const Route = createFileRoute("/admin/tenants/")({
 const slugify = (input: string) =>
   input
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+    .replace(/[^a-z0-9]+/g, "")
     .slice(0, 40);
 
 function AdminTenants() {
@@ -230,11 +229,11 @@ function AdminTenants() {
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Brand / Website Name</label>
-                    <Input required maxLength={60} placeholder="Fat To Fit" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <Input required maxLength={60} placeholder="Fat2Fit" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
                     <p className="text-[10px] font-bold text-slate-400 ml-1 pt-1">
                       Portal address:{" "}
                       <code className="text-slate-500">/p/{slugify(formData.name) || "…"}</code>
-                      <span className="text-slate-300"> · generated automatically</span>
+                      <span className="text-slate-300"> · alphanumeric only</span>
                     </p>
                   </div>
                   <div className="space-y-1.5">
