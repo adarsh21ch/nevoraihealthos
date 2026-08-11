@@ -5,9 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
+  ssr: false,
   beforeLoad: async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) throw redirect({ to: "/login" });
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw redirect({ to: "/login" });
     
     const { data: context } = await supabase.rpc("get_my_auth_context");
     if ((context as any)?.role !== "tenant_owner") {

@@ -3,9 +3,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_authenticated')({
+  ssr: false,
   beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
       throw redirect({
         to: '/login',
         search: { redirect: location.href },
