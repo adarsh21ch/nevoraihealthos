@@ -22,6 +22,7 @@ import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
 import { Route as AdminTenantsRouteImport } from './routes/admin/tenants'
 import { Route as AdminTipsRouteImport } from './routes/admin/tips'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardAccessRouteImport } from './routes/dashboard/access'
 import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
 import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
 import { Route as DashboardCustomersRouteImport } from './routes/dashboard/customers'
@@ -101,6 +102,11 @@ const AdminTipsRoute = AdminTipsRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAccessRoute = DashboardAccessRouteImport.update({
+  id: '/access',
+  path: '/access',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardAtRiskRoute = DashboardAtRiskRouteImport.update({
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/tips': typeof AdminTipsRoute
+  '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/tips': typeof AdminTipsRoute
+  '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -264,6 +272,7 @@ export interface FileRoutesById {
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/tenants': typeof AdminTenantsRoute
   '/admin/tips': typeof AdminTipsRoute
+  '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/admin/programs'
     | '/admin/tenants'
     | '/admin/tips'
+    | '/dashboard/access'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -324,6 +334,7 @@ export interface FileRouteTypes {
     | '/admin/programs'
     | '/admin/tenants'
     | '/admin/tips'
+    | '/dashboard/access'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -355,6 +366,7 @@ export interface FileRouteTypes {
     | '/admin/programs'
     | '/admin/tenants'
     | '/admin/tips'
+    | '/dashboard/access'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/customers'
@@ -476,6 +488,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/access': {
+      id: '/dashboard/access'
+      path: '/access'
+      fullPath: '/dashboard/access'
+      preLoaderRoute: typeof DashboardAccessRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/at-risk': {
@@ -676,6 +695,7 @@ const DashboardCustomersRouteWithChildren =
   DashboardCustomersRoute._addFileChildren(DashboardCustomersRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardAccessRoute: typeof DashboardAccessRoute
   DashboardAtRiskRoute: typeof DashboardAtRiskRoute
   DashboardBrandingRoute: typeof DashboardBrandingRoute
   DashboardCustomersRoute: typeof DashboardCustomersRouteWithChildren
@@ -686,6 +706,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAccessRoute: DashboardAccessRoute,
   DashboardAtRiskRoute: DashboardAtRiskRoute,
   DashboardBrandingRoute: DashboardBrandingRoute,
   DashboardCustomersRoute: DashboardCustomersRouteWithChildren,

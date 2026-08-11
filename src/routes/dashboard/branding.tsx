@@ -1,7 +1,7 @@
-import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData, useNavigate, Link } from "@tanstack/react-router";
 import { Palette, Upload, Loader2, Save } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Key, RefreshCw } from "lucide-react";
+import { Shield, Key, Settings as SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,8 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyTenantAccessCode, rotateTenantAccessCode } from "@/lib/admin.functions";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getMyTenantAccessCode } from "@/lib/admin.functions";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/dashboard/branding")({
   loader: async () => {
@@ -24,25 +24,11 @@ export const Route = createFileRoute("/dashboard/branding")({
 function BrandingPage() {
   const { tenant } = useLoaderData({ from: '/dashboard/branding' });
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const fetchAccessCode = useServerFn(getMyTenantAccessCode);
-  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
   
   const { data: creds } = useQuery({
     queryKey: ["my-tenant-access-code"],
     queryFn: () => fetchAccessCode(),
-  });
-
-  const rotateMutation = useMutation({
-    mutationFn: async () => {
-      const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-      return rotateCodeFn({ data: { tenantId: tenant?.id!, accessCode: newCode } });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-tenant-access-code"] });
-      toast.success("Access code rotated successfully");
-    },
-    onError: (e: any) => toast.error(e.message)
   });
 
   const [formData, setFormData] = useState({
@@ -132,12 +118,13 @@ function BrandingPage() {
                 </div>
               </div>
               <Button 
-                onClick={() => rotateMutation.mutate()} 
-                disabled={rotateMutation.isPending}
+                asChild
                 className="h-12 px-6 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition-all shadow-lg active:scale-95"
               >
-                {rotateMutation.isPending ? <Loader2 className="animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
-                Rotate Code
+                <Link to="/dashboard/access">
+                  <SettingsIcon className="w-4 h-4 mr-2" />
+                  Manage Access
+                </Link>
               </Button>
             </div>
 

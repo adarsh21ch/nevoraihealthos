@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { Users, Copy, QrCode, MessageSquare, ArrowLeft, RefreshCw, Shield } from "lucide-react";
+import { Users, Copy, QrCode, MessageSquare, ArrowLeft, RefreshCw, Shield, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -105,16 +105,17 @@ function InvitePage() {
                   <div className="text-3xl font-black tracking-tighter">{loadingCode ? "••••••" : accessCode}</div>
                 </div>
                 <Button 
+                  asChild
                   size="icon"
                   variant="ghost"
-                  onClick={() => rotateMutation.mutate()}
-                  disabled={rotateMutation.isPending}
                   className="h-10 w-10 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all"
                 >
-                  <RefreshCw className={cn("w-4 h-4", rotateMutation.isPending && "animate-spin")} />
+                  <Link to="/dashboard/access">
+                    <Settings className="w-4 h-4" />
+                  </Link>
                 </Button>
               </div>
-              <p className="text-[10px] text-white/40 font-bold leading-tight">Customers must enter this code to register. You can rotate it anytime for security.</p>
+              <p className="text-[10px] text-white/40 font-bold leading-tight">Required for customer registration. Manage this in Access Control.</p>
             </div>
           </CardContent>
         </Card>
