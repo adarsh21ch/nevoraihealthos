@@ -46,13 +46,7 @@ function Index() {
   // redirect to the tenant's public landing or join page
   useEffect(() => {
     if (tenant) {
-      // If we have a tenant (e.g. via custom domain fat2fit.nevorai.com),
-      // redirect them immediately to their branded join/portal entry.
-      navigate({ 
-        to: '/p/$tenantSlug/join', 
-        params: { tenantSlug: tenant.slug }, 
-        replace: true 
-      });
+      navigate({ to: '/p/$tenantSlug/join', params: { tenantSlug: tenant.slug }, replace: true });
     }
   }, [tenant, navigate]);
 
