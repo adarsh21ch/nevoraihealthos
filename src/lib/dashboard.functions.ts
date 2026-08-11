@@ -191,34 +191,81 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const tenantId = (authCtx as any)?.tenant_id;
     if (!tenantId) throw new Error("Unauthorized");
 
-    const { data: customer, error } = await supabase
+    const { data: row, error } = await supabase
       .from("customers")
-      .select(`
-        id, name, phone, email, share_consent, user_id,
-        customer_enrollments(
-          id, day_number, status,
-          programs(id, name, duration_days)
-        ),
-        daily_logs(id, logged_at, weight, mood, energy, soreness, sleep, adherence_score),
-        measurements(id, weight, waist, hip, chest, thigh, arm, created_at),
-        progress_photos(id, photo_url, type, created_at)
-      `)
+      .select(
+        `id, name, phone, email, share_consent, user_id,
+         enrollments(id, start_date, status, programs(id, name, duration_days)),
+         measurements(id, weight_kg, waist_cm, hip_cm, chest_cm, thigh_cm, arm_cm, taken_on),
+         progress_photos(id, storage_path, pose, taken_on)`,
+      )
       .eq("id", data.customerId)
       .eq("tenant_id", tenantId)
       .single();
 
     if (error) throw error;
-    
-    // Filter photos based on share_consent if needed, 
-    // but the dashboard owner should see them anyway for management.
-    // The prompt says "photos (ONLY if share_consent)", so I will respect that
-    // if the goal is to show what the CUSTOMER sees or for a "gallery" view.
-    // However, as a coach, seeing progress photos is usually standard.
-    // Re-reading prompt: "CUSTOMER DETAIL: ... photos (ONLY if share_consent)"
-    if (!customer.share_consent) {
-       customer.progress_photos = [];
+
+    const enrollments = ((row as any).enrollments ?? []) as any[];
+    const activeEnrollment = enrollments.find((e) => e.status === "active") ?? enrollments[0];
+
+    // Daily logs hang off the enrollment, not the customer
+    let dailyLogs: any[] = [];
+    if (activeEnrollment) {
+      const { data: logs } = await supabase
+        .from("daily_logs")
+        .select("id, log_date, day_number, water_ml, mood, notes")
+        .eq("enrollment_id", activeEnrollment.id)
+        .order("log_date", { ascending: false })
+        .limit(30);
+      dailyLogs = (logs ?? []).map((l) => ({
+        id: l.id,
+        logged_at: l.log_date,
+        day_number: l.day_number,
+        water_ml: l.water_ml,
+        mood: l.mood,
+        notes: l.notes,
+      }));
     }
 
-    return customer;
+    // Private photos: signed URLs, and only when the customer consented to sharing
+    let photos: any[] = [];
+    if ((row as any).share_consent) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      photos = await Promise.all(
+        (((row as any).progress_photos ?? []) as any[]).map(async (p) => {
+          const { data: signed } = await supabaseAdmin.storage
+            .from("progress-photos")
+            .createSignedUrl(p.storage_path, 60 * 60);
+          return { id: p.id, photo_url: signed?.signedUrl ?? null, type: p.pose, created_at: p.taken_on };
+        }),
+      );
+    }
+
+    return {
+      id: (row as any).id,
+      name: (row as any).name,
+      phone: (row as any).phone,
+      email: (row as any).email,
+      share_consent: (row as any).share_consent,
+      user_id: (row as any).user_id,
+      customer_enrollments: enrollments.map((e) => ({
+        id: e.id,
+        status: e.status,
+        day_number: istDayNumber(e.start_date),
+        programs: e.programs,
+      })),
+      daily_logs: dailyLogs,
+      measurements: (((row as any).measurements ?? []) as any[]).map((m) => ({
+        id: m.id,
+        weight: m.weight_kg,
+        waist: m.waist_cm,
+        hip: m.hip_cm,
+        chest: m.chest_cm,
+        thigh: m.thigh_cm,
+        arm: m.arm_cm,
+        created_at: m.taken_on,
+      })),
+      progress_photos: photos,
+    };
   });
 
