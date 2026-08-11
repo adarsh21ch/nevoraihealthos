@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { getJourneyData } from '@/lib/journey.functions';
 import { cn } from '@/lib/utils';
-import { CheckCircle2, Circle, Lock } from 'lucide-react';
+import { CheckCircle2, Circle, Lock, Trophy } from 'lucide-react';
 import { getProgramDayNumber } from '@/lib/date-utils';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/journey')({
