@@ -73,7 +73,7 @@ export const getTenants = createServerFn({ method: "GET" })
     
     const { data, error } = await supabaseAdmin
       .from("tenants")
-      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, custom_domain, created_at")
+      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
       .order("created_at", { ascending: false })
       .limit(200);
       
@@ -139,9 +139,8 @@ export const createTenant = createServerFn({ method: "POST" })
         phone: data.phone || null,
         logo_url: data.logoUrl || null,
         primary_color: data.primaryColor,
-        custom_domain: data.customDomain || null,
         status: 'active'
-      })
+      } as any)
       .select('id, slug, name')
       .single();
 

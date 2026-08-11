@@ -38,7 +38,7 @@ function BrandingPage() {
       logo_url: formData.logoUrl,
       whatsapp: formData.whatsapp,
       custom_domain: formData.customDomain
-    }).eq('id', tenant?.id);
+    } as any).eq('id', tenant?.id);
 
     if (error) toast.error(error.message);
     else toast.success("Branding updated");
