@@ -148,6 +148,22 @@ export const saveProgramDay = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+export const duplicateProgramDay = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ fromDayId: z.string().uuid(), toDayId: z.string().uuid() }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { data: tasks, error: fetchError } = await context.supabase
+      .from("day_tasks")
+      .select("*")
+      .eq("program_day_id", data.fromDayId);
+    if (fetchError) throw fetchError;
+    const newTasks = tasks.map(({ id, ...task }) => ({ ...task, program_day_id: data.toDayId }));
+    const { error: insertError } = await context.supabase.from("day_tasks").insert(newTasks);
+    if (insertError) throw insertError;
+    return { success: true };
+  });
+
 export const saveDayTask = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
