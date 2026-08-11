@@ -5,7 +5,10 @@ import { getTodayData, toggleTaskCompletion, updateDailyLog, ProgramDayContent, 
 import { CheckCircle2, Circle, Droplets, Info, Calendar, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/today')({
   component: TodayPage,
@@ -23,7 +26,7 @@ function TodayPage() {
 
   useEffect(() => {
     if (data && 'redirect' in data && data.redirect) {
-      navigate({ to: data.redirect });
+      navigate({ to: data.redirect as any });
     }
   }, [data, navigate]);
 
@@ -94,13 +97,17 @@ function TodayPage() {
 
   if (dayNumber > duration) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center">
-        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6">
+      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center space-y-8 animate-in fade-in duration-700">
+        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center">
           <Trophy className="w-12 h-12 text-green-600" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Congratulations!</h1>
-        <p className="text-slate-500 mb-8">You've successfully completed the {enrollment.programs?.name} program.</p>
-        <Link to={`/p/${tenantSlug}/journey`} className="text-green-600 font-bold underline">Review your Journey</Link>
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-slate-900 leading-tight">Program Complete!</h1>
+          <p className="text-slate-500 max-w-xs mx-auto">You've successfully finished the {enrollment.programs?.name} program. Time to celebrate!</p>
+        </div>
+        <Button asChild className="w-full h-14 bg-slate-900 text-white font-bold rounded-xl active:scale-95 transition-all">
+          <Link to={`/p/${tenantSlug}/complete` as any}>See my Results</Link>
+        </Button>
       </div>
     );
   }
@@ -127,7 +134,27 @@ function TodayPage() {
   const slotsOrder = ['morning', 'pre_lunch', 'lunch', 'evening', 'pre_dinner', 'dinner', 'bedtime', 'anytime'];
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500">
+    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500 space-y-8">
+      {dayNumber >= duration - 2 && enrollment.programs?.next_program_code && (
+        <Card className="rounded-[2rem] bg-slate-900 text-white border-none shadow-xl overflow-hidden mb-8">
+          <CardContent className="p-8 space-y-6">
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Next Program</p>
+              <h2 className="text-xl font-black tracking-tight">Your program ends in {duration - dayNumber} days.</h2>
+              <p className="text-white/70 text-sm font-medium">Start Day {dayNumber + 1} without a gap. Reorder now.</p>
+            </div>
+            <Button 
+              asChild
+              className="w-full h-12 bg-white text-slate-900 font-black rounded-xl text-sm hover:bg-slate-100 transition-all active:scale-95"
+            >
+              <a href={`https://wa.me/${tenant.whatsapp?.replace(/\+/g, '')}?text=${encodeURIComponent(`Hi, I'm on Day ${dayNumber} of ${enrollment.programs.name}. I want to reorder for the next phase.`)}`} target="_blank">
+                Contact {tenant.owner_name || 'Coach'} <ArrowRight className="ml-2 w-4 h-4" />
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex justify-between items-start mb-12">
         <div>
           <div className="flex items-center gap-2 mb-2">

@@ -20,11 +20,11 @@ export const Route = createFileRoute("/dashboard/branding")({
 function BrandingPage() {
   const { tenant } = useLoaderData({ from: '/dashboard/branding' });
   const [formData, setFormData] = useState({
-    name: tenant.name,
-    tagline: tenant.tagline || "",
-    primaryColor: tenant.primary_color,
-    logoUrl: tenant.logo_url || "",
-    whatsapp: tenant.whatsapp || ""
+    name: tenant?.name || "",
+    tagline: tenant?.tagline || "",
+    primaryColor: tenant?.primary_color || "#000000",
+    logoUrl: tenant?.logo_url || "",
+    whatsapp: tenant?.whatsapp || ""
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -36,7 +36,7 @@ function BrandingPage() {
       primary_color: formData.primaryColor,
       logo_url: formData.logoUrl,
       whatsapp: formData.whatsapp
-    }).eq('id', tenant.id);
+    }).eq('id', tenant?.id);
 
     if (error) toast.error(error.message);
     else toast.success("Branding updated");

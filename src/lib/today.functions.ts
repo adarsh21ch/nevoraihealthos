@@ -40,7 +40,7 @@ export const getTodayData = createServerFn({ method: "GET" })
 
     const { data: tenant, error: tenantErr } = await supabase
       .from("tenants")
-      .select("id, name, slug")
+      .select("id, name, slug, logo_url, whatsapp, primary_color, owner_name")
       .eq("slug", input.tenantSlug)
       .single();
     if (tenantErr || !tenant) throw new Error("Tenant not found");
@@ -67,7 +67,7 @@ export const getTodayData = createServerFn({ method: "GET" })
 
     const { data: enrollment, error: enrollErr } = await supabase
       .from("enrollments")
-      .select("id, program_id, start_date, programs(duration_days, name)")
+      .select("id, program_id, start_date, programs(duration_days, name, next_program_code)")
       .eq("customer_id", customer.id)
       .eq("status", "active")
       .single();
