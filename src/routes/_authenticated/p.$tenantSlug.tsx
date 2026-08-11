@@ -3,6 +3,7 @@ import { Home, Calendar, Trophy, Package, BookOpen, Loader2, MessageCircle } fro
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
