@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/admin/tenants")({
+export const Route = createFileRoute("/admin/tenants/")({
   component: AdminTenants,
 });
 

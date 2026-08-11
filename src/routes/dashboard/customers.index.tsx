@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, ChevronLeft, ChevronRight, User, ExternalLink } from "lucide-react";
 
-export const Route = createFileRoute("/dashboard/customers")({
+export const Route = createFileRoute("/dashboard/customers/")({
   component: CustomersPage,
 });
 

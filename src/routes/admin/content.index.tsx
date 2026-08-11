@@ -22,7 +22,7 @@ import { checkAdminStatus, getUserRole } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin/content")({
+export const Route = createFileRoute("/admin/content/")({
   component: AdminContentManagement,
 });
 
