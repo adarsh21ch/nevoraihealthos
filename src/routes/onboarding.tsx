@@ -113,7 +113,8 @@ function OnboardingPage() {
     setStep((s) => Math.max(1, s - 1));
   };
 
-  const optional = (value: string) => (value.trim() === "" ? undefined : Number(value));
+  const optional = (key: string, value: string) =>
+    value.trim() === "" ? {} : { [key]: Number(value) };
 
   const finish = async () => {
     const message = validateStep();
@@ -140,10 +141,10 @@ function OnboardingPage() {
         _start_date: startDate,
         _weight_kg: Number(weight),
         _waist_cm: Number(waist),
-        _hip_cm: optional(hip),
-        _chest_cm: optional(chest),
-        _thigh_cm: optional(thigh),
-        _arm_cm: optional(arm),
+        ...optional("_hip_cm", hip),
+        ...optional("_chest_cm", chest),
+        ...optional("_thigh_cm", thigh),
+        ...optional("_arm_cm", arm),
       });
       if (rpcError) throw rpcError;
 
