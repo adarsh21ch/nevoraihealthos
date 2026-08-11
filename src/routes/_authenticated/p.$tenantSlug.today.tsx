@@ -110,7 +110,7 @@ function TodayPage() {
   const { enrollment, dayContent, dailyLog, tenant } = data;
   const typedDayContent = dayContent as ProgramDayContent;
   const dayNumber = typedDayContent?.day_number || 0;
-  const duration = enrollment.programs?.duration_days || 0;
+  const duration = (enrollment as any)?.programs?.duration_days || 0;
   
   const totalTasks = typedDayContent?.tasks?.length || 0;
   const completedTasks = dailyLog?.task_completions?.length || 0;
