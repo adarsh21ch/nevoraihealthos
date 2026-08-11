@@ -72,6 +72,7 @@ function BrandingPage() {
                 </div>
                 <p className="text-[10px] text-slate-400 font-bold tracking-tight">Point your CNAME to <code className="text-slate-900">domains.nevorai.com</code></p>
               </div>
+            </div>
             <div className="space-y-6 text-center">
               <div className="w-32 h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
                 {formData.logoUrl ? <img src={formData.logoUrl} className="w-full h-full object-contain p-4" loading="lazy" alt="" /> : <Upload className="w-8 h-8 text-slate-300" />}
