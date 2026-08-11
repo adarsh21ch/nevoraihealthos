@@ -12,29 +12,29 @@ import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
-  loader: async () => {
-    try {
-      const tenants = await getTenants();
-      return { tenants: tenants || [] };
-    } catch (e) {
-      console.error("Error loading tenants:", e);
-      return { tenants: [] };
-    }
-  },
   component: AdminTenants,
 });
 
+const slugify = (input: string) =>
+  input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+
+const randomCode = () => Math.random().toString(36).slice(-8).toUpperCase();
+const randomPassword = () => Math.random().toString(36).slice(-10);
+
 function AdminTenants() {
-  const { tenants: initialTenants } = Route.useLoaderData();
   const queryClient = useQueryClient();
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
 
-  const { data: tenants = initialTenants, isLoading } = useQuery({
+  const { data: tenants = [], isLoading } = useQuery({
     queryKey: ["admin-tenants"],
     queryFn: () => getTenantsFn(),
-    initialData: initialTenants,
+    staleTime: 1000 * 60 * 5,
   });
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -42,12 +42,11 @@ function AdminTenants() {
   const [createdTenantInfo, setCreatedTenantInfo] = useState<any>(null);
   
   const [formData, setFormData] = useState({
-    slug: "",
     name: "",
     ownerEmail: "",
     ownerName: "",
-    ownerPassword: Math.random().toString(36).slice(-10),
-    accessCode: Math.random().toString(36).slice(-8).toUpperCase(),
+    ownerPassword: randomPassword(),
+    accessCode: randomCode(),
     tagline: "",
     whatsapp: "",
     phone: "",
@@ -68,9 +67,9 @@ function AdminTenants() {
       });
       setIsSuccessOpen(true);
       setFormData({
-        slug: "", name: "", ownerEmail: "", ownerName: "", 
-        ownerPassword: Math.random().toString(36).slice(-10),
-        accessCode: Math.random().toString(36).slice(-8).toUpperCase(),
+        name: "", ownerEmail: "", ownerName: "",
+        ownerPassword: randomPassword(),
+        accessCode: randomCode(),
         tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: ""
       });
     },
