@@ -67,7 +67,7 @@ export const getTodayData = createServerFn({ method: "GET" })
 
     const { data: enrollment, error: enrollErr } = await supabase
       .from("enrollments")
-      .select("id, program_id, start_date, programs(duration_days, name)")
+      .select("id, program_id, start_date, programs(duration_days, name, next_program_code)")
       .eq("customer_id", customer.id)
       .eq("status", "active")
       .single();
