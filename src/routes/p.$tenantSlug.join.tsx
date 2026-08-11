@@ -35,10 +35,11 @@ function JoinPage() {
   const navigate = useNavigate();
   const signUp = useServerFn(createCustomerAccount);
 
-  const [mode, setMode] = useState<"email" | "phone">("email");
+  const [mode, setMode] = useState<"email" | "phone" | "facebook">("email");
   const [fboId, setFboId] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [contact, setContact] = useState("");
+  const [facebookId, setFacebookId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
