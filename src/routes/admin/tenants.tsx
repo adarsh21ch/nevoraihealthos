@@ -158,6 +158,20 @@ function AdminTenants() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {isLoading && (
+              <TableRow className="border-slate-100">
+                <TableCell colSpan={5} className="py-16 text-center">
+                  <Loader2 className="h-5 w-5 animate-spin text-slate-300 mx-auto" />
+                </TableCell>
+              </TableRow>
+            )}
+            {!isLoading && tenants.length === 0 && (
+              <TableRow className="border-slate-100">
+                <TableCell colSpan={5} className="py-16 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  No tenants yet — onboard your first client
+                </TableCell>
+              </TableRow>
+            )}
             {tenants.map((tenant: any) => (
               <TableRow key={tenant.id} className="border-slate-100 hover:bg-slate-50 transition-colors group">
                 <TableCell className="font-bold pl-10 py-7 text-ink text-lg">
