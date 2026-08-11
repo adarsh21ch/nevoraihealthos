@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { getTenants, createTenant, updateTenantStatus, rotateTenantAccessCode, updateTenantOwnerCredentials } from "@/lib/admin.functions";
+import { getTenants, createTenant, updateTenantStatus } from "@/lib/admin.functions";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check, Key, Shield, User } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
@@ -22,16 +22,11 @@ const slugify = (input: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);
 
-const randomCode = () => Math.random().toString(36).slice(-8).toUpperCase();
-const randomPassword = () => Math.random().toString(36).slice(-10);
-
 function AdminTenants() {
   const queryClient = useQueryClient();
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
-  const updateCredentialsFn = useServerFn(updateTenantOwnerCredentials);
-  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
 
   const { data: tenants = [], isLoading } = useQuery({
     queryKey: ["admin-tenants"],
@@ -42,18 +37,13 @@ function AdminTenants() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [createdTenantInfo, setCreatedTenantInfo] = useState<any>(null);
-  const [selectedTenant, setSelectedTenant] = useState<any>(null);
-  const [isManageOpen, setIsManageOpen] = useState(false);
-  const [isCredentialsOpen, setIsCredentialsOpen] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   
   const [formData, setFormData] = useState({
     name: "",
     ownerEmail: "",
     ownerName: "",
-    ownerPassword: randomPassword(),
-    accessCode: randomCode(),
+    ownerPassword: "",
+    accessCode: "",
     tagline: "",
     whatsapp: "",
     phone: "",
@@ -76,8 +66,8 @@ function AdminTenants() {
       setIsSuccessOpen(true);
       setFormData({
         name: "", ownerEmail: "", ownerName: "",
-        ownerPassword: randomPassword(),
-        accessCode: randomCode(),
+        ownerPassword: "",
+        accessCode: "",
         tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: "", customDomain: ""
       });
     },
@@ -202,7 +192,11 @@ function AdminTenants() {
                   </span>
                 </TableCell>
                 <TableCell className="text-right pr-10 space-x-2">
-                  <Button variant="ghost" size="sm" className="rounded-xl h-10 px-3 text-slate-400 hover:text-slate-900" onClick={() => { setSelectedTenant(tenant); setIsManageOpen(true); }}><Edit2 className="h-4 w-4" /></Button>
+                  <Button asChild variant="ghost" size="sm" className="rounded-xl h-10 px-3 text-slate-400 hover:text-slate-900">
+                    <Link to="/admin/tenants/$tenantId" params={{ tenantId: tenant.id }} aria-label={`Manage ${tenant.name}`}>
+                      <Edit2 className="h-4 w-4" />
+                    </Link>
+                  </Button>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -247,6 +241,15 @@ function AdminTenants() {
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Email</label>
                     <Input required type="email" maxLength={255} placeholder="owner@example.com" value={formData.ownerEmail} onChange={e => setFormData({ ...formData, ownerEmail: e.target.value.trim() })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Password</label>
+                    <Input required minLength={6} type="text" placeholder="Type a password" value={formData.ownerPassword} onChange={e => setFormData({ ...formData, ownerPassword: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <p className="text-[10px] font-bold text-slate-400 ml-1 pt-1">Owner signs in with this email + password — no access code.</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Customer Access Code</label>
+                    <Input required minLength={4} maxLength={24} placeholder="FAT2FIT2026" value={formData.accessCode} onChange={e => setFormData({ ...formData, accessCode: e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, "") })} className="h-11 rounded-xl bg-slate-50 border-slate-200 font-bold tracking-widest" />
+                  </div>
                 </div>
               </div>
               <div className="space-y-6">
@@ -275,13 +278,9 @@ function AdminTenants() {
               </div>
             </div>
             <DialogFooter className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-4">
-                  <span>Owner Pass: {formData.ownerPassword}</span>
-                  <span>Customer Join Code: {formData.accessCode}</span>
-                </div>
-                <p className="text-[9px] text-slate-400 font-medium italic">Owner uses email & password to sign in</p>
-              </div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                You set both credentials manually
+              </p>
               <Button type="submit" disabled={createMutation.isPending} className="bg-ink text-white hover:bg-slate-800 font-bold rounded-xl h-11 px-8 shrink-0">
                 {createMutation.isPending ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Deploy System"}
               </Button>
@@ -325,160 +324,6 @@ function AdminTenants() {
             </div>
 
             <Button onClick={() => setIsSuccessOpen(false)} className="w-full bg-slate-900 text-white font-bold rounded-xl h-12">Close & Continue</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Management Dialog */}
-      <Dialog open={isManageOpen} onOpenChange={setIsManageOpen}>
-        <DialogContent className="max-w-md bg-white rounded-[2rem] p-8 border-none shadow-2xl">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900">Manage Tenant</h2>
-              <p className="text-slate-500 font-medium mt-1">{selectedTenant?.name}</p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Credentials</h3>
-                
-                <div className="space-y-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full h-11 rounded-xl justify-start bg-white border-slate-200 text-slate-900 font-bold"
-                    onClick={() => {
-                      setNewEmail(selectedTenant.email || "");
-                      setNewPassword("");
-                      setIsCredentialsOpen(true);
-                    }}
-                  >
-                    <User className="w-4 h-4 mr-3 text-slate-400" />
-                    Edit Owner Credentials
-                  </Button>
-
-                  <Button 
-                    variant="outline" 
-                    className="w-full h-11 rounded-xl justify-start bg-white border-slate-200 text-slate-900 font-bold"
-                    onClick={async () => {
-                      const newCode = randomCode();
-                      try {
-                        await rotateCodeFn({ data: { tenantId: selectedTenant.id, accessCode: newCode } });
-                        toast.success(`Access code rotated to: ${newCode}`);
-                      } catch (e: any) {
-                        toast.error(e.message);
-                      }
-                    }}
-                  >
-                    <Shield className="w-4 h-4 mr-3 text-slate-400" />
-                    Rotate Access Code
-                  </Button>
-                </div>
-              </div>
-
-              <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Status</h3>
-                <Button 
-                  className={`w-full h-11 rounded-xl font-bold ${
-                    selectedTenant?.status === 'active' 
-                      ? 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100' 
-                      : 'bg-emerald-600 text-white hover:bg-emerald-700'
-                  }`}
-                  onClick={() => {
-                    statusMutation.mutate({ 
-                      id: selectedTenant.id, 
-                      status: selectedTenant.status === 'active' ? 'suspended' : 'active' 
-                    });
-                    setIsManageOpen(false);
-                  }}
-                >
-                  {selectedTenant?.status === 'active' ? (
-                    <><PowerOff className="w-4 h-4 mr-2" /> Suspend Platform</>
-                  ) : (
-                    <><Power className="w-4 h-4 mr-2" /> Activate Platform</>
-                  )}
-                </Button>
-              </div>
-            </div>
-            
-            <Button variant="ghost" onClick={() => setIsManageOpen(false)} className="w-full h-12 font-bold text-slate-400">Close</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Credentials Dialog */}
-      <Dialog open={isCredentialsOpen} onOpenChange={setIsCredentialsOpen}>
-        <DialogContent className="max-w-md bg-white rounded-[2rem] p-8 border-none shadow-2xl">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900">Owner Credentials</h2>
-              <p className="text-slate-500 font-medium mt-1">Update email or password for {selectedTenant?.name}</p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Email</label>
-                <Input 
-                  type="email"
-                  value={newEmail} 
-                  onChange={e => setNewEmail(e.target.value)} 
-                  className="h-11 rounded-xl bg-slate-50 border-slate-200" 
-                  placeholder="owner@example.com"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest ml-1">New Password</label>
-                <div className="flex gap-2">
-                  <Input 
-                    type="text"
-                    value={newPassword} 
-                    onChange={e => setNewPassword(e.target.value)} 
-                    className="h-11 rounded-xl bg-slate-50 border-slate-200" 
-                    placeholder="Leave blank to keep current"
-                  />
-                  <Button 
-                    variant="outline" 
-                    type="button" 
-                    onClick={() => setNewPassword(randomPassword())}
-                    className="rounded-xl px-3 border-slate-200"
-                  >
-                    <Key className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3 pt-2">
-              <Button 
-                variant="ghost" 
-                onClick={() => setIsCredentialsOpen(false)} 
-                className="flex-1 h-12 font-bold text-slate-400"
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="flex-1 h-12 bg-slate-900 text-white font-bold rounded-xl"
-                onClick={async () => {
-                  const toastId = toast.loading("Updating credentials...");
-                  try {
-                    await updateCredentialsFn({ 
-                      data: { 
-                        tenantId: selectedTenant.id, 
-                        email: newEmail !== selectedTenant.email ? newEmail : undefined,
-                        password: newPassword || undefined
-                      } 
-                    });
-                    queryClient.invalidateQueries({ queryKey: ["admin-tenants"] });
-                    toast.success("Credentials updated successfully", { id: toastId });
-                    setIsCredentialsOpen(false);
-                    setIsManageOpen(false);
-                  } catch (e: any) {
-                    toast.error(e.message || "Failed to update credentials", { id: toastId });
-                  }
-                }}
-              >
-                Save Changes
-              </Button>
-            </div>
           </div>
         </DialogContent>
       </Dialog>

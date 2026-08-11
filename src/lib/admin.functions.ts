@@ -222,6 +222,75 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
     return { accessCode: creds?.access_code ?? null };
   });
 
+export const getTenantAdminDetail = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ tenantId: z.string().uuid() }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: tenant, error } = await supabaseAdmin
+      .from("tenants")
+      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
+      .eq("id", data.tenantId)
+      .single();
+
+    if (error || !tenant) throw new Error("Tenant not found");
+
+    const [{ data: creds }, { data: profile }] = await Promise.all([
+      supabaseAdmin
+        .from("tenant_signup_credentials")
+        .select("access_code")
+        .eq("tenant_id", data.tenantId)
+        .maybeSingle(),
+      supabaseAdmin
+        .from("profiles")
+        .select("user_id")
+        .eq("tenant_id", data.tenantId)
+        .eq("role", "owner")
+        .maybeSingle(),
+    ]);
+
+    let ownerEmail: string | null = (tenant as any).email ?? null;
+    let ownerPhone: string | null = null;
+    if (profile?.user_id) {
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(profile.user_id);
+      ownerEmail = authUser?.user?.email ?? ownerEmail;
+      ownerPhone = authUser?.user?.phone ?? null;
+    }
+
+    return {
+      tenant,
+      accessCode: creds?.access_code ?? null,
+      ownerEmail,
+      ownerPhone,
+      hasOwnerAccount: Boolean(profile?.user_id),
+    };
+  });
+
+export const setTenantAccessCode = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    tenantId: z.string().uuid(),
+    accessCode: z.string().trim().min(4).max(24).regex(/^[A-Za-z0-9-]+$/),
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("tenant_signup_credentials")
+      .upsert({ tenant_id: data.tenantId, access_code: data.accessCode }, { onConflict: "tenant_id" });
+
+    if (error) throw error;
+    return { success: true, accessCode: data.accessCode };
+  });
+
 export const updateTenantStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
