@@ -68,7 +68,7 @@ export const getTenants = createServerFn({ method: "GET" })
     
     const { data, error } = await supabaseAdmin
       .from("tenants")
-      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp_number, phone, email, is_active, created_at")
+      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
       .order("created_at", { ascending: false });
       
     if (error) throw error;
@@ -104,12 +104,12 @@ export const createTenant = createServerFn({ method: "POST" })
       .insert({
         slug: data.slug,
         name: data.name,
-        owner_name: data.ownerName,
-        email: data.ownerEmail,
-        tagline: data.tagline,
-        whatsapp: data.whatsapp,
-        phone: data.phone,
-        logo_url: data.logoUrl,
+        owner_name: data.ownerName || null,
+        email: data.ownerEmail || null,
+        tagline: data.tagline || null,
+        whatsapp: data.whatsapp || null,
+        phone: data.phone || null,
+        logo_url: data.logoUrl || null,
         primary_color: data.primaryColor,
         status: 'active'
       })
@@ -165,8 +165,7 @@ export const updateTenantStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     id: z.string().uuid(),
-    status: z.enum(["active", "suspended"]),
-    isActive: z.boolean().optional()
+    status: z.enum(["active", "suspended"])
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { userId } = context;
@@ -179,8 +178,7 @@ export const updateTenantStatus = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin
       .from("tenants")
       .update({ 
-        status: data.status,
-        is_active: data.isActive !== undefined ? data.isActive : (data.status === 'active')
+        status: data.status
       })
       .eq("id", data.id);
 
