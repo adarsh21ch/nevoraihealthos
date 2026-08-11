@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
 import { getMeasurements, addMeasurement } from '@/lib/measurements/measurements.functions';
 import { getProgressPhotos, createProgressPhoto, updatePhotoConsent, deleteProgressPhoto } from '@/lib/photos/photos.functions';
-import { getTodayData } from '@/lib/today.functions';
+import { ProgramDayContent, DayTask } from '@/lib/today.functions';
+import { cn } from '@/lib/utils';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer, AreaChart, Area 
