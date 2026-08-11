@@ -58,51 +58,48 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-stretch bg-black overflow-hidden font-sans">
-      {/* Left Side: Illustration/Brand */}
-      <div className="hidden lg:flex flex-1 relative bg-zinc-950 items-center justify-center p-12 overflow-hidden border-r border-zinc-900">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.03)_0%,transparent_70%)]"></div>
-        <div className="relative z-10 max-w-lg">
-          <div className="w-16 h-16 bg-white text-black rounded-2xl flex items-center justify-center font-bold text-3xl mb-8 shadow-[0_0_50px_rgba(255,255,255,0.1)]">H</div>
-          <h1 className="text-6xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
-            Scale your <br/>
-            <span className="text-zinc-500">health business.</span>
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#FCFBF8] font-sans">
+      {/* Left Side: Brand Context */}
+      <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
+        <div>
+          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mb-12">H</div>
+          <h1 className="text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
+            Infrastructure for <br/>
+            <span className="text-slate-400">wellness scale.</span>
           </h1>
-          <p className="text-xl text-zinc-400 leading-relaxed font-light">
-            The premier infrastructure for health coaches and wellness distributors to scale personalized programs.
+          <p className="text-xl text-slate-500 max-w-md font-medium leading-relaxed">
+            The premier platform for health coaches to manage programs and onboard customers with professional white-label portals.
           </p>
-          
-          <div className="mt-16 grid grid-cols-2 gap-8">
-            <div>
-               <div className="text-2xl font-bold text-white">100%</div>
-               <div className="text-sm text-zinc-500 uppercase tracking-widest mt-1">E2E Privacy</div>
-            </div>
-            <div>
-               <div className="text-2xl font-bold text-white">24/7</div>
-               <div className="text-sm text-zinc-500 uppercase tracking-widest mt-1">AI Support</div>
-            </div>
-          </div>
         </div>
         
-        {/* Background decorative elements */}
-        <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-zinc-800/10 blur-[120px] rounded-full"></div>
+        <div className="flex items-center gap-8">
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-slate-900">2026</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Version Release</span>
+          </div>
+          <div className="w-px h-8 bg-slate-100"></div>
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-slate-900">E2E</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Data Privacy</span>
+          </div>
+        </div>
       </div>
 
       {/* Right Side: Form */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 relative">
-        <div className="w-full max-w-md space-y-8">
-          <div className="lg:hidden flex justify-center mb-8">
-            <div className="w-12 h-12 bg-white text-black rounded-xl flex items-center justify-center font-bold text-2xl shadow-xl">H</div>
+      <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12">
+        <div className="w-full max-w-sm space-y-8">
+          <div className="lg:hidden flex justify-center mb-12">
+            <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl">H</div>
           </div>
           
           <div className="space-y-2 text-center lg:text-left">
-            <h2 className="text-3xl font-bold tracking-tight text-white">Welcome back</h2>
-            <p className="text-zinc-500">Enter your credentials to manage your Health OS.</p>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">Sign in</h2>
+            <p className="text-slate-500 font-medium">Enter your credentials to access your dashboard.</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-zinc-400 font-medium ml-1">Email or Identifier</Label>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email or Identifier</Label>
               <Input
                 id="email"
                 type="text"
@@ -110,33 +107,38 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-zinc-900/50 border-zinc-800 text-white h-12 px-4 focus:ring-1 focus:ring-white/20 transition-all rounded-xl"
+                className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-zinc-400 font-medium ml-1">Password</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Password</Label>
               <Input
                 id="password"
                 type="password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-zinc-900/50 border-zinc-800 text-white h-12 px-4 focus:ring-1 focus:ring-white/20 transition-all rounded-xl"
+                className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
               />
             </div>
-            <Button type="submit" className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold rounded-xl transition-all shadow-xl shadow-white/5 group mt-2" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 group mt-4" 
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Sign In <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  Enter Dashboard <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </>
               )}
             </Button>
           </form>
           
-          <div className="pt-8 text-center text-zinc-600 text-sm">
-            Powered by Nevorai AI &copy; 2026
+          <div className="pt-8 text-center text-slate-400 text-[11px] font-bold uppercase tracking-widest">
+            Health OS &copy; 2026
           </div>
         </div>
       </div>
