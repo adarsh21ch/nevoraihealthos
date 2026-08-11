@@ -1,12 +1,16 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { Palette, Upload, Loader2, Save } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Shield, Key, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { getMyTenantAccessCode, rotateTenantAccessCode } from "@/lib/admin.functions";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/dashboard/branding")({
   loader: async () => {
@@ -19,6 +23,27 @@ export const Route = createFileRoute("/dashboard/branding")({
 
 function BrandingPage() {
   const { tenant } = useLoaderData({ from: '/dashboard/branding' });
+  const queryClient = useQueryClient();
+  const fetchAccessCode = useServerFn(getMyTenantAccessCode);
+  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
+  
+  const { data: creds } = useQuery({
+    queryKey: ["my-tenant-access-code"],
+    queryFn: () => fetchAccessCode(),
+  });
+
+  const rotateMutation = useMutation({
+    mutationFn: async () => {
+      const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      return rotateCodeFn({ data: { tenantId: tenant?.id!, accessCode: newCode } });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-tenant-access-code"] });
+      toast.success("Access code rotated successfully");
+    },
+    onError: (e: any) => toast.error(e.message)
+  });
+
   const [formData, setFormData] = useState({
     name: tenant?.name || "",
     tagline: tenant?.tagline || "",
@@ -86,7 +111,33 @@ function BrandingPage() {
               </div>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-slate-900 text-white font-bold rounded-2xl text-lg shadow-xl shadow-slate-900/10 transition-all active:scale-95">
+
+          <div className="p-10 pt-0 space-y-8">
+            <div className="p-8 bg-slate-900 rounded-[2rem] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-slate-900/20">
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-white/10 rounded-[1.5rem] flex items-center justify-center border border-white/10">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">Access Security</h3>
+                  <div className="text-3xl font-black tracking-tighter flex items-center gap-3">
+                    {creds?.accessCode || "••••••"}
+                    <span className="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/20 font-bold uppercase tracking-widest">Active</span>
+                  </div>
+                  <p className="text-xs text-white/50 font-bold mt-1">Required for all new customer registrations.</p>
+                </div>
+              </div>
+              <Button 
+                onClick={() => rotateMutation.mutate()} 
+                disabled={rotateMutation.isPending}
+                className="h-12 px-6 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition-all shadow-lg active:scale-95"
+              >
+                {rotateMutation.isPending ? <Loader2 className="animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+                Rotate Code
+              </Button>
+            </div>
+
+            <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-slate-900 text-white font-bold rounded-2xl text-lg shadow-xl shadow-slate-900/10 transition-all active:scale-95">
             {isSaving ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-5 h-5" />} Save Changes
           </Button>
         </CardContent>
