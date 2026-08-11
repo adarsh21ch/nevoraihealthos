@@ -112,7 +112,7 @@ function BrandingPage() {
             </div>
           </div>
 
-          <div className="p-10 pt-0 space-y-8">
+          <div className="space-y-8">
             <div className="p-8 bg-slate-900 rounded-[2rem] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-slate-900/20">
               <div className="flex items-center gap-6">
                 <div className="w-16 h-16 bg-white/10 rounded-[1.5rem] flex items-center justify-center border border-white/10">
@@ -138,8 +138,9 @@ function BrandingPage() {
             </div>
 
             <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-slate-900 text-white font-bold rounded-2xl text-lg shadow-xl shadow-slate-900/10 transition-all active:scale-95">
-            {isSaving ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-5 h-5" />} Save Changes
-          </Button>
+              {isSaving ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-5 h-5" />} Save Changes
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
