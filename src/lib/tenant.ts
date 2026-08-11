@@ -39,6 +39,8 @@ export function isReservedPlatformHost(hostname: string): boolean {
   const labels = hostname.split('.');
   const firstLabel = labels[0];
   
+  if (!firstLabel) return true;
+
   // 36 char UUID-like labels
   if (firstLabel.length === 36) return true;
   
