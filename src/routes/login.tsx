@@ -48,6 +48,7 @@ function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { tenant: currentTenant } = Route.useRouteContext();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,13 +67,21 @@ function LoginPage() {
       
       if (contextError) throw contextError;
 
-      const { role, tenant_slug, onboarding_complete, tenant_id } = context as any;
+      const { role, tenant_slug, onboarding_complete, custom_domain } = context as any;
 
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
       } else if (role === "tenant_owner") {
         navigate({ to: "/dashboard" });
       } else if (role === "customer") {
+        // If current domain is a custom domain and doesn't match user's tenant, redirect to correct domain
+        if (currentTenant && currentTenant.slug !== tenant_slug) {
+          const { tenantSiteUrl } = await import("@/lib/tenant");
+          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain });
+          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+          return;
+        }
+
         if (onboarding_complete) {
           navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } });
         } else {
