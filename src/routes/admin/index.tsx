@@ -134,55 +134,64 @@ function AdminDashboard() {
                   createMutation.mutate(formData);
                 }}
               >
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Tenant Name</label>
-                  <Input 
-                    required
-                    placeholder="e.g. FitLife Mumbai"
-                    value={formData.name}
-                    onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  />
+                <div className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Tenant Name</label>
+                    <Input 
+                      required
+                      placeholder="e.g. FitLife Mumbai"
+                      value={formData.name}
+                      onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">URL Slug</label>
+                      <Input 
+                        required
+                        placeholder="slug"
+                        value={formData.slug}
+                        onChange={e => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
+                        className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Access Code</label>
+                      <Input 
+                        required
+                        placeholder="JOIN2026"
+                        value={formData.accessCode}
+                        onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
+                        className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Owner Full Name</label>
+                    <Input 
+                      required
+                      placeholder="e.g. John Doe"
+                      value={formData.ownerName}
+                      onChange={e => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
+                      className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                    />
+                  </div>
+                  <div className="space-y-2 pb-2">
+                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Owner Email</label>
+                    <Input 
+                      required
+                      type="email"
+                      placeholder="owner@example.com"
+                      value={formData.ownerEmail}
+                      onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
+                      className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold rounded-xl transition-all shadow-xl shadow-white/5" disabled={createMutation.isPending}>
+                    {createMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Deploy Infrastructure"}
+                  </Button>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">URL Slug</label>
-                  <Input 
-                    required
-                    placeholder="e.g. fitlife-mumbai"
-                    value={formData.slug}
-                    onChange={e => setFormData(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Owner Name</label>
-                  <Input 
-                    required
-                    placeholder="e.g. John Doe"
-                    value={formData.ownerName}
-                    onChange={e => setFormData(prev => ({ ...prev, ownerName: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Owner Email</label>
-                  <Input 
-                    required
-                    type="email"
-                    placeholder="owner@example.com"
-                    value={formData.ownerEmail}
-                    onChange={e => setFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Access Code</label>
-                  <Input 
-                    required
-                    placeholder="e.g. JOIN2026"
-                    value={formData.accessCode}
-                    onChange={e => setFormData(prev => ({ ...prev, accessCode: e.target.value.toUpperCase() }))}
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={createMutation.isPending}>
-                  {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Tenant"}
-                </Button>
               </form>
             </DialogContent>
           </Dialog>
