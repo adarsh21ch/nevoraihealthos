@@ -27,6 +27,7 @@ function DashboardLayout() {
     { name: "Customers", icon: Users, path: "/dashboard/customers" },
     { name: "Reorder", icon: Package, path: "/dashboard/reorder" },
     { name: "At-risk", icon: TrendingUp, path: "/dashboard/at-risk" },
+    { name: "Access Control", icon: Key, path: "/dashboard/access" },
     { name: "Testimonials", icon: MessageSquare, path: "/dashboard/testimonials" },
     { name: "Invite", icon: Users, path: "/dashboard/invite" },
     { name: "Settings", icon: Settings, path: "/dashboard/branding" },
