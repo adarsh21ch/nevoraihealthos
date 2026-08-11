@@ -107,8 +107,14 @@ function TenantEditor() {
   };
 
   const saveOwner = async () => {
-    if (ownerPassword && ownerPassword.length < 6) return toast.error("Password must be at least 6 characters");
-    if (ownerPassword && ownerPassword !== confirmPassword) return toast.error("Passwords do not match");
+    if (ownerPassword && ownerPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    if (ownerPassword && ownerPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
     setSaving("owner");
     try {
       await setOwnerCreds({
