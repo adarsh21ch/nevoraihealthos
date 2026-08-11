@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS public.customers_metrics_fix (id uuid);

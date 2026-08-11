@@ -34,6 +34,7 @@ import { Route as DashboardCustomersIndexRouteImport } from './routes/dashboard/
 import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p.$tenantSlug.join'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
+import { Route as AuthenticatedPTenantSlugDietRouteImport } from './routes/_authenticated/p.$tenantSlug.diet'
 import { Route as AuthenticatedPTenantSlugGuideRouteImport } from './routes/_authenticated/p.$tenantSlug.guide'
 import { Route as AuthenticatedPTenantSlugJourneyRouteImport } from './routes/_authenticated/p.$tenantSlug.journey'
 import { Route as AuthenticatedPTenantSlugKitRouteImport } from './routes/_authenticated/p.$tenantSlug.kit'
@@ -168,6 +169,12 @@ const AuthenticatedPTenantSlugCompleteRoute =
     path: '/complete',
     getParentRoute: () => AuthenticatedPTenantSlugRoute,
   } as any)
+const AuthenticatedPTenantSlugDietRoute =
+  AuthenticatedPTenantSlugDietRouteImport.update({
+    id: '/diet',
+    path: '/diet',
+    getParentRoute: () => AuthenticatedPTenantSlugRoute,
+  } as any)
 const AuthenticatedPTenantSlugGuideRoute =
   AuthenticatedPTenantSlugGuideRouteImport.update({
     id: '/guide',
@@ -230,6 +237,7 @@ export interface FileRoutesByFullPath {
   '/admin/tenants/': typeof AdminTenantsIndexRoute
   '/dashboard/customers/': typeof DashboardCustomersIndexRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
+  '/p/$tenantSlug/diet': typeof AuthenticatedPTenantSlugDietRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
   '/p/$tenantSlug/kit': typeof AuthenticatedPTenantSlugKitRoute
@@ -260,6 +268,7 @@ export interface FileRoutesByTo {
   '/admin/tenants': typeof AdminTenantsIndexRoute
   '/dashboard/customers': typeof DashboardCustomersIndexRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
+  '/p/$tenantSlug/diet': typeof AuthenticatedPTenantSlugDietRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
   '/p/$tenantSlug/kit': typeof AuthenticatedPTenantSlugKitRoute
@@ -294,6 +303,7 @@ export interface FileRoutesById {
   '/admin/tenants/': typeof AdminTenantsIndexRoute
   '/dashboard/customers/': typeof DashboardCustomersIndexRoute
   '/_authenticated/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
+  '/_authenticated/p/$tenantSlug/diet': typeof AuthenticatedPTenantSlugDietRoute
   '/_authenticated/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/_authenticated/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
   '/_authenticated/p/$tenantSlug/kit': typeof AuthenticatedPTenantSlugKitRoute
@@ -328,6 +338,7 @@ export interface FileRouteTypes {
     | '/admin/tenants/'
     | '/dashboard/customers/'
     | '/p/$tenantSlug/complete'
+    | '/p/$tenantSlug/diet'
     | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
     | '/p/$tenantSlug/kit'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/admin/tenants'
     | '/dashboard/customers'
     | '/p/$tenantSlug/complete'
+    | '/p/$tenantSlug/diet'
     | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
     | '/p/$tenantSlug/kit'
@@ -391,6 +403,7 @@ export interface FileRouteTypes {
     | '/admin/tenants/'
     | '/dashboard/customers/'
     | '/_authenticated/p/$tenantSlug/complete'
+    | '/_authenticated/p/$tenantSlug/diet'
     | '/_authenticated/p/$tenantSlug/guide'
     | '/_authenticated/p/$tenantSlug/journey'
     | '/_authenticated/p/$tenantSlug/kit'
@@ -586,6 +599,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPTenantSlugCompleteRouteImport
       parentRoute: typeof AuthenticatedPTenantSlugRoute
     }
+    '/_authenticated/p/$tenantSlug/diet': {
+      id: '/_authenticated/p/$tenantSlug/diet'
+      path: '/diet'
+      fullPath: '/p/$tenantSlug/diet'
+      preLoaderRoute: typeof AuthenticatedPTenantSlugDietRouteImport
+      parentRoute: typeof AuthenticatedPTenantSlugRoute
+    }
     '/_authenticated/p/$tenantSlug/guide': {
       id: '/_authenticated/p/$tenantSlug/guide'
       path: '/guide'
@@ -633,6 +653,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedPTenantSlugRouteChildren {
   AuthenticatedPTenantSlugCompleteRoute: typeof AuthenticatedPTenantSlugCompleteRoute
+  AuthenticatedPTenantSlugDietRoute: typeof AuthenticatedPTenantSlugDietRoute
   AuthenticatedPTenantSlugGuideRoute: typeof AuthenticatedPTenantSlugGuideRoute
   AuthenticatedPTenantSlugJourneyRoute: typeof AuthenticatedPTenantSlugJourneyRoute
   AuthenticatedPTenantSlugKitRoute: typeof AuthenticatedPTenantSlugKitRoute
@@ -644,6 +665,7 @@ const AuthenticatedPTenantSlugRouteChildren: AuthenticatedPTenantSlugRouteChildr
   {
     AuthenticatedPTenantSlugCompleteRoute:
       AuthenticatedPTenantSlugCompleteRoute,
+    AuthenticatedPTenantSlugDietRoute: AuthenticatedPTenantSlugDietRoute,
     AuthenticatedPTenantSlugGuideRoute: AuthenticatedPTenantSlugGuideRoute,
     AuthenticatedPTenantSlugJourneyRoute: AuthenticatedPTenantSlugJourneyRoute,
     AuthenticatedPTenantSlugKitRoute: AuthenticatedPTenantSlugKitRoute,
@@ -734,13 +756,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

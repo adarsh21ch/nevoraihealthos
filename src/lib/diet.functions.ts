@@ -48,8 +48,11 @@ export const getDietPlan = createServerFn({ method: "GET" })
     ];
 
     const day3to9: DietRequirement[] = [
-      ...day1and2.filter(i => i.name !== 'Aloe Vera Gel' || i.slot === 'morning'),
+      { id: '1', name: 'Aloe Vera Gel', slot: 'morning', description: '120ml with a glass of water', is_product: true, product_name: 'Aloe Vera Gel' },
+      { id: '2', name: 'Forever Garcinia Plus', slot: 'morning', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
+      { id: '3', name: 'Forever Fiber', slot: 'pre_lunch', description: '1 stick pack mixed with water', is_product: true, product_name: 'Forever Fiber' },
       { id: '10', name: 'Main Meal', slot: 'lunch', description: '600 calorie controlled meal (800 for men)', is_product: false },
+      { id: '4', name: 'Forever Garcinia Plus', slot: 'dinner', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
       { id: '11', name: 'Aloe Vera Gel', slot: 'dinner', description: '120ml with water', is_product: true, product_name: 'Aloe Vera Gel' },
     ];
 
