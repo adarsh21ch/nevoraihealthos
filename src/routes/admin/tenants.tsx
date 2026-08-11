@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { getTenants, createTenant, updateTenantStatus, rotateTenantAccessCode, updateTenantOwnerCredentials } from "@/lib/admin.functions";
+import { getTenants, createTenant, updateTenantStatus } from "@/lib/admin.functions";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check, Key, Shield, User } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
@@ -30,8 +30,6 @@ function AdminTenants() {
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
-  const updateCredentialsFn = useServerFn(updateTenantOwnerCredentials);
-  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
 
   const { data: tenants = [], isLoading } = useQuery({
     queryKey: ["admin-tenants"],
@@ -42,11 +40,6 @@ function AdminTenants() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [createdTenantInfo, setCreatedTenantInfo] = useState<any>(null);
-  const [selectedTenant, setSelectedTenant] = useState<any>(null);
-  const [isManageOpen, setIsManageOpen] = useState(false);
-  const [isCredentialsOpen, setIsCredentialsOpen] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   
   const [formData, setFormData] = useState({
     name: "",
