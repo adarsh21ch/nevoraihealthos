@@ -52,8 +52,8 @@ function DashboardOverview() {
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]"></span>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Operational</span>
           </div>
-          <h1 className="text-5xl font-bold tracking-tight text-slate-900 leading-none">Overview</h1>
-          <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Welcome back, {tenant?.owner_name}.</p>
+          <h1 className="text-5xl font-bold tracking-tight text-ink leading-none">Overview</h1>
+          <p className="text-muted mt-4 font-medium text-lg max-w-md">Welcome back, {tenant?.owner_name}.</p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ function DashboardOverview() {
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
             </CardHeader>
             <CardContent className="px-8 pb-8">
-              <div className="text-4xl font-bold text-slate-900 tracking-tight">{stat.value}</div>
+              <div className="text-4xl font-bold text-ink tracking-tight">{stat.value}</div>
             </CardContent>
           </Card>
         </Link>
@@ -85,14 +85,14 @@ function DashboardOverview() {
                 <div>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Your Join Link</p>
                   <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-4 py-3">
-                    <code className="text-xs font-bold text-slate-900 break-all mr-2">/p/{tenant?.slug}/join</code>
+                    <code className="text-xs font-bold text-ink break-all mr-2">/p/{tenant?.slug}/join</code>
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => { navigator.clipboard.writeText(joinLink); toast.success("Copied to clipboard"); }}>
                       <Copy className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 </div>
                 <div className="pt-2">
-                  <Button className="w-full bg-slate-900 text-white font-bold rounded-xl h-11" asChild>
+                  <Button className="w-full bg-ink text-white font-bold rounded-xl h-11" asChild>
                     <Link to="/dashboard/invite">Manage Invitations</Link>
                   </Button>
                 </div>
@@ -116,7 +116,7 @@ function DashboardOverview() {
             </div>
             <div className="space-y-4 flex-1">
               <div>
-                <h3 className="font-bold text-slate-900">{tenant?.name}</h3>
+                <h3 className="font-bold text-ink">{tenant?.name}</h3>
                 <p className="text-sm text-slate-500">{tenant?.tagline || 'No tagline set'}</p>
               </div>
               <div className="flex items-center gap-2">

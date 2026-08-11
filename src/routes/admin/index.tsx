@@ -138,12 +138,12 @@ function AdminDashboard() {
     <div className="space-y-10 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-5xl font-bold tracking-tight text-slate-900 leading-none">Tenants</h1>
+          <h1 className="text-5xl font-bold tracking-tight text-ink leading-none">Tenants</h1>
           <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Manage wellness distributors and their white-label platforms.</p>
         </div>
         <Button 
           onClick={() => setIsCreateOpen(true)}
-          className="bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl h-12 px-8 shadow-xl shadow-slate-900/10"
+          className="bg-ink text-white hover:bg-slate-800 font-bold rounded-xl h-12 px-8 shadow-xl shadow-slate-900/10"
         >
           <Plus className="mr-2 h-4 w-4 stroke-[3px]" />
           Onboard Client
@@ -164,7 +164,7 @@ function AdminDashboard() {
           <TableBody>
             {tenants.map((tenant: any) => (
               <TableRow key={tenant.id} className="border-slate-100 hover:bg-slate-50 transition-colors group">
-                <TableCell className="font-bold pl-10 py-7 text-slate-900 text-lg">
+                <TableCell className="font-bold pl-10 py-7 text-ink text-lg">
                   <div className="flex items-center gap-3">
                     {tenant.logo_url && <img src={tenant.logo_url} className="w-8 h-8 rounded-lg object-contain bg-slate-50 border" loading="lazy" alt="" />}
                     {tenant.name}
@@ -248,7 +248,7 @@ function AdminDashboard() {
                 <span>Access: {formData.accessCode}</span>
                 <span>Pass: {formData.ownerPassword}</span>
               </div>
-              <Button type="submit" disabled={createMutation.isPending} className="bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl h-11 px-8">
+              <Button type="submit" disabled={createMutation.isPending} className="bg-ink text-white hover:bg-slate-800 font-bold rounded-xl h-11 px-8">
                 {createMutation.isPending ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Deploy System"}
               </Button>
             </DialogFooter>
