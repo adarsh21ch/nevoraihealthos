@@ -6,10 +6,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
-  loader: async ({ params }) => {
+  loader: async ({ params, context }: { params: { tenantSlug: string }, context: any }) => {
+    // If we have a tenant from the root loader (custom domain), use it
+    if (context.tenant && (context.tenant as any).slug === params.tenantSlug) {
+      return { tenant: context.tenant as any };
+    }
+
     const { data: tenant, error } = await supabase
       .from('tenants')
-      .select('id, name, slug, logo_url, primary_color, tagline, whatsapp')
+      .select('id, name, slug, logo_url, primary_color, tagline, whatsapp, custom_domain')
       .eq('slug', params.tenantSlug)
       .single();
     

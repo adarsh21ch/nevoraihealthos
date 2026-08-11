@@ -14,20 +14,22 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import {
   ArrowLeft, Loader2, Palette, KeyRound, ShieldCheck, Power, PowerOff,
-  Eye, EyeOff, ExternalLink, Save, Copy,
+  Eye, EyeOff, ExternalLink, Save, Copy, Globe,
 } from "lucide-react";
+import { tenantSiteUrl } from "@/lib/tenant";
 
 export const Route = createFileRoute("/admin/tenants/$tenantId")({
   ssr: false,
   component: TenantEditor,
 });
 
-type Section = "brand" | "owner" | "access" | "status";
+type Section = "brand" | "owner" | "access" | "domain" | "status";
 
 const sections: { id: Section; label: string; hint: string; icon: any }[] = [
   { id: "brand", label: "Brand", hint: "Name, logo, colours", icon: Palette },
   { id: "owner", label: "Owner Login", hint: "Email & password", icon: KeyRound },
   { id: "access", label: "Access Code", hint: "Customer join code", icon: ShieldCheck },
+  { id: "domain", label: "Custom Domain", hint: "Domain routing", icon: Globe },
   { id: "status", label: "Status", hint: "Suspend or activate", icon: Power },
 ];
 
@@ -50,7 +52,7 @@ function TenantEditor() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const [brand, setBrand] = useState({ name: "", tagline: "", primary_color: "#16a34a", whatsapp: "" });
+  const [brand, setBrand] = useState({ name: "", tagline: "", primary_color: "#16a34a", whatsapp: "", custom_domain: "" });
   const [ownerEmail, setOwnerEmail] = useState("");
   const [ownerPassword, setOwnerPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -65,6 +67,7 @@ function TenantEditor() {
       tagline: (data.tenant as any).tagline ?? "",
       primary_color: (data.tenant as any).primary_color ?? "#16a34a",
       whatsapp: (data.tenant as any).whatsapp ?? "",
+      custom_domain: (data.tenant as any).custom_domain ?? "",
     });
     setOwnerEmail(data.ownerEmail ?? "");
     setCode(data.accessCode ?? "");
@@ -95,6 +98,7 @@ function TenantEditor() {
           tagline: brand.tagline,
           primary_color: brand.primary_color,
           whatsapp: brand.whatsapp,
+          custom_domain: brand.custom_domain.trim() || undefined,
         },
       });
       toast.success("Brand details saved");
@@ -183,11 +187,23 @@ function TenantEditor() {
             </p>
           </div>
         </div>
-        <Button asChild variant="outline" className="rounded-xl h-12 px-6 font-bold border-slate-200">
-          <Link to="/p/$tenantSlug/today" params={{ tenantSlug: tenant.slug }}>
-            <ExternalLink className="h-4 w-4 mr-2" /> View portal
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline" className="rounded-xl h-12 px-6 font-bold border-slate-200">
+            <a href={tenantSiteUrl(tenant)} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-4 w-4 mr-2" /> View portal
+            </a>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="rounded-xl h-12 px-4 border-slate-200"
+            onClick={() => {
+              navigator.clipboard.writeText(tenantSiteUrl(tenant));
+              toast.success("Live URL copied");
+            }}
+          >
+            <Copy className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-[260px_1fr] gap-8 items-start">
@@ -330,6 +346,38 @@ function TenantEditor() {
               </div>
               <Button onClick={saveCode} disabled={saving === "access" || code.trim().length < 4} className="h-12 px-8 bg-ink text-white hover:bg-slate-800 font-bold rounded-xl">
                 {saving === "access" ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Save className="h-4 w-4 mr-2" /> Save code</>}
+              </Button>
+            </div>
+          )}
+
+          {section === "domain" && (
+            <div className={cardCls}>
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight text-ink">Custom Domain</h2>
+                <p className="text-slate-500 font-medium mt-1">
+                  Connect a custom subdomain (e.g., <code className="text-slate-900 font-bold">fat2fit.nevorai.com</code>).
+                </p>
+              </div>
+              <div className="space-y-4 max-w-md">
+                <div className="space-y-1.5">
+                  <label className={labelCls}>Domain Name</label>
+                  <Input 
+                    value={brand.custom_domain} 
+                    placeholder="fat2fit.nevorai.com"
+                    onChange={(e) => setBrand({ ...brand, custom_domain: e.target.value.toLowerCase().trim() })} 
+                    className={inputCls} 
+                  />
+                </div>
+                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    1. Add this domain in Lovable Project Settings → Domains.<br />
+                    2. Configure DNS records with your provider.<br />
+                    3. Save the domain name here to enable routing.
+                  </p>
+                </div>
+              </div>
+              <Button onClick={saveBrand} disabled={saving === "brand"} className="h-12 px-8 bg-ink text-white hover:bg-slate-800 font-bold rounded-xl">
+                {saving === "brand" ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Save className="h-4 w-4 mr-2" /> Save domain</>}
               </Button>
             </div>
           )}

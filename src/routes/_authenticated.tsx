@@ -4,18 +4,17 @@ import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_authenticated')({
   ssr: false,
-  beforeLoad: async ({ location }) => {
-    // Auto-detect tenant from hostname if using a custom subdomain (e.g. fat2fit.nevera.com)
-    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
-    const isSubdomain = hostname.includes('.nevera.com') && !hostname.startsWith('project--');
-    const hostnameSlug = isSubdomain ? hostname.split('.')[0] : null;
+  beforeLoad: async ({ location, context }) => {
+    // 1. Resolve tenant from hostname or context
+    const tenant = (context as any).tenant;
+    const isCustomDomain = (context as any).isCustomDomain;
 
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      // If we're on a subdomain, redirect to the specific join page if they try to access /
-      if (hostnameSlug && location.pathname === '/') {
-        throw redirect({ to: `/p/${hostnameSlug}/join` as any });
+      // If we're on a custom domain, redirect to their branded join page
+      if (tenant && isCustomDomain && location.pathname === '/') {
+        throw redirect({ to: `/p/${tenant.slug}/join` as any });
       }
 
       throw redirect({
@@ -42,9 +41,9 @@ export const Route = createFileRoute('/_authenticated')({
         toast.error("Access denied: Tenant Owner only");
         throw redirect({ to: '/login' });
       }
-    } else if (location.pathname.startsWith('/p/')) {
+    } else if (location.pathname.startsWith('/p/') || (isCustomDomain && tenant)) {
       const pathSegments = location.pathname.split('/');
-      const urlTenantSlug = pathSegments[2];
+      const urlTenantSlug = pathSegments[2] || tenant?.slug;
       
       // Platform Admins can view any tenant portal for testing/management
       if (role === 'platform_admin') {
