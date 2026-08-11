@@ -45,20 +45,7 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
 
     if (authError) throw authError;
 
-    // 3. Assign role
-    const { error: roleError } = await supabaseAdmin
-      .from("user_roles")
-      .insert({
-        user_id: authUser.user.id,
-        role: "tenant_owner"
-      });
-
-    if (roleError) {
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
-      throw roleError;
-    }
-
-    // 4. Create profile link
+    // 3. Create profile link
     const { error: profileError } = await supabaseAdmin
       .from("profiles")
       .insert({
@@ -68,7 +55,6 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
       });
 
     if (profileError) {
-       // Roles table will cascade delete on user delete
        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
        throw profileError;
     }
