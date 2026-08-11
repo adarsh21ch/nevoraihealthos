@@ -23,7 +23,7 @@ function TodayPage() {
 
   useEffect(() => {
     if (data && 'redirect' in data && data.redirect) {
-      navigate({ to: data.redirect });
+      navigate({ to: data.redirect as any });
     }
   }, [data, navigate]);
 
