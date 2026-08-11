@@ -19,10 +19,12 @@ function CustomerDetailPage() {
   const fetchDetail = useServerFn(getCustomerDetail);
   const resetPassword = useServerFn(resetCustomerPassword);
 
-  const { data: customer, isLoading, refetch } = useQuery({
+  const { data: customerData, isLoading, refetch } = useQuery({
     queryKey: ["customer-detail", customerId],
     queryFn: () => fetchDetail({ data: { customerId } }),
   });
+
+  const customer = customerData as any;
 
   const resetMutation = useMutation({
     mutationFn: (id: string) => resetPassword({ data: { customerId: id } }),

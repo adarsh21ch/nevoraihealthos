@@ -25,6 +25,7 @@ import { Route as DashboardInviteRouteImport } from './routes/dashboard/invite'
 import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder'
 import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
+import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
 import { Route as AuthenticatedPTenantSlugGuideRouteImport } from './routes/_authenticated/p.$tenantSlug.guide'
@@ -114,6 +115,12 @@ const AuthenticatedPTenantSlugRoute =
     path: '/p/$tenantSlug',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const DashboardCustomersCustomerIdRoute =
+  DashboardCustomersCustomerIdRouteImport.update({
+    id: '/$customerId',
+    path: '/$customerId',
+    getParentRoute: () => DashboardCustomersRoute,
+  } as any)
 const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
   id: '/p/$tenantSlug/join',
   path: '/p/$tenantSlug/join',
@@ -171,13 +178,14 @@ export interface FileRoutesByFullPath {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
-  '/dashboard/customers': typeof DashboardCustomersRoute
+  '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
   '/dashboard/invite': typeof DashboardInviteRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
+  '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
@@ -194,13 +202,14 @@ export interface FileRoutesByTo {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
-  '/dashboard/customers': typeof DashboardCustomersRoute
+  '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
   '/dashboard/invite': typeof DashboardInviteRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
+  '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
@@ -221,13 +230,14 @@ export interface FileRoutesById {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
-  '/dashboard/customers': typeof DashboardCustomersRoute
+  '/dashboard/customers': typeof DashboardCustomersRouteWithChildren
   '/dashboard/invite': typeof DashboardInviteRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
+  '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/_authenticated/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/_authenticated/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/p/$tenantSlug'
+    | '/dashboard/customers/$customerId'
     | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
     | '/p/$tenantSlug/guide'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/p/$tenantSlug'
+    | '/dashboard/customers/$customerId'
     | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
     | '/p/$tenantSlug/guide'
@@ -304,6 +316,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/_authenticated/p/$tenantSlug'
+    | '/dashboard/customers/$customerId'
     | '/p/$tenantSlug/join'
     | '/_authenticated/p/$tenantSlug/complete'
     | '/_authenticated/p/$tenantSlug/guide'
@@ -438,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPTenantSlugRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/dashboard/customers/$customerId': {
+      id: '/dashboard/customers/$customerId'
+      path: '/$customerId'
+      fullPath: '/dashboard/customers/$customerId'
+      preLoaderRoute: typeof DashboardCustomersCustomerIdRouteImport
+      parentRoute: typeof DashboardCustomersRoute
+    }
     '/p/$tenantSlug/join': {
       id: '/p/$tenantSlug/join'
       path: '/p/$tenantSlug/join'
@@ -560,10 +580,21 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface DashboardCustomersRouteChildren {
+  DashboardCustomersCustomerIdRoute: typeof DashboardCustomersCustomerIdRoute
+}
+
+const DashboardCustomersRouteChildren: DashboardCustomersRouteChildren = {
+  DashboardCustomersCustomerIdRoute: DashboardCustomersCustomerIdRoute,
+}
+
+const DashboardCustomersRouteWithChildren =
+  DashboardCustomersRoute._addFileChildren(DashboardCustomersRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardAtRiskRoute: typeof DashboardAtRiskRoute
   DashboardBrandingRoute: typeof DashboardBrandingRoute
-  DashboardCustomersRoute: typeof DashboardCustomersRoute
+  DashboardCustomersRoute: typeof DashboardCustomersRouteWithChildren
   DashboardInviteRoute: typeof DashboardInviteRoute
   DashboardReorderRoute: typeof DashboardReorderRoute
   DashboardTestimonialsRoute: typeof DashboardTestimonialsRoute
@@ -573,7 +604,7 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAtRiskRoute: DashboardAtRiskRoute,
   DashboardBrandingRoute: DashboardBrandingRoute,
-  DashboardCustomersRoute: DashboardCustomersRoute,
+  DashboardCustomersRoute: DashboardCustomersRouteWithChildren,
   DashboardInviteRoute: DashboardInviteRoute,
   DashboardReorderRoute: DashboardReorderRoute,
   DashboardTestimonialsRoute: DashboardTestimonialsRoute,
