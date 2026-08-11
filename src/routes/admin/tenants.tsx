@@ -6,10 +6,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff, Shield, Edit2, Key, Copy, Check, QrCode } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
@@ -22,17 +21,15 @@ export const Route = createFileRoute("/admin/tenants")({
       return { tenants: [] };
     }
   },
-  component: AdminDashboard,
+  component: AdminTenants,
 });
 
-function AdminDashboard() {
+function AdminTenants() {
   const { tenants: initialTenants } = Route.useLoaderData();
   const queryClient = useQueryClient();
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
-  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
-  const resetPasswordFn = useServerFn(resetTenantOwnerPassword);
 
   const { data: tenants = initialTenants, isLoading } = useQuery({
     queryKey: ["admin-tenants"],
