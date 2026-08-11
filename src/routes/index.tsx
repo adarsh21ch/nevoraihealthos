@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { 
   ArrowRight, 
@@ -38,6 +39,17 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { tenant } = Route.useRouteContext();
+  const navigate = useNavigate();
+
+  // If we're on a custom domain resolved to a tenant, 
+  // redirect to the tenant's public landing or join page
+  useEffect(() => {
+    if (tenant) {
+      navigate({ to: '/p/$tenantSlug/join', params: { tenantSlug: tenant.slug }, replace: true });
+    }
+  }, [tenant, navigate]);
+
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

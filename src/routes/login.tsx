@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,16 +10,28 @@ import { Loader2, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ context }) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: context } = await supabase.rpc("get_my_auth_context");
-    const { role, tenant_slug, onboarding_complete, tenant_id } = (context ?? {}) as any;
+    const { data: authContext } = await supabase.rpc("get_my_auth_context");
+    const { role, tenant_slug, onboarding_complete } = (authContext ?? {}) as any;
 
     if (role === "platform_admin") throw redirect({ to: "/admin" });
     if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
+    
     if (role === "customer" && tenant_slug) {
+      // If we are on a custom domain, check if it matches the user's tenant
+      if (context.tenant && context.tenant.slug !== tenant_slug) {
+        // User is logged into the wrong tenant for this domain
+        // We let them through to sign out or we could force a logout
+        // For now, let's redirect to their actual tenant home
+        const { tenantSiteUrl } = await import("@/lib/tenant");
+        const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
+        window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+        return;
+      }
+
       throw redirect(
         onboarding_complete
           ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
@@ -36,6 +48,7 @@ function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { tenant: currentTenant } = Route.useRouteContext();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,13 +67,21 @@ function LoginPage() {
       
       if (contextError) throw contextError;
 
-      const { role, tenant_slug, onboarding_complete, tenant_id } = context as any;
+      const { role, tenant_slug, onboarding_complete, custom_domain } = context as any;
 
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
       } else if (role === "tenant_owner") {
         navigate({ to: "/dashboard" });
       } else if (role === "customer") {
+        // If current domain is a custom domain and doesn't match user's tenant, redirect to correct domain
+        if (currentTenant && currentTenant.slug !== tenant_slug) {
+          const { tenantSiteUrl } = await import("@/lib/tenant");
+          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain });
+          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+          return;
+        }
+
         if (onboarding_complete) {
           navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } });
         } else {
