@@ -98,7 +98,7 @@ function TodayPage() {
         <p className="text-sm text-slate-500 mb-4">
           {data?.message || error?.message || "An unexpected error occurred while loading your data."}
         </p>
-        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['today'] })} className="rounded-xl h-12 px-8">
+        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] })} className="rounded-xl h-12 px-8">
           Retry
         </Button>
       </div>
@@ -252,9 +252,12 @@ function TodayPage() {
               cx="32" cy="32" r="28"
               fill="none" stroke="var(--accent, #16a34a)" strokeWidth="5"
               strokeDasharray={175.9}
-              strokeDashoffset={175.9 * (1 - progressPercent / 100)}
+              strokeDashoffset={175.9}
               strokeLinecap="round"
-              className="transition-all duration-1000"
+              className="transition-all duration-[2000ms] ease-out-expo"
+              style={{ 
+                strokeDashoffset: 175.9 * (1 - progressPercent / 100)
+              }}
             />
           </svg>
           <span className="absolute text-[11px] font-bold text-slate-900">{progressPercent}%</span>

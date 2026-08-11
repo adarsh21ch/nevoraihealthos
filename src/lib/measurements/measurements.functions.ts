@@ -1,21 +1,36 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-export const getMeasurements = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ customerId: z.string() }).parse)
-  .handler(async ({ data }) => {
-    const { data: measurements, error } = await supabaseAdmin
-      .from("measurements")
-      .select("id, weight_kg, waist_cm, hip_cm, chest_cm, thigh_cm, arm_cm, created_at, taken_on")
-      .eq("customer_id", data.customerId)
-      .order("taken_on", { ascending: true });
+export type MeasurementsResult = {
+  state: 'success' | 'not_a_customer' | 'no_content' | 'error';
+  message?: string;
+  data?: any[];
+};
 
-    if (error) throw error;
-    return measurements || [];
+export const getMeasurements = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ customerId: z.string() }).parse)
+  .handler(async ({ data }): Promise<MeasurementsResult> => {
+    try {
+      const { data: measurements, error } = await supabaseAdmin
+        .from("measurements")
+        .select("id, weight_kg, waist_cm, hip_cm, chest_cm, thigh_cm, arm_cm, created_at, taken_on")
+        .eq("customer_id", data.customerId)
+        .order("taken_on", { ascending: true });
+
+      if (error) return { state: 'error', message: error.message };
+      if (!measurements || measurements.length === 0) return { state: 'no_content', data: [] };
+      
+      return { state: 'success', data: measurements };
+    } catch (e: any) {
+      return { state: 'error', message: e.message };
+    }
   });
 
 export const addMeasurement = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(z.object({
     customerId: z.string(),
     weight_kg: z.number().nullable().optional(),

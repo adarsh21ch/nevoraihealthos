@@ -43,11 +43,13 @@ function ProgressPage() {
 
   const customerId = todayData && !('redirect' in todayData) ? todayData.customer?.id : null;
 
-  const { data: measurements = [], isLoading } = useQuery({
+  const { data: result, isLoading } = useQuery({
     queryKey: ['measurements', customerId],
     queryFn: () => getMeasurementsFn({ data: { customerId: customerId! } }),
     enabled: !!customerId,
   });
+
+  const measurements = result?.data || [];
 
   const addMutation = useMutation({
     mutationFn: (data: any) => addMeasurementFn({ data: { ...data, customerId } }),
