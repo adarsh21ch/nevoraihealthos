@@ -80,7 +80,30 @@ export const getCompletionData = createServerFn({ method: "GET" })
       enrollment,
       stats,
       nextProgram,
-      ownerName: tenant.owner_name || tenant.name
+      ownerName: tenant.owner_name || tenant.name,
+      photos: await (async () => {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: photos } = await supabaseAdmin
+          .from("progress_photos")
+          .select("id, storage_path, pose, taken_on")
+          .eq("customer_id", customer.id)
+          .eq("share_consent", true)
+          .order("taken_on", { ascending: true });
+        
+        if (!photos || photos.length === 0) return [];
+        
+        return await Promise.all(photos.map(async (p) => {
+          const { data: signed } = await supabaseAdmin.storage
+            .from("progress-photos")
+            .createSignedUrl(p.storage_path, 3600);
+          return {
+            id: p.id,
+            photo_url: signed?.signedUrl || null,
+            pose: p.pose,
+            taken_on: p.taken_on
+          };
+        }));
+      })()
     };
   });
 
