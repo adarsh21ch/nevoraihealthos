@@ -63,48 +63,75 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
   });
 
 export const getTenants = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     const { data, error } = await supabaseAdmin
       .from("tenants")
       .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(200);
       
     if (error) throw error;
     return data;
   });
 
+function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
 export const createTenant = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
-    slug: z.string().min(3),
-    name: z.string().min(3),
+    name: z.string().trim().min(2).max(60),
     ownerEmail: z.string().email(),
-    ownerName: z.string().min(1),
-    tagline: z.string().optional(),
-    whatsapp: z.string().optional(),
-    phone: z.string().optional(),
-    logoUrl: z.string().optional(),
+    ownerName: z.string().trim().max(80).optional(),
+    tagline: z.string().trim().max(120).optional(),
+    whatsapp: z.string().trim().max(20).optional(),
+    phone: z.string().trim().max(20).optional(),
+    logoUrl: z.string().url().optional().or(z.literal("")),
     primaryColor: z.string().default("#16a34a"),
     accessCode: z.string().min(4),
     ownerPassword: z.string().min(6)
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 0. Verify platform admin
-    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
+
+    // 1a. Derive a unique slug from the brand name — never asked of the operator
+    const base = slugify(data.name) || "tenant";
+    let slug = base;
+    for (let attempt = 0; attempt < 25; attempt++) {
+      const { data: taken } = await supabaseAdmin
+        .from("tenants")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (!taken) break;
+      slug = `${base}-${attempt + 2}`;
+    }
 
     // 1. Create tenant row
     const { data: tenant, error: tenantError } = await supabaseAdmin
       .from("tenants")
       .insert({
-        slug: data.slug,
+        slug,
         name: data.name,
-        owner_name: data.ownerName || null,
+        owner_name: data.ownerName?.trim() || data.ownerEmail.split("@")[0] || null,
         email: data.ownerEmail || null,
         tagline: data.tagline || null,
         whatsapp: data.whatsapp || null,
