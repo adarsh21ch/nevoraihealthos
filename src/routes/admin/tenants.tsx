@@ -244,6 +244,15 @@ function AdminTenants() {
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Email</label>
                     <Input required type="email" maxLength={255} placeholder="owner@example.com" value={formData.ownerEmail} onChange={e => setFormData({ ...formData, ownerEmail: e.target.value.trim() })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Password</label>
+                    <Input required minLength={6} type="text" placeholder="Type a password" value={formData.ownerPassword} onChange={e => setFormData({ ...formData, ownerPassword: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <p className="text-[10px] font-bold text-slate-400 ml-1 pt-1">Owner signs in with this email + password — no access code.</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Customer Access Code</label>
+                    <Input required minLength={4} maxLength={24} placeholder="FAT2FIT2026" value={formData.accessCode} onChange={e => setFormData({ ...formData, accessCode: e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, "") })} className="h-11 rounded-xl bg-slate-50 border-slate-200 font-bold tracking-widest" />
+                  </div>
                 </div>
               </div>
               <div className="space-y-6">
@@ -272,13 +281,9 @@ function AdminTenants() {
               </div>
             </div>
             <DialogFooter className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-4">
-                  <span>Owner Pass: {formData.ownerPassword}</span>
-                  <span>Customer Join Code: {formData.accessCode}</span>
-                </div>
-                <p className="text-[9px] text-slate-400 font-medium italic">Owner uses email & password to sign in</p>
-              </div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                You set both credentials manually
+              </p>
               <Button type="submit" disabled={createMutation.isPending} className="bg-ink text-white hover:bg-slate-800 font-bold rounded-xl h-11 px-8 shrink-0">
                 {createMutation.isPending ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Deploy System"}
               </Button>
