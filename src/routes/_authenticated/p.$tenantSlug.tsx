@@ -21,12 +21,12 @@ function TenantLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fcfbf8] pb-24">
+    <div className="min-h-screen bg-[#FCFBF8] pb-24 font-sans">
       <main>
         <Outlet />
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-slate-100 px-6 py-3 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-2xl border-t border-slate-100 px-6 py-4 z-50 shadow-[0_-1px_3px_rgba(0,0,0,0.02)]">
         <div className="max-w-md mx-auto flex justify-between items-center">
           {navItems.map((item) => {
             const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
@@ -35,12 +35,17 @@ function TenantLayout() {
                 key={item.label}
                 to={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-1 transition-colors",
-                  isActive ? "text-[#16a34a]" : "text-slate-400 hover:text-slate-600"
+                  "flex flex-col items-center gap-1.5 transition-all active:scale-90",
+                  isActive ? "text-[#16a34a]" : "text-slate-400"
                 )}
               >
-                <item.icon className={cn("w-6 h-6", isActive && "fill-[#16a34a]/10")} />
-                <span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
+                <div className={cn(
+                  "p-1.5 rounded-xl transition-colors",
+                  isActive && "bg-[#16a34a]/10"
+                )}>
+                  <item.icon className="w-6 h-6" />
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em]">{item.label}</span>
               </Link>
             );
           })}
