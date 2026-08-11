@@ -22,7 +22,7 @@ function DashboardLayout() {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
+    { name: "Overview", icon: LayoutDashboard, path: "/dashboard" },
     { name: "Customers", icon: Users, path: "/dashboard/customers" },
     { name: "Reorder", icon: Package, path: "/dashboard/reorder" },
     { name: "At-risk", icon: TrendingUp, path: "/dashboard/at-risk" },

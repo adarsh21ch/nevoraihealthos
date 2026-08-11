@@ -18,6 +18,8 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
+import { Route as DashboardInviteRouteImport } from './routes/dashboard/invite'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
 import { Route as AuthenticatedPTenantSlugGuideRouteImport } from './routes/_authenticated/p.$tenantSlug.guide'
@@ -69,6 +71,16 @@ const AdminContentRoute = AdminContentRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBrandingRoute = DashboardBrandingRouteImport.update({
+  id: '/branding',
+  path: '/branding',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInviteRoute = DashboardInviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => DashboardRoute,
 } as any)
 const AuthenticatedPTenantSlugRoute =
@@ -126,6 +138,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/dashboard/branding': typeof DashboardBrandingRoute
+  '/dashboard/invite': typeof DashboardInviteRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -142,6 +156,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/dashboard/branding': typeof DashboardBrandingRoute
+  '/dashboard/invite': typeof DashboardInviteRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -162,6 +178,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/dashboard/branding': typeof DashboardBrandingRoute
+  '/dashboard/invite': typeof DashboardInviteRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -182,6 +200,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/dashboard/branding'
+    | '/dashboard/invite'
     | '/admin/'
     | '/dashboard/'
     | '/p/$tenantSlug'
@@ -198,6 +218,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/dashboard/branding'
+    | '/dashboard/invite'
     | '/admin'
     | '/dashboard'
     | '/p/$tenantSlug'
@@ -217,6 +239,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/dashboard/branding'
+    | '/dashboard/invite'
     | '/admin/'
     | '/dashboard/'
     | '/_authenticated/p/$tenantSlug'
@@ -302,6 +326,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/branding': {
+      id: '/dashboard/branding'
+      path: '/branding'
+      fullPath: '/dashboard/branding'
+      preLoaderRoute: typeof DashboardBrandingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/invite': {
+      id: '/dashboard/invite'
+      path: '/invite'
+      fullPath: '/dashboard/invite'
+      preLoaderRoute: typeof DashboardInviteRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/_authenticated/p/$tenantSlug': {
@@ -424,10 +462,14 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardBrandingRoute: typeof DashboardBrandingRoute
+  DashboardInviteRoute: typeof DashboardInviteRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardBrandingRoute: DashboardBrandingRoute,
+  DashboardInviteRoute: DashboardInviteRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

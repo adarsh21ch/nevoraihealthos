@@ -5,7 +5,6 @@ import { createCustomerAccount, resolveLoginIdentifier } from "@/lib/auth.functi
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -170,6 +169,17 @@ function JoinPage() {
                   placeholder="Create password"
                   value={signupData.password}
                   onChange={e => setSignupData(d => ({ ...d, password: e.target.value }))}
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Confirm Password</label>
+                <Input 
+                  required 
+                  type="password"
+                  placeholder="Confirm password"
+                  value={signupData.confirmPassword}
+                  onChange={e => setSignupData(d => ({ ...d, confirmPassword: e.target.value }))}
                   className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
                 />
               </div>
