@@ -119,12 +119,36 @@ export const getTestimonials = createServerFn({ method: "GET" })
 
     const { data, error } = await supabase
       .from("customers")
-      .select("id, name, progress_photos(id, photo_url, type, created_at)")
+      .select("id, name, progress_photos(id, storage_path, pose, taken_on)")
       .eq("tenant_id", tenantId)
-      .eq("share_consent", true);
+      .eq("share_consent", true)
+      .limit(50);
 
     if (error) throw error;
-    return data;
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    return await Promise.all(
+      (data ?? []).map(async (c: any) => ({
+        id: c.id,
+        name: c.name,
+        progress_photos: await Promise.all(
+          (c.progress_photos ?? [])
+            .sort((a: any, b: any) => a.taken_on.localeCompare(b.taken_on))
+            .map(async (p: any) => {
+              const { data: signed } = await supabaseAdmin.storage
+                .from("progress-photos")
+                .createSignedUrl(p.storage_path, 60 * 60);
+              return {
+                id: p.id,
+                photo_url: signed?.signedUrl ?? null,
+                type: p.pose,
+                created_at: p.taken_on,
+              };
+            }),
+        ),
+      })),
+    );
   });
 
 export const resetCustomerPassword = createServerFn({ method: "POST" })
