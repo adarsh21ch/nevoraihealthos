@@ -1,13 +1,14 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { Users, Copy, QrCode, MessageSquare, ArrowLeft } from "lucide-react";
+import { Users, Copy, QrCode, MessageSquare, ArrowLeft, RefreshCw, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyTenantAccessCode } from "@/lib/admin.functions";
+import { getMyTenantAccessCode, rotateTenantAccessCode } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/dashboard/invite")({
   loader: async () => {
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/dashboard/invite")({
     if (!ctx?.tenant_id) return { tenant: null };
     const { data: tenant } = await supabase
       .from('tenants')
-      .select('slug, name')
+      .select('id, slug, name')
       .eq('id', ctx.tenant_id)
       .maybeSingle();
     return { tenant };
@@ -26,14 +27,35 @@ export const Route = createFileRoute("/dashboard/invite")({
 
 function InvitePage() {
   const { tenant } = useLoaderData({ from: '/dashboard/invite' });
+  const queryClient = useQueryClient();
   const fetchAccessCode = useServerFn(getMyTenantAccessCode);
-  const { data: creds } = useQuery({
+  const rotateCodeFn = useServerFn(rotateTenantAccessCode);
+  
+  const { data: creds, isLoading: loadingCode } = useQuery({
     queryKey: ["my-tenant-access-code"],
     queryFn: () => fetchAccessCode(),
     staleTime: 1000 * 60 * 5,
   });
+
+  const rotateMutation = useMutation({
+    mutationFn: async () => {
+      const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      return rotateCodeFn({ data: { tenantId: (tenant as any)?.id, accessCode: newCode } });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-tenant-access-code"] });
+      toast.success("Access code rotated successfully");
+    },
+    onError: (e: any) => toast.error(e.message)
+  });
   const accessCode = creds?.accessCode ?? "…";
-  const joinUrl = `${window.location.origin}/p/${tenant?.slug}/join`;
+  // Use the specific tenant slug for the join link
+  // If the hostname is a subdomain (e.g. fat2fit.nevera.com), the relative path /join will work
+  const joinUrl = typeof window !== 'undefined' 
+    ? (window.location.hostname.includes('.nevera.com') && !window.location.hostname.startsWith('project--'))
+      ? `${window.location.origin}/join`
+      : `${window.location.origin}/p/${tenant?.slug}/join`
+    : `/p/${tenant?.slug}/join`;
   const whatsappMsg = `Hi! Join my wellness academy ${tenant?.name} here: ${joinUrl}. Use Access Code: ${accessCode}`;
 
   return (
@@ -76,10 +98,23 @@ function InvitePage() {
                 <MessageSquare className="w-4 h-4 mr-2" /> Send on WhatsApp
               </Button>
             </div>
-            <div className="p-6 bg-slate-900 rounded-2xl text-white">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Access Code</p>
-              <div className="text-2xl font-black tracking-tighter">{accessCode}</div>
-              <p className="text-[10px] text-slate-500 mt-2">Customers must enter this code to register.</p>
+            <div className="p-6 bg-slate-900 rounded-[2rem] text-white flex flex-col gap-4 shadow-xl shadow-slate-900/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Access Code</p>
+                  <div className="text-3xl font-black tracking-tighter">{loadingCode ? "••••••" : accessCode}</div>
+                </div>
+                <Button 
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => rotateMutation.mutate()}
+                  disabled={rotateMutation.isPending}
+                  className="h-10 w-10 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all"
+                >
+                  <RefreshCw className={cn("w-4 h-4", rotateMutation.isPending && "animate-spin")} />
+                </Button>
+              </div>
+              <p className="text-[10px] text-white/40 font-bold leading-tight">Customers must enter this code to register. You can rotate it anytime for security.</p>
             </div>
           </CardContent>
         </Card>

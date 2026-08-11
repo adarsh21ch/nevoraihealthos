@@ -265,7 +265,7 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
       .eq("tenant_id", data.tenantId);
 
     if (error) throw error;
-    return { success: true };
+    return { success: true, newCode: data.accessCode };
   });
 
 export const resetTenantOwnerPassword = createServerFn({ method: "POST" })

@@ -29,7 +29,7 @@ function DashboardLayout() {
     { name: "At-risk", icon: TrendingUp, path: "/dashboard/at-risk" },
     { name: "Testimonials", icon: MessageSquare, path: "/dashboard/testimonials" },
     { name: "Invite", icon: Users, path: "/dashboard/invite" },
-    { name: "Branding", icon: Layout, path: "/dashboard/branding" },
+    { name: "Settings", icon: Settings, path: "/dashboard/branding" },
   ];
 
   return (
