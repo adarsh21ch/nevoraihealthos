@@ -12,8 +12,8 @@ export const getDashboardStats = createServerFn({ method: "GET" })
 
     const [activeCount, atRiskCount, reorderCount] = await Promise.all([
       supabase.from("customers").select("id", { count: "exact", head: true }).eq("tenant_id", tenantId),
-      supabase.rpc("get_at_risk_customers_count", { _tenant_id: tenantId }),
-      supabase.rpc("get_reorder_customers_count", { _tenant_id: tenantId })
+      supabase.rpc("get_at_risk_customers_count" as any, { _tenant_id: tenantId }),
+      (supabase as any).rpc("get_reorder_customers_count", { _tenant_id: tenantId })
     ]);
 
     return {
