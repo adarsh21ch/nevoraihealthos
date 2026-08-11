@@ -90,7 +90,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+  tenant: any;
+  isCustomDomain: boolean;
+}>()({
   loader: async ({ context }) => {
     const info = await getRequestInfo();
     const hint = resolveTenantHint(info);
