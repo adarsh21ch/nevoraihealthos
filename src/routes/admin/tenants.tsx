@@ -479,7 +479,8 @@ function AdminTenants() {
                 Save Changes
               </Button>
             </div>
-          </DialogContent>
+          </div>
+        </DialogContent>
       </Dialog>
     </div>
   );
