@@ -18,8 +18,12 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
 import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
+import { Route as DashboardCustomersRouteImport } from './routes/dashboard/customers'
 import { Route as DashboardInviteRouteImport } from './routes/dashboard/invite'
+import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder'
+import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
@@ -74,14 +78,34 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAtRiskRoute = DashboardAtRiskRouteImport.update({
+  id: '/at-risk',
+  path: '/at-risk',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardBrandingRoute = DashboardBrandingRouteImport.update({
   id: '/branding',
   path: '/branding',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCustomersRoute = DashboardCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardInviteRoute = DashboardInviteRouteImport.update({
   id: '/invite',
   path: '/invite',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReorderRoute = DashboardReorderRouteImport.update({
+  id: '/reorder',
+  path: '/reorder',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardTestimonialsRoute = DashboardTestimonialsRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
   getParentRoute: () => DashboardRoute,
 } as any)
 const AuthenticatedPTenantSlugRoute =
@@ -145,8 +169,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
+  '/dashboard/customers': typeof DashboardCustomersRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/reorder': typeof DashboardReorderRoute
+  '/dashboard/testimonials': typeof DashboardTestimonialsRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -164,8 +192,12 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
+  '/dashboard/customers': typeof DashboardCustomersRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/reorder': typeof DashboardReorderRoute
+  '/dashboard/testimonials': typeof DashboardTestimonialsRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -187,8 +219,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/admin/content': typeof AdminContentRouteWithChildren
+  '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
+  '/dashboard/customers': typeof DashboardCustomersRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/reorder': typeof DashboardReorderRoute
+  '/dashboard/testimonials': typeof DashboardTestimonialsRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
@@ -210,8 +246,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/dashboard/at-risk'
     | '/dashboard/branding'
+    | '/dashboard/customers'
     | '/dashboard/invite'
+    | '/dashboard/reorder'
+    | '/dashboard/testimonials'
     | '/admin/'
     | '/dashboard/'
     | '/p/$tenantSlug'
@@ -229,8 +269,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/dashboard/at-risk'
     | '/dashboard/branding'
+    | '/dashboard/customers'
     | '/dashboard/invite'
+    | '/dashboard/reorder'
+    | '/dashboard/testimonials'
     | '/admin'
     | '/dashboard'
     | '/p/$tenantSlug'
@@ -251,8 +295,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/admin/content'
+    | '/dashboard/at-risk'
     | '/dashboard/branding'
+    | '/dashboard/customers'
     | '/dashboard/invite'
+    | '/dashboard/reorder'
+    | '/dashboard/testimonials'
     | '/admin/'
     | '/dashboard/'
     | '/_authenticated/p/$tenantSlug'
@@ -341,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/at-risk': {
+      id: '/dashboard/at-risk'
+      path: '/at-risk'
+      fullPath: '/dashboard/at-risk'
+      preLoaderRoute: typeof DashboardAtRiskRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/branding': {
       id: '/dashboard/branding'
       path: '/branding'
@@ -348,11 +403,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBrandingRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/customers': {
+      id: '/dashboard/customers'
+      path: '/customers'
+      fullPath: '/dashboard/customers'
+      preLoaderRoute: typeof DashboardCustomersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/invite': {
       id: '/dashboard/invite'
       path: '/invite'
       fullPath: '/dashboard/invite'
       preLoaderRoute: typeof DashboardInviteRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/reorder': {
+      id: '/dashboard/reorder'
+      path: '/reorder'
+      fullPath: '/dashboard/reorder'
+      preLoaderRoute: typeof DashboardReorderRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/testimonials': {
+      id: '/dashboard/testimonials'
+      path: '/testimonials'
+      fullPath: '/dashboard/testimonials'
+      preLoaderRoute: typeof DashboardTestimonialsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/_authenticated/p/$tenantSlug': {
@@ -485,14 +561,22 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardAtRiskRoute: typeof DashboardAtRiskRoute
   DashboardBrandingRoute: typeof DashboardBrandingRoute
+  DashboardCustomersRoute: typeof DashboardCustomersRoute
   DashboardInviteRoute: typeof DashboardInviteRoute
+  DashboardReorderRoute: typeof DashboardReorderRoute
+  DashboardTestimonialsRoute: typeof DashboardTestimonialsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAtRiskRoute: DashboardAtRiskRoute,
   DashboardBrandingRoute: DashboardBrandingRoute,
+  DashboardCustomersRoute: DashboardCustomersRoute,
   DashboardInviteRoute: DashboardInviteRoute,
+  DashboardReorderRoute: DashboardReorderRoute,
+  DashboardTestimonialsRoute: DashboardTestimonialsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
