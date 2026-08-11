@@ -66,7 +66,7 @@ function CustomerDetailPage() {
             className="h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl px-6"
             onClick={() => {
               const msg = `Hi ${customer.name}! Checking in on your progress with the ${program?.name || 'program'}. How are you feeling today?`;
-              window.open(`https://wa.me/${customer.phone.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`);
+              window.open(`https://wa.me/${(customer.phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`);
             }}
           >
             <MessageCircle className="mr-2 h-5 w-5" /> WhatsApp
