@@ -23,26 +23,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/content")({
-  beforeLoad: async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw redirect({ to: "/login" });
-      }
-
-      const { data: context } = await supabase.rpc("get_my_auth_context");
-      const role = (context as any)?.role;
-      if (role !== "platform_admin") {
-        if (role === "owner" || role === "staff") {
-          throw redirect({ to: "/dashboard" });
-        }
-        throw redirect({ to: "/" });
-      }
-    } catch (e) {
-      if ((e as any).status === 307 || (e as any).status === 302) throw e;
-      throw redirect({ to: "/login" });
-    }
-  },
   component: AdminContentManagement,
 });
 
