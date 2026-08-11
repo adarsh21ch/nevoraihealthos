@@ -691,6 +691,7 @@ export type Database = {
       tenants: {
         Row: {
           created_at: string
+          custom_domain: string | null
           email: string | null
           features: Json
           id: string
@@ -707,6 +708,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          custom_domain?: string | null
           email?: string | null
           features?: Json
           id?: string
@@ -723,6 +725,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          custom_domain?: string | null
           email?: string | null
           features?: Json
           id?: string
