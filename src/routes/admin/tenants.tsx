@@ -271,12 +271,15 @@ function AdminTenants() {
                 </div>
               </div>
             </div>
-            <DialogFooter className="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-4">
-                <span>Access: {formData.accessCode}</span>
-                <span>Pass: {formData.ownerPassword}</span>
+            <DialogFooter className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-1">
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-4">
+                  <span>Owner Pass: {formData.ownerPassword}</span>
+                  <span>Customer Join Code: {formData.accessCode}</span>
+                </div>
+                <p className="text-[9px] text-slate-400 font-medium italic">Owner uses email & password to sign in</p>
               </div>
-              <Button type="submit" disabled={createMutation.isPending} className="bg-ink text-white hover:bg-slate-800 font-bold rounded-xl h-11 px-8">
+              <Button type="submit" disabled={createMutation.isPending} className="bg-ink text-white hover:bg-slate-800 font-bold rounded-xl h-11 px-8 shrink-0">
                 {createMutation.isPending ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : "Deploy System"}
               </Button>
             </DialogFooter>

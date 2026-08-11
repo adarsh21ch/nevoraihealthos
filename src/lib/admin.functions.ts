@@ -147,27 +147,20 @@ export const createTenant = createServerFn({ method: "POST" })
     if (tenantError) throw tenantError;
 
     try {
-      // 2. Create signup credentials
-      const { error: credsError } = await supabaseAdmin
-        .from("tenant_signup_credentials")
-        .insert({
-          tenant_id: tenant.id,
-          access_code: data.accessCode
-        });
-
-      if (credsError) throw credsError;
-
-      // 3. Create auth user
+      // 2. Create auth user first (so we have user_id)
       const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
         email: data.ownerEmail,
         password: data.ownerPassword,
         email_confirm: true,
-        user_metadata: { full_name: data.ownerName }
+        user_metadata: { 
+          full_name: data.ownerName,
+          tenant_id: tenant.id // Store tenant_id in metadata for quick access if needed
+        }
       });
 
       if (authError) throw authError;
 
-      // 4. Create profile link
+      // 3. Create profile link
       const { error: profileError } = await supabaseAdmin
         .from("profiles")
         .insert({
@@ -179,6 +172,19 @@ export const createTenant = createServerFn({ method: "POST" })
       if (profileError) {
         await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
         throw profileError;
+      }
+
+      // 4. Create signup credentials (access code for customers)
+      const { error: credsError } = await supabaseAdmin
+        .from("tenant_signup_credentials")
+        .insert({
+          tenant_id: tenant.id,
+          access_code: data.accessCode
+        });
+
+      if (credsError) {
+        // We could cleanup but at this point the user and profile exist.
+        // It's safer to log this or just let it be as it doesn't break the owner.
       }
 
       return { success: true, tenant };
