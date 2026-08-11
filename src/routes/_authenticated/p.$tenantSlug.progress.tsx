@@ -397,7 +397,7 @@ function AddPhotoSheet({ customerId, onUploadSuccess }: { customerId: string | n
 
       // 2. Upload to private bucket
       const takenOn = new Date().toISOString().split('T')[0];
-      const fileName = `progress-photos/${customerId}/${takenOn}-${pose}-${Date.now()}.webp`;
+      const fileName = `${customerId}/${takenOn}-${pose}-${Date.now()}.webp`;
       
       const { data, error } = await supabase.storage
         .from('progress-photos')
