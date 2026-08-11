@@ -30,6 +30,7 @@ import { Route as DashboardInviteRouteImport } from './routes/dashboard/invite'
 import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder'
 import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
+import { Route as AdminTenantsTenantIdRouteImport } from './routes/admin/tenants.$tenantId'
 import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
 import { Route as PTenantSlugJoinRouteImport } from './routes/p.$tenantSlug.join'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
@@ -145,6 +146,11 @@ const AuthenticatedPTenantSlugRoute =
     path: '/p/$tenantSlug',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AdminTenantsTenantIdRoute = AdminTenantsTenantIdRouteImport.update({
+  id: '/$tenantId',
+  path: '/$tenantId',
+  getParentRoute: () => AdminTenantsRoute,
+} as any)
 const DashboardCustomersCustomerIdRoute =
   DashboardCustomersCustomerIdRouteImport.update({
     id: '/$customerId',
@@ -208,7 +214,7 @@ export interface FileRoutesByFullPath {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
-  '/admin/tenants': typeof AdminTenantsRoute
+  '/admin/tenants': typeof AdminTenantsRouteWithChildren
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
+  '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
@@ -237,7 +244,7 @@ export interface FileRoutesByTo {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
-  '/admin/tenants': typeof AdminTenantsRoute
+  '/admin/tenants': typeof AdminTenantsRouteWithChildren
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
@@ -249,6 +256,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
+  '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
@@ -270,7 +278,7 @@ export interface FileRoutesById {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
-  '/admin/tenants': typeof AdminTenantsRoute
+  '/admin/tenants': typeof AdminTenantsRouteWithChildren
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
+  '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/_authenticated/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
@@ -315,6 +324,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/p/$tenantSlug'
+    | '/admin/tenants/$tenantId'
     | '/dashboard/customers/$customerId'
     | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/p/$tenantSlug'
+    | '/admin/tenants/$tenantId'
     | '/dashboard/customers/$customerId'
     | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/_authenticated/p/$tenantSlug'
+    | '/admin/tenants/$tenantId'
     | '/dashboard/customers/$customerId'
     | '/p/$tenantSlug/join'
     | '/_authenticated/p/$tenantSlug/complete'
@@ -546,6 +558,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPTenantSlugRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/admin/tenants/$tenantId': {
+      id: '/admin/tenants/$tenantId'
+      path: '/$tenantId'
+      fullPath: '/admin/tenants/$tenantId'
+      preLoaderRoute: typeof AdminTenantsTenantIdRouteImport
+      parentRoute: typeof AdminTenantsRoute
+    }
     '/dashboard/customers/$customerId': {
       id: '/dashboard/customers/$customerId'
       path: '/$customerId'
@@ -663,11 +682,23 @@ const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
   AdminContentRouteChildren,
 )
 
+interface AdminTenantsRouteChildren {
+  AdminTenantsTenantIdRoute: typeof AdminTenantsTenantIdRoute
+}
+
+const AdminTenantsRouteChildren: AdminTenantsRouteChildren = {
+  AdminTenantsTenantIdRoute: AdminTenantsTenantIdRoute,
+}
+
+const AdminTenantsRouteWithChildren = AdminTenantsRoute._addFileChildren(
+  AdminTenantsRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminProductsRoute: typeof AdminProductsRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
-  AdminTenantsRoute: typeof AdminTenantsRoute
+  AdminTenantsRoute: typeof AdminTenantsRouteWithChildren
   AdminTipsRoute: typeof AdminTipsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -676,7 +707,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminContentRoute: AdminContentRouteWithChildren,
   AdminProductsRoute: AdminProductsRoute,
   AdminProgramsRoute: AdminProgramsRoute,
-  AdminTenantsRoute: AdminTenantsRoute,
+  AdminTenantsRoute: AdminTenantsRouteWithChildren,
   AdminTipsRoute: AdminTipsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -732,13 +763,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
