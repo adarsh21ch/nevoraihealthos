@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useLoaderData } from '@tanstack/react-router';
-import { Home, Calendar, Trophy, Package, BookOpen, Loader2 } from 'lucide-react';
+import { Home, Calendar, Trophy, Package, BookOpen, Loader2, MessageCircle } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,6 +64,13 @@ function TenantLayout() {
             <h1 className="text-sm font-bold text-slate-900 leading-none">{tenant.name}</h1>
             {tenant.tagline && <p className="text-[10px] text-slate-400 font-medium mt-1">{tenant.tagline}</p>}
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+           <Button variant="ghost" size="icon" asChild className="h-10 w-10 text-slate-400 hover:text-slate-900 rounded-xl hover:bg-slate-50 transition-all">
+             <a href={`https://wa.me/${tenant.whatsapp?.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer">
+               <MessageCircle className="w-5 h-5" />
+             </a>
+           </Button>
         </div>
       </header>
 
