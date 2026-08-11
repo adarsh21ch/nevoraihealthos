@@ -12,29 +12,29 @@ import { Loader2, Plus, Power, PowerOff, Edit2, Copy, Check } from "lucide-react
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/tenants")({
-  loader: async () => {
-    try {
-      const tenants = await getTenants();
-      return { tenants: tenants || [] };
-    } catch (e) {
-      console.error("Error loading tenants:", e);
-      return { tenants: [] };
-    }
-  },
   component: AdminTenants,
 });
 
+const slugify = (input: string) =>
+  input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+
+const randomCode = () => Math.random().toString(36).slice(-8).toUpperCase();
+const randomPassword = () => Math.random().toString(36).slice(-10);
+
 function AdminTenants() {
-  const { tenants: initialTenants } = Route.useLoaderData();
   const queryClient = useQueryClient();
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
 
-  const { data: tenants = initialTenants, isLoading } = useQuery({
+  const { data: tenants = [], isLoading } = useQuery({
     queryKey: ["admin-tenants"],
     queryFn: () => getTenantsFn(),
-    initialData: initialTenants,
+    staleTime: 1000 * 60 * 5,
   });
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -42,12 +42,11 @@ function AdminTenants() {
   const [createdTenantInfo, setCreatedTenantInfo] = useState<any>(null);
   
   const [formData, setFormData] = useState({
-    slug: "",
     name: "",
     ownerEmail: "",
     ownerName: "",
-    ownerPassword: Math.random().toString(36).slice(-10),
-    accessCode: Math.random().toString(36).slice(-8).toUpperCase(),
+    ownerPassword: randomPassword(),
+    accessCode: randomCode(),
     tagline: "",
     whatsapp: "",
     phone: "",
@@ -68,9 +67,9 @@ function AdminTenants() {
       });
       setIsSuccessOpen(true);
       setFormData({
-        slug: "", name: "", ownerEmail: "", ownerName: "", 
-        ownerPassword: Math.random().toString(36).slice(-10),
-        accessCode: Math.random().toString(36).slice(-8).toUpperCase(),
+        name: "", ownerEmail: "", ownerName: "",
+        ownerPassword: randomPassword(),
+        accessCode: randomCode(),
         tagline: "", whatsapp: "", phone: "", primaryColor: "#16a34a", logoUrl: ""
       });
     },
@@ -159,6 +158,20 @@ function AdminTenants() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {isLoading && (
+              <TableRow className="border-slate-100">
+                <TableCell colSpan={5} className="py-16 text-center">
+                  <Loader2 className="h-5 w-5 animate-spin text-slate-300 mx-auto" />
+                </TableCell>
+              </TableRow>
+            )}
+            {!isLoading && tenants.length === 0 && (
+              <TableRow className="border-slate-100">
+                <TableCell colSpan={5} className="py-16 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  No tenants yet — onboard your first client
+                </TableCell>
+              </TableRow>
+            )}
             {tenants.map((tenant: any) => (
               <TableRow key={tenant.id} className="border-slate-100 hover:bg-slate-50 transition-colors group">
                 <TableCell className="font-bold pl-10 py-7 text-ink text-lg">
@@ -210,22 +223,31 @@ function AdminTenants() {
                 <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Business Details</h3>
                 <div className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Academy Name</label>
-                    <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Brand / Website Name</label>
+                    <Input required maxLength={60} placeholder="Fat To Fit" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <p className="text-[10px] font-bold text-slate-400 ml-1 pt-1">
+                      Portal address:{" "}
+                      <code className="text-slate-500">/p/{slugify(formData.name) || "…"}</code>
+                      <span className="text-slate-300"> · generated automatically</span>
+                    </p>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">URL Slug</label>
-                    <Input required value={formData.slug} onChange={e => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '-') })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Name</label>
+                    <Input required maxLength={80} placeholder="Krishna Arora" value={formData.ownerName} onChange={e => setFormData({ ...formData, ownerName: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Owner Email</label>
-                    <Input required type="email" value={formData.ownerEmail} onChange={e => setFormData({ ...formData, ownerEmail: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                    <Input required type="email" maxLength={255} placeholder="owner@example.com" value={formData.ownerEmail} onChange={e => setFormData({ ...formData, ownerEmail: e.target.value.trim() })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
                   </div>
                 </div>
               </div>
               <div className="space-y-6">
                 <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Branding</h3>
                 <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Tagline <span className="text-slate-300">(optional)</span></label>
+                    <Input maxLength={120} placeholder="Your 9-day reset starts today" value={formData.tagline} onChange={e => setFormData({ ...formData, tagline: e.target.value })} className="h-11 rounded-xl bg-slate-50 border-slate-200" />
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold uppercase tracking-widest ml-1">Primary Color</label>
                     <div className="flex gap-3">

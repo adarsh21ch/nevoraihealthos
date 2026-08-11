@@ -5,21 +5,34 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getMyTenantAccessCode } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/dashboard/invite")({
   loader: async () => {
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const ctx = authContext as any;
-    const { data: tenant } = await supabase.from('tenants').select('slug, name').eq('id', ctx.tenant_id).single();
-    // tenant_signup_credentials check is kept here as it's required for the dashboard owner to see their own code
-    const { data: creds } = await supabase.from('tenant_signup_credentials').select('access_code').eq('tenant_id', ctx.tenant_id).single();
-    return { tenant, accessCode: creds?.access_code || 'UNSET' };
+    const ctx = authContext as { tenant_id?: string } | null;
+    if (!ctx?.tenant_id) return { tenant: null };
+    const { data: tenant } = await supabase
+      .from('tenants')
+      .select('slug, name')
+      .eq('id', ctx.tenant_id)
+      .maybeSingle();
+    return { tenant };
   },
   component: InvitePage,
 });
 
 function InvitePage() {
-  const { tenant, accessCode } = useLoaderData({ from: '/dashboard/invite' });
+  const { tenant } = useLoaderData({ from: '/dashboard/invite' });
+  const fetchAccessCode = useServerFn(getMyTenantAccessCode);
+  const { data: creds } = useQuery({
+    queryKey: ["my-tenant-access-code"],
+    queryFn: () => fetchAccessCode(),
+    staleTime: 1000 * 60 * 5,
+  });
+  const accessCode = creds?.accessCode ?? "…";
   const joinUrl = `${window.location.origin}/p/${tenant?.slug}/join`;
   const whatsappMsg = `Hi! Join my wellness academy ${tenant?.name} here: ${joinUrl}. Use Access Code: ${accessCode}`;
 

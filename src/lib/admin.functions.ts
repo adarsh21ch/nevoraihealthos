@@ -63,48 +63,75 @@ export const createTenantOwnerAccount = createServerFn({ method: "POST" })
   });
 
 export const getTenants = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     const { data, error } = await supabaseAdmin
       .from("tenants")
       .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(200);
       
     if (error) throw error;
     return data;
   });
 
+function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
 export const createTenant = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
-    slug: z.string().min(3),
-    name: z.string().min(3),
+    name: z.string().trim().min(2).max(60),
     ownerEmail: z.string().email(),
-    ownerName: z.string().min(1),
-    tagline: z.string().optional(),
-    whatsapp: z.string().optional(),
-    phone: z.string().optional(),
-    logoUrl: z.string().optional(),
+    ownerName: z.string().trim().max(80).optional(),
+    tagline: z.string().trim().max(120).optional(),
+    whatsapp: z.string().trim().max(20).optional(),
+    phone: z.string().trim().max(20).optional(),
+    logoUrl: z.string().url().optional().or(z.literal("")),
     primaryColor: z.string().default("#16a34a"),
     accessCode: z.string().min(4),
     ownerPassword: z.string().min(6)
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 0. Verify platform admin
-    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
+
+    // 1a. Derive a unique slug from the brand name — never asked of the operator
+    const base = slugify(data.name) || "tenant";
+    let slug = base;
+    for (let attempt = 0; attempt < 25; attempt++) {
+      const { data: taken } = await supabaseAdmin
+        .from("tenants")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (!taken) break;
+      slug = `${base}-${attempt + 2}`;
+    }
 
     // 1. Create tenant row
     const { data: tenant, error: tenantError } = await supabaseAdmin
       .from("tenants")
       .insert({
-        slug: data.slug,
+        slug,
         name: data.name,
-        owner_name: data.ownerName || null,
+        owner_name: data.ownerName?.trim() || data.ownerEmail.split("@")[0] || null,
         email: data.ownerEmail || null,
         tagline: data.tagline || null,
         whatsapp: data.whatsapp || null,
@@ -161,6 +188,34 @@ export const createTenant = createServerFn({ method: "POST" })
     }
   });
 
+export const getMyTenantAccessCode = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    // Resolve the caller's own tenant; credentials are never exposed to the client table-side
+    const { data: authContext } = await supabase.rpc("get_my_auth_context");
+    const ctx = authContext as { role?: string; tenant_id?: string } | null;
+    const tenantId = ctx?.tenant_id;
+
+    if (!tenantId || (ctx?.role !== "tenant_owner" && ctx?.role !== "platform_admin")) {
+      throw new Error("Unauthorized");
+    }
+
+    const { data: isMember } = await supabase.rpc("is_tenant_member", { _uid: userId, _tenant: tenantId });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
+    if (!isMember && !isAdmin) throw new Error("Unauthorized");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: creds } = await supabaseAdmin
+      .from("tenant_signup_credentials")
+      .select("access_code")
+      .eq("tenant_id", tenantId)
+      .maybeSingle();
+
+    return { accessCode: creds?.access_code ?? null };
+  });
+
 export const updateTenantStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
@@ -168,11 +223,11 @@ export const updateTenantStatus = createServerFn({ method: "POST" })
     status: z.enum(["active", "suspended"])
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     // Verify admin
-    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
     
     const { error } = await supabaseAdmin
@@ -193,13 +248,14 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
     accessCode: z.string().min(4)
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // Verify admin OR owner of this tenant
-    const { data: authContext } = await supabaseAdmin.rpc("get_my_auth_context");
-    const isPlatformAdmin = (authContext as any)?.role === 'platform_admin';
-    const isTenantOwner = (authContext as any)?.role === 'owner' && (authContext as any)?.tenant_id === data.tenantId;
+    // Verify admin OR owner of this tenant, evaluated as the CALLER (not service role)
+    const [{ data: isPlatformAdmin }, { data: isTenantOwner }] = await Promise.all([
+      supabase.rpc("is_platform_admin", { _uid: userId }),
+      supabase.rpc("is_tenant_member", { _uid: userId, _tenant: data.tenantId }),
+    ]);
 
     if (!isPlatformAdmin && !isTenantOwner) throw new Error("Unauthorized");
 
