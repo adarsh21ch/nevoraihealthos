@@ -1,8 +1,16 @@
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useNavigate, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
+  beforeLoad: async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw redirect({ to: "/login" });
+    
+    const { data: context } = await supabase.rpc("get_my_auth_context");
+    if ((context as any)?.role !== "tenant_owner") throw redirect({ to: "/login" });
+  },
   component: DashboardLayout,
 });
 
@@ -44,7 +52,10 @@ function DashboardLayout() {
           </nav>
         </div>
         <div className="mt-auto p-6 border-t border-slate-800/50">
-           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-900/10 transition-all duration-200" onClick={handleSignOut}>
+           <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-900/10 transition-all duration-200" onClick={async () => {
+             await supabase.auth.signOut();
+             navigate({ to: "/login" });
+           }}>
              <LogOut className="mr-3 h-4 w-4" />
              Sign Out
            </Button>

@@ -30,7 +30,8 @@ export const Route = createFileRoute("/admin/content")({
         throw redirect({ to: "/login" });
       }
 
-      const { role } = await getUserRole();
+      const { data: context } = await supabase.rpc("get_my_auth_context");
+      const role = (context as any)?.role;
       if (role !== "platform_admin") {
         if (role === "owner" || role === "staff") {
           throw redirect({ to: "/dashboard" });

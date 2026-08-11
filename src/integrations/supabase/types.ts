@@ -827,6 +827,7 @@ export type Database = {
       }
       current_customer_ids: { Args: { _uid: string }; Returns: string[] }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
+      get_my_auth_context: { Args: never; Returns: Json }
       get_program_day_with_tasks: {
         Args: { _date: string; _program_id: string; _start_date: string }
         Returns: Json
@@ -845,7 +846,13 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "user"
+        | "platform_admin"
+        | "tenant_owner"
+        | "customer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -973,7 +980,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: [
+        "admin",
+        "moderator",
+        "user",
+        "platform_admin",
+        "tenant_owner",
+        "customer",
+      ],
     },
   },
 } as const

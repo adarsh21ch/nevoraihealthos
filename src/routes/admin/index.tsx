@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
-import { checkAdminStatus, getTenants, getUserRole } from "@/lib/admin.functions";
+import { checkAdminStatus, getTenants, getUserRole, createTenantOwnerAccount } from "@/lib/admin.functions";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createTenant, updateTenantStatus } from "@/lib/admin.functions";
@@ -10,10 +10,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Plus, Power, PowerOff, LogOut } from "lucide-react";
+import { Loader2, Plus, Power, PowerOff, LogOut, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/")({
+  beforeLoad: async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw redirect({ to: "/login" });
+    
+    const { data: context } = await supabase.rpc("get_my_auth_context");
+    if ((context as any)?.role !== "platform_admin") throw redirect({ to: "/login" });
+  },
   loader: async () => {
     try {
       const tenants = await getTenants();
@@ -33,6 +40,7 @@ function AdminDashboard() {
   const getTenantsFn = useServerFn(getTenants);
   const createTenantFn = useServerFn(createTenant);
   const updateStatusFn = useServerFn(updateTenantStatus);
+  const createOwnerFn = useServerFn(createTenantOwnerAccount);
 
   const { data: tenants = initialTenants, isLoading } = useQuery({
     queryKey: ["admin-tenants"],
@@ -41,6 +49,12 @@ function AdminDashboard() {
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isOwnerDialogOpen, setIsOwnerDialogOpen] = useState(false);
+  const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
+  const [ownerData, setOwnerData] = useState({
+    email: "",
+    password: "",
+  });
   const [formData, setFormData] = useState({
     slug: "",
     name: "",
@@ -71,8 +85,23 @@ function AdminDashboard() {
     },
   });
 
+  const ownerMutation = useMutation({
+    mutationFn: (data: typeof ownerData) => createOwnerFn({ 
+      data: { ...data, tenantId: selectedTenantId! } 
+    }),
+    onSuccess: () => {
+      setIsOwnerDialogOpen(false);
+      setOwnerData({ email: "", password: "" });
+      toast.success("Tenant owner created successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to create owner");
+    },
+  });
+
   const handleSignOut = async () => {
-    navigate({ to: "/" });
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
   };
 
   return (
@@ -185,7 +214,19 @@ function AdminDashboard() {
                       {tenant.status}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right pr-6">
+                  <TableCell className="text-right pr-6 space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hover:bg-slate-800/50"
+                      onClick={() => {
+                        setSelectedTenantId(tenant.id);
+                        setIsOwnerDialogOpen(true);
+                      }}
+                      title="Create Tenant Owner"
+                    >
+                      <Shield className="h-4 w-4 text-blue-400" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -218,6 +259,44 @@ function AdminDashboard() {
           </Table>
         </CardContent>
       </Card>
+      <Dialog open={isOwnerDialogOpen} onOpenChange={setIsOwnerDialogOpen}>
+        <DialogContent className="bg-slate-900 border-slate-800">
+          <DialogHeader>
+            <DialogTitle>Create Tenant Owner Account</DialogTitle>
+          </DialogHeader>
+          <form 
+            className="space-y-4 pt-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              ownerMutation.mutate(ownerData);
+            }}
+          >
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Owner Email</label>
+              <Input 
+                required
+                type="email"
+                placeholder="owner@example.com"
+                value={ownerData.email}
+                onChange={e => setOwnerData(prev => ({ ...prev, email: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Initial Password</label>
+              <Input 
+                required
+                type="password"
+                placeholder="Minimum 6 characters"
+                value={ownerData.password}
+                onChange={e => setOwnerData(prev => ({ ...prev, password: e.target.value }))}
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={ownerMutation.isPending}>
+              {ownerMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Owner Account"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -72,7 +72,7 @@ function JoinPage() {
 
         if (error) throw error;
         toast.success("Account created successfully!");
-        navigate({ to: "/onboarding" });
+        navigate({ to: "/login" });
       }
     } catch (error: any) {
       toast.error(error.message || "Signup failed. Please check your credentials.");
@@ -98,7 +98,7 @@ function JoinPage() {
 
       if (error) throw error;
       
-      navigate({ to: "/today" });
+      navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug } });
     } catch (error: any) {
       toast.error("Invalid email, phone, FBO ID, or password.");
     } finally {

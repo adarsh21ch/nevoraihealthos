@@ -3,14 +3,77 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const checkAdminStatus = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    // Note: Middleware removed for direct access
+    const { supabase, userId } = context;
+    const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "platform_admin" });
+    if (error || !data) throw new Error("Unauthorized");
     return { isAdmin: true };
   });
 
 export const getUserRole = createServerFn({ method: "GET" })
-  .handler(async () => {
-    return { role: "platform_admin", tenantSlug: null };
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const { data, error } = await supabase.rpc("get_my_auth_context");
+    if (error) throw error;
+    return data as { role: string; tenantSlug: string | null };
+  });
+
+export const createTenantOwnerAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    tenantId: z.string().uuid(),
+    email: z.string().email(),
+    password: z.string().min(6),
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+    
+    // 1. Verify caller is platform admin
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "platform_admin" });
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 2. Create auth user
+    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+    });
+
+    if (authError) throw authError;
+
+    // 3. Assign role
+    const { error: roleError } = await supabaseAdmin
+      .from("user_roles")
+      .insert({
+        user_id: authUser.user.id,
+        role: "tenant_owner"
+      });
+
+    if (roleError) {
+      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+      throw roleError;
+    }
+
+    // 4. Create profile link
+    const { error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .insert({
+        user_id: authUser.user.id,
+        tenant_id: data.tenantId,
+        role: "owner"
+      });
+
+    if (profileError) {
+       // Roles table will cascade delete on user delete
+       await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+       throw profileError;
+    }
+
+    return { success: true };
   });
 
 export const getTenants = createServerFn({ method: "GET" })
