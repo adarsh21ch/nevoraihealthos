@@ -134,7 +134,27 @@ function TodayPage() {
   const slotsOrder = ['morning', 'pre_lunch', 'lunch', 'evening', 'pre_dinner', 'dinner', 'bedtime', 'anytime'];
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500">
+    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500 space-y-8">
+      {dayNumber >= duration - 2 && enrollment.programs?.next_program_code && (
+        <Card className="rounded-[2rem] bg-slate-900 text-white border-none shadow-xl overflow-hidden mb-8">
+          <CardContent className="p-8 space-y-6">
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Next Program</p>
+              <h2 className="text-xl font-black tracking-tight">Your program ends in {duration - dayNumber} days.</h2>
+              <p className="text-white/70 text-sm font-medium">Start Day {dayNumber + 1} without a gap. Reorder now.</p>
+            </div>
+            <Button 
+              asChild
+              className="w-full h-12 bg-white text-slate-900 font-black rounded-xl text-sm hover:bg-slate-100 transition-all active:scale-95"
+            >
+              <a href={`https://wa.me/${tenant.whatsapp?.replace(/\+/g, '')}?text=${encodeURIComponent(`Hi, I'm on Day ${dayNumber} of ${enrollment.programs.name}. I want to reorder for the next phase.`)}`} target="_blank">
+                Contact {tenant.owner_name || 'Coach'} <ArrowRight className="ml-2 w-4 h-4" />
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex justify-between items-start mb-12">
         <div>
           <div className="flex items-center gap-2 mb-2">
