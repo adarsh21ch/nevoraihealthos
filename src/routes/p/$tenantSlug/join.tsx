@@ -106,12 +106,12 @@ function JoinPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFBF8] flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-surface flex items-center justify-center p-6 font-sans">
       <div className="w-full max-w-[400px] space-y-8">
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mx-auto shadow-lg shadow-slate-200">H</div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Health OS</h1>
-          <p className="text-slate-500 font-medium">Distributor Portal for <span className="text-slate-900 font-bold">{tenantSlug}</span></p>
+          <div className="w-12 h-12 bg-ink text-white rounded-xl flex items-center justify-center font-bold text-2xl mx-auto shadow-lg shadow-slate-200">H</div>
+          <h1 className="text-3xl font-bold tracking-tight text-ink">Health OS</h1>
+          <p className="text-muted font-medium">Distributor Portal for <span className="text-ink font-bold">{tenantSlug}</span></p>
         </div>
 
         <Tabs defaultValue="signup" className="w-full">
@@ -183,7 +183,7 @@ function JoinPage() {
                   className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
                 />
               </div>
-              <Button type="submit" className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 mt-2" disabled={loading}>
+              <Button type="submit" className="w-full h-12 bg-ink text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 mt-2" disabled={loading}>
                 {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Create Customer Account"}
               </Button>
             </form>

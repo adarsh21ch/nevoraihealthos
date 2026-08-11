@@ -105,7 +105,7 @@ function TodayPage() {
           <h1 className="text-3xl font-bold text-slate-900 leading-tight">Program Complete!</h1>
           <p className="text-slate-500 max-w-xs mx-auto">You've successfully finished the {enrollment.programs?.name} program. Time to celebrate!</p>
         </div>
-        <Button asChild className="w-full h-14 bg-slate-900 text-white font-bold rounded-xl active:scale-95 transition-all">
+        <Button asChild className="w-full h-14 bg-ink text-white font-bold rounded-xl active:scale-95 transition-all">
           <Link to={`/p/${tenantSlug}/complete` as any}>See my Results</Link>
         </Button>
       </div>
@@ -136,7 +136,7 @@ function TodayPage() {
   return (
     <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500 space-y-8">
       {dayNumber >= duration - 2 && enrollment.programs?.next_program_code && (
-        <Card className="rounded-[2rem] bg-slate-900 text-white border-none shadow-xl overflow-hidden mb-8">
+        <Card className="rounded-[2rem] bg-ink text-white border-none shadow-xl overflow-hidden mb-8">
           <CardContent className="p-8 space-y-6">
             <div className="space-y-2">
               <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Next Program</p>
@@ -145,7 +145,7 @@ function TodayPage() {
             </div>
             <Button 
               asChild
-              className="w-full h-12 bg-white text-slate-900 font-black rounded-xl text-sm hover:bg-slate-100 transition-all active:scale-95"
+              className="w-full h-12 bg-white text-ink font-black rounded-xl text-sm hover:bg-slate-100 transition-all active:scale-95"
             >
               <a href={`https://wa.me/${tenant.whatsapp?.replace(/\+/g, '')}?text=${encodeURIComponent(`Hi, I'm on Day ${dayNumber} of ${enrollment.programs.name}. I want to reorder for the next phase.`)}`} target="_blank">
                 Contact {tenant.owner_name || 'Coach'} <ArrowRight className="ml-2 w-4 h-4" />
@@ -158,7 +158,7 @@ function TodayPage() {
       <div className="flex justify-between items-start mb-12">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-full bg-[#16a34a] shadow-[0_0_8px_rgba(22,163,74,0.3)]"></div>
+             <div className="w-2 h-2 rounded-full accent-bg shadow-[0_0_8px_rgba(22,163,74,0.3)]"></div>
              <h1 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
                {tenant.name}
              </h1>
@@ -177,7 +177,7 @@ function TodayPage() {
             />
             <circle
               cx="32" cy="32" r="28"
-              fill="none" stroke="#16a34a" strokeWidth="5"
+              fill="none" stroke="var(--accent, #16a34a)" strokeWidth="5"
               strokeDasharray={175.9}
               strokeDashoffset={175.9 * (1 - progressPercent / 100)}
               strokeLinecap="round"
@@ -224,7 +224,7 @@ function TodayPage() {
                         className="flex-shrink-0 transition-transform active:scale-90"
                       >
                         {isCompleted ? (
-                          <CheckCircle2 className="w-9 h-9 text-[#16a34a]" />
+                          <CheckCircle2 className="w-9 h-9 accent-text" />
                         ) : (
                           <div className="w-9 h-9 rounded-full border-2 border-slate-100 flex items-center justify-center">
                              <div className="w-4 h-4 rounded-full bg-slate-50"></div>
@@ -302,7 +302,7 @@ function TodayPage() {
               className={cn(
                 "flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all border",
                 dailyLog?.mood === mood 
-                  ? "bg-slate-900 border-slate-900 text-white shadow-lg shadow-slate-900/10" 
+                  ? "bg-ink border-ink text-white shadow-lg shadow-slate-900/10" 
                   : "bg-slate-50 text-slate-400 border-transparent hover:bg-slate-100"
               )}
             >
