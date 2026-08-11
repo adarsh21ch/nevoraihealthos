@@ -172,7 +172,7 @@ function CompletionPage() {
           <div className="space-y-12">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-6">
-                {tenant.logo_url && <img src={tenant.logo_url} className="h-20 w-auto" />}
+                {tenant.logo_url && <img src={tenant.logo_url} className="h-20 w-auto" loading="lazy" alt="" />}
                 <div>
                   <h3 className="text-3xl font-black text-slate-900 uppercase tracking-widest">{tenant.name}</h3>
                   <p className="text-xl text-slate-400 font-bold">{enrollment.programs.name} Finisher</p>

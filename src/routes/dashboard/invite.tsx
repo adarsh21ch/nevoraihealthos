@@ -11,6 +11,7 @@ export const Route = createFileRoute("/dashboard/invite")({
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
     const ctx = authContext as any;
     const { data: tenant } = await supabase.from('tenants').select('slug, name').eq('id', ctx.tenant_id).single();
+    // tenant_signup_credentials check is kept here as it's required for the dashboard owner to see their own code
     const { data: creds } = await supabase.from('tenant_signup_credentials').select('access_code').eq('tenant_id', ctx.tenant_id).single();
     return { tenant, accessCode: creds?.access_code || 'UNSET' };
   },

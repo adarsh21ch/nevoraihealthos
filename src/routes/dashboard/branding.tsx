@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/dashboard/branding")({
   loader: async () => {
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { data: tenant } = await supabase.from('tenants').select('*').eq('id', (authContext as any).tenant_id).single();
+    const { data: tenant } = await supabase.from('tenants').select('id, name, tagline, logo_url, primary_color, whatsapp').eq('id', (authContext as any).tenant_id).single();
     return { tenant };
   },
   component: BrandingPage,
@@ -65,7 +65,7 @@ function BrandingPage() {
             </div>
             <div className="space-y-6 text-center">
               <div className="w-32 h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
-                {formData.logoUrl ? <img src={formData.logoUrl} className="w-full h-full object-contain p-4" alt="" /> : <Upload className="w-8 h-8 text-slate-300" />}
+                {formData.logoUrl ? <img src={formData.logoUrl} className="w-full h-full object-contain p-4" loading="lazy" alt="" /> : <Upload className="w-8 h-8 text-slate-300" />}
               </div>
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Primary Color</Label>

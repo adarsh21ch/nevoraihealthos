@@ -109,7 +109,7 @@ function DashboardOverview() {
           <CardContent className="p-8 flex items-center gap-8">
             <div className="w-24 h-24 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
                {tenant?.logo_url ? (
-                 <img src={tenant.logo_url} className="w-full h-full object-contain p-2" alt="" />
+                 <img src={tenant.logo_url} className="w-full h-full object-cover p-2" loading="lazy" alt="" />
                ) : (
                  <Building2 className="w-8 h-8 text-slate-200" />
                )}

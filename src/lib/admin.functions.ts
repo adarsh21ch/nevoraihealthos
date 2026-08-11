@@ -113,7 +113,7 @@ export const createTenant = createServerFn({ method: "POST" })
         primary_color: data.primaryColor,
         status: 'active'
       })
-      .select()
+      .select('id, slug, name')
       .single();
 
     if (tenantError) throw tenantError;

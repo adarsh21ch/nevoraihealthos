@@ -191,7 +191,7 @@ function CustomerDetailPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {customer.progress_photos?.map((photo: any) => (
                     <div key={photo.id} className="aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
-                      <img src={photo.photo_url} className="w-full h-full object-cover" alt={photo.type} />
+                      <img src={photo.photo_url} className="w-full h-full object-cover" loading="lazy" alt={photo.type} />
                     </div>
                   ))}
                   {(!customer.progress_photos || customer.progress_photos.length === 0) && (
