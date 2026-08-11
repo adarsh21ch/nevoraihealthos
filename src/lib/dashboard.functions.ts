@@ -88,7 +88,7 @@ export const getAtRiskList = createServerFn({ method: "GET" })
     const tenantId = (authCtx as any)?.tenant_id;
     if (!tenantId) throw new Error("Unauthorized");
 
-    const { data, error } = await supabase.rpc("get_at_risk_list", { _tenant_id: tenantId });
+    const { data, error } = await (supabase as any).rpc("get_at_risk_list", { _tenant_id: tenantId });
     if (error) throw error;
     return data;
   });
