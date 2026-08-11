@@ -827,6 +827,7 @@ export type Database = {
       }
       current_customer_ids: { Args: { _uid: string }; Returns: string[] }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
+      get_my_auth_context: { Args: never; Returns: Json }
       get_program_day_with_tasks: {
         Args: { _date: string; _program_id: string; _start_date: string }
         Returns: Json
