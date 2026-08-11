@@ -18,7 +18,10 @@ import { TenantGate } from "@/components/site/TenantGate";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
-const getRequestInfo = createServerFn({ method: "GET" }).handler(async ({ request }) => {
+const getRequestInfo = createServerFn({ method: "GET" }).handler(async () => {
+  const { getWebRequest } = await import("@tanstack/react-start/server");
+  const request = getWebRequest();
+  if (!request) return { hostname: "", pathname: "", search: "" };
   const url = new URL(request.url);
   return {
     hostname: url.hostname,
@@ -88,7 +91,22 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
+  loader: async ({ context }) => {
+    const info = await getRequestInfo();
+    const hint = resolveTenantHint(info);
+    
+    let tenant = null;
+    if (hint) {
+      const result = await getTenantByHint({ data: hint });
+      tenant = result.tenant;
+    }
+    
+    return {
+      tenant,
+      isCustomDomain: hint?.mode === 'domain',
+    };
+  },
+  head: ({ loaderData }) => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -131,11 +149,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { tenant, isCustomDomain } = Route.useLoaderData();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <TenantProvider tenant={tenant as any} isCustomDomain={isCustomDomain}>
+        <TenantGate isPlatformPage={!isCustomDomain && !tenant}>
+          <Outlet />
+        </TenantGate>
+      </TenantProvider>
       <Toaster />
     </QueryClientProvider>
   );
