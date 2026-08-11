@@ -2,6 +2,15 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+/** Day number of a program in IST (start date = day 1). */
+function istDayNumber(startDate: string): number {
+  const ist = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
+  const today = Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate());
+  const [y, m, d] = startDate.split("-").map(Number);
+  const start = Date.UTC(y!, (m ?? 1) - 1, d ?? 1);
+  return Math.floor((today - start) / 86400000) + 1;
+}
+
 export const getDashboardStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -42,17 +51,10 @@ export const getCustomers = createServerFn({ method: "GET" })
 
     let query = supabase
       .from("customers")
-      .select(`
-        id, 
-        name, 
-        phone, 
-        created_at,
-        customer_enrollments(
-          id,
-          day_number,
-          programs(name, duration_days)
-        )
-      `)
+      .select(
+        "id, name, phone, created_at, enrollments(id, start_date, status, programs(name, duration_days))",
+        { count: "exact" },
+      )
       .eq("tenant_id", tenantId)
       .order("name")
       .range(from, to);
@@ -61,8 +63,22 @@ export const getCustomers = createServerFn({ method: "GET" })
       query = query.or(`name.ilike.%${data.search}%,phone.ilike.%${data.search}%`);
     }
 
-    const { data: customers, count, error } = await query;
+    const { data: rows, count, error } = await query;
     if (error) throw error;
+
+    const customers = (rows ?? []).map((c: any) => ({
+      id: c.id,
+      name: c.name,
+      phone: c.phone,
+      created_at: c.created_at,
+      customer_enrollments: (c.enrollments ?? [])
+        .filter((e: any) => e.status === "active")
+        .map((e: any) => ({
+          id: e.id,
+          day_number: istDayNumber(e.start_date),
+          programs: e.programs,
+        })),
+    }));
 
     return { customers, total: count || 0 };
   });
