@@ -70,7 +70,13 @@ function JoinPage() {
 
     if (!fboId.trim()) return setError("Enter your FBO / distributor ID");
     if (!accessCode.trim()) return setError("Enter the access code your coach shared");
-    if (!contact.trim()) return setError(mode === "email" ? "Enter your email" : "Enter your phone number");
+    
+    if (mode === "facebook") {
+      if (!facebookId.trim()) return setError("Enter your Facebook ID");
+    } else {
+      if (!contact.trim()) return setError(mode === "email" ? "Enter your email" : "Enter your phone number");
+    }
+    
     if (password.length < 6) return setError("Password must be at least 6 characters");
 
     setIsLoading(true);
@@ -87,9 +93,11 @@ function JoinPage() {
       });
 
       const { error: signInError } = await supabase.auth.signInWithPassword(
-        mode === "email"
-          ? { email: contact.trim(), password }
-          : { phone: contact.trim(), password },
+        mode === "facebook" 
+          ? { email: `${facebookId.trim()}@facebook.temp`, password } // Mock for now
+          : mode === "email"
+            ? { email: contact.trim(), password }
+            : { phone: contact.trim(), password },
       );
       if (signInError) throw signInError;
 
@@ -128,6 +136,24 @@ function JoinPage() {
           </p>
         </div>
 
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl">
+          {(["email", "phone", "facebook"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => {
+                setMode(m);
+                setError(null);
+              }}
+              className={`py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
+                mode === m ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              {m === "facebook" ? "FB ID" : m}
+            </button>
+          ))}
+        </div>
+
         <form
           onSubmit={handleSubmit}
           className="bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-sm"
@@ -144,6 +170,7 @@ function JoinPage() {
             </Label>
             <Input
               id="fbo"
+              placeholder="e.g. 910000000000"
               value={fboId}
               onChange={(e) => setFboId(e.target.value)}
               className="h-12 rounded-xl border-slate-200"
@@ -157,6 +184,7 @@ function JoinPage() {
             </Label>
             <Input
               id="code"
+              placeholder="Shared by your coach"
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value)}
               className="h-12 rounded-xl border-slate-200"
@@ -164,33 +192,28 @@ function JoinPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-50 rounded-xl">
-            {(["email", "phone"] as const).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setMode(m)}
-                className={`h-10 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
-                  mode === m ? "bg-white text-ink shadow-sm" : "text-slate-400"
-                }`}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
-
           <div className="space-y-1.5">
             <Label htmlFor="contact" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              {mode === "email" ? "Email" : "Phone (with country code)"}
+              {mode === "email" ? "Email Address" : mode === "phone" ? "Phone Number" : "Facebook ID"}
             </Label>
-            <Input
-              id="contact"
-              type={mode === "email" ? "email" : "tel"}
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder={mode === "email" ? "name@example.com" : "+9198XXXXXXXX"}
-              className="h-12 rounded-xl border-slate-200"
-            />
+            {mode === "facebook" ? (
+              <Input
+                id="contact"
+                placeholder="Your FB profile ID"
+                value={facebookId}
+                onChange={(e) => setFacebookId(e.target.value)}
+                className="h-12 rounded-xl border-slate-200"
+              />
+            ) : (
+              <Input
+                id="contact"
+                type={mode === "email" ? "email" : "tel"}
+                placeholder={mode === "email" ? "name@example.com" : "+91 ..."}
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                className="h-12 rounded-xl border-slate-200"
+              />
+            )}
           </div>
 
           <div className="space-y-1.5">
