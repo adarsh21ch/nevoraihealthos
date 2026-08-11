@@ -31,7 +31,80 @@ function TodayPage() {
   }, [data, navigate]);
 
   if (isLoading) return <div className="p-8 text-center text-slate-400">Loading your day...</div>;
-  if (error) return <div className="p-8 text-center text-red-500">Error loading data</div>;
+  
+  const state = data?.state;
+
+  if (state === 'tenant_not_found') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center">
+        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+          <Info className="w-10 h-10 text-red-500" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Tenant Not Found</h1>
+        <p className="text-slate-500 mb-8">The link you followed is invalid or the distributor does not exist.</p>
+        <Button asChild className="rounded-xl h-12 px-8">
+          <Link to="/">Return Home</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  if (state === 'not_a_customer') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center">
+        <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6">
+          <Info className="w-10 h-10 text-blue-500" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Admin Portal View</h1>
+        <p className="text-slate-500 mb-8">
+          You're signed in as an admin or owner. This is the customer portal for {data.tenant?.name || 'this tenant'}.
+        </p>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <Button asChild className="rounded-xl h-12 font-bold">
+            <Link to="/admin">Go to Platform Admin</Link>
+          </Button>
+          <Button asChild variant="outline" className="rounded-xl h-12 font-bold">
+            <Link to="/dashboard">Go to Tenant Dashboard</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (state === 'no_content') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center">
+        <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+          <Calendar className="w-10 h-10 text-slate-300" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Program Setting Up</h1>
+        <p className="text-slate-500 mb-4">
+          Your program is being prepared by your coach. Please check back shortly.
+        </p>
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          No program content found for today
+        </p>
+      </div>
+    );
+  }
+
+  if (state === 'error' || error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] p-8 text-center">
+        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+          <Info className="w-10 h-10 text-red-500" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Something went wrong</h1>
+        <p className="text-sm text-slate-500 mb-4">
+          {data?.message || error?.message || "An unexpected error occurred while loading your data."}
+        </p>
+        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] })} className="rounded-xl h-12 px-8">
+          Retry
+        </Button>
+      </div>
+    );
+  }
+
   if (!data || 'redirect' in data) return null;
 
   const { enrollment, dayContent, dailyLog, tenant } = data;
@@ -179,9 +252,12 @@ function TodayPage() {
               cx="32" cy="32" r="28"
               fill="none" stroke="var(--accent, #16a34a)" strokeWidth="5"
               strokeDasharray={175.9}
-              strokeDashoffset={175.9 * (1 - progressPercent / 100)}
+              strokeDashoffset={175.9}
               strokeLinecap="round"
-              className="transition-all duration-1000"
+              className="transition-all duration-[2000ms] ease-out-expo"
+              style={{ 
+                strokeDashoffset: 175.9 * (1 - progressPercent / 100)
+              }}
             />
           </svg>
           <span className="absolute text-[11px] font-bold text-slate-900">{progressPercent}%</span>

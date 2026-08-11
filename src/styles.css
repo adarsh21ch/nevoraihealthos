@@ -1,4 +1,8 @@
 @import "tailwindcss";
+
+@theme {
+  --easing-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
 @source "../src";
 
 @theme {

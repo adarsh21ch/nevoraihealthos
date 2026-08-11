@@ -1,3 +1,4 @@
+
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
@@ -19,12 +20,18 @@ function KitPage() {
   const { tenantSlug } = Route.useParams();
   const getKitFn = useServerFn(getProgramContent);
 
-  const { data: items, isLoading } = useQuery({
+  const { data: result, isLoading } = useQuery({
     queryKey: ['kit', tenantSlug],
     queryFn: () => getKitFn({ data: { tenantSlug, type: 'products' } }),
   });
 
   if (isLoading) return <div className="p-8 text-center text-slate-400">Loading your kit...</div>;
+  if (result?.state === 'no_content') return (
+    <div className="max-w-md mx-auto px-6 py-20 text-center">
+       <Package className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+       <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No kit items yet</p>
+    </div>
+  );
 
   return (
     <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500">
@@ -34,15 +41,9 @@ function KitPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {items?.map((item: any) => (
+        {result?.data?.map((item: any) => (
           <ProductCard key={item.product_id} product={item.products} />
         ))}
-        {(!items || items.length === 0) && (
-          <div className="text-center py-20 bg-slate-50 rounded-[2.5rem] border border-slate-100">
-             <Package className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-             <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No kit items found</p>
-          </div>
-        )}
       </div>
     </div>
   );
