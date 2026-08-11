@@ -7,11 +7,12 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     tenant_slug: z.string(),
     access_code: z.string(),
     fbo_id: z.string(),
-    email: z.string().email().optional().nullable(),
+    email: z.string().optional().nullable(),
     phone: z.string().optional().nullable(),
+    facebook_id: z.string().optional().nullable(),
     password: z.string().min(6),
-  }).refine(data => data.email || data.phone, {
-    message: "At least one of email or phone is required",
+  }).refine(data => data.email || data.phone || data.facebook_id, {
+    message: "At least one of email, phone, or Facebook ID is required",
     path: ["email"]
   }).parse(data))
   .handler(async ({ data }) => {
@@ -51,11 +52,23 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 3. Create Auth User
-    const signupMethod = data.email ? 'email' : 'phone';
-    const signupValue = data.email || data.phone!;
-    
+    // If Facebook ID is used, we create a mock email to use as the primary identifier
+    let signupValue = "";
+    let signupMethod: 'email' | 'phone' | 'facebook' = 'email';
+
+    if (data.facebook_id) {
+      signupValue = `${data.facebook_id}@facebook.temp`;
+      signupMethod = 'facebook';
+    } else if (data.email) {
+      signupValue = data.email;
+      signupMethod = 'email';
+    } else if (data.phone) {
+      signupValue = data.phone;
+      signupMethod = 'phone';
+    }
+
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      ...(data.email ? { email: data.email, email_confirm: true } : { phone: data.phone!, phone_confirm: true }),
+      ...(signupMethod === 'phone' ? { phone: signupValue, phone_confirm: true } : { email: signupValue, email_confirm: true }),
       password: data.password,
     });
 
@@ -68,7 +81,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
         tenant_id: tenant.id,
         user_id: authUser.user.id,
         fbo_id: data.fbo_id,
-        email: data.email || null,
+        email: data.email || (signupMethod === 'facebook' ? signupValue : null),
         phone: data.phone || null,
         name: "", // Initial empty name, will be filled in onboarding wizard step 1
       });
@@ -160,4 +173,3 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
 
     return { success: true, tempPassword };
   });
-
