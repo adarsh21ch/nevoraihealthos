@@ -100,7 +100,7 @@ function TodayPage() {
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Congratulations!</h1>
         <p className="text-slate-500 mb-8">You've successfully completed the {enrollment.programs?.name} program.</p>
-        <Link to={`/p/${tenantSlug}/journey`} className="text-green-600 font-bold underline">Review your Journey</Link>
+        <Link to={`/p/${tenantSlug}/journey` as any} className="text-green-600 font-bold underline">Review your Journey</Link>
       </div>
     );
   }
