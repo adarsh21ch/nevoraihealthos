@@ -16,9 +16,9 @@ export const getProgressPhotos = createServerFn({ method: "GET" })
     try {
       const userId = context.userId;
       
-      // Ownership check
+      // Ownership check - RPC parameter is _customer according to build error
       const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-        _uid: userId, _customer_id: data.customerId
+        _uid: userId, _customer: data.customerId
       });
       if (!allowed) return { state: 'not_a_customer' };
 
@@ -62,7 +62,7 @@ export const createProgressPhoto = createServerFn({ method: "POST" })
     const userId = context.userId;
     
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer_id: data.customerId
+      _uid: userId, _customer: data.customerId
     });
     if (!allowed) return { success: false, error: 'Unauthorized' };
 
@@ -99,7 +99,7 @@ export const updatePhotoConsent = createServerFn({ method: "POST" })
     if (!photoData) return { success: false, error: 'Photo not found' };
 
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer_id: photoData.customer_id
+      _uid: userId, _customer: photoData.customer_id
     });
     if (!allowed) return { success: false, error: 'Unauthorized' };
 
@@ -129,7 +129,7 @@ export const deleteProgressPhoto = createServerFn({ method: "POST" })
     if (!photoData) return { success: false, error: 'Photo not found' };
 
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer_id: photoData.customer_id
+      _uid: userId, _customer: photoData.customer_id
     });
     if (!allowed) return { success: false, error: 'Unauthorized' };
 
@@ -146,3 +146,4 @@ export const deleteProgressPhoto = createServerFn({ method: "POST" })
     if (error) throw error;
     return { success: true };
   });
+
