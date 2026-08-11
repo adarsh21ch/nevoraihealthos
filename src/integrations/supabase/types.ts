@@ -858,11 +858,41 @@ export type Database = {
         Returns: undefined
       }
       current_customer_ids: { Args: { _uid: string }; Returns: string[] }
+      get_at_risk_customers_count: {
+        Args: { _tenant_id: string }
+        Returns: number
+      }
+      get_at_risk_list: {
+        Args: { _tenant_id: string }
+        Returns: {
+          customer_id: string
+          day_number: number
+          days_since_log: number
+          name: string
+          phone: string
+          program_name: string
+        }[]
+      }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
       get_my_auth_context: { Args: never; Returns: Json }
       get_program_day_with_tasks: {
         Args: { _date: string; _program_id: string; _start_date: string }
         Returns: Json
+      }
+      get_reorder_customers_count: {
+        Args: { _tenant_id: string }
+        Returns: number
+      }
+      get_reorder_list: {
+        Args: { _tenant_id: string }
+        Returns: {
+          customer_id: string
+          day_number: number
+          duration_days: number
+          name: string
+          phone: string
+          program_name: string
+        }[]
       }
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
       is_tenant_member: {
