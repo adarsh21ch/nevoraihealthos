@@ -1,16 +1,54 @@
-
-import { createFileRoute, Outlet } from '@tanstack/react-router';
-import { Home, Calendar, Trophy, Package, BookOpen } from 'lucide-react';
+import { createFileRoute, Outlet, useLoaderData } from '@tanstack/react-router';
+import { Home, Calendar, Trophy, Package, BookOpen, Loader2 } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
+  loader: async ({ params }) => {
+    const { data: tenant, error } = await supabase
+      .from('tenants')
+      .select('id, name, slug, logo_url, primary_color, tagline, is_active')
+      .eq('slug', params.tenantSlug)
+      .single();
+    
+    if (error || !tenant) {
+      return { tenant: null, error: "Tenant not found" };
+    }
+    return { tenant };
+  },
   component: TenantLayout,
 });
 
 function TenantLayout() {
   const { tenantSlug } = Route.useParams();
+  const { tenant, error } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' });
   const location = useLocation();
+
+  if (error || !tenant) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[#FCFBF8] text-center">
+        <div className="max-w-md space-y-4">
+          <h1 className="text-2xl font-bold text-slate-900">Tenant Not Found</h1>
+          <p className="text-slate-500">The distributor link you followed is invalid or has been moved.</p>
+          <Link to="/" className="text-[#16a34a] font-bold">Return Home</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (tenant.is_active === false) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[#FCFBF8] text-center">
+        <div className="max-w-md space-y-4">
+          <h1 className="text-2xl font-bold text-slate-900">Service Temporarily Unavailable</h1>
+          <p className="text-slate-500">{tenant.name} is currently updating their platform. Please check back later.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const primaryColor = tenant.primary_color || '#16a34a';
 
   const navItems = [
     { label: 'Today', icon: Home, href: `/p/${tenantSlug}/today` },
@@ -21,7 +59,23 @@ function TenantLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FCFBF8] pb-24 font-sans">
+    <div className="min-h-screen bg-[#FCFBF8] pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
+      <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {tenant.logo_url ? (
+            <img src={tenant.logo_url} className="h-8 w-auto object-contain" alt={tenant.name} />
+          ) : (
+            <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg">
+              {tenant.name.charAt(0)}
+            </div>
+          )}
+          <div>
+            <h1 className="text-sm font-bold text-slate-900 leading-none">{tenant.name}</h1>
+            {tenant.tagline && <p className="text-[10px] text-slate-400 font-medium mt-1">{tenant.tagline}</p>}
+          </div>
+        </div>
+      </header>
+
       <main>
         <Outlet />
       </main>
@@ -36,12 +90,12 @@ function TenantLayout() {
                 to={item.href}
                 className={cn(
                   "flex flex-col items-center gap-1.5 transition-all active:scale-90",
-                  isActive ? "text-[#16a34a]" : "text-slate-400"
+                  isActive ? "text-[var(--accent)]" : "text-slate-400"
                 )}
               >
                 <div className={cn(
                   "p-1.5 rounded-xl transition-colors",
-                  isActive && "bg-[#16a34a]/10"
+                  isActive && "bg-[var(--accent)]/10"
                 )}>
                   <item.icon className="w-6 h-6" />
                 </div>

@@ -68,7 +68,7 @@ export const getTenants = createServerFn({ method: "GET" })
     
     const { data, error } = await supabaseAdmin
       .from("tenants")
-      .select("id, slug, name, owner_name, status, created_at")
+      .select("id, slug, name, owner_name, status, logo_url, primary_color, tagline, whatsapp, phone, email, created_at")
       .order("created_at", { ascending: false });
       
     if (error) throw error;
@@ -76,15 +76,27 @@ export const getTenants = createServerFn({ method: "GET" })
   });
 
 export const createTenant = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     slug: z.string().min(3),
     name: z.string().min(3),
     ownerEmail: z.string().email(),
     ownerName: z.string().min(1),
-    accessCode: z.string().min(4)
+    tagline: z.string().optional(),
+    whatsapp: z.string().optional(),
+    phone: z.string().optional(),
+    logoUrl: z.string().optional(),
+    primaryColor: z.string().default("#16a34a"),
+    accessCode: z.string().min(4),
+    ownerPassword: z.string().min(6)
   }).parse(data))
-  .handler(async ({ data }) => {
+  .handler(async ({ context, data }) => {
+    const { userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 0. Verify platform admin
+    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
 
     // 1. Create tenant row
     const { data: tenant, error: tenantError } = await supabaseAdmin
@@ -92,8 +104,13 @@ export const createTenant = createServerFn({ method: "POST" })
       .insert({
         slug: data.slug,
         name: data.name,
-        owner_name: data.ownerName,
-        email: data.ownerEmail,
+        owner_name: data.ownerName || null,
+        email: data.ownerEmail || null,
+        tagline: data.tagline || null,
+        whatsapp: data.whatsapp || null,
+        phone: data.phone || null,
+        logo_url: data.logoUrl || null,
+        primary_color: data.primaryColor,
         status: 'active'
       })
       .select()
@@ -101,61 +118,129 @@ export const createTenant = createServerFn({ method: "POST" })
 
     if (tenantError) throw tenantError;
 
-    // 2. Create signup credentials
-    const { error: credsError } = await supabaseAdmin
-      .from("tenant_signup_credentials")
-      .insert({
-        tenant_id: tenant.id,
-        access_code: data.accessCode
+    try {
+      // 2. Create signup credentials
+      const { error: credsError } = await supabaseAdmin
+        .from("tenant_signup_credentials")
+        .insert({
+          tenant_id: tenant.id,
+          access_code: data.accessCode
+        });
+
+      if (credsError) throw credsError;
+
+      // 3. Create auth user
+      const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+        email: data.ownerEmail,
+        password: data.ownerPassword,
+        email_confirm: true,
+        user_metadata: { full_name: data.ownerName }
       });
 
-    if (credsError) {
+      if (authError) throw authError;
+
+      // 4. Create profile link
+      const { error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .insert({
+          user_id: authUser.user.id,
+          tenant_id: tenant.id,
+          role: "owner"
+        });
+
+      if (profileError) {
+        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+        throw profileError;
+      }
+
+      return { success: true, tenant };
+    } catch (err) {
+      // Cleanup tenant on any subsequent failure
       await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
-      throw credsError;
+      throw err;
     }
-
-    // 3. Create auth user
-    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: data.ownerEmail,
-      email_confirm: true,
-      user_metadata: { full_name: data.ownerName }
-    });
-
-    if (authError) {
-      await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
-      throw authError;
-    }
-
-    // 4. Create profile link
-    const { error: profileError } = await supabaseAdmin
-      .from("profiles")
-      .insert({
-        user_id: authUser.user.id,
-        tenant_id: tenant.id,
-        role: "owner"
-      });
-
-    if (profileError) {
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
-      await supabaseAdmin.from("tenants").delete().eq("id", tenant.id);
-      throw profileError;
-    }
-
-    return { success: true, tenant };
   });
 
 export const updateTenantStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     id: z.string().uuid(),
     status: z.enum(["active", "suspended"])
   }).parse(data))
-  .handler(async ({ data }) => {
+  .handler(async ({ context, data }) => {
+    const { userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    // Verify admin
+    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
     
     const { error } = await supabaseAdmin
       .from("tenants")
-      .update({ status: data.status })
+      .update({ 
+        status: data.status
+      })
       .eq("id", data.id);
+
+    if (error) throw error;
+    return { success: true };
+  });
+
+export const rotateTenantAccessCode = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    tenantId: z.string().uuid(),
+    accessCode: z.string().min(4)
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    // Verify admin OR owner of this tenant
+    const { data: authContext } = await supabaseAdmin.rpc("get_my_auth_context");
+    const isPlatformAdmin = (authContext as any)?.role === 'platform_admin';
+    const isTenantOwner = (authContext as any)?.role === 'owner' && (authContext as any)?.tenant_id === data.tenantId;
+
+    if (!isPlatformAdmin && !isTenantOwner) throw new Error("Unauthorized");
+
+    const { error } = await supabaseAdmin
+      .from("tenant_signup_credentials")
+      .update({ access_code: data.accessCode })
+      .eq("tenant_id", data.tenantId);
+
+    if (error) throw error;
+    return { success: true };
+  });
+
+export const resetTenantOwnerPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    tenantId: z.string().uuid(),
+    email: z.string().email(),
+    newPassword: z.string().min(6)
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Verify platform admin
+    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    // Find the user ID for this owner
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("user_id")
+      .eq("tenant_id", data.tenantId)
+      .eq("role", "owner")
+      .single();
+
+    if (!profile) throw new Error("Owner not found");
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(
+      profile.user_id,
+      { password: data.newPassword }
+    );
 
     if (error) throw error;
     return { success: true };

@@ -1,45 +1,45 @@
 import { createFileRoute, Outlet, useNavigate, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Package, MessageSquare, Layout } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Layout, Package, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/admin")({
   beforeLoad: async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw redirect({ to: "/login" });
     
     const { data: context } = await supabase.rpc("get_my_auth_context");
-    if ((context as any)?.role !== "tenant_owner") {
-      toast.error("Access denied: Tenant Owner only");
+    if ((context as any)?.role !== "platform_admin") {
+      toast.error("Access denied: Platform Admin only");
       throw redirect({ to: "/login" });
     }
   },
-  component: DashboardLayout,
+  component: AdminLayout,
 });
 
-function DashboardLayout() {
+function AdminLayout() {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
-    { name: "Customers", icon: Users, path: "/dashboard/customers" },
-    { name: "Reorder", icon: Package, path: "/dashboard/reorder" },
-    { name: "At-risk", icon: TrendingUp, path: "/dashboard/at-risk" },
-    { name: "Testimonials", icon: MessageSquare, path: "/dashboard/testimonials" },
-    { name: "Invite", icon: Users, path: "/dashboard/invite" },
-    { name: "Branding", icon: Layout, path: "/dashboard/branding" },
+    { name: "Tenants", icon: Building2, path: "/admin" },
+    { name: "Programs", icon: Layout, path: "/admin/content" },
+    { name: "Products", icon: Package, path: "/admin/content" },
+    { name: "Tips", icon: MessageSquare, path: "/admin/content" },
+    { name: "FAQs", icon: HelpCircle, path: "/admin/content" },
   ];
 
   return (
     <div className="min-h-screen bg-[#FCFBF8] text-[#0F172A] flex font-sans">
+      {/* Sidebar */}
       <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200">H</div>
             <div>
                <span className="block font-bold text-lg tracking-tight text-slate-900 leading-none">Health OS</span>
-               <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Owner Portal</span>
+               <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Platform Admin</span>
             </div>
           </div>
           
@@ -73,11 +73,12 @@ function DashboardLayout() {
         </div>
       </aside>
 
+      {/* Main */}
       <div className="flex-1 flex flex-col bg-[#FCFBF8]">
         <header className="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
              <div className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 tracking-wider uppercase">
-               Dashboard
+               Infrastructure Control
              </div>
           </div>
           <div className="flex items-center gap-3">
