@@ -10,23 +10,23 @@ export const getCompletionData = createServerFn({ method: "GET" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: tenant } = await supabase
+    const { data: tenant, error: tErr } = await supabase
       .from("tenants")
-      .select("id, name, slug, logo_url, whatsapp_number, primary_color")
+      .select("id, name, slug, logo_url, whatsapp, primary_color, owner_name")
       .eq("slug", data.tenantSlug)
       .single();
     
-    if (!tenant) throw new Error("Tenant not found");
+    if (tErr || !tenant) throw new Error("Tenant not found");
 
-    const { data: customer } = await supabase
+    const { data: customer, error: cErr } = await supabase
       .from("customers")
-      .select("id, first_name, last_name, share_consent")
+      .select("id, name, share_consent")
       .eq("user_id", userId)
       .single();
     
-    if (!customer) throw new Error("Customer not found");
+    if (cErr || !customer) throw new Error("Customer not found");
 
-    const { data: enrollment } = await supabase
+    const { data: enrollment, error: eErr } = await supabase
       .from("enrollments")
       .select(`
         id, 
@@ -43,9 +43,8 @@ export const getCompletionData = createServerFn({ method: "GET" })
       .eq("status", "active")
       .single();
 
-    if (!enrollment) throw new Error("No active enrollment found");
+    if (eErr || !enrollment) throw new Error("No active enrollment found");
 
-    // Get first and last measurements for summary
     const { data: measurements } = await supabase
       .from("measurements")
       .select("weight_kg, waist_cm, taken_on")
@@ -60,7 +59,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
       stats.waistChange = (last.waist_cm || 0) - (first.waist_cm || 0);
     }
 
-    let nextProgram = null;
+    let nextProgram: any = null;
     if (enrollment.programs?.next_program_code) {
       const { data: nextProg } = await supabase
         .from("programs")
@@ -71,21 +70,13 @@ export const getCompletionData = createServerFn({ method: "GET" })
       nextProgram = nextProg;
     }
 
-    const { data: owner } = await supabase
-      .from("profiles")
-      .select("full_name")
-      .eq("tenant_id", tenant.id)
-      .eq("role", "owner")
-      .limit(1)
-      .maybeSingle();
-
     return {
       tenant,
       customer,
       enrollment,
       stats,
       nextProgram,
-      ownerName: owner?.full_name || tenant.name
+      ownerName: tenant.owner_name || tenant.name
     };
   });
 
@@ -115,13 +106,13 @@ export const createReferral = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: customer } = await supabase
+    const { data: customer, error: cErr } = await supabase
       .from("customers")
       .select("id")
       .eq("user_id", userId)
       .single();
     
-    if (!customer) throw new Error("Customer not found");
+    if (cErr || !customer) throw new Error("Customer not found");
 
     const { error } = await supabase
       .from("referrals")
