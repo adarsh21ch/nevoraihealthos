@@ -166,7 +166,7 @@ function AdminDashboard() {
               <TableRow key={tenant.id} className="border-slate-100 hover:bg-slate-50 transition-colors group">
                 <TableCell className="font-bold pl-10 py-7 text-slate-900 text-lg">
                   <div className="flex items-center gap-3">
-                    {tenant.logo_url && <img src={tenant.logo_url} className="w-8 h-8 rounded-lg object-contain bg-slate-50 border" alt="" />}
+                    {tenant.logo_url && <img src={tenant.logo_url} className="w-8 h-8 rounded-lg object-contain bg-slate-50 border" loading="lazy" alt="" />}
                     {tenant.name}
                   </div>
                 </TableCell>

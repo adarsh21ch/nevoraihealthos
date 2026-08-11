@@ -45,11 +45,11 @@ function TestimonialsPage() {
             <Card key={customer.id} className="bg-white border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all overflow-hidden group">
               <div className="aspect-square relative flex">
                 <div className="flex-1 relative overflow-hidden">
-                   <img src={earliest.photo_url} className="absolute inset-0 w-full h-full object-cover" alt="Before" />
+                   <img src={earliest.photo_url} className="absolute inset-0 w-full h-full object-cover" loading="lazy" alt="Before" />
                    <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest">Before</div>
                 </div>
                 <div className="flex-1 relative overflow-hidden border-l-2 border-white">
-                   <img src={latest.photo_url} className="absolute inset-0 w-full h-full object-cover" alt="After" />
+                   <img src={latest.photo_url} className="absolute inset-0 w-full h-full object-cover" loading="lazy" alt="After" />
                    <div className="absolute top-4 right-4 bg-emerald-500/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest">After</div>
                 </div>
               </div>
