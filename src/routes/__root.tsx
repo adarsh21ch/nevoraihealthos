@@ -19,8 +19,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 const getRequestInfo = createServerFn({ method: "GET" }).handler(async () => {
-  const { getWebRequest } = await import("@tanstack/react-start/server");
-  const request = getWebRequest();
+  const { getRequest } = await import("@tanstack/react-start/server");
+  const request = getRequest();
   if (!request) return { hostname: "", pathname: "", search: "" };
   const url = new URL(request.url);
   return {
