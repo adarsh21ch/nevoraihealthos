@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/dashboard/branding")({
   loader: async () => {
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { data: tenant } = await supabase.from('tenants').select('*').eq('id', (authContext as any).tenant_id).single();
+    const { data: tenant } = await supabase.from('tenants').select('id, name, tagline, logo_url, primary_color, whatsapp').eq('id', (authContext as any).tenant_id).single();
     return { tenant };
   },
   component: BrandingPage,
