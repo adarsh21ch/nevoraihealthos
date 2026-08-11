@@ -123,11 +123,11 @@ function LoginPage() {
               </div>
             )}
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email or Identifier</Label>
+              <Label htmlFor="email" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email / ID</Label>
               <Input
                 id="email"
                 type="text"
-                placeholder="name@example.com"
+                placeholder="name@example.com or FBO ID"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
