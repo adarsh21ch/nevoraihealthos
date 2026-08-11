@@ -233,19 +233,19 @@ function AdminDashboard() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hover:bg-slate-800/50"
+                      className="hover:bg-white hover:text-black transition-all rounded-lg h-9 w-9 p-0"
                       onClick={() => {
                         setSelectedTenantId(tenant.id);
                         setIsOwnerDialogOpen(true);
                       }}
                       title="Create Tenant Owner"
                     >
-                      <Shield className="h-4 w-4 text-blue-400" />
+                      <Shield className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="hover:bg-slate-800/50"
+                      className="hover:bg-zinc-800 transition-all rounded-lg h-9 w-9 p-0"
                       onClick={() => statusMutation.mutate({ 
                         id: tenant.id, 
                         status: tenant.status === 'active' ? 'suspended' : 'active' 
@@ -253,9 +253,9 @@ function AdminDashboard() {
                       disabled={statusMutation.isPending}
                     >
                       {tenant.status === 'active' ? (
-                        <PowerOff className="h-4 w-4 text-red-400" />
+                        <PowerOff className="h-4 w-4 text-zinc-500" />
                       ) : (
-                        <Power className="h-4 w-4 text-emerald-400" />
+                        <Power className="h-4 w-4 text-emerald-500" />
                       )}
                     </Button>
                   </TableCell>
@@ -275,39 +275,41 @@ function AdminDashboard() {
         </CardContent>
       </Card>
       <Dialog open={isOwnerDialogOpen} onOpenChange={setIsOwnerDialogOpen}>
-        <DialogContent className="bg-slate-900 border-slate-800">
-          <DialogHeader>
-            <DialogTitle>Create Tenant Owner Account</DialogTitle>
+        <DialogContent className="bg-zinc-950 border-zinc-900 rounded-2xl max-w-md">
+          <DialogHeader className="pb-4 border-b border-zinc-900">
+            <DialogTitle className="text-2xl font-bold text-white tracking-tight">Create Tenant Owner Account</DialogTitle>
           </DialogHeader>
           <form 
-            className="space-y-4 pt-4"
+            className="space-y-4 pt-6"
             onSubmit={(e) => {
               e.preventDefault();
               ownerMutation.mutate(ownerData);
             }}
           >
             <div className="space-y-2">
-              <label className="text-sm font-medium">Owner Email</label>
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Owner Email</label>
               <Input 
                 required
                 type="email"
                 placeholder="owner@example.com"
                 value={ownerData.email}
                 onChange={e => setOwnerData(prev => ({ ...prev, email: e.target.value }))}
+                className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Initial Password</label>
+            <div className="space-y-2 pb-2">
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Initial Password</label>
               <Input 
                 required
                 type="password"
                 placeholder="Minimum 6 characters"
                 value={ownerData.password}
                 onChange={e => setOwnerData(prev => ({ ...prev, password: e.target.value }))}
+                className="bg-zinc-900/50 border-zinc-800 text-white h-11 px-4 rounded-xl focus:ring-1 focus:ring-white/20"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={ownerMutation.isPending}>
-              {ownerMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create Owner Account"}
+            <Button type="submit" className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold rounded-xl transition-all shadow-xl shadow-white/5" disabled={ownerMutation.isPending}>
+              {ownerMutation.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : "Authorize Owner"}
             </Button>
           </form>
         </DialogContent>
