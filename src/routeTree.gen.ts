@@ -19,6 +19,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminContentRouteImport } from './routes/admin/content'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
+import { Route as AdminTenantsRouteImport } from './routes/admin/tenants'
 import { Route as AdminTipsRouteImport } from './routes/admin/tips'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
@@ -85,6 +86,11 @@ const AdminProductsRoute = AdminProductsRouteImport.update({
 const AdminProgramsRoute = AdminProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTenantsRoute = AdminTenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTipsRoute = AdminTipsRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tenants': typeof AdminTenantsRoute
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
@@ -223,6 +230,7 @@ export interface FileRoutesByTo {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tenants': typeof AdminTenantsRoute
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/admin/content': typeof AdminContentRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
+  '/admin/tenants': typeof AdminTenantsRoute
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
@@ -285,6 +294,7 @@ export interface FileRouteTypes {
     | '/admin/content'
     | '/admin/products'
     | '/admin/programs'
+    | '/admin/tenants'
     | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/admin/content'
     | '/admin/products'
     | '/admin/programs'
+    | '/admin/tenants'
     | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
@@ -342,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin/content'
     | '/admin/products'
     | '/admin/programs'
+    | '/admin/tenants'
     | '/admin/tips'
     | '/dashboard/at-risk'
     | '/dashboard/branding'
@@ -443,6 +455,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/admin/programs'
       preLoaderRoute: typeof AdminProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tenants': {
+      id: '/admin/tenants'
+      path: '/tenants'
+      fullPath: '/admin/tenants'
+      preLoaderRoute: typeof AdminTenantsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tips': {
@@ -629,6 +648,7 @@ interface AdminRouteChildren {
   AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminProductsRoute: typeof AdminProductsRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
+  AdminTenantsRoute: typeof AdminTenantsRoute
   AdminTipsRoute: typeof AdminTipsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -637,6 +657,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminContentRoute: AdminContentRouteWithChildren,
   AdminProductsRoute: AdminProductsRoute,
   AdminProgramsRoute: AdminProgramsRoute,
+  AdminTenantsRoute: AdminTenantsRoute,
   AdminTipsRoute: AdminTipsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }

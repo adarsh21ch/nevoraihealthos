@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { Loader2, Plus, Power, PowerOff, Shield, Edit2, Key, Copy, Check, QrCode } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/admin/")({
+export const Route = createFileRoute("/admin/tenants")({
   loader: async () => {
     try {
       const tenants = await getTenants();
