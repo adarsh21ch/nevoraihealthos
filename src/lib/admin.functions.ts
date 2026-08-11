@@ -195,11 +195,11 @@ export const updateTenantStatus = createServerFn({ method: "POST" })
     status: z.enum(["active", "suspended"])
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     // Verify admin
-    const { data: isAdmin } = await supabaseAdmin.rpc("is_platform_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
     
     const { error } = await supabaseAdmin
@@ -220,13 +220,14 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
     accessCode: z.string().min(4)
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
+    const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // Verify admin OR owner of this tenant
-    const { data: authContext } = await supabaseAdmin.rpc("get_my_auth_context");
-    const isPlatformAdmin = (authContext as any)?.role === 'platform_admin';
-    const isTenantOwner = (authContext as any)?.role === 'owner' && (authContext as any)?.tenant_id === data.tenantId;
+    // Verify admin OR owner of this tenant, evaluated as the CALLER (not service role)
+    const [{ data: isPlatformAdmin }, { data: isTenantOwner }] = await Promise.all([
+      supabase.rpc("is_platform_admin", { _uid: userId }),
+      supabase.rpc("is_tenant_member", { _uid: userId, _tenant: data.tenantId }),
+    ]);
 
     if (!isPlatformAdmin && !isTenantOwner) throw new Error("Unauthorized");
 
