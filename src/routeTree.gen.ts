@@ -30,7 +30,6 @@ import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder
 import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
-import { Route as PTenantSlugJoinRouteImport } from './routes/p/$tenantSlug/join'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
 import { Route as AuthenticatedPTenantSlugGuideRouteImport } from './routes/_authenticated/p.$tenantSlug.guide'
 import { Route as AuthenticatedPTenantSlugJourneyRouteImport } from './routes/_authenticated/p.$tenantSlug.journey'
@@ -145,11 +144,6 @@ const DashboardCustomersCustomerIdRoute =
     path: '/$customerId',
     getParentRoute: () => DashboardCustomersRoute,
   } as any)
-const PTenantSlugJoinRoute = PTenantSlugJoinRouteImport.update({
-  id: '/p/$tenantSlug/join',
-  path: '/p/$tenantSlug/join',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedPTenantSlugCompleteRoute =
   AuthenticatedPTenantSlugCompleteRouteImport.update({
     id: '/complete',
@@ -214,7 +208,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
-  '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
@@ -242,7 +235,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
-  '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
@@ -274,7 +266,6 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
-  '/p/$tenantSlug/join': typeof PTenantSlugJoinRoute
   '/_authenticated/p/$tenantSlug/complete': typeof AuthenticatedPTenantSlugCompleteRoute
   '/_authenticated/p/$tenantSlug/guide': typeof AuthenticatedPTenantSlugGuideRoute
   '/_authenticated/p/$tenantSlug/journey': typeof AuthenticatedPTenantSlugJourneyRoute
@@ -306,7 +297,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/p/$tenantSlug'
     | '/dashboard/customers/$customerId'
-    | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
     | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
@@ -334,7 +324,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/p/$tenantSlug'
     | '/dashboard/customers/$customerId'
-    | '/p/$tenantSlug/join'
     | '/p/$tenantSlug/complete'
     | '/p/$tenantSlug/guide'
     | '/p/$tenantSlug/journey'
@@ -365,7 +354,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/_authenticated/p/$tenantSlug'
     | '/dashboard/customers/$customerId'
-    | '/p/$tenantSlug/join'
     | '/_authenticated/p/$tenantSlug/complete'
     | '/_authenticated/p/$tenantSlug/guide'
     | '/_authenticated/p/$tenantSlug/journey'
@@ -382,7 +370,6 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
-  PTenantSlugJoinRoute: typeof PTenantSlugJoinRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -533,13 +520,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/customers/$customerId'
       preLoaderRoute: typeof DashboardCustomersCustomerIdRouteImport
       parentRoute: typeof DashboardCustomersRoute
-    }
-    '/p/$tenantSlug/join': {
-      id: '/p/$tenantSlug/join'
-      path: '/p/$tenantSlug/join'
-      fullPath: '/p/$tenantSlug/join'
-      preLoaderRoute: typeof PTenantSlugJoinRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/p/$tenantSlug/complete': {
       id: '/_authenticated/p/$tenantSlug/complete'
@@ -706,7 +686,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
-  PTenantSlugJoinRoute: PTenantSlugJoinRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
