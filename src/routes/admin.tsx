@@ -23,9 +23,9 @@ function AdminLayout() {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: "Performance", icon: LayoutDashboard, path: "/admin" },
-    { name: "Tenants", icon: Building2, path: "/admin/tenants" },
-    { name: "Programs", icon: Layout, path: "/admin/programs" },
+    { name: "Performance", icon: LayoutDashboard, path: "/admin/" },
+    { name: "Tenants", icon: Building2, path: "/admin/tenants/" },
+    { name: "Programs", icon: Layout, path: "/admin/content/" },
     { name: "Products", icon: Package, path: "/admin/products" },
     { name: "Tips", icon: MessageSquare, path: "/admin/tips" },
   ];
