@@ -300,7 +300,7 @@ function Index() {
                 viewport={{ once: true }}
                 className="relative z-20"
               >
-                <div className="glass-card rounded-[2.5rem] p-4 shadow-3xl">
+                <div className="glass-card bg-slate-100/50 rounded-[2.5rem] p-4 shadow-3xl">
                   <div className="bg-slate-50 rounded-[2rem] overflow-hidden border border-slate-100 aspect-video relative">
                     <div className="absolute top-4 left-4 right-4 flex justify-between items-center px-4 py-2 bg-white/80 backdrop-blur-md rounded-full border border-slate-100">
                       <div className="flex gap-2">
@@ -327,7 +327,7 @@ function Index() {
               <motion.div 
                 animate={{ y: [0, -20, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-10 -right-10 z-30 px-6 py-4 glass-card rounded-2xl flex items-center gap-4 border-emerald-100 shadow-2xl"
+                className="absolute -top-10 -right-10 z-30 px-6 py-4 glass-card bg-white rounded-2xl flex items-center gap-4 border-emerald-100 shadow-2xl"
               >
                 <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white">
                   <CheckCircle2 className="w-6 h-6" />

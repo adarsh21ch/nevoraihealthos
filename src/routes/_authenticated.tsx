@@ -1,4 +1,3 @@
-
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -31,14 +30,12 @@ export const Route = createFileRoute('/_authenticated')({
       
       if (role === 'customer') {
         if (urlTenantSlug !== tenant_slug) {
-          throw redirect({ to: `/p/${tenant_slug}/today` });
+          throw redirect({ to: `/p/${tenant_slug}/today`, params: { tenantSlug: tenant_slug } } as any);
         }
         if (!onboarding_complete && !location.pathname.endsWith('/onboarding')) {
-          // Note: we might need a dedicated /onboarding route or handle it per tenant
           throw redirect({ to: '/onboarding' });
         }
       } else if (role === 'tenant_owner') {
-         // Owners might want to see their own tenant portal
          if (urlTenantSlug !== tenant_slug) throw redirect({ to: '/dashboard' });
       } else if (role !== 'platform_admin') {
         throw redirect({ to: '/login' });
