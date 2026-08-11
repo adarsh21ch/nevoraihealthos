@@ -141,3 +141,44 @@ export const resetCustomerPassword = createServerFn({ method: "POST" })
     if (error) throw error;
     return { success: true, tempPassword };
   });
+
+export const getCustomerDetail = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ customerId: z.string().uuid() }))
+  .handler(async ({ context, data }) => {
+    const { supabase } = context;
+    const { data: authCtx } = await supabase.rpc("get_my_auth_context");
+    const tenantId = (authCtx as any)?.tenant_id;
+    if (!tenantId) throw new Error("Unauthorized");
+
+    const { data: customer, error } = await supabase
+      .from("customers")
+      .select(`
+        *,
+        customer_enrollments(
+          *,
+          programs(*)
+        ),
+        daily_logs(*),
+        measurements(*),
+        progress_photos(*)
+      `)
+      .eq("id", data.customerId)
+      .eq("tenant_id", tenantId)
+      .single();
+
+    if (error) throw error;
+    
+    // Filter photos based on share_consent if needed, 
+    // but the dashboard owner should see them anyway for management.
+    // The prompt says "photos (ONLY if share_consent)", so I will respect that
+    // if the goal is to show what the CUSTOMER sees or for a "gallery" view.
+    // However, as a coach, seeing progress photos is usually standard.
+    // Re-reading prompt: "CUSTOMER DETAIL: ... photos (ONLY if share_consent)"
+    if (!customer.share_consent) {
+       customer.progress_photos = [];
+    }
+
+    return customer;
+  });
+
