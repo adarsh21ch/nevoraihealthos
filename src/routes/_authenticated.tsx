@@ -5,17 +5,12 @@ import { toast } from 'sonner';
 export const Route = createFileRoute('/_authenticated')({
   ssr: false,
   beforeLoad: async ({ location }) => {
-    // 1. Get the current hostname and tenant ID from metadata if possible
-    // This allows dedicated domains like fat2fit.nevera.com to resolve correctly
-    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
-    
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    // Auto-detect tenant from hostname if using a custom subdomain
-    // e.g. fat2fit.nevera.com
+    // Auto-detect tenant from hostname if using a custom subdomain (e.g. fat2fit.nevera.com)
     const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
     const isSubdomain = hostname.includes('.nevera.com') && !hostname.startsWith('project--');
     const hostnameSlug = isSubdomain ? hostname.split('.')[0] : null;
+
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
       // If we're on a subdomain, redirect to the specific join page if they try to access /

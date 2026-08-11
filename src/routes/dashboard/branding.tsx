@@ -1,4 +1,4 @@
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { Palette, Upload, Loader2, Save } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Key, RefreshCw } from "lucide-react";
