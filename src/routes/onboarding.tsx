@@ -179,7 +179,7 @@ function OnboardingPage() {
               {((me as any)?.tenants?.name || "H").charAt(0)}
             </div>
           )}
-          <h1 className="text-3xl font-bold tracking-tight text-ink">Let's set up your profile</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-ink">Set up your Fat2Fit profile</h1>
           <p className="text-muted font-medium">
             A few details so your coach can follow your progress day by day.
           </p>
