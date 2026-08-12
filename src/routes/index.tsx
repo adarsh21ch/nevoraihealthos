@@ -19,17 +19,17 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Health OS | Customer Portals for Wellness Distributors" },
+      { title: "Fat2Fit | Your Personalized Wellness Journey" },
       {
         name: "description",
         content:
-          "Share one join link, onboard customers, and track their program day by day. Built for independent wellness distributors in India.",
+          "Transform your health with the Fat2Fit program. Personalized diet plans, guided wellness, and trackable results based on the C9 program logic.",
       },
-      { property: "og:title", content: "Health OS | Customer Portals for Wellness Distributors" },
+      { property: "og:title", content: "Fat2Fit | Your Personalized Wellness Journey" },
       {
         property: "og:description",
         content:
-          "One place to onboard customers and follow their program day by day, instead of chat threads and spreadsheets.",
+          "Your personalized portal for the Fat2Fit wellness journey. Track your measurements, follow your diet, and reach your goals.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -42,13 +42,10 @@ function Index() {
   const { tenant } = Route.useRouteContext();
   const navigate = useNavigate();
 
-  // If we're on a custom domain resolved to a tenant, 
-  // redirect to the tenant's public landing or join page
+  // Always redirect to the Fat2Fit join flow as the primary entry point
   useEffect(() => {
-    if (tenant) {
-      // Force immediate redirect to join flow for custom domains to ensure brand isolation
-      navigate({ to: '/p/$tenantSlug/join', params: { tenantSlug: tenant.slug }, replace: true });
-    }
+    const slug = tenant?.slug || "fat2fit";
+    navigate({ to: '/p/$tenantSlug/join', params: { tenantSlug: slug }, replace: true });
   }, [tenant, navigate]);
 
   const containerRef = useRef(null);

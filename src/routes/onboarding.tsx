@@ -317,7 +317,7 @@ function OnboardingPage() {
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-600 font-medium leading-relaxed space-y-2">
                 <p className="font-bold text-ink uppercase tracking-wider text-[10px]">Important notice</p>
                 <p>
-                  This app helps you follow a routine and record your own measurements. It does not
+                  The Fat2Fit program helps you follow a routine and record your own measurements. It does not
                   provide medical advice, diagnosis or treatment, and no outcome is promised.
                 </p>
                 <p>

@@ -12,7 +12,7 @@ import { Loader2, ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/p/$tenantSlug/join")({
   head: () => ({
     meta: [
-      { title: "Join the program | Health OS" },
+      { title: "Join Fat2Fit" },
       {
         name: "description",
         content:
@@ -130,7 +130,7 @@ function JoinPage() {
             </div>
           )}
           <h1 className="text-3xl font-bold tracking-tight text-ink">
-            {tenant?.name ? `Join ${tenant.name}` : "Create your account"}
+            {tenant?.name ? `Join ${tenant.name}` : "Join Fat2Fit"}
           </h1>
           <p className="text-muted font-medium">
             {tenant?.tagline ?? "Set up your account to start your program."}
