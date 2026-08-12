@@ -1,3 +1,7 @@
+/**
+ * Fat2Fit Diet Calculation Logic
+ * Based on Mifflin-St Jeor Equation and C9 Program guidelines
+ */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 

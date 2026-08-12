@@ -33,12 +33,10 @@ export const Route = createFileRoute('/_authenticated')({
 
     if (location.pathname.startsWith('/admin')) {
       if (role !== 'platform_admin') {
-        toast.error("Access denied: Platform Admin only");
         throw redirect({ to: '/login' });
       }
     } else if (location.pathname.startsWith('/dashboard')) {
       if (role !== 'tenant_owner') {
-        toast.error("Access denied: Tenant Owner only");
         throw redirect({ to: '/login' });
       }
     } else if (location.pathname.startsWith('/p/') || (isCustomDomain && tenant)) {

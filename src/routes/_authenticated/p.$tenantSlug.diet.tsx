@@ -56,7 +56,7 @@ function DietPage() {
   return (
     <div className="max-w-md mx-auto px-6 pt-12 pb-24 space-y-8 animate-in fade-in duration-500">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Diet Plan</h1>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Fat2Fit Plan</h1>
         <p className="text-slate-500 font-medium">Personalized for the C9 Program</p>
       </div>
 
