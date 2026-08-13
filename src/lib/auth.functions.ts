@@ -15,7 +15,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     // 1. Check access code
     const { data: creds, error: credsError } = await supabaseAdmin
       .from("access_codes")
-      .select("id, coach_id")
+      .select("id")
       .eq("code", data.access_code)
       .is("used_at", null)
       .maybeSingle();
@@ -87,7 +87,7 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
     const { data: customer } = await supabaseAdmin
       .from("customers")
       .select("user_id")
-      .eq("fbo_id", data.identifier)
+      .eq("fbo_id" as any, data.identifier)
       .maybeSingle();
       
     if (customer && customer.user_id) {
