@@ -65,54 +65,44 @@ function LoginPage() {
     setError(null);
 
     try {
-      let loginEmail = identifier;
+      let loginEmail = identifier.trim();
       
-      if (!identifier.includes('@')) {
-        const resolution = await resolveIdentifier({ data: { identifier } });
+      if (!loginEmail.includes('@')) {
+        const resolution = await resolveIdentifier({ data: { identifier: loginEmail } });
         if (resolution.found) {
           loginEmail = resolution.value;
         }
       }
 
       console.log("Attempting sign in with:", loginEmail);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail.trim(),
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
         password: signInPassword,
       });
 
-      if (error) {
-        if (error.message.includes("Email or phone number is required")) {
-          throw new Error("Please enter your email/FBO ID and password");
-        }
-        throw error;
-      }
+      if (signInError) throw signInError;
 
       console.log("Login successful, resolving identity...");
-      const { data: authData } = await supabase.auth.getUser();
-      const user = authData?.user;
+      const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        console.error("No user returned from session");
         throw new Error("Authentication failed: No user session found");
       }
 
-      // 1. HARDWIRED ADMIN CHECK (Highest Priority)
+      // Hardcoded admin redirect (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com') {
-        console.log("Platform admin recognized via email, redirecting...");
+        console.log("Platform admin recognized, redirecting to /admin...");
         navigate({ to: "/admin" });
         return;
       }
 
-      // 2. DATABASE RESOLUTION
       const { data: context } = await supabase.rpc("get_my_auth_context");
       
-      const effectiveContext = (context ?? {
+      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {
         role: 'participant',
         tenant_slug: 'fat2fit',
         onboarding_complete: false
       }) as any;
-      
-      const { role, tenant_slug, onboarding_complete, custom_domain } = effectiveContext;
 
       console.log("Identity resolved:", { role, tenant_slug, onboarding_complete });
 
