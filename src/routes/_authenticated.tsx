@@ -50,6 +50,12 @@ export const Route = createFileRoute('/_authenticated')({
       } else if (location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
         if (role !== 'tenant_owner' && role !== 'coach' && role !== 'admin' && role !== 'platform_admin') throw redirect({ to: '/login' });
       } else if (location.pathname.startsWith('/p/')) {
+        // Ensure slug consistency - redirect /p/fat-to-fit to /p/fat2fit
+        if (location.pathname.startsWith('/p/fat-to-fit')) {
+            const newPath = location.pathname.replace('/p/fat-to-fit', '/p/fat2fit');
+            throw redirect({ to: newPath as any });
+        }
+
         if (role === 'participant') {
           if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
               throw redirect({ to: '/onboarding' });

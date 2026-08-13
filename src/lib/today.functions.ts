@@ -80,7 +80,7 @@ export const getTodayData = createServerFn({ method: "GET" })
       
       // If program is finished (Day 10+)
       if (dayNumber > 9) {
-          return { state: 'success', dayNumber, redirect: '/p/fat-to-fit/complete' as any };
+          return { state: 'success', dayNumber, redirect: '/p/fat2fit/complete' as any };
       }
 
       // 2. Fetch daily log and tasks
