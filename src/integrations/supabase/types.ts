@@ -168,6 +168,7 @@ export type Database = {
           dob: string | null
           fbo_id: string | null
           gender: string | null
+          goal: string | null
           goal_weight_kg: number | null
           health_concerns: string | null
           height_cm: number | null
@@ -205,6 +206,7 @@ export type Database = {
           dob?: string | null
           fbo_id?: string | null
           gender?: string | null
+          goal?: string | null
           goal_weight_kg?: number | null
           health_concerns?: string | null
           height_cm?: number | null
@@ -242,6 +244,7 @@ export type Database = {
           dob?: string | null
           fbo_id?: string | null
           gender?: string | null
+          goal?: string | null
           goal_weight_kg?: number | null
           health_concerns?: string | null
           height_cm?: number | null
