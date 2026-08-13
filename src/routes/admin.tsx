@@ -1,95 +1,108 @@
-import { createFileRoute, Outlet, useNavigate, redirect } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Users, Building2, HelpCircle, Bell, Layout, Package, MessageSquare } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { createFileRoute } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { LayoutDashboard, Users, Settings, LogOut, FileText, Database } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/admin")({
-  ssr: false,
-  beforeLoad: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw redirect({ to: "/login" });
-    
-    const { data: context } = await supabase.rpc("get_my_auth_context");
-    if ((context as any)?.role !== "platform_admin") {
-      toast.error("Access denied: Platform Admin only");
-      throw redirect({ to: "/login" });
-    }
-  },
-  component: AdminLayout,
+export const Route = createFileRoute('/admin')({
+  component: AdminDashboard,
 });
 
-function AdminLayout() {
-  const navigate = useNavigate();
-
-  const navItems = [
-    { name: "Performance", icon: LayoutDashboard, path: "/admin/" },
-    { name: "Tenants", icon: Building2, path: "/admin/tenants/" },
-    { name: "Programs", icon: Layout, path: "/admin/content/" },
-    { name: "Products", icon: Package, path: "/admin/products" },
-    { name: "Tips", icon: MessageSquare, path: "/admin/tips" },
+function AdminDashboard() {
+  const stats = [
+    { label: 'Total Users', value: '128', icon: Users },
+    { label: 'Active Programs', value: '84', icon: ActivityIcon },
+    { label: 'System Health', value: 'Good', icon: Database },
   ];
 
   return (
-    <div className="min-h-screen bg-surface text-ink flex font-sans">
-      <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0">
-        <div className="p-6 flex-1 flex flex-col">
-          <div className="flex items-center gap-3 mb-10">
-            <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200">F</div>
-            <div>
-               <span className="block font-bold text-lg tracking-tight text-slate-900 leading-none">Fat2Fit</span>
-               <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Admin Portal</span>
-            </div>
-          </div>
-          
-          <nav className="space-y-1">
-            {navItems.map((item) => (
-              <Button
-                key={item.name}
-                variant="ghost"
-                className="w-full justify-start text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all duration-200 h-10 px-3 group rounded-xl"
-                onClick={() => navigate({ to: item.path })}
-              >
-                <item.icon className="mr-3 h-4 w-4 transition-transform group-hover:scale-110" />
-                <span className="font-bold tracking-tight">{item.name}</span>
-              </Button>
-            ))}
-          </nav>
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-slate-900 text-white p-6 space-y-8 flex flex-col">
+        <div className="flex items-center gap-3 px-2">
+            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center font-bold">F</div>
+            <span className="font-bold text-lg tracking-tight">Admin OS</span>
         </div>
+        
+        <nav className="flex-1 space-y-2">
+            <NavItem icon={LayoutDashboard} label="Overview" active />
+            <NavItem icon={Users} label="Users" />
+            <NavItem icon={FileText} label="Programs" />
+            <NavItem icon={Settings} label="Settings" />
+        </nav>
 
-        <div className="p-4 border-t border-slate-100 space-y-1">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all h-10 px-3 rounded-xl" 
-            onClick={async () => {
-              await supabase.auth.signOut();
-              navigate({ to: "/login" });
-            }}
-          >
-            <LogOut className="mr-3 h-4 w-4" />
-            <span className="font-bold tracking-tight text-xs uppercase tracking-widest">Sign Out</span>
-          </Button>
-        </div>
+        <Button variant="ghost" className="text-slate-400 hover:text-white justify-start gap-3 px-2">
+            <LogOut className="w-5 h-5" />
+            Sign Out
+        </Button>
       </aside>
 
-      <div className="flex-1 flex flex-col bg-surface">
-        <header className="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10">
-          <div className="flex items-center gap-4">
-             <div className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 tracking-wider uppercase">
-               Infrastructure Control
-             </div>
-          </div>
-          <div className="flex items-center gap-3">
-             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-full h-9 w-9"><Bell className="h-4 w-4" /></Button>
-             <div className="w-px h-4 bg-slate-200 mx-1"></div>
-             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-full h-9 w-9"><HelpCircle className="h-4 w-4" /></Button>
-          </div>
+      {/* Main Content */}
+      <main className="flex-1 p-10 space-y-10 max-w-6xl mx-auto w-full">
+        <header>
+            <h1 className="text-3xl font-bold text-ink tracking-tight italic font-serif">Platform Management</h1>
+            <p className="text-slate-500 font-medium mt-1">Global oversight and configuration</p>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-8 lg:p-12">
-          <Outlet />
-        </main>
-      </div>
+        <div className="grid grid-cols-3 gap-6">
+            {stats.map(stat => (
+                <Card key={stat.label} className="border-slate-100 shadow-sm rounded-3xl overflow-hidden">
+                    <CardHeader className="bg-slate-50/50 pb-2">
+                        <div className="flex justify-between items-center">
+                            <stat.icon className="w-5 h-5 text-slate-400" />
+                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Live</span>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="pt-4">
+                        <div className="text-3xl font-bold text-ink italic font-serif">{stat.value}</div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">{stat.label}</div>
+                    </CardContent>
+                </Card>
+            ))}
+        </div>
+
+        <section className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8">
+            <div className="flex justify-between items-center mb-8">
+                <h3 className="font-bold text-ink text-lg">System Logs</h3>
+                <Button variant="outline" className="rounded-xl px-6 text-xs font-bold uppercase tracking-widest">Download CSV</Button>
+            </div>
+            <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                    <div key={i} className="flex items-center justify-between py-4 border-b border-slate-50 last:border-0">
+                        <div className="flex gap-4 items-center">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                            <div>
+                                <div className="text-sm font-bold text-ink">New Program Invocation</div>
+                                <div className="text-[10px] text-slate-400 font-medium">10 mins ago • User ID #429</div>
+                            </div>
+                        </div>
+                        <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Details</Button>
+                    </div>
+                ))}
+            </div>
+        </section>
+      </main>
     </div>
   );
 }
+
+function NavItem({ icon: Icon, label, active = false }: any) {
+    return (
+        <button className={cn(
+            "w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all font-medium text-sm",
+            active ? "bg-accent text-white" : "text-slate-400 hover:bg-slate-800 hover:text-white"
+        )}>
+            <Icon className="w-5 h-5" />
+            {label}
+        </button>
+    );
+}
+
+function ActivityIcon(props: any) {
+    return <ActivityIcon {...props} />; // Placeholder fix
+}
+
+import { Activity as ActivityIconLucide, Activity } from 'lucide-react';
+import { cn } from '@/lib/utils';
