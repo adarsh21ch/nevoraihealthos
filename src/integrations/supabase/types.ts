@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       access_codes: {
         Row: {
+          coach_id: string | null
           code: string
           created_at: string
           customer_id: string | null
@@ -25,6 +26,7 @@ export type Database = {
           used_at: string | null
         }
         Insert: {
+          coach_id?: string | null
           code: string
           created_at?: string
           customer_id?: string | null
@@ -34,6 +36,7 @@ export type Database = {
           used_at?: string | null
         }
         Update: {
+          coach_id?: string | null
           code?: string
           created_at?: string
           customer_id?: string | null
@@ -101,6 +104,7 @@ export type Database = {
           created_at: string
           disclaimer_accepted_at: string | null
           distributor_id: string
+          fbo_id: string | null
           gender: string | null
           goal_weight_kg: number | null
           height_cm: number | null
@@ -122,6 +126,7 @@ export type Database = {
           created_at?: string
           disclaimer_accepted_at?: string | null
           distributor_id?: string
+          fbo_id?: string | null
           gender?: string | null
           goal_weight_kg?: number | null
           height_cm?: number | null
@@ -143,6 +148,7 @@ export type Database = {
           created_at?: string
           disclaimer_accepted_at?: string | null
           distributor_id?: string
+          fbo_id?: string | null
           gender?: string | null
           goal_weight_kg?: number | null
           height_cm?: number | null
