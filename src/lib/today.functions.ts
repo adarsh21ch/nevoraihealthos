@@ -109,11 +109,9 @@ export const getTodayData = createServerFn({ method: "GET" })
               .eq("log_date", todayStr)
               .maybeSingle(),
           supabase.rpc("get_day_with_tasks", {
-              _program_id: actualProgramId,
-              _date: todayStr,
-              _start_date: activeProgram?.start_date || todayStr,
-              _track: actualTrack
-          } as any)
+              _customer: customer.id,
+              _day: dayNumber
+          })
       ]);
 
       const dayContent = dayContentRes.data as unknown as ProgramDayContent;
