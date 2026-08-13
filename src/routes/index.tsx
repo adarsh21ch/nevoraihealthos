@@ -11,7 +11,8 @@ import {
   Layers,
   ChevronRight,
   CheckCircle2,
-  Play
+  Play,
+  Package
 } from "lucide-react";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
