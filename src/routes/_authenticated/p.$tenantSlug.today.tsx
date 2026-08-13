@@ -191,29 +191,36 @@ function TodayPage() {
   const slotsOrder = ['morning', 'mid_morning', 'noon', 'early_evening', 'evening', 'all_day'];
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-32 animate-in fade-in duration-500 space-y-8">
+    <div className="animate-in fade-in duration-500 space-y-8 md:space-y-12">
       {/* Header & Progress Ring */}
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-6">
         <div>
           <h2 className="text-sm font-bold text-slate-400 mb-1">Good morning, {customer?.name?.split(' ')[0] || 'there'}</h2>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-bold text-ink tracking-tight italic font-serif uppercase">Day {dayNumber} of 9</span>
+            <span className="text-4xl md:text-5xl lg:text-6xl font-bold text-ink tracking-tight italic font-serif uppercase leading-none">Day {dayNumber} of 9</span>
           </div>
         </div>
-        <div className="relative w-20 h-20 flex items-center justify-center">
-          <svg className="w-full h-full -rotate-90">
-            <circle cx="40" cy="40" r="34" fill="none" stroke="#F1F5F9" strokeWidth="6" />
-            <circle
-              cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6"
-              strokeDasharray={213.6} strokeDashoffset={213.6 * (1 - progressPercent / 100)}
-              strokeLinecap="round" className="text-health-green transition-all duration-1000 ease-out"
-            />
-          </svg>
-          <div className="absolute flex flex-col items-center justify-center">
-            <span className="text-sm font-black text-ink">{completedTasks}/{totalTasks}</span>
+        <div className="flex items-center gap-6 bg-white p-4 pr-8 rounded-[2rem] border border-slate-100 shadow-sm">
+          <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+            <svg className="w-full h-full -rotate-90">
+              <circle cx="32" cy="32" r="28" fill="none" stroke="#F1F5F9" strokeWidth="5" />
+              <circle
+                cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="5"
+                strokeDasharray={175.9} strokeDashoffset={175.9 * (1 - progressPercent / 100)}
+                strokeLinecap="round" className="text-health-green transition-all duration-1000 ease-out"
+              />
+            </svg>
+            <div className="absolute flex flex-col items-center justify-center">
+              <span className="text-xs font-black text-ink">{progressPercent}%</span>
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Overall Progress</p>
+            <p className="text-sm font-bold text-ink">{completedTasks} of {totalTasks} tasks complete</p>
           </div>
         </div>
       </div>
+
 
       {/* Today Hero Card */}
       <section className="bg-emerald-900 text-white rounded-[2.5rem] p-8 relative overflow-hidden shadow-xl shadow-emerald-900/10">
