@@ -6,14 +6,15 @@ import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
-    if (params.tenantSlug !== 'fat-to-fit') {
-      throw redirect({ to: '/p/fat-to-fit/today' as any });
+    if (params.tenantSlug !== 'fat-to-fit' && params.tenantSlug !== 'fat2fit') {
+      throw redirect({ to: '/p/fat2fit/today' as any });
     }
+    const slug = params.tenantSlug;
     return {
       tenant: {
         id: 'fat-to-fit-id',
         name: 'Fat2Fit',
-        slug: 'fat-to-fit',
+        slug,
         primary_color: '#7C3AED',
         tagline: '9-Day Reset Protocol',
         whatsapp: '+919876543210'
