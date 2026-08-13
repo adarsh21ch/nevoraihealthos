@@ -66,8 +66,8 @@ function ProfilePage() {
       icon: User, 
       fields: [
         { label: 'Name', value: profile.name, key: 'name' },
-        { label: 'DOB', value: profile.dob, key: 'dob' },
-        { label: 'Sex', value: profile.gender, key: 'gender' }
+        { label: 'DOB', value: profile.dob, key: 'dob', type: 'date' },
+        { label: 'Sex', value: profile.gender, key: 'gender', options: ['Male', 'Female', 'Other'] }
       ]
     },
     { 
@@ -75,9 +75,9 @@ function ProfilePage() {
       title: 'Body', 
       icon: Ruler, 
       fields: [
-        { label: 'Height', value: profile.height_cm ? `${profile.height_cm} cm` : null, key: 'height_cm' },
-        { label: 'Weight', value: profile.weight_kg ? `${profile.weight_kg} kg` : null, key: 'weight_kg' },
-        { label: 'Waist', value: profile.waist_cm ? `${profile.waist_cm} cm` : null, key: 'waist_cm' }
+        { label: 'Height (cm)', value: profile.height_cm ? `${profile.height_cm} cm` : null, key: 'height_cm', type: 'number' },
+        { label: 'Weight (kg)', value: profile.weight_kg ? `${profile.weight_kg} kg` : null, key: 'weight_kg', type: 'number' },
+        { label: 'Waist (cm)', value: profile.waist_cm ? `${profile.waist_cm} cm` : null, key: 'waist_cm', type: 'number' }
       ]
     },
     { 
@@ -85,8 +85,8 @@ function ProfilePage() {
       title: 'Goals', 
       icon: Target, 
       fields: [
-        { label: 'Primary Goal', value: profile.goal, key: 'goal' },
-        { label: 'Target Weight', value: profile.target_weight_kg ? `${profile.target_weight_kg} kg` : null, key: 'target_weight_kg' }
+        { label: 'Primary Goal', value: profile.goal, key: 'goal', options: ['Weight Loss', 'Weight Management', 'Body Composition', 'Energy & Habits'] },
+        { label: 'Target Weight (kg)', value: profile.target_weight_kg ? `${profile.target_weight_kg} kg` : null, key: 'target_weight_kg', type: 'number' }
       ]
     },
     { 
@@ -94,8 +94,8 @@ function ProfilePage() {
       title: 'Lifestyle', 
       icon: Info, 
       fields: [
-        { label: 'Activity Level', value: profile.activity_level, key: 'activity_level' },
-        { label: 'Lifestyle', value: profile.lifestyle, key: 'lifestyle' }
+        { label: 'Activity Level', value: profile.activity_level, key: 'activity_level', options: ['sedentary', 'light', 'moderate', 'very'] },
+        { label: 'Lifestyle', value: profile.lifestyle, key: 'lifestyle', options: ['Office Worker', 'Business Owner', 'Student', 'Homemaker', 'Shift Worker', 'Retired'] }
       ]
     },
     { 
@@ -103,8 +103,8 @@ function ProfilePage() {
       title: 'Diet', 
       icon: Utensils, 
       fields: [
-        { label: 'Diet Preference', value: profile.diet_preference, key: 'diet_preference' },
-        { label: 'Cooking Access', value: profile.cooking_access, key: 'cooking_access' }
+        { label: 'Diet Preference', value: profile.diet_preference, key: 'diet_preference', options: ['Vegetarian', 'Non-Vegetarian', 'Egg-Inclusive', 'Vegan'] },
+        { label: 'Cooking Access', value: profile.cooking_access, key: 'cooking_access', options: ['Full Kitchen', 'Basic Access', 'Limited (Hostel/Office)', 'No Cooking'] }
       ]
     },
     { 
@@ -112,11 +112,12 @@ function ProfilePage() {
       title: 'Safety / Health', 
       icon: ShieldCheck, 
       fields: [
-        { label: 'Allergies', value: profile.allergies?.join(', '), key: 'allergies' },
-        { label: 'Health Concerns', value: profile.health_concerns, key: 'health_concerns' }
+        { label: 'Allergies (comma separated)', value: profile.allergies?.join(', '), key: 'allergies' },
+        { label: 'Health Concerns', value: profile.health_concerns, key: 'health_concerns', type: 'textarea' }
       ]
     }
   ];
+
 
 
   return (
