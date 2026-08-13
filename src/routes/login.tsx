@@ -102,25 +102,25 @@ function LoginPage() {
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
-          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mb-12">H</div>
+          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mb-12">F</div>
           <h1 className="text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
-            Infrastructure for <br/>
-            <span className="text-slate-400">wellness scale.</span>
+            Wellness simplified.<br/>
+            <span className="text-slate-400">Scale your impact.</span>
           </h1>
           <p className="text-xl text-slate-500 max-w-md font-medium leading-relaxed">
-            The premier platform for health coaches to manage programs and onboard customers with professional white-label portals.
+            The premier platform for Fat2Fit coaches to manage programs and onboard customers with professional portals.
           </p>
         </div>
         
         <div className="flex items-center gap-8">
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-slate-900">2026</span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Version Release</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Fat2Fit Edition</span>
           </div>
           <div className="w-px h-8 bg-slate-100"></div>
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-slate-900">E2E</span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Data Privacy</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Health Data Privacy</span>
           </div>
         </div>
       </div>
@@ -129,7 +129,7 @@ function LoginPage() {
       <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12">
         <div className="w-full max-w-sm space-y-8">
           <div className="lg:hidden flex justify-center mb-12">
-            <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl">H</div>
+            <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl">F</div>
           </div>
           
           <div className="space-y-2 text-center lg:text-left">
@@ -187,7 +187,7 @@ function LoginPage() {
               New here? <span className="text-ink font-bold">Contact your coach for an invite code.</span>
             </p>
             <div className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
-              Health OS &copy; 2026
+              Fat2Fit &copy; 2026
             </div>
           </div>
         </div>

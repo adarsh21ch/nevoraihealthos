@@ -527,7 +527,7 @@ function Index() {
           </div>
           
           <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p className="text-slate-400 text-sm font-medium">© 2026 Health OS Platform. All rights reserved.</p>
+            <p className="text-slate-400 text-sm font-medium">© 2026 Fat2Fit. All rights reserved.</p>
             <div className="flex items-center gap-8">
               <Link to="/login" className="text-sm font-bold text-slate-900">Staff Portal</Link>
               <a href="/admin" className="text-sm font-bold text-slate-900">Admin Console</a>
