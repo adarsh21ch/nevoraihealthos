@@ -32,8 +32,6 @@ export const getMyNutritionPlan = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    // Use a completely untyped approach for the table name to bypass the "never" error
-    // until Supabase types are fully synchronized in the environment.
     const table: any = "nutrition_plans";
     const { data: plan, error } = await supabase
       .from(table)
@@ -45,7 +43,7 @@ export const getMyNutritionPlan = createServerFn({ method: "GET" })
       .maybeSingle();
 
     if (error) throw error;
-    return plan as NutritionPlan | null;
+    return (plan as unknown) as NutritionPlan | null;
   });
 
 export const logMealStatus = createServerFn({ method: "POST" })
@@ -93,7 +91,7 @@ export const getMealLogs = createServerFn({ method: "GET" })
       .eq("log_date", data.date);
     
     if (error) throw error;
-    return logs as MealLog[];
+    return (logs as unknown) as MealLog[];
   });
 
 export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
@@ -140,5 +138,5 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
       .single();
 
     if (storeError) throw storeError;
-    return newPlan as NutritionPlan;
+    return (newPlan as unknown) as NutritionPlan;
   });
