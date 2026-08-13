@@ -143,7 +143,7 @@ function DietPage() {
                                           </div>
                                           <div>
                                             <span className="font-bold text-ink text-lg">{food.name}</span>
-                                            {food.description && <p className="text-[10px] text-slate-400 font-medium">{food.description}</p>}
+                                            {food.calories_approx && <p className="text-[10px] text-slate-400 font-medium">Approx. {food.calories_approx} kcal</p>}
                                           </div>
                                       </div>
                                       <div className="text-right">
