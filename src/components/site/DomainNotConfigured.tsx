@@ -11,7 +11,7 @@ export function DomainNotConfigured() {
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-slate-900">Domain Not Configured</h1>
           <p className="text-slate-500">
-            This domain isn't connected to a Health OS site yet.
+            This domain isn't connected to a Fat2Fit site yet.
           </p>
         </div>
         <div className="pt-4">
@@ -19,7 +19,7 @@ export function DomainNotConfigured() {
             to="/" 
             className="inline-flex items-center justify-center px-6 py-2 rounded-full bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors"
           >
-            Return to Health OS
+            Return to Fat2Fit
           </Link>
         </div>
       </div>
