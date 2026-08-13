@@ -113,14 +113,30 @@ function FastListTab({ data, isLoading, onSave, queryKey, columns }: any) {
   });
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle>List Editor</CardTitle>
-        <Button size="sm" onClick={() => setItems([...items, { sort_order: items.length }])}>Add Row</Button>
+    <Card className="border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white">
+      <CardHeader className="flex flex-row justify-between items-center p-8 bg-slate-50/50 border-b border-slate-100">
+        <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Editor</CardTitle>
+        <Button 
+          size="sm" 
+          onClick={() => setItems([...items, { sort_order: items.length }])}
+          className="bg-accent text-white rounded-xl h-10 px-6 font-bold shadow-lg shadow-purple-100"
+        >
+          <Plus className="mr-2 h-4 w-4" /> Add Row
+        </Button>
       </CardHeader>
-      <CardContent>
-        {isLoading ? <Loader2 className="animate-spin" /> : (
+      <CardContent className="p-0">
+        {isLoading ? (
+          <div className="py-20 text-center"><Loader2 className="animate-spin h-6 w-6 text-slate-300 mx-auto" /></div>
+        ) : (
           <Table>
+            <TableHeader>
+              <TableRow className="border-slate-100 bg-slate-50/30 hover:bg-slate-50/30">
+                {columns.map((col: any) => (
+                  <TableHead key={col.field} className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">{col.label}</TableHead>
+                ))}
+                <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6 text-right pr-10">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
             <TableBody>
               {items.map((item: any, idx: number) => (
                 <TableRow key={idx}>
