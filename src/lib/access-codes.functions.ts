@@ -26,7 +26,7 @@ export const generateAccessCode = createServerFn({ method: "POST" })
     const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
-    const { error } = await supabase.from("access_codes").insert({ code: data.code, phone: "" });
+    const { error } = await supabase.from("access_codes").insert({ code: data.code });
     if (error) throw error;
     return { success: true };
   });

@@ -243,7 +243,7 @@ export const getAdminFAQs = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("faqs")
-      .select("id, category, question, answer, sort_order")
+      .select("id, question, answer, sort_order")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -253,7 +253,7 @@ export const saveFAQ = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     id: z.string().uuid().optional(),
-    category: z.string().nullable().optional(),
+    
     question: z.string(),
     answer: z.string(),
     sort_order: z.number().int()

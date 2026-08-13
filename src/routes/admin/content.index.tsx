@@ -84,7 +84,6 @@ function AdminContentManagement() {
             onSave={(data: any) => saveFAQ({ data })}
             queryKey={["admin-faqs"]}
             columns={[
-              { label: "Category", field: "category", type: "text" },
               { label: "Question", field: "question", type: "text" },
               { label: "Answer", field: "answer", type: "textarea" },
               { label: "Order", field: "sort_order", type: "number" }
