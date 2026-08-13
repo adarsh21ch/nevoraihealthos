@@ -58,8 +58,8 @@ function AdminDashboard() {
           
           <nav className="flex-1 space-y-2 overflow-y-auto pr-2 custom-scrollbar">
               <NavItem icon={LayoutDashboard} label="Overview" to="/admin" />
-              <NavItem icon={Users} label="Users" to="/admin/tenants" />
-              <NavItem icon={FileText} label="Content" to="/admin/content" />
+              <NavItem icon={Users} label="Users" to="/admin/tenants/" />
+              <NavItem icon={FileText} label="Content" to="/admin/content/" />
               <NavItem icon={Key} label="Access Codes" to="/admin/access-codes" />
               <NavItem icon={Settings} label="Settings" to="/admin/settings" />
           </nav>
