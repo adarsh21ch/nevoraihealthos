@@ -84,11 +84,14 @@ export const PillarCard = ({ number, title, description, icon: Icon }: { number:
 );
 
 export const StatBox = ({ label, value, description }: { label: string, value: string, description: string }) => (
-  <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center">
-    <div className="text-[12px] font-bold text-accent uppercase tracking-widest mb-2">{label}</div>
-    <div className="text-4xl font-bold text-ink mb-2">{value}</div>
-    <div className="text-sm text-slate-500">{description}</div>
-  </div>
+  <motion.div 
+    whileHover={{ y: -5 }}
+    className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 text-center transition-all hover:bg-white hover:shadow-xl group"
+  >
+    <div className="text-[12px] font-black text-accent uppercase tracking-[0.2em] mb-4 group-hover:scale-110 transition-transform">{label}</div>
+    <div className="text-5xl font-black text-ink mb-4 tracking-tighter">{value}</div>
+    <div className="text-base text-slate-500 font-medium leading-relaxed">{description}</div>
+  </motion.div>
 );
 
 export const StepIcon = ({ day, active, completed }: { day: number, active?: boolean, completed?: boolean }) => (
