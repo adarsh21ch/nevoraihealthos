@@ -167,15 +167,19 @@ function OnboardingPage() {
       });
 
       // Also update baseline measurements
-      await supabase.from("measurements").insert({
-        customer_id: me.id,
-        day_number: 1,
-        taken_on: new Date().toISOString().slice(0, 10),
-        weight_kg: Number(formData.weight_kg),
-        waist_cm: Number(formData.waist_cm),
-        hip_cm: formData.hip_cm ? Number(formData.hip_cm) : null,
-        thigh_cm: formData.thigh_cm ? Number(formData.thigh_cm) : null
-      } as any);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from("measurements").insert({
+          customer_id: me.id,
+          day_number: 1,
+          taken_on: new Date().toISOString().slice(0, 10),
+          weight_kg: Number(formData.weight_kg),
+          waist_cm: Number(formData.waist_cm),
+          hip_cm: formData.hip_cm ? Number(formData.hip_cm) : null,
+          thigh_cm: formData.thigh_cm ? Number(formData.thigh_cm) : null
+        } as any);
+      }
+
 
       toast.success("Profile completed!");
       navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: 'fat-to-fit' } as any });
@@ -191,6 +195,8 @@ function OnboardingPage() {
   };
 
   const currentStep = STEPS[step];
+  if (!currentStep) return null;
+
 
   return (
     <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 font-sans">
