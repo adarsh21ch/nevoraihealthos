@@ -223,7 +223,7 @@ function LoginPage() {
       <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 overflow-y-auto">
         <div className="w-full max-w-sm space-y-8 py-12">
           <div className="lg:hidden flex justify-center mb-8">
-            <div className="w-16 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-purple-200">F2F</div>
+            <AppLogo iconOnly />
           </div>
           
           <div className="space-y-2 text-center lg:text-left">
