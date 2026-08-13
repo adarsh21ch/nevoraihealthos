@@ -33,10 +33,10 @@ function AdminTenants() {
         <Table>
           <TableHeader>
             <TableRow className="border-slate-100 bg-slate-50/50 hover:bg-slate-50/50">
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Customer</TableHead>
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Phone</TableHead>
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Program</TableHead>
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Joined</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Customer</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Phone</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Program</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Joined</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
