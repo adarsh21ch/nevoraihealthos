@@ -166,7 +166,7 @@ function ProfilePage() {
                   Complete your profile to unlock your personalized AI nutrition plan.
                 </p>
                 <Button variant="link" asChild className="h-auto p-0 text-emerald-600 font-black text-[10px] uppercase tracking-widest">
-                  <Link to="/onboarding">Complete Profile</Link>
+                  <Link to="/onboarding" asAny>Complete Profile</Link>
                 </Button>
               </div>
             </div>
