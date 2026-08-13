@@ -103,20 +103,20 @@ export type Database = {
           completed_at: string | null
           created_at: string
           disclaimer_accepted_at: string | null
-          distributor_id: string
+          distributor_id: string | null
           fbo_id: string | null
           gender: string | null
           goal_weight_kg: number | null
           height_cm: number | null
           id: string
-          language: string
+          language: string | null
           name: string
           onboarding_complete: boolean
-          phone: string
+          phone: string | null
           program_id: string | null
           share_consent: boolean
           start_date: string | null
-          track: string
+          track: string | null
           updated_at: string
           user_id: string | null
         }
@@ -125,20 +125,20 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           disclaimer_accepted_at?: string | null
-          distributor_id?: string
+          distributor_id?: string | null
           fbo_id?: string | null
           gender?: string | null
           goal_weight_kg?: number | null
           height_cm?: number | null
           id?: string
-          language?: string
+          language?: string | null
           name?: string
           onboarding_complete?: boolean
-          phone: string
+          phone?: string | null
           program_id?: string | null
           share_consent?: boolean
           start_date?: string | null
-          track?: string
+          track?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -147,20 +147,20 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           disclaimer_accepted_at?: string | null
-          distributor_id?: string
+          distributor_id?: string | null
           fbo_id?: string | null
           gender?: string | null
           goal_weight_kg?: number | null
           height_cm?: number | null
           id?: string
-          language?: string
+          language?: string | null
           name?: string
           onboarding_complete?: boolean
-          phone?: string
+          phone?: string | null
           program_id?: string | null
           share_consent?: boolean
           start_date?: string | null
-          track?: string
+          track?: string | null
           updated_at?: string
           user_id?: string | null
         }
