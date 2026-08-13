@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -42,13 +42,13 @@ const STEPS = [
 
 function OnboardingPage() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [error, setError] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  const [step, setStep] = React.useState(0);
+  const [error, setError] = React.useState<string | null>(null);
+  const [isSaving, setIsSaving] = React.useState(false);
   const updateProfile = useServerFn(updateMyProfile);
 
   // Form State
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = React.useState({
     name: "",
     gender: "",
     dob: "",
@@ -87,7 +87,7 @@ function OnboardingPage() {
     },
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (me) {
       setFormData(prev => ({
         ...prev,
