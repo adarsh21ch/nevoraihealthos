@@ -57,7 +57,9 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       .from("customers")
       .insert({
         user_id: authUser.user.id,
-        phone: data.phone || signupValue,
+        phone: data.phone,
+        fbo_id: data.fbo_id,
+        facebook_id: data.facebook_id,
         name: "", // Initial empty name, will be filled in onboarding
       } as any)
       .select("id")
@@ -88,15 +90,23 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Try finding by phone (the identifier used for customers usually)
+    // Try finding by phone or Facebook ID or FBO ID
+    // We use .select("id, user_id") and cast to any to avoid TS errors with potentially missing columns
     const { data: customer } = await supabaseAdmin
       .from("customers")
-      .select("phone")
-      .eq("phone", data.identifier)
+      .select("user_id" as any)
+      .or(`phone.eq.${data.identifier},facebook_id.eq.${data.identifier},fbo_id.eq.${data.identifier}` as any)
       .maybeSingle();
-
-    if (customer) {
-      return { found: true, method: 'phone' as const, value: customer.phone };
+      
+    if (customer && (customer as any).user_id) {
+      // Find the user's email since signInWithPassword needs email or phone
+      const { data: user } = await supabaseAdmin.auth.admin.getUserById((customer as any).user_id);
+      if (user?.user?.email) {
+        return { found: true, method: 'email' as const, value: user.user.email };
+      }
+      if (user?.user?.phone) {
+        return { found: true, method: 'phone' as const, value: user.user.phone };
+      }
     }
 
     return { found: false };

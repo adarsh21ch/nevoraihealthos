@@ -35,10 +35,10 @@ function JoinPage() {
   const navigate = useNavigate();
   const signUp = useServerFn(createCustomerAccount);
 
-  const [mode, setMode] = useState<"email" | "phone" | "facebook">("email");
   const [fboId, setFboId] = useState("");
   const [accessCode, setAccessCode] = useState("");
-  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [facebookId, setFacebookId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -66,13 +66,9 @@ function JoinPage() {
 
     if (!fboId.trim()) return setError("Enter your FBO / distributor ID");
     if (!accessCode.trim()) return setError("Enter the access code your coach shared");
-    
-    if (mode === "facebook") {
-      if (!facebookId.trim()) return setError("Enter your Facebook ID");
-    } else {
-      if (!contact.trim()) return setError(mode === "email" ? "Enter your email" : "Enter your phone number");
-    }
-    
+    if (!email.trim()) return setError("Enter your email address");
+    if (!phone.trim()) return setError("Enter your phone number");
+    if (!facebookId.trim()) return setError("Enter your Facebook ID");
     if (password.length < 6) return setError("Password must be at least 6 characters");
 
     setIsLoading(true);
@@ -82,20 +78,17 @@ function JoinPage() {
           tenant_slug: tenantSlug,
           access_code: accessCode.trim(),
           fbo_id: fboId.trim(),
-          email: mode === "email" ? contact.trim() : null,
-          phone: mode === "phone" ? contact.trim() : null,
-          facebook_id: mode === "facebook" ? facebookId.trim() : null,
+          email: email.trim(),
+          phone: phone.trim(),
+          facebook_id: facebookId.trim(),
           password,
         },
       });
 
-      const { error: signInError } = await supabase.auth.signInWithPassword(
-        mode === "facebook" 
-          ? { email: `${facebookId.trim()}@facebook.temp`, password } // Mock for now
-          : mode === "email"
-            ? { email: contact.trim(), password }
-            : { phone: contact.trim(), password },
-      );
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
       if (signInError) throw signInError;
 
       navigate({ to: "/onboarding" });
@@ -121,27 +114,13 @@ function JoinPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl">
-          {(["email", "phone", "facebook"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => {
-                setMode(m);
-                setError(null);
-              }}
-              className={`py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
-                mode === m ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
-              }`}
-            >
-              {m === "facebook" ? "FB ID" : m}
-            </button>
-          ))}
+        <div className="bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-sm">
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">Program Enrollment</p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-sm"
+          className="bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-sm -mt-6"
         >
           {error && (
             <div className="p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-xs font-bold">
@@ -180,27 +159,47 @@ function JoinPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="contact" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              {mode === "email" ? "Email Address" : mode === "phone" ? "Phone Number" : "Facebook ID"}
+            <Label htmlFor="email" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Email Address
             </Label>
-            {mode === "facebook" ? (
-              <Input
-                id="contact"
-                placeholder="Your FB profile ID"
-                value={facebookId}
-                onChange={(e) => setFacebookId(e.target.value)}
-                className="h-12 rounded-xl border-slate-200"
-              />
-            ) : (
-              <Input
-                id="contact"
-                type={mode === "email" ? "email" : "tel"}
-                placeholder={mode === "email" ? "name@example.com" : "+91 ..."}
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                className="h-12 rounded-xl border-slate-200"
-              />
-            )}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-12 rounded-xl border-slate-200"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="phone" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Phone Number
+            </Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+91 ..."
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="h-12 rounded-xl border-slate-200"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="facebookId" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Facebook ID
+            </Label>
+            <Input
+              id="facebookId"
+              placeholder="Your FB profile ID"
+              value={facebookId}
+              onChange={(e) => setFacebookId(e.target.value)}
+              className="h-12 rounded-xl border-slate-200"
+              required
+            />
           </div>
 
           <div className="space-y-1.5">
