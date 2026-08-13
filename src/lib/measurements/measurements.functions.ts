@@ -38,7 +38,7 @@ export const addMeasurement = createServerFn({ method: "POST" })
       .from("measurements")
       .insert({
         customer_id: customerId,
-        taken_on: (rest.taken_on || new Date().toISOString()).split('T')[0],
+        taken_on: (rest.taken_on || new Date().toISOString()).split('T')[0]!,
         day_number: rest.day_number,
         weight_kg: rest.weight_kg ?? null,
         waist_cm: rest.waist_cm ?? null,

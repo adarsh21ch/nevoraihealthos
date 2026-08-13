@@ -42,6 +42,7 @@ export type TodayDataResult = {
 
 export const getTodayData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
+  .inputValidator(z.any().optional().parse)
   .handler(async ({ context }): Promise<TodayDataResult> => {
     const { supabase, userId } = context;
 

@@ -24,7 +24,7 @@ function TodayPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['today', tenantSlug],
-    queryFn: () => getTodayFn({ data: { tenantSlug } }),
+    queryFn: () => getTodayFn({}),
   });
 
   useEffect(() => {

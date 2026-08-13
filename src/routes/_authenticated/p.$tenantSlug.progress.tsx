@@ -36,7 +36,7 @@ function ProgressPage() {
 
   const { data: todayData } = useQuery({
     queryKey: ['today', tenantSlug],
-    queryFn: () => getTodayFn({ data: { tenantSlug } }),
+    queryFn: () => getTodayFn({}),
   });
 
   const customerId = todayData && !('redirect' in todayData) ? (todayData as any).customer?.id : null;

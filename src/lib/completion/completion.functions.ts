@@ -18,7 +18,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
     const { data: program } = await supabase
       .from("programs")
       .select("id, name, duration_days, next_program_code")
-      .eq("id", customer.program_id)
+      .eq("id", customer.program_id!)
       .maybeSingle();
 
     const { data: measurements } = await supabase
