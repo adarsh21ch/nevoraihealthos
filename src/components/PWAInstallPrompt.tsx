@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Share, PlusSquare, X } from "lucide-react";
 import { AppLogo } from "./ui/app-logo";
@@ -6,11 +6,11 @@ import { AppLogo } from "./ui/app-logo";
 import { toast } from "sonner";
 
 export function PWAInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [platform, setPlatform] = useState<"ios" | "android" | "other" | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
+  const [showPrompt, setShowPrompt] = React.useState(false);
+  const [platform, setPlatform] = React.useState<"ios" | "android" | "other" | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Detect platform
     const ua = window.navigator.userAgent.toLowerCase();
     if (/iphone|ipad|ipod/.test(ua)) {
