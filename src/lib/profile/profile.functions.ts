@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export interface ParticipantProfile {
   id: string;
+  user_id: string | null;
   name: string;
   gender: string | null;
   age: number | null;
@@ -25,7 +26,7 @@ export interface ParticipantProfile {
   meal_timing: any | null;
   health_concerns: string | null;
   onboarding_complete: boolean;
-  track: 'standard' | 'DX4' | null;
+  track: string | null;
 }
 
 export const getMyProfile = createServerFn({ method: "GET" })
@@ -39,7 +40,7 @@ export const getMyProfile = createServerFn({ method: "GET" })
       .single();
 
     if (error) throw error;
-    return data as ParticipantProfile;
+    return (data as unknown) as ParticipantProfile;
   });
 
 export const updateMyProfile = createServerFn({ method: "POST" })
@@ -65,7 +66,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     cooking_access: z.string().nullable().optional(),
     meal_timing: z.any().nullable().optional(),
     health_concerns: z.string().nullable().optional(),
-    track: z.enum(['standard', 'DX4']).nullable().optional(),
+    track: z.string().nullable().optional(),
     onboarding_complete: z.boolean().optional()
   }).parse)
   .handler(async ({ context, data }) => {
