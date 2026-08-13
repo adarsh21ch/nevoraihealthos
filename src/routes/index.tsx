@@ -57,14 +57,14 @@ function Index() {
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeader title="Everything your journey needs." />
           <div className="grid md:grid-cols-4 gap-6">
-            <PillarCard number={1} title="Set a Goal" description="Define your path." />
-            <PillarCard number={2} title="Guided Intake" description="Program supplement support." />
-            <PillarCard number={3} title="Proper Hydration" description="Track every glass." />
-            <PillarCard number={4} title="Body Awareness" description="Measure and track." />
-            <PillarCard number={5} title="Healthy Recipes" description="C9-approved meals." />
-            <PillarCard number={6} title="Light Movement" description="Stay active daily." />
-            <PillarCard number={7} title="Share Experience" description="Connect with your coach." />
-            <PillarCard number={8} title="Celebrate" description="Review your journey." />
+            <PillarCard number={1} title="Set a Goal" description="Define your path." icon={Goal} />
+            <PillarCard number={2} title="Guided Intake" description="Program supplement support." icon={Activity} />
+            <PillarCard number={3} title="Proper Hydration" description="Track every glass." icon={Droplets} />
+            <PillarCard number={4} title="Body Awareness" description="Measure and track." icon={BarChart3} />
+            <PillarCard number={5} title="Healthy Recipes" description="C9-approved meals." icon={Utensils} />
+            <PillarCard number={6} title="Light Movement" description="Stay active daily." icon={Sparkles} />
+            <PillarCard number={7} title="Share Experience" description="Connect with your coach." icon={Users} />
+            <PillarCard number={8} title="Celebrate" description="Review your journey." icon={Award} />
           </div>
         </div>
       </section>
