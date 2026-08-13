@@ -44,25 +44,21 @@ function JoinPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: tenant } = useQuery({
-    queryKey: ["public-tenant", tenantSlug],
+  const { data: settings } = useQuery({
+    queryKey: ["app-settings"],
     staleTime: 1000 * 60 * 30,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tenants")
-        .select("name, tagline, logo_url, primary_color")
-        .eq("slug", tenantSlug)
+        .from("app_settings")
+        .select("brand_name, tagline")
+        .eq("id", true)
         .maybeSingle();
       if (error) throw error;
       return data;
     },
   });
 
-  useEffect(() => {
-    if (tenant?.primary_color) {
-      document.documentElement.style.setProperty("--accent", tenant.primary_color);
-    }
-  }, [tenant?.primary_color]);
+  // Removed primary color injection as it's now global Fat2Fit theme
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,26 +110,14 @@ function JoinPage() {
     <div className="min-h-screen bg-surface font-sans flex flex-col items-center px-5 py-10">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center space-y-3">
-          {tenant?.logo_url ? (
-            <img
-              src={tenant.logo_url}
-              alt={`${tenant.name} logo`}
-              width={64}
-              height={64}
-              loading="lazy"
-              decoding="async"
-              className="w-16 h-16 rounded-2xl object-cover mx-auto border border-slate-100"
-            />
-          ) : (
-            <div className="w-14 h-14 bg-ink text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto">
-              {(tenant?.name ?? "H").charAt(0)}
-            </div>
-          )}
+          <div className="w-14 h-14 bg-ink text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto">
+            {(settings?.brand_name || "F").charAt(0)}
+          </div>
           <h1 className="text-3xl font-bold tracking-tight text-ink">
-            {tenant?.name ? `Join ${tenant.name}` : "Join Fat2Fit"}
+            {settings?.brand_name ? `Join ${settings.brand_name}` : "Join Fat2Fit"}
           </h1>
           <p className="text-muted font-medium">
-            {tenant?.tagline ?? "Set up your account to start your program."}
+            {settings?.tagline ?? "Set up your account to start your program."}
           </p>
         </div>
 

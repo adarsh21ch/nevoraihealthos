@@ -1,79 +1,52 @@
-import { createFileRoute, Outlet, useLoaderData } from '@tanstack/react-router';
-import { Home, Calendar, Trophy, Package, BookOpen, Loader2, MessageCircle } from 'lucide-react';
+import { createFileRoute, Outlet, useLoaderData, redirect } from '@tanstack/react-router';
+import { Home, Calendar, Trophy, Package, BookOpen, MessageCircle } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
-  loader: async ({ params, context }: { params: { tenantSlug: string }, context: any }) => {
-    // If we have a tenant from the root loader (custom domain), use it
-    if (context.tenant && (context.tenant as any).slug === params.tenantSlug) {
-      return { tenant: context.tenant as any };
+  loader: async ({ params }) => {
+    if (params.tenantSlug !== 'fat2fit') {
+      throw redirect({ to: '/p/fat2fit/today' as any });
     }
-
-    const { data: tenant, error } = await supabase
-      .from('tenants')
-      .select('id, name, slug, logo_url, primary_color, tagline, whatsapp, custom_domain')
-      .eq('slug', params.tenantSlug)
-      .single();
-    
-    if (error || !tenant) {
-      return { tenant: null, error: "Tenant not found" };
-    }
-    return { tenant };
+    return {
+      tenant: {
+        id: 'fat2fit-id',
+        name: 'Fat2Fit',
+        slug: 'fat2fit',
+        primary_color: '#16a34a',
+        tagline: 'Your 9-day reset, guided day by day.',
+        whatsapp: '+919876543210'
+      }
+    };
   },
   component: TenantLayout,
 });
 
 function TenantLayout() {
-  const { tenantSlug } = Route.useParams();
-  const { tenant, error } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' });
+  const { tenant } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' });
   const location = useLocation();
-
-  if (error || !tenant) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-surface text-center">
-        <div className="max-w-md space-y-4">
-          <h1 className="text-2xl font-bold text-slate-900">Tenant Not Found</h1>
-          <p className="text-slate-500">The distributor link you followed is invalid or has been moved.</p>
-          <Link to="/" className="accent-text font-bold">Return Home</Link>
-        </div>
-      </div>
-    );
-  }
-
-// Removed is_active check since column is removed
 
   const primaryColor = tenant.primary_color || '#16a34a';
 
   const navItems = [
-    { label: 'Today', icon: Home, href: `/p/${tenantSlug}/today` },
-    { label: 'Journey', icon: Calendar, href: `/p/${tenantSlug}/journey` },
-    { label: 'Diet', icon: Trophy, href: `/p/${tenantSlug}/diet` },
-    { label: 'Kit', icon: Package, href: `/p/${tenantSlug}/kit` },
-    { label: 'Guide', icon: BookOpen, href: `/p/${tenantSlug}/guide` },
+    { label: 'Today', icon: Home, href: `/p/fat2fit/today` },
+    { label: 'Journey', icon: Calendar, href: `/p/fat2fit/journey` },
+    { label: 'Diet', icon: Trophy, href: `/p/fat2fit/diet` },
+    { label: 'Kit', icon: Package, href: `/p/fat2fit/kit` },
+    { label: 'Guide', icon: BookOpen, href: `/p/fat2fit/guide` },
   ];
 
   return (
     <div className="min-h-screen bg-surface pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {tenant.logo_url ? (
-            <img 
-              src={tenant.logo_url} 
-              className="h-8 w-auto object-contain rounded-lg" 
-              loading="lazy" 
-              alt={tenant.name} 
-            />
-          ) : (
-            <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg">
-              {tenant.name.charAt(0)}
-            </div>
-          )}
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg">
+            F
+          </div>
           <div>
-            <h1 className="text-sm font-bold text-slate-900 leading-none">{tenant.name}</h1>
-            {tenant.tagline && <p className="text-[10px] text-slate-400 font-medium mt-1">{tenant.tagline}</p>}
+            <h1 className="text-sm font-bold text-slate-900 leading-none">Fat2Fit</h1>
+            <p className="text-[10px] text-slate-400 font-medium mt-1">Your 9-day reset</p>
           </div>
         </div>
         <div className="flex items-center gap-2">

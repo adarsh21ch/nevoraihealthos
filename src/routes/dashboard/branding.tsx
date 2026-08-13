@@ -1,7 +1,7 @@
 import { createFileRoute, useLoaderData, useNavigate, Link } from "@tanstack/react-router";
-import { Palette, Upload, Loader2, Save } from "lucide-react";
+import { Upload, Loader2, Save } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Key, Settings as SettingsIcon } from "lucide-react";
+import { Shield, Settings as SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,51 +9,51 @@ import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { getMyTenantAccessCode } from "@/lib/admin.functions";
+import { getAppSettings } from "@/lib/tenant.functions";
+import { updateAppSettings } from "@/lib/admin.functions";
 import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/dashboard/branding")({
   loader: async () => {
-    const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { data: tenant } = await supabase.from('tenants').select('id, name, tagline, logo_url, primary_color, whatsapp').eq('id', (authContext as any).tenant_id).single();
-    return { tenant };
+    return {};
   },
   component: BrandingPage,
 });
 
 function BrandingPage() {
-  const { tenant } = useLoaderData({ from: '/dashboard/branding' });
   const navigate = useNavigate();
-  const fetchAccessCode = useServerFn(getMyTenantAccessCode);
+  const getSettingsFn = useServerFn(getAppSettings);
+  const updateSettingsFn = useServerFn(updateAppSettings);
   
-  const { data: creds } = useQuery({
-    queryKey: ["my-tenant-access-code"],
-    queryFn: () => fetchAccessCode(),
+  const { data: result } = useQuery({
+    queryKey: ["app-settings"],
+    queryFn: () => getSettingsFn(),
   });
 
+  const settings = result?.settings;
+
   const [formData, setFormData] = useState({
-    name: (tenant as any)?.name || "",
-    tagline: (tenant as any)?.tagline || "",
-    primaryColor: (tenant as any)?.primary_color || "#000000",
-    logoUrl: (tenant as any)?.logo_url || "",
-    whatsapp: (tenant as any)?.whatsapp || ""
+    name: settings?.brand_name || "Fat2Fit",
+    tagline: settings?.tagline || "",
+    whatsapp: settings?.whatsapp_number || ""
   });
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
-    const { error } = await supabase.from('tenants').update({
-      name: formData.name,
-      tagline: formData.tagline,
-      primary_color: formData.primaryColor,
-      logo_url: formData.logoUrl,
-      whatsapp: formData.whatsapp
-    } as any).eq('id', (tenant as any)?.id);
-
-    if (error) toast.error(error.message);
-    else {
+    try {
+      await updateSettingsFn({
+        data: {
+          brand_name: formData.name,
+          tagline: formData.tagline,
+          whatsapp_number: formData.whatsapp,
+          health_disclaimer: settings?.health_disclaimer || "",
+          results_disclaimer: settings?.results_disclaimer || ""
+        }
+      });
       toast.success("Settings updated");
-      navigate({ to: "." }); // Refresh loader data
+    } catch (error: any) {
+      toast.error(error.message);
     }
     setIsSaving(false);
   };
@@ -66,7 +66,7 @@ function BrandingPage() {
           <div className="grid md:grid-cols-2 gap-10">
             <div className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Brand / Website Name</Label>
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Brand Name</Label>
                 <Input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="h-12 rounded-xl" />
               </div>
               <div className="space-y-2">
@@ -78,50 +78,11 @@ function BrandingPage() {
                 <Input value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="h-12 rounded-xl" />
               </div>
             </div>
-            <div className="space-y-6 text-center">
-              <div className="w-32 h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 mx-auto flex items-center justify-center overflow-hidden">
-                {formData.logoUrl ? <img src={formData.logoUrl} className="w-full h-full object-contain p-4" loading="lazy" alt="" /> : <Upload className="w-8 h-8 text-slate-300" />}
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Primary Color</Label>
-                <div className="flex gap-4 items-center justify-center">
-                  <Input type="color" value={formData.primaryColor} onChange={e => setFormData({...formData, primaryColor: e.target.value})} className="w-12 h-12 p-1 rounded-xl" />
-                  <code className="font-bold text-slate-900">{formData.primaryColor}</code>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="space-y-8">
-            <div className="p-8 bg-slate-900 rounded-[2rem] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-slate-900/20">
-              <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-white/10 rounded-[1.5rem] flex items-center justify-center border border-white/10">
-                  <Shield className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">Access Security</h3>
-                  <div className="text-3xl font-black tracking-tighter flex items-center gap-3">
-                    {creds?.accessCode || "••••••"}
-                    <span className="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/20 font-bold uppercase tracking-widest">Active</span>
-                  </div>
-                  <p className="text-xs text-white/50 font-bold mt-1">Required for all new customer registrations.</p>
-                </div>
-              </div>
-              <Button 
-                asChild
-                className="h-12 px-6 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition-all shadow-lg active:scale-95"
-              >
-                <Link to="/dashboard/access">
-                  <SettingsIcon className="w-4 h-4 mr-2" />
-                  Manage Access
-                </Link>
-              </Button>
-            </div>
-
-            <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-slate-900 text-white font-bold rounded-2xl text-lg shadow-xl shadow-slate-900/10 transition-all active:scale-95">
-              {isSaving ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-5 h-5" />} Save Changes
-            </Button>
-          </div>
+          <Button onClick={handleSave} disabled={isSaving} className="w-full h-14 bg-slate-900 text-white font-bold rounded-2xl text-lg shadow-xl shadow-slate-900/10 transition-all active:scale-95">
+            {isSaving ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2 w-5 h-5" />} Save Changes
+          </Button>
         </CardContent>
       </Card>
     </div>

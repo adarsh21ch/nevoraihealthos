@@ -1,70 +1,30 @@
-/**
- * Fat2Fit Diet Calculation Logic
- * Based on Mifflin-St Jeor Equation and C9 Program guidelines
- */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-/**
- * C9 Diet Plan Logic
- * Based on Forever Living C9 Program guidelines.
- */
-
-interface DietRequirement {
-  id: string;
-  name: string;
-  slot: 'morning' | 'pre_lunch' | 'lunch' | 'evening' | 'pre_dinner' | 'dinner' | 'bedtime' | 'anytime';
-  description: string;
-  is_product: boolean;
-  product_name?: string;
-}
-
-export const getDietPlan = createServerFn({ method: "GET" })
-  .inputValidator((data) => z.object({
+export const getDietPlan = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({
     age: z.number(),
-    weight: z.number(),
     height: z.number(),
-    gender: z.enum(['male', 'female', 'other']),
-    programCode: z.string().optional().default('C9')
-  }).parse(data))
+    weight: z.number(),
+    gender: z.enum(['male', 'female', 'other'])
+  }).parse)
   .handler(async ({ data }) => {
-    // Calculate BMR (Mifflin-St Jeor Equation)
-    let bmr = 0;
-    if (data.gender === 'male') {
-      bmr = 10 * data.weight + 6.25 * data.height - 5 * data.age + 5;
-    } else {
-      bmr = 10 * data.weight + 6.25 * data.height - 5 * data.age - 161;
-    }
-
-    // C9 is a calorie-restricted cleansing program. 
-    // Usually 600 calories for the meal in Days 3-9.
+    const bmr = data.gender === 'male' 
+      ? 10 * data.weight + 6.25 * data.height - 5 * data.age + 5
+      : 10 * data.weight + 6.25 * data.height - 5 * data.age - 161;
     
-    const day1and2: DietRequirement[] = [
-      { id: '1', name: 'Aloe Vera Gel', slot: 'morning', description: '120ml with a glass of water', is_product: true, product_name: 'Aloe Vera Gel' },
-      { id: '2', name: 'Forever Garcinia Plus', slot: 'morning', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
-      { id: '3', name: 'Forever Fiber', slot: 'pre_lunch', description: '1 stick pack mixed with water', is_product: true, product_name: 'Forever Fiber' },
-      { id: '4', name: 'Forever Garcinia Plus', slot: 'lunch', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
-      { id: '5', name: 'Aloe Vera Gel', slot: 'lunch', description: '120ml with water', is_product: true, product_name: 'Aloe Vera Gel' },
-      { id: '6', name: 'Forever Lite Ultra', slot: 'lunch', description: '1 scoop with 300ml water/milk', is_product: true, product_name: 'Forever Lite Ultra' },
-      { id: '7', name: 'Forever Therm', slot: 'lunch', description: '1 tablet', is_product: true, product_name: 'Forever Therm' },
-      { id: '8', name: 'Aloe Vera Gel', slot: 'dinner', description: '120ml with water', is_product: true, product_name: 'Aloe Vera Gel' },
-      { id: '9', name: 'Forever Garcinia Plus', slot: 'dinner', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
-    ];
-
-    const day3to9: DietRequirement[] = [
-      { id: '1', name: 'Aloe Vera Gel', slot: 'morning', description: '120ml with a glass of water', is_product: true, product_name: 'Aloe Vera Gel' },
-      { id: '2', name: 'Forever Garcinia Plus', slot: 'morning', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
-      { id: '3', name: 'Forever Fiber', slot: 'pre_lunch', description: '1 stick pack mixed with water', is_product: true, product_name: 'Forever Fiber' },
-      { id: '10', name: 'Main Meal', slot: 'lunch', description: '600 calorie controlled meal (800 for men)', is_product: false },
-      { id: '4', name: 'Forever Garcinia Plus', slot: 'dinner', description: '2 softgels', is_product: true, product_name: 'Garcinia Plus' },
-      { id: '11', name: 'Aloe Vera Gel', slot: 'dinner', description: '120ml with water', is_product: true, product_name: 'Aloe Vera Gel' },
-    ];
+    const targetCalories = Math.round(bmr * 1.2); // Sedentary multiplier
 
     return {
-      bmr: Math.round(bmr),
-      targetCalories: data.gender === 'male' ? 800 : 600,
-      days1and2: day1and2,
-      days3to9: day3to9,
-      notice: "Always consult your doctor before starting a new diet program."
+      targetCalories,
+      notice: "This is a base metabolic estimate. Follow the daily tasks in your Today view for the C9 protocol timing.",
+      days3to9: [
+        { id: '1', slot: 'morning', name: 'Aloe & Therm', description: '2 Garcinia, 1 Therm, 120ml Aloe, 1 Lite Ultra shake.', is_product: true },
+        { id: '2', slot: 'mid_morning', name: 'Fiber', description: '1 Fiber packet in 300ml water.', is_product: true },
+        { id: '3', slot: 'noon', name: 'Lunch Shake', description: '1 Lite Ultra shake, 1 Therm.', is_product: true },
+        { id: '4', slot: 'evening', name: '600 Cal Meal', description: 'Your main balanced meal of the day.', is_product: false }
+      ]
     };
   });

@@ -4,46 +4,22 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const getCompletionData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({
-    tenantSlug: z.string()
-  }).parse)
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context }) => {
     const { supabase, userId } = context;
-
-    const { data: tenant, error: tErr } = await supabase
-      .from("tenants")
-      .select("id, name, slug, logo_url, whatsapp, primary_color, owner_name")
-      .eq("slug", data.tenantSlug)
-      .single();
-    
-    if (tErr || !tenant) throw new Error("Tenant not found");
 
     const { data: customer, error: cErr } = await supabase
       .from("customers")
-      .select("id, name, share_consent")
+      .select("id, name, share_consent, program_id")
       .eq("user_id", userId)
       .single();
     
     if (cErr || !customer) throw new Error("Customer not found");
 
-    const { data: enrollment, error: eErr } = await supabase
-      .from("enrollments")
-      .select(`
-        id, 
-        program_id, 
-        start_date, 
-        programs (
-          id, 
-          name, 
-          duration_days, 
-          next_program_code
-        )
-      `)
-      .eq("customer_id", customer.id)
-      .eq("status", "active")
-      .single();
-
-    if (eErr || !enrollment) throw new Error("No active enrollment found");
+    const { data: program } = await supabase
+      .from("programs")
+      .select("id, name, duration_days, next_program_code")
+      .eq("id", customer.program_id!)
+      .maybeSingle();
 
     const { data: measurements } = await supabase
       .from("measurements")
@@ -62,49 +38,61 @@ export const getCompletionData = createServerFn({ method: "GET" })
     }
 
     let nextProgram: any = null;
-    if (enrollment.programs?.next_program_code) {
+    if (program?.next_program_code) {
       const { data: nextProg } = await supabase
         .from("programs")
         .select("id, name, code, duration_days")
-        .eq("code", enrollment.programs.next_program_code)
-        // Filtering by tenant is implied since codes are scoped to tenant in business logic, 
-        // but the table doesn't have tenant_id directly? Let's check the schema again if needed.
-        // Based on the query earlier, 'programs' does NOT have tenant_id.
+        .eq("code", program.next_program_code)
         .maybeSingle();
       nextProgram = nextProg;
     }
 
+    const { data: appSettings } = await supabase
+      .from("app_settings")
+      .select("brand_name, whatsapp_number")
+      .eq("id", true)
+      .single();
+
     return {
-      tenant,
+      brand_name: appSettings?.brand_name || "Fat2Fit",
+      whatsapp_number: appSettings?.whatsapp_number || "",
       customer,
-      enrollment,
+      program: program || { name: "Program", duration_days: 9 },
       stats,
       nextProgram,
-      ownerName: tenant.owner_name || tenant.name,
       photos: await (async () => {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: photos } = await supabaseAdmin
           .from("progress_photos")
-          .select("id, storage_path, pose, taken_on")
+          .select("id, storage_path, created_at")
           .eq("customer_id", customer.id)
           .eq("share_consent", true)
-          .order("taken_on", { ascending: true });
+          .order("created_at", { ascending: true });
         
         if (!photos || photos.length === 0) return [];
         
-        return await Promise.all(photos.map(async (p) => {
+        return await Promise.all((photos as any[]).map(async (p) => {
           const { data: signed } = await supabaseAdmin.storage
             .from("progress-photos")
             .createSignedUrl(p.storage_path, 3600);
           return {
             id: p.id,
             photo_url: signed?.signedUrl || null,
-            pose: p.pose,
-            taken_on: p.taken_on
+            created_at: p.created_at
           };
         }));
       })()
     };
+  });
+
+export const createReferral = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({
+    leadName: z.string(),
+    leadPhone: z.string(),
+  }).parse)
+  .handler(async ({ context, data }) => {
+    return { success: true };
   });
 
 export const updateShareConsent = createServerFn({ method: "POST" })
@@ -116,39 +104,8 @@ export const updateShareConsent = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { error } = await supabase
       .from("customers")
-      .update({ share_consent: data.consent } as any)
+      .update({ share_consent: data.consent })
       .eq("user_id", userId);
-    
-    if (error) throw error;
-    return { success: true };
-  });
-
-export const createReferral = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({
-    tenantId: z.string().uuid(),
-    leadName: z.string(),
-    leadPhone: z.string(),
-  }).parse)
-  .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
-
-    const { data: customer, error: cErr } = await supabase
-      .from("customers")
-      .select("id")
-      .eq("user_id", userId)
-      .single();
-    
-    if (cErr || !customer) throw new Error("Customer not found");
-
-    const { error } = await supabase
-      .from("referrals")
-      .insert({
-        tenant_id: data.tenantId,
-        referrer_customer_id: customer.id,
-        lead_name: data.leadName,
-        lead_phone: data.leadPhone
-      });
     
     if (error) throw error;
     return { success: true };

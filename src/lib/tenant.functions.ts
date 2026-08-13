@@ -1,6 +1,24 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+export const getAppSettings = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    const { data: settings, error } = await supabaseAdmin
+      .from('app_settings')
+      .select('*')
+      .eq('id', true)
+      .maybeSingle();
+      
+    if (error) {
+      console.error("Error fetching app settings:", error);
+      return { settings: null, error: error.message };
+    }
+    
+    return { settings };
+  });
+
 export const getTenantByHint = createServerFn({ method: "GET" })
   .inputValidator((data) => z.object({
     mode: z.enum(['slug', 'domain']),
@@ -9,22 +27,25 @@ export const getTenantByHint = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    let query = supabaseAdmin
-      .from('tenants')
-      .select('id, slug, name, logo_url, primary_color, tagline, whatsapp, custom_domain');
+    const { data: tenant, error } = await supabaseAdmin
+      .from('app_settings')
+      .select('*')
+      .eq('id', true)
+      .maybeSingle();
       
-    if (data.mode === 'slug') {
-      query = query.eq('slug', data.value);
-    } else {
-      query = query.eq('custom_domain' as any, data.value);
-    }
-    
-    const { data: tenant, error } = await query.maybeSingle();
-    
     if (error) {
-      console.error("Error fetching tenant by hint:", error);
       return { tenant: null, error: error.message };
     }
     
-    return { tenant };
+    // Mock a tenant object for compatibility
+    return { 
+      tenant: {
+        id: 'fat2fit-id',
+        slug: 'fat2fit',
+        name: tenant?.brand_name || 'Fat2Fit',
+        tagline: tenant?.tagline,
+        primary_color: '#16a34a',
+        logo_url: null
+      }
+    };
   });

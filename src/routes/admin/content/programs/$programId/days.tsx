@@ -6,7 +6,7 @@ import { getProgramDays, saveProgramDay, saveDayTask, deleteDayTask, duplicatePr
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, ChevronLeft, Copy } from "lucide-react";
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/admin/content/programs/$programId/days")(
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw redirect({ to: "/login" });
     const { data: context } = await supabase.rpc("get_my_auth_context");
-    if ((context as any)?.role !== "platform_admin") throw redirect({ to: "/" });
+    if ((context as any)?.role !== "admin") throw redirect({ to: "/" });
   },
   component: DayBuilder,
 });
@@ -38,11 +38,6 @@ function DayBuilder() {
   const { data: days, isLoading: loadingDays } = useQuery({
     queryKey: ["program-days", programId],
     queryFn: () => getDaysFn({ data: { programId } }),
-  });
-
-  const { data: products } = useQuery({
-    queryKey: ["admin-products"],
-    queryFn: () => getProductsFn(),
   });
 
   const dayMutation = useMutation({
@@ -65,9 +60,7 @@ function DayBuilder() {
 
   if (loadingDays) return <div className="p-8 text-center"><Loader2 className="animate-spin mx-auto" /></div>;
 
-  const activeDay = days?.find(d => d.id === activeDayId) || days?.[0];
-
-  const completedDaysCount = days?.filter(d => d.title && d.day_tasks?.length > 0).length || 0;
+  const activeDay = (days as any[])?.find(d => d.id === activeDayId) || (days as any[])?.[0];
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
@@ -78,14 +71,11 @@ function DayBuilder() {
           </Button>
           <h1 className="text-2xl font-bold">Program Builder</h1>
         </div>
-        <div className="text-sm font-bold bg-slate-100 px-4 py-2 rounded-full">
-          {completedDaysCount} / {days?.length} Days Completed
-        </div>
       </div>
 
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-3 space-y-2">
-          {days?.map(day => (
+          {(days as any[])?.map(day => (
             <button
               key={day.id}
               onClick={() => setActiveDayId(day.id)}
@@ -102,7 +92,7 @@ function DayBuilder() {
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold">Editing Day {activeDay.day_number}</h2>
                 <Button size="sm" variant="outline" onClick={() => {
-                  const prevDay = days?.find(d => d.day_number === activeDay.day_number - 1);
+                  const prevDay = (days as any[])?.find(d => d.day_number === activeDay.day_number - 1);
                   if (prevDay) duplicateMutation.mutate({ fromDayId: prevDay.id, toDayId: activeDay.id });
                 }}>
                   <Copy className="h-4 w-4 mr-2" /> Copy Tasks from Previous
@@ -113,17 +103,17 @@ function DayBuilder() {
                 <CardContent className="p-4 space-y-4">
                   <Input defaultValue={activeDay.title} placeholder="Title" onBlur={(e) => dayMutation.mutate({ ...activeDay, title: e.target.value })} />
                   <Input defaultValue={activeDay.focus || ""} placeholder="Focus" onBlur={(e) => dayMutation.mutate({ ...activeDay, focus: e.target.value })} />
-                  <Textarea defaultValue={activeDay.motivation || ""} placeholder="Motivation" onBlur={(e) => dayMutation.mutate({ ...activeDay, motivation: e.target.value })} />
+                  <Textarea defaultValue={activeDay.tip || ""} placeholder="Tip" onBlur={(e) => dayMutation.mutate({ ...activeDay, tip: e.target.value })} />
                 </CardContent>
               </Card>
 
               <div className="space-y-4">
-                {activeDay.day_tasks?.sort((a: any, b: any) => a.sort_order - b.sort_order).map((task: any) => (
+                {(activeDay.day_tasks || [])?.sort((a: any, b: any) => a.sort_order - b.sort_order).map((task: any) => (
                   <div key={task.id} className="flex gap-2 items-center bg-white p-2 rounded-lg border shadow-sm">
-                    <Select defaultValue={task.time_slot} onValueChange={(v) => taskMutation.mutate({ ...task, time_slot: v })}>
+                    <Select defaultValue={task.slot} onValueChange={(v) => taskMutation.mutate({ ...task, slot: v })}>
                       <SelectTrigger className="w-[120px]"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        {["morning", "lunch", "dinner", "anytime"].map(s => <SelectItem value={s}>{s}</SelectItem>)}
+                        {["morning", "mid_morning", "noon", "early_evening", "evening", "all_day"].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <Input className="flex-1" defaultValue={task.title} onBlur={(e) => taskMutation.mutate({ ...task, title: e.target.value })} />
@@ -132,7 +122,7 @@ function DayBuilder() {
                     </Button>
                   </div>
                 ))}
-                <Button onClick={() => taskMutation.mutate({ program_day_id: activeDay.id, title: "New Task", time_slot: "morning", sort_order: activeDay.day_tasks.length })}>
+                <Button onClick={() => taskMutation.mutate({ program_day_id: activeDay.id, title: "New Task", slot: "morning", sort_order: activeDay.day_tasks?.length || 0 })}>
                   <Plus className="h-4 w-4 mr-2" /> Add Task
                 </Button>
               </div>

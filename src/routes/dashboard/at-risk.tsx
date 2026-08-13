@@ -14,7 +14,7 @@ export const Route = createFileRoute("/dashboard/at-risk")({
 function AtRiskPage() {
   const fetchAtRiskList = useServerFn(getAtRiskList);
 
-  const { data: customers, isLoading } = useQuery({
+  const { data: customers = [], isLoading } = useQuery({
     queryKey: ["dashboard-at-risk-list"],
     queryFn: () => fetchAtRiskList(),
   });
@@ -33,7 +33,7 @@ function AtRiskPage() {
           Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-32 bg-slate-100 rounded-[2rem] animate-pulse" />
           ))
-        ) : customers?.map((customer: any) => (
+        ) : (customers as any[]).map((customer: any) => (
           <Card key={customer.id} className="bg-white border-slate-100 rounded-[2rem] shadow-sm hover:shadow-md transition-shadow overflow-hidden group border-l-4 border-l-red-500">
             <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="flex items-center gap-6 flex-1">
@@ -70,7 +70,7 @@ function AtRiskPage() {
             </CardContent>
           </Card>
         ))}
-        {!isLoading && customers?.length === 0 && (
+        {!isLoading && (customers as any[])?.length === 0 && (
           <div className="h-64 flex flex-col items-center justify-center text-slate-400 bg-white border border-dashed border-slate-200 rounded-[2.5rem]">
             <Shield className="h-12 w-12 mb-4 text-emerald-500 opacity-20" />
             <p className="font-bold uppercase tracking-widest text-xs">All Athletes Active</p>

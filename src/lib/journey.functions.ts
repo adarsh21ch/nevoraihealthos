@@ -1,4 +1,3 @@
-
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -6,36 +5,32 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export type JourneyDataResult = {
   state: 'success' | 'not_a_customer' | 'no_content' | 'error';
   message?: string;
-  enrollment?: any;
+  customer?: any;
+  program?: any;
   programDays?: any[];
   completions?: any[];
 };
 
 export const getJourneyData = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({
-    tenantSlug: z.string(),
-  }).parse(data))
-  .handler(async ({ context, data: input }): Promise<JourneyDataResult> => {
+  .handler(async ({ context }): Promise<JourneyDataResult> => {
     const { supabase, userId } = context;
 
     try {
       const { data: customer, error: customerErr } = await supabase
         .from("customers")
-        .select("id, tenant_id")
+        .select("id, program_id, start_date")
         .eq("user_id", userId)
         .single();
 
       if (customerErr || !customer) return { state: 'not_a_customer' };
+      if (!customer.program_id) return { state: 'no_content' };
 
-      const { data: enrollment, error: enrollErr } = await supabase
-        .from("enrollments")
-        .select("id, program_id, start_date, programs(duration_days, name)")
-        .eq("customer_id", customer.id)
-        .eq("status", "active")
+      const { data: program } = await supabase
+        .from("programs")
+        .select("id, name, duration_days")
+        .eq("id", customer.program_id)
         .single();
-
-      if (enrollErr || !enrollment) return { state: 'no_content' };
 
       const { data: programDays, error: daysErr } = await supabase
         .from("program_days")
@@ -45,7 +40,7 @@ export const getJourneyData = createServerFn({ method: "GET" })
           title, 
           day_tasks(id)
         `)
-        .eq("program_id", enrollment.program_id)
+        .eq("program_id", customer.program_id)
         .order("day_number", { ascending: true });
 
       if (daysErr) return { state: 'error', message: daysErr.message };
@@ -53,14 +48,15 @@ export const getJourneyData = createServerFn({ method: "GET" })
 
       const { data: completions, error: compErr } = await supabase
         .from("task_completions")
-        .select("day_task_id, daily_logs!inner(day_number)")
-        .eq("daily_logs.enrollment_id", enrollment.id);
+        .select("day_task_id, customer_id")
+        .eq("customer_id", customer.id);
 
       if (compErr) return { state: 'error', message: compErr.message };
 
       return {
         state: 'success',
-        enrollment,
+        customer,
+        program,
         programDays,
         completions
       };
