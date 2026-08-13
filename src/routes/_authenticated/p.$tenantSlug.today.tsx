@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTodayData, toggleTaskCompletion, updateDailyLog } from '@/lib/today.functions';
-import { CheckCircle2, Droplets, Info, Calendar, Trophy, Moon, Sun, Smile, Frown, Meh } from 'lucide-react';
+import { getCoachInsights } from '@/lib/ai/gemini.functions';
+import { CheckCircle2, Droplets, Info, Calendar, Trophy, Moon, Sun, Smile, Frown, Meh, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
@@ -20,10 +21,18 @@ function TodayPage() {
   const getTodayFn = useServerFn(getTodayData);
   const toggleTaskFn = useServerFn(toggleTaskCompletion);
   const updateLogFn = useServerFn(updateDailyLog);
+  const getInsightsFn = useServerFn(getCoachInsights);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['today', tenantSlug],
     queryFn: () => getTodayFn({}),
+  });
+
+  const { data: insights } = useQuery({
+    queryKey: ['coach-insights', tenantSlug],
+    queryFn: () => getInsightsFn({}),
+    enabled: !!data && 'state' in data && data.state === 'success',
+    staleTime: 1000 * 60 * 30, // 30 minutes
   });
 
   useEffect(() => {
