@@ -207,7 +207,11 @@ function ProfilePage() {
       <div className="space-y-4">
         <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 ml-2">Program Guidance</h3>
         <div className="grid grid-cols-1 gap-4">
-          <button className="w-full flex items-center justify-between bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm group">
+          <Link 
+            to="/p/$tenantSlug/kit" 
+            params={{ tenantSlug }}
+            className="w-full flex items-center justify-between bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm group"
+          >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <BookOpen className="w-6 h-6" />
@@ -218,9 +222,12 @@ function ProfilePage() {
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
-          </button>
+          </Link>
           
-          <button className="w-full flex items-center justify-between bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm group">
+          <button 
+            onClick={() => setActiveSection(sections.find(s => s.id === 'goals'))}
+            className="w-full flex items-center justify-between bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm group"
+          >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <Target className="w-6 h-6" />
