@@ -119,7 +119,6 @@ function LoginPage() {
     try {
       await signUp({
         data: {
-          tenant_slug: "fat2fit",
           access_code: accessCode.trim(),
           fbo_id: fboId.trim(),
           email: email.trim(),
@@ -146,24 +145,24 @@ function LoginPage() {
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
-          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mb-12 shadow-lg shadow-slate-200">F</div>
-          <h1 className="text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
+          <div className="w-12 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-2xl mb-12 shadow-lg shadow-purple-200">F</div>
+          <h1 className="text-6xl font-bold tracking-tight text-ink mb-6 leading-tight">
             Wellness simplified.<br/>
-            <span className="text-slate-400">Scale your impact.</span>
+            <span className="text-accent/60">Guided daily.</span>
           </h1>
           <p className="text-xl text-slate-500 max-w-md font-medium leading-relaxed">
-            The premier platform for Fat2Fit coaches to manage programs and onboard customers with professional portals.
+            The premier platform for Fit to Fit wellness programs. Access your personalized journey or manage your participants.
           </p>
         </div>
         
         <div className="flex items-center gap-8 text-slate-300">
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-slate-900">2026</span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Fat2Fit Edition</span>
+            <span className="text-2xl font-bold text-ink">2026</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Fit to Fit Edition</span>
           </div>
           <div className="w-px h-8 bg-slate-100"></div>
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-slate-900">E2E</span>
+            <span className="text-2xl font-bold text-ink">E2E</span>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Health Data Privacy</span>
           </div>
         </div>
@@ -173,7 +172,7 @@ function LoginPage() {
       <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 overflow-y-auto">
         <div className="w-full max-w-sm space-y-8 py-12">
           <div className="lg:hidden flex justify-center mb-8">
-            <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl shadow-lg shadow-slate-200">F</div>
+            <div className="w-12 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-2xl shadow-lg shadow-purple-200">F</div>
           </div>
           
           <div className="space-y-2 text-center lg:text-left">
@@ -191,7 +190,7 @@ function LoginPage() {
             <button
               onClick={() => { setAuthMode("signin"); setError(null); }}
               className={`py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
-                authMode === "signin" ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
+                authMode === "signin" ? "bg-white text-accent shadow-sm" : "text-slate-400 hover:text-slate-600"
               }`}
             >
               Sign In
@@ -199,7 +198,7 @@ function LoginPage() {
             <button
               onClick={() => { setAuthMode("signup"); setError(null); }}
               className={`py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
-                authMode === "signup" ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
+                authMode === "signup" ? "bg-white text-accent shadow-sm" : "text-slate-400 hover:text-slate-600"
               }`}
             >
               Join Program
@@ -222,7 +221,7 @@ function LoginPage() {
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   required
-                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-accent/5 transition-all"
                 />
               </div>
               <div className="space-y-1.5">
@@ -234,12 +233,12 @@ function LoginPage() {
                   value={signInPassword}
                   onChange={(e) => setSignInPassword(e.target.value)}
                   required
-                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-accent/5 transition-all"
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 group mt-4" 
+                className="w-full h-12 bg-accent text-white hover:bg-accent/90 font-bold rounded-xl transition-all shadow-lg shadow-purple-200 group mt-4" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -297,7 +296,6 @@ function LoginPage() {
                 />
               </div>
 
-
               <div className="space-y-1.5">
                 <Label htmlFor="signup-password" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Password</Label>
                 <Input
@@ -313,7 +311,7 @@ function LoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-slate-900/10 group mt-4" 
+                className="w-full h-12 bg-accent text-white hover:bg-accent/90 font-bold rounded-xl transition-all shadow-lg shadow-purple-200 group mt-4" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -330,11 +328,11 @@ function LoginPage() {
           <div className="pt-8 space-y-4 text-center">
             {authMode === "signin" && (
               <p className="text-xs text-slate-400 font-medium">
-                New here? <button onClick={() => setAuthMode("signup")} className="text-ink font-bold hover:underline">Create a program account.</button>
+                New here? <button onClick={() => setAuthMode("signup")} className="text-accent font-bold hover:underline">Create a program account.</button>
               </p>
             )}
             <div className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
-              Fat2Fit &copy; 2026
+              Fit to Fit &copy; 2026
             </div>
           </div>
         </div>
