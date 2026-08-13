@@ -3,6 +3,7 @@ import { Home, Calendar, Trophy, Package, User, MessageCircle } from 'lucide-rea
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
@@ -46,7 +47,7 @@ function TenantLayout() {
         {/* Mobile Header - only visible on mobile/tablet */}
         <header className="lg:hidden bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <h1 className="text-sm font-black text-ink uppercase tracking-tight">Fat<span className="text-health-green">2</span>Fit</h1>
+            <AppLogo />
           </div>
         </header>
 

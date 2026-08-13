@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { getAppSettings } from '@/lib/tenant.functions'
 
-export const Route = createFileRoute('/api/manifest.json')({
+export const Route = createFileRoute('/api/manifest/json')({
   server: {
     handlers: {
       GET: async () => {
