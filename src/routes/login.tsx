@@ -89,27 +89,44 @@ function LoginPage() {
 
       console.log("Login successful, fetching auth context...");
       const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
-      if (contextError) throw contextError;
+      
+      console.log("Auth context received:", context);
+      
+      if (contextError) {
+        console.error("Context fetch error:", contextError);
+        // If RPC fails, try manual recovery for admin
+        const { data: adminCheck } = await supabase.from('platform_admins').select('*').single();
+        if (adminCheck) {
+          console.log("Found in platform_admins, redirecting to admin...");
+          navigate({ to: "/admin" });
+          return;
+        }
+        throw contextError;
+      }
 
-      const { role, tenant_slug, onboarding_complete, custom_domain } = context as any;
+      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {}) as any;
 
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
       } else if (role === "tenant_owner") {
         navigate({ to: "/dashboard" });
-      } else if (role === "customer") {
-        if (currentTenant && currentTenant.slug !== tenant_slug) {
+      } else if (role === "participant" || role === "customer") {
+        const effectiveSlug = tenant_slug || "fat2fit";
+        if (currentTenant && currentTenant.slug !== effectiveSlug) {
           const { tenantSiteUrl } = await import("@/lib/tenant");
-          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain });
+          const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
           window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
           return;
         }
 
         if (onboarding_complete) {
-          navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } });
+          navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: effectiveSlug } });
         } else {
           navigate({ to: "/onboarding" });
         }
+      } else {
+        console.log("Unknown role, defaulting to dashboard...");
+        navigate({ to: "/dashboard" });
       }
     } catch (error: any) {
       setError(error.message || "Incorrect identifier or password");
