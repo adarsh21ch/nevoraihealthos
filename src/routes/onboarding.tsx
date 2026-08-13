@@ -118,6 +118,19 @@ function OnboardingPage() {
     if (currentStepId === 'diet') {
       if (!formData.diet_preference) return "Please select your diet preference";
     }
+    if (currentStepId === 'preferences') {
+      if (formData.disliked_foods.length === 0) return "Please select at least one item or 'None'";
+    }
+    if (currentStepId === 'cooking') {
+      if (!formData.cooking_access) return "Please select your cooking access";
+    }
+    if (currentStepId === 'timing') {
+      if (!formData.wake_time || !formData.sleep_time) return "Please set your wake and sleep times";
+    }
+    if (currentStepId === 'health') {
+      // Health concerns are optional, but we want to ensure allergies is an array
+    }
+
     return null;
   };
 
@@ -414,7 +427,7 @@ function OnboardingPage() {
                     <h2 className="text-2xl font-serif italic font-bold text-ink">Food Avoidance</h2>
                     <p className="text-[10px] text-slate-400">Which foods do you typically avoid or dislike?</p>
                     <div className="grid grid-cols-2 gap-2">
-                      {['Dairy', 'Gluten', 'Sugar', 'Caffeine', 'Processed', 'Nuts', 'Soy'].map(f => {
+                      {['Dairy', 'Gluten', 'Sugar', 'Caffeine', 'Processed', 'Nuts', 'Soy', 'None'].map(f => {
                         const isSelected = formData.disliked_foods.includes(f);
                         return (
                           <button
