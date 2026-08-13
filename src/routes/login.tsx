@@ -145,13 +145,18 @@ function LoginPage() {
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
-          <div className="w-16 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-xl mb-12 shadow-lg shadow-purple-200">F2F</div>
-          <h1 className="text-6xl font-bold tracking-tight text-ink mb-6 leading-tight">
-            Wellness simplified.<br/>
-            <span className="text-accent/60">Guided daily.</span>
+          <div className="flex items-center gap-3 mb-16 group">
+            <div className="w-14 h-14 bg-ink rounded-2xl rotate-3 flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-transform">
+              <span className="text-white font-black text-2xl tracking-tighter">F2</span>
+            </div>
+            <span className="text-3xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
+          </div>
+          <h1 className="text-7xl font-serif italic text-ink mb-8 leading-[0.9]">
+            True health,<br/>
+            <span className="text-accent not-italic font-sans font-black uppercase tracking-tighter">Unlocked.</span>
           </h1>
           <p className="text-xl text-slate-500 max-w-md font-medium leading-relaxed">
-            The premier platform for Fat2Fit wellness programs. Access your personalized journey or manage your participants.
+            Welcome to the Fat2Fit elite portal. Your 9-day metabolic evolution starts here.
           </p>
         </div>
         
