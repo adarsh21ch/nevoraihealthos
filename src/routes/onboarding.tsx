@@ -31,7 +31,7 @@ function OnboardingPage() {
   const [age, setAge] = useState("");
   const [heightCm, setHeightCm] = useState("");
   const [goalWeight, setGoalWeight] = useState("");
-  const [programId, setProgramId] = useState("");
+  const [programId, setProgramId] = useState("7e7677a0-1e66-4fbb-9e6e-4af3c56119d2");
   const [didDX4, setDidDX4] = useState(false);
   const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [weight, setWeight] = useState("");
@@ -58,7 +58,7 @@ function OnboardingPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("programs")
-        .select("id, name, duration_days")
+        .select("id, code, name, duration_days")
         .order("sort_order", { ascending: true })
         .limit(20);
       if (error) throw error;
@@ -187,7 +187,7 @@ function OnboardingPage() {
               <div className="space-y-1.5">
                 <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Choose Program</Label>
                 <div className="space-y-2">
-                  {programs?.map(p => (
+                  {programs?.filter(p => ['DX4', 'C9', 'F15', 'V5'].includes(p.code)).map(p => (
                     <button 
                       key={p.id}
                       onClick={() => setProgramId(p.id)}
