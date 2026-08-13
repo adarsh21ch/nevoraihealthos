@@ -99,7 +99,7 @@ export const getTodayData = createServerFn({ method: "GET" })
               _program_id: activeProgram.program_id,
               _date: todayStr,
               _start_date: activeProgram.start_date
-          } as any)
+          })
       ]);
 
       const dayContent = dayContentRes.data as unknown as ProgramDayContent;
