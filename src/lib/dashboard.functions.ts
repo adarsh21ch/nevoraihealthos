@@ -137,7 +137,6 @@ export const getTestimonials = createServerFn({ method: "GET" })
               return {
                 id: p.id,
                 photo_url: signed?.signedUrl ?? null,
-                type: p.pose,
                 created_at: p.created_at,
               };
             }),
