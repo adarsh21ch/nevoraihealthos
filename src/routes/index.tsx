@@ -23,9 +23,16 @@ function Index() {
     <div className="flex flex-col min-h-screen bg-surface selection:bg-purple-100">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-accent rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-200 text-center">F2F</div>
-            <span className="text-xl font-bold tracking-tight text-ink">Fat2Fit</span>
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="relative">
+              <div className="w-11 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl">
+                <span className="text-white font-black text-xl tracking-tighter">F2</span>
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                 <div className="w-2 h-2 bg-white rounded-full" />
+              </div>
+            </div>
+            <span className="text-2xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             {['Program', 'How It Works', 'Nutrition', 'FAQ'].map(item => (
