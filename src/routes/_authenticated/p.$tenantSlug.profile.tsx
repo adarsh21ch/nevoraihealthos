@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import * as React from 'react';
 import { 
   User, 
   Ruler, 
@@ -19,15 +20,19 @@ import { useServerFn } from '@tanstack/react-start';
 import { getMyProfile, validateProfileReadiness } from '@/lib/profile/profile.functions';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { ProfileEditDrawer } from '@/components/profile/ProfileEditDrawer';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/profile')({
   component: ProfilePage,
 });
 
+
 function ProfilePage() {
   const { tenantSlug } = Route.useParams();
   const getProfile = useServerFn(getMyProfile);
   const checkReadiness = useServerFn(validateProfileReadiness);
+  
+  const [activeSection, setActiveSection] = React.useState<any>(null);
 
   const { data: profile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['my-profile'],
@@ -38,6 +43,7 @@ function ProfilePage() {
     queryKey: ['profile-readiness'],
     queryFn: () => checkReadiness(),
   });
+
 
   if (isProfileLoading || isReadinessLoading) {
     return (
@@ -242,7 +248,11 @@ function ProfilePage() {
                               </div>
                               <span className="font-bold text-ink text-lg italic font-serif tracking-tight">{section.title}</span>
                           </div>
-                          <Button variant="ghost" className="h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-health-green hover:bg-emerald-50/50">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => setActiveSection(section)}
+                            className="h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-health-green hover:bg-emerald-50/50"
+                          >
                             Edit
                           </Button>
                       </div>
@@ -260,6 +270,14 @@ function ProfilePage() {
             ))}
         </div>
       </div>
+
+      <ProfileEditDrawer 
+        isOpen={!!activeSection} 
+        onClose={() => setActiveSection(null)} 
+        section={activeSection} 
+        profile={profile}
+      />
     </div>
   );
 }
+
