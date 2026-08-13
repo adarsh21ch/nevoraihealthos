@@ -1,7 +1,31 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { getISTDateString } from "../date-utils";
+
+/**
+ * Types for the nutrition plan results to fix TS errors in consumers
+ */
+export interface NutritionPlan {
+  id: string;
+  participant_id: string;
+  tenant_id: string;
+  version: number;
+  status: 'DRAFT' | 'AI_GENERATED' | 'PENDING_REVIEW' | 'APPROVED' | 'PUBLISHED' | 'ARCHIVED';
+  plan_data: any;
+  generated_at: string;
+  model_info: string;
+}
+
+export interface MealLog {
+  id: string;
+  participant_id: string;
+  plan_id: string;
+  meal_id: string;
+  log_date: string;
+  status: 'COMPLETED' | 'SUBSTITUTED' | 'SKIPPED';
+  substitution_data?: any;
+  completed_at: string;
+}
 
 export const getMyNutritionPlan = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -18,7 +42,7 @@ export const getMyNutritionPlan = createServerFn({ method: "GET" })
       .maybeSingle();
 
     if (error) throw error;
-    return plan;
+    return plan as NutritionPlan | null;
   });
 
 export const logMealStatus = createServerFn({ method: "POST" })
@@ -63,7 +87,7 @@ export const getMealLogs = createServerFn({ method: "GET" })
       .eq("log_date", data.date);
     
     if (error) throw error;
-    return logs;
+    return logs as MealLog[];
   });
 
 export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
@@ -109,5 +133,5 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
       .single();
 
     if (storeError) throw storeError;
-    return newPlan;
+    return newPlan as NutritionPlan;
   });
