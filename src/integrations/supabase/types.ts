@@ -131,6 +131,7 @@ export type Database = {
           brand_name: string
           health_disclaimer: string
           id: boolean
+          logo_url: string | null
           results_disclaimer: string
           tagline: string
           whatsapp_number: string
@@ -139,6 +140,7 @@ export type Database = {
           brand_name?: string
           health_disclaimer?: string
           id?: boolean
+          logo_url?: string | null
           results_disclaimer?: string
           tagline?: string
           whatsapp_number?: string
@@ -147,6 +149,7 @@ export type Database = {
           brand_name?: string
           health_disclaimer?: string
           id?: boolean
+          logo_url?: string | null
           results_disclaimer?: string
           tagline?: string
           whatsapp_number?: string
