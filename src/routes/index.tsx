@@ -362,5 +362,6 @@ function Index() {
         </div>
       </footer>
     </div>
+  </ClientOnly>
   );
 }
