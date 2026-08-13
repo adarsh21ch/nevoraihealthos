@@ -21,7 +21,7 @@ export const getAdminPrograms = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("programs")
-      .select("id, code, name, subtitle, duration_days, description, hero_image_url, next_program_code, sort_order, is_active")
+      .select("id, code, name, summary, duration_days, next_program_code, sort_order")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -33,13 +33,10 @@ export const saveProgram = createServerFn({ method: "POST" })
     id: z.string().uuid().optional(),
     code: z.string().min(2),
     name: z.string().min(2),
-    subtitle: z.string().nullable().optional(),
+    summary: z.string().nullable().optional(),
     duration_days: z.number().int().min(1),
-    description: z.string().nullable().optional(),
-    hero_image_url: z.string().nullable().optional(),
     next_program_code: z.string().nullable().optional(),
-    sort_order: z.number().int().default(0),
-    is_active: z.boolean().default(true)
+    sort_order: z.number().int().default(0)
   }).parse(data))
   .handler(async ({ context, data }) => {
     await adminAuth(context);
@@ -66,7 +63,7 @@ export const getAdminProducts = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("products")
-      .select("id, code, name, short_desc, why_in_program, how_to_use, common_mistakes, image_url, video_url, sort_order")
+      .select("id, name, short_name, how_to_use, image_url, video_url, sort_order, daily_use, kit_quantity, warnings")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -76,15 +73,15 @@ export const saveProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     id: z.string().uuid().optional(),
-    code: z.string().min(2),
     name: z.string().min(2),
-    short_desc: z.string().nullable().optional(),
-    why_in_program: z.string().nullable().optional(),
+    short_name: z.string().nullable().optional(),
     how_to_use: z.string().nullable().optional(),
-    common_mistakes: z.string().nullable().optional(),
     image_url: z.string().nullable().optional(),
     video_url: z.string().nullable().optional(),
-    sort_order: z.number().int().default(0)
+    sort_order: z.number().int().default(0),
+    daily_use: z.string().nullable().optional(),
+    kit_quantity: z.string().nullable().optional(),
+    warnings: z.string().nullable().optional()
   }).parse(data))
   .handler(async ({ context, data }) => {
     await adminAuth(context);
@@ -112,7 +109,7 @@ export const getProgramDays = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data: days, error } = await context.supabase
       .from("program_days")
-      .select("id, program_id, day_number, title, focus, motivation, meal_guidance, tip, day_tasks(id, program_day_id, product_id, time_slot, suggested_time, title, dosage, instructions, is_optional, sort_order)")
+      .select("id, program_id, day_number, title, focus, tip, track, day_tasks(id, program_day_id, product_id, slot, sort_order, title, detail)")
       .eq("program_id", data.programId)
       .order("day_number", { ascending: true });
     if (error) throw error;
@@ -127,9 +124,8 @@ export const saveProgramDay = createServerFn({ method: "POST" })
     day_number: z.number().int(),
     title: z.string().min(1),
     focus: z.string().nullable().optional(),
-    motivation: z.string().nullable().optional(),
-    meal_guidance: z.string().nullable().optional(),
-    tip: z.string().nullable().optional()
+    tip: z.string().nullable().optional(),
+    track: z.string()
   }).parse(data))
   .handler(async ({ context, data }) => {
     await adminAuth(context);
@@ -170,12 +166,9 @@ export const saveDayTask = createServerFn({ method: "POST" })
     id: z.string().uuid().optional(),
     program_day_id: z.string().uuid(),
     product_id: z.string().uuid().nullable().optional(),
-    time_slot: z.string(),
-    suggested_time: z.string().nullable().optional(),
+    slot: z.string(),
     title: z.string().min(1),
-    dosage: z.string().nullable().optional(),
-    instructions: z.string().nullable().optional(),
-    is_optional: z.boolean().default(false),
+    detail: z.string().nullable().optional(),
     sort_order: z.number().int().default(0)
   }).parse(data))
   .handler(async ({ context, data }) => {
@@ -213,7 +206,7 @@ export const getAdminTips = createServerFn({ method: "GET" })
     await adminAuth(context);
     const { data, error } = await context.supabase
       .from("tips")
-      .select("id, category, title, body, sort_order")
+      .select("id, body, day_number, sort_order")
       .order("sort_order", { ascending: true });
     if (error) throw error;
     return data;
@@ -223,9 +216,8 @@ export const saveTip = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     id: z.string().uuid().optional(),
-    category: z.string(),
-    title: z.string(),
     body: z.string(),
+    day_number: z.number().int().nullable().optional(),
     sort_order: z.number().int()
   }).parse(data))
   .handler(async ({ context, data }) => {
