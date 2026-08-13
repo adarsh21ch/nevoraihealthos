@@ -32,13 +32,20 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     - Gender: ${customer.gender || 'Not specified'}
     - Age: ${customer.age || 'Not specified'}
     - Lifestyle: ${customer.lifestyle || 'General'}
+    - Activity Level: ${customer.activity_level || 'General'}
+    - Height: ${customer.height_cm || 'Unknown'} cm
     - Weight: ${latestMeasurement?.weight_kg || customer.weight_kg || 'Unknown'} kg
+    - Waist: ${latestMeasurement?.waist_cm || customer.waist_cm || 'Unknown'} cm
     - Goal: ${customer.goal || 'General Health'}
     - Diet Preference: ${customer.diet_preference || 'Standard'}
-    - Allergies: ${customer.allergies || 'None'}
+    - Allergies: ${customer.allergies?.join(', ') || 'None'}
+    - Disliked Foods: ${customer.disliked_foods?.join(', ') || 'None'}
+    - Cooking Access: ${customer.cooking_access || 'General'}
+    - Meal Timing: ${customer.meal_timing ? JSON.stringify(customer.meal_timing) : 'Standard'}
     
     PROGRAM CONTEXT:
     - Track: ${programTrack}
+
     
     STRICT RULES:
     1. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
