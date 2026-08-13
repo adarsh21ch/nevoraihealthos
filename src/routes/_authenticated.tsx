@@ -31,7 +31,7 @@ export const Route = createFileRoute('/_authenticated')({
 
     // Optimization: Return early if already in an admin session (trust cookie/storage)
     // to avoid RPC overhead on every transition
-    const existingContext = (window as any).__AUTH_CONTEXT;
+    const existingContext = typeof window !== 'undefined' ? (window as any).__AUTH_CONTEXT : null;
     if (existingContext && existingContext.role === 'platform_admin') {
         return { authContext: existingContext };
     }
