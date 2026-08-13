@@ -30,7 +30,7 @@ function InvitePage() {
     ? `${window.location.origin}/p/fat2fit/join`
     : `/p/fat2fit/join`;
   
-  const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl}`;
+  const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl} and use Access Code: FAT2FIT to create your account.`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
