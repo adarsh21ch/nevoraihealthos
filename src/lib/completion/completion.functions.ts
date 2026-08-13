@@ -53,12 +53,9 @@ export const getCompletionData = createServerFn({ method: "GET" })
       .eq("id", true)
       .single();
 
-    const brandName = appSettings?.brand_name || "Fat2Fit";
-    const whatsapp = appSettings?.whatsapp_number || "";
-
     return {
-      brand_name: brandName,
-      whatsapp_number: whatsapp,
+      brand_name: appSettings?.brand_name || "Fat2Fit",
+      whatsapp_number: appSettings?.whatsapp_number || "",
       customer,
       program: program || { name: "Program", duration_days: 9 },
       stats,
@@ -82,8 +79,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
             id: p.id,
             photo_url: signed?.signedUrl || null,
             pose: p.pose,
-            created_at: p.created_at,
-            taken_on: p.created_at // Use created_at if taken_on is missing
+            created_at: p.created_at
           };
         }));
       })()
