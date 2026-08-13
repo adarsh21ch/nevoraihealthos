@@ -118,71 +118,133 @@ function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center p-6 font-sans">
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 font-sans">
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        <div className="text-center space-y-6 pt-12">
+        <div className="text-center space-y-6">
           <div className="w-24 h-16 bg-ink text-white rounded-3xl rotate-3 flex items-center justify-center font-black text-3xl mx-auto shadow-2xl">F2F</div>
           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-accent transition-all duration-500 ease-out" style={{ width: `${(step / TOTAL_STEPS) * 100}%` }} />
+              <div className="h-full bg-health-green transition-all duration-500 ease-out" style={{ width: `${(step / TOTAL_STEPS) * 100}%` }} />
           </div>
         </div>
 
         <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 space-y-8 shadow-sm">
           {error && <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-[11px] font-black uppercase tracking-widest border border-red-100">{error}</div>}
 
-          {step === 1 && <div className="text-center py-4"><h2 className="text-4xl font-bold text-ink leading-tight">Welcome to<br/>Fat2Fit.</h2></div>}
+          {step === 1 && <div className="text-center py-4"><h2 className="text-4xl font-serif italic font-bold text-ink leading-tight">Welcome to<br/>Fat2Fit.</h2></div>}
           
           {step === 2 && (
-            <div className="space-y-4"><h2 className="text-2xl font-bold">What's your name?</h2>
-              <Input value={name} onChange={e => setName(e.target.value)} className="h-14 rounded-2xl border-slate-200" placeholder="e.g. Sarah" />
+            <div className="space-y-4">
+              <h2 className="text-2xl font-serif italic font-bold text-ink">What's your name?</h2>
+              <Input 
+                value={name} 
+                onChange={e => setName(e.target.value)} 
+                className="h-14 rounded-2xl border-slate-200 text-ink focus:ring-health-green" 
+                placeholder="e.g. Sarah" 
+              />
             </div>
           )}
 
           {step === 3 && (
-            <div className="space-y-4"><h2 className="text-2xl font-bold">Choose your goal.</h2>
+            <div className="space-y-4">
+              <h2 className="text-2xl font-serif italic font-bold text-ink">Choose your goal.</h2>
               {["Weight management", "Better energy", "Lifestyle"].map(g => (
-                <button key={g} onClick={() => setGoal(g)} className={cn("w-full p-4 rounded-2xl border text-left", goal === g ? "border-accent bg-purple-50" : "border-slate-100")}>{g}</button>
+                <button 
+                  key={g} 
+                  onClick={() => setGoal(g)} 
+                  className={cn(
+                    "w-full p-4 rounded-2xl border text-left transition-all duration-200", 
+                    goal === g ? "border-health-green bg-health-green/5 text-health-green font-bold" : "border-slate-100 text-slate-600 hover:border-slate-300"
+                  )}
+                >
+                  {g}
+                </button>
               ))}
             </div>
           )}
 
           {step === 4 && (
-            <div className="space-y-4"><h2 className="text-2xl font-bold">Why is this important?</h2>
-              <textarea value={goalImportance} onChange={e => setGoalImportance(e.target.value)} className="w-full h-32 p-4 rounded-2xl border-slate-200 bg-slate-50" />
+            <div className="space-y-4">
+              <h2 className="text-2xl font-serif italic font-bold text-ink">Why is this important?</h2>
+              <textarea 
+                value={goalImportance} 
+                onChange={e => setGoalImportance(e.target.value)} 
+                className="w-full h-32 p-4 rounded-2xl border-slate-200 bg-slate-50 text-ink focus:ring-health-green outline-none focus:border-health-green" 
+                placeholder="Share your motivation..."
+              />
             </div>
           )}
 
           {step === 5 && (
-            <div className="grid grid-cols-2 gap-4"><h2 className="col-span-2 text-2xl font-bold">Baseline Stats</h2>
-              <Input placeholder="Weight (kg)" type="number" value={weight} onChange={e => setWeight(e.target.value)} />
-              <Input placeholder="Waist (cm)" type="number" value={waist} onChange={e => setWaist(e.target.value)} />
+            <div className="grid grid-cols-2 gap-4">
+              <h2 className="col-span-2 text-2xl font-serif italic font-bold text-ink">Baseline Stats</h2>
+              <div className="space-y-2">
+                <Label className="text-xs text-slate-500 ml-1">Weight (kg)</Label>
+                <Input placeholder="70" type="number" value={weight} onChange={e => setWeight(e.target.value)} className="h-12 rounded-xl text-ink" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-slate-500 ml-1">Waist (cm)</Label>
+                <Input placeholder="80" type="number" value={waist} onChange={e => setWaist(e.target.value)} className="h-12 rounded-xl text-ink" />
+              </div>
             </div>
           )}
 
           {step === 6 && (
-            <div className="space-y-4"><h2 className="text-2xl font-bold">Did you do DX4 first?</h2>
+            <div className="space-y-4">
+              <h2 className="text-2xl font-serif italic font-bold text-ink">Did you do DX4 first?</h2>
               <div className="flex gap-4">
-                <Button onClick={() => setDidDX4(true)} className="flex-1">Yes</Button>
-                <Button onClick={() => setDidDX4(false)} className="flex-1">No</Button>
+                <Button 
+                  onClick={() => setDidDX4(true)} 
+                  variant={didDX4 === true ? "default" : "outline"}
+                  className={cn("flex-1 h-14 rounded-2xl", didDX4 === true ? "bg-health-green hover:bg-health-green-dark" : "border-slate-200")}
+                >
+                  Yes
+                </Button>
+                <Button 
+                  onClick={() => setDidDX4(false)} 
+                  variant={didDX4 === false ? "default" : "outline"}
+                  className={cn("flex-1 h-14 rounded-2xl", didDX4 === false ? "bg-health-green hover:bg-health-green-dark" : "border-slate-200")}
+                >
+                  No
+                </Button>
               </div>
             </div>
           )}
 
           {step === 7 && (
             <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Medical Disclaimer</h2>
-                <p className="text-sm">I accept this is a wellness program and not medical advice.</p>
-                <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" checked={consent} onCheckedChange={(v) => setConsent(!!v)} />
-                    <Label htmlFor="terms">I accept the notice</Label>
+                <h2 className="text-2xl font-serif italic font-bold text-ink">Medical Disclaimer</h2>
+                <div className="p-4 bg-slate-50 rounded-2xl text-slate-600 text-sm border border-slate-100">
+                  I accept this is a wellness program and not medical advice. I should consult a doctor before starting any new health regimen.
+                </div>
+                <div className="flex items-center space-x-3 p-2">
+                    <Checkbox id="terms" checked={consent} onCheckedChange={(v) => setConsent(!!v)} className="w-5 h-5 border-slate-300 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green" />
+                    <Label htmlFor="terms" className="text-sm font-medium text-slate-700 cursor-pointer">I accept the notice</Label>
                 </div>
             </div>
           )}
 
-          <div className="flex gap-4">
-            {step > 1 && <Button variant="ghost" onClick={() => setStep(s => s - 1)}>Back</Button>}
-            <Button onClick={step === TOTAL_STEPS ? finish : next} className="flex-1 bg-accent">{step === TOTAL_STEPS ? "Start Journey" : "Continue"}</Button>
+          <div className="flex gap-4 pt-4">
+            {step > 1 && (
+              <Button 
+                variant="ghost" 
+                onClick={() => setStep(s => s - 1)}
+                className="h-14 px-6 rounded-2xl text-slate-500"
+              >
+                Back
+              </Button>
+            )}
+            <Button 
+              onClick={step === TOTAL_STEPS ? finish : next} 
+              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-bold text-lg shadow-lg shadow-health-green/20"
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                step === TOTAL_STEPS ? "Start Journey" : "Continue"
+              )}
+            </Button>
           </div>
         </div>
       </div>
