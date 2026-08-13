@@ -27,18 +27,28 @@ function CoachPlansDashboard() {
   const { data: plans, isLoading } = useQuery({
     queryKey: ['coach-pending-plans'],
     queryFn: async () => {
-      // First get all participants for this coach
       const { data: userData } = await supabase.auth.getUser();
-      const coachId = userData.user?.id;
+      const coachUserId = userData.user?.id;
+      if (!coachUserId) return [];
       
+      const { data: distributor } = await supabase
+        .from('distributors')
+        .select('id')
+        .eq('user_id', coachUserId)
+        .single();
+
+      if (!distributor) return [];
+
       const { data: participants } = await supabase
         .from('customers')
         .select('user_id, name, track')
-        .eq('distributor_id', (await supabase.from('distributors').select('id').eq('user_id', coachId).single()).data?.id);
+        .eq('distributor_id', distributor.id);
 
       if (!participants?.length) return [];
 
-      const participantIds = participants.map(p => p.user_id);
+      const participantIds = participants
+        .map(p => p.user_id)
+        .filter((id): id is string => id !== null);
 
       const { data: nutritionPlans } = await supabase
         .from('nutrition_plans')
