@@ -91,19 +91,24 @@ function LoginPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Authentication failed: No user session found");
 
+      // Hardcoded client-side check for the admin email
+      if (user.email === 'teamnevorai@gmail.com') {
+        console.log("Platform admin recognized via email, redirecting...");
+        navigate({ to: "/admin" });
+        return;
+      }
+
       const { data: context } = await supabase.rpc("get_my_auth_context");
       
-      // Recovery context if the database RPC is lagging or failing
-      const recoveryContext = {
-        role: user.email === 'teamnevorai@gmail.com' ? 'platform_admin' : 'participant',
+      const effectiveContext = (context ?? {
+        role: 'participant',
         tenant_slug: 'fat2fit',
         onboarding_complete: false
-      };
-
-      const effectiveContext = (context ?? recoveryContext) as any;
+      }) as any;
+      
       const { role, tenant_slug, onboarding_complete, custom_domain } = effectiveContext;
 
-      console.log("Effective identity resolved:", { role, tenant_slug, onboarding_complete });
+      console.log("Identity resolved:", { role, tenant_slug, onboarding_complete });
 
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
@@ -124,6 +129,9 @@ function LoginPage() {
         } else {
           navigate({ to: "/onboarding" });
         }
+      } else {
+        navigate({ to: "/onboarding" });
+      }
       } else {
         console.warn("Unrecognized role, falling back to dashboard:", role);
         navigate({ to: "/dashboard" });
