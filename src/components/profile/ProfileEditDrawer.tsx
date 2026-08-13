@@ -38,7 +38,12 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     if (section && profile) {
       const initial: Record<string, any> = {};
       section.fields.forEach(f => {
-        initial[f.key] = profile[f.key] ?? "";
+        let val = profile[f.key] ?? "";
+        // Map database value back to display value for Selects
+        if (f.key === 'gender' && val) {
+          val = val.charAt(0).toUpperCase() + val.slice(1);
+        }
+        initial[f.key] = val;
       });
       setFormData(initial);
     }
