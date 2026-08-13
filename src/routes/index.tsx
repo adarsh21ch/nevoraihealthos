@@ -1,7 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { ArrowRight, BarChart3, Zap, CheckCircle2, Package, Users, Goal, Award } from "lucide-react";
-import { FeatureCard, SectionHeader, PhoneMockup, PillarCard } from "@/components/landing/LandingComponents";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { 
+  ArrowRight, BarChart3, Zap, CheckCircle2, Package, Users, Goal, Award, 
+  Activity, Droplets, Utensils, Sparkles, Apple, Clock, ShieldCheck, 
+  Heart, Scale, ChevronRight, MessageSquare, Plus, Star
+} from "lucide-react";
+import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon } from "@/components/landing/LandingComponents";
+import heroAsset from "@/assets/hero_c9.pdf.asset.json";
+import lifestyleAsset from "@/assets/lifestyle.pdf.asset.json";
+import wellnessAsset from "@/assets/wellness.pdf.asset.json";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const Route = createFileRoute("/")({
