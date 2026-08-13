@@ -1,6 +1,6 @@
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { BrandedLoading } from '@/components/ui/branded-loading';
 
 export const Route = createFileRoute('/_authenticated')({
@@ -31,7 +31,7 @@ export const Route = createFileRoute('/_authenticated')({
 
     // Optimization: Return early if already in an admin session (trust cookie/storage)
     // to avoid RPC overhead on every transition
-    const existingContext = (window as any).__AUTH_CONTEXT;
+    const existingContext = typeof window !== 'undefined' ? (window as any).__AUTH_CONTEXT : null;
     if (existingContext && existingContext.role === 'platform_admin') {
         return { authContext: existingContext };
     }
@@ -84,9 +84,9 @@ export const Route = createFileRoute('/_authenticated')({
 });
 
 function AuthenticatedLayout() {
-  const [isInitializing, setIsInitializing] = useState(true);
+  const [isInitializing, setIsInitializing] = React.useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let mounted = true;
 
     const checkSession = async () => {

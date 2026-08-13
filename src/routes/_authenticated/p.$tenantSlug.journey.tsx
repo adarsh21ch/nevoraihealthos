@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getJourneyData } from '@/lib/journey.functions';

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -7,7 +8,6 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { createServerFn } from "@tanstack/react-start";
 import { resolveTenantHint } from "@/lib/tenant";
@@ -57,7 +57,7 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
+  React.useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
@@ -161,7 +161,7 @@ export const Route = createRootRouteWithContext<{
   errorComponent: ErrorComponent,
 });
 
-function RootShell({ children }: { children: ReactNode }) {
+function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -179,7 +179,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { tenant, isCustomDomain } = Route.useLoaderData();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
         .then(reg => console.log('SW registered:', reg))

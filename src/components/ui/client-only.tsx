@@ -1,9 +1,9 @@
-import { useEffect, useState, ReactNode } from 'react';
+import * as React from 'react';
 
-export function ClientOnly({ children }: { children: ReactNode }) {
-  const [hasHydrated, setHasHydrated] = useState(false);
+export function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [hasHydrated, setHasHydrated] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setHasHydrated(true);
   }, []);
 
