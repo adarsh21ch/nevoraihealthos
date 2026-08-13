@@ -14,13 +14,18 @@ export const Route = createFileRoute("/login")({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Hardwired redirect if already signed in
+    if (user.email === 'teamnevorai@gmail.com') {
+      throw redirect({ to: "/admin" });
+    }
+
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { role, tenant_slug, onboarding_complete } = (authContext ?? {}) as any;
+    const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
 
     if (role === "platform_admin") throw redirect({ to: "/admin" });
     if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
     
-    if (role === "customer" && tenant_slug) {
+    if ((role === "customer" || role === "participant") && tenant_slug) {
       if (context.tenant && context.tenant.slug !== tenant_slug) {
         const { tenantSiteUrl } = await import("@/lib/tenant");
         const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });

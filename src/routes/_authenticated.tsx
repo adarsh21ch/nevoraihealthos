@@ -13,11 +13,22 @@ export const Route = createFileRoute('/_authenticated')({
       });
     }
 
-    const { data: authContext, error: rpcError } = await supabase.rpc('get_my_auth_context');
+    // Direct admin check to bypass potentially slow/failing RPC
+    if (user.email === 'teamnevorai@gmail.com') {
+      return { 
+        authContext: {
+          role: 'platform_admin',
+          onboarding_complete: true,
+          tenant_slug: 'fat2fit'
+        } 
+      };
+    }
+
+    const { data: authContext } = await supabase.rpc('get_my_auth_context');
     
-    // Recovery path if RPC fails or returns null
+    // Recovery path for other users
     const recoveryContext = {
-      role: user.email === 'teamnevorai@gmail.com' ? 'platform_admin' : 'participant',
+      role: 'participant',
       onboarding_complete: false,
       tenant_slug: 'fat2fit'
     };
