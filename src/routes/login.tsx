@@ -336,8 +336,13 @@ function LoginPage() {
                 New here? <button onClick={() => setAuthMode("signup")} className="text-accent font-bold hover:underline">Create a program account.</button>
               </p>
             )}
-            <div className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
-              Fat2Fit &copy; 2026
+            <div className="space-y-1">
+              <div className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
+                Fat2Fit &copy; 2026
+              </div>
+              <div className="text-slate-200 text-[8px] font-bold uppercase tracking-[0.2em]">
+                Build by Nevorai Technologies
+              </div>
             </div>
           </div>
         </div>

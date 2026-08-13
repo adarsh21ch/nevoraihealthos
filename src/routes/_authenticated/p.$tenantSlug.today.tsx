@@ -225,6 +225,16 @@ function TodayPage() {
             ))}
         </div>
       </section>
+
+      <footer className="py-12 px-6 text-center opacity-40">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="w-8 h-7 bg-ink rounded-lg rotate-2 flex items-center justify-center shadow-sm">
+            <span className="text-white font-black text-[10px] tracking-tighter">F2F</span>
+          </div>
+          <span className="text-xs font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
+        </div>
+        <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Build by Nevorai Technologies</p>
+      </footer>
     </div>
   );
 }

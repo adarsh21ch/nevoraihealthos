@@ -334,12 +334,18 @@ function Index() {
 
       <footer className="py-24 bg-slate-50 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="w-16 h-16 bg-accent rounded-3xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-8 shadow-xl shadow-purple-200">F</div>
-          <p className="text-slate-500 mb-8">© 2026 Fit to Fit. All rights reserved.</p>
+          <div className="flex items-center justify-center gap-3 mb-8 group">
+            <div className="w-12 h-11 bg-ink rounded-xl rotate-3 flex items-center justify-center shadow-xl">
+              <span className="text-white font-black text-xl tracking-tighter">F2F</span>
+            </div>
+            <span className="text-2xl font-black tracking-tighter text-ink uppercase italic">Fat<span className="text-accent not-italic">2</span>Fit</span>
+          </div>
+          <p className="text-slate-500 mb-2">© 2026 Fat2Fit. All rights reserved.</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Build by Nevorai Technologies</p>
           <div className="flex justify-center gap-6 text-sm font-bold text-slate-400">
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
-            <a href="#">Coaching</a>
+            <a href="#" className="hover:text-accent transition-colors">Terms</a>
+            <a href="#" className="hover:text-accent transition-colors">Privacy</a>
+            <a href="#" className="hover:text-accent transition-colors">Coaching</a>
           </div>
         </div>
       </footer>
