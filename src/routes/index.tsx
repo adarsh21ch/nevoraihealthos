@@ -90,40 +90,155 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
-          <div>
-            <SectionHeader centered={false} badge="Daily Experience" title="Everything in your pocket." subtitle="Your daily checklist, meal tracker, hydration log, and movement goals. Stay connected with your coach and monitor your progress in real-time." />
-            <div className="flex gap-4">
-              <div className="flex flex-col gap-2">
-                <StepIcon day={1} completed />
-                <div className="w-[1px] h-8 bg-purple-100 mx-auto" />
+      <section className="py-24 bg-surface" id="how-it-works">
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionHeader badge="The Program" title="What’s inside the C9 System?" subtitle="Everything you need to reset your body and transform your nutrition over 9 powerful days." />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+            <FeatureCard 
+              icon={Droplets} 
+              title="Aloe Drinks" 
+              description="2X 1-liter Tetra Paks. Up to 99% pure aloe vera to help cleanse the digestive system and maximize absorption of nutrients." 
+            />
+            <FeatureCard 
+              icon={Zap} 
+              title="Forever Fiber" 
+              description="9 packets of water-soluble fiber to promote feelings of fullness and digestive health." 
+            />
+            <FeatureCard 
+              icon={Activity} 
+              title="Forever Therm" 
+              description="18 tablets featuring botanical extracts and vitamins to support metabolism and energy." 
+            />
+            <FeatureCard 
+              icon={Scale} 
+              title="Forever Garcinia Plus" 
+              description="54 softgels to help the body burn fat more efficiently and support healthy appetite levels." 
+            />
+            <FeatureCard 
+              icon={Apple} 
+              title="Forever Lite Ultra" 
+              description="High-protein shake mix (17g per serving) with essential vitamins and minerals for muscle support." 
+            />
+            <FeatureCard 
+              icon={ShieldCheck} 
+              title="Guided Support" 
+              description="Includes a tape measure and a comprehensive guidebook to track every step of your 9-day journey." 
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-white" id="nutrition">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="bg-ink rounded-[3.5rem] p-12 md:p-24 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+              <div className="w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent via-transparent to-transparent" />
+            </div>
+            <div className="relative z-10 grid md:grid-cols-2 gap-16 items-center">
+              <div>
+                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">Nutrition Focus</span>
+                <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">Master your daily intake.</h2>
+                <div className="space-y-6">
+                  {[
+                    "Free Foods list for guilt-free snacking.",
+                    "C9-approved 600-calorie dinner recipes.",
+                    "High-protein meal replacement shakes.",
+                    "Natural metabolism-supporting botanicals."
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-white">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                      <span className="text-slate-300 text-lg">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link to="/login" className="inline-flex mt-12 px-8 py-4 bg-white text-ink rounded-full font-bold hover:bg-accent hover:text-white transition-all items-center gap-2">
+                  View Full Meal Plan <ChevronRight className="w-5 h-5" />
+                </Link>
               </div>
-              <div className="flex flex-col gap-2">
-                <StepIcon day={2} completed />
-                <div className="w-[1px] h-8 bg-purple-100 mx-auto" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <StepIcon day={3} active />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4 pt-12">
+                  <div className="aspect-[4/5] rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col justify-end">
+                    <span className="text-accent font-bold text-2xl">437</span>
+                    <span className="text-white/50 text-sm">Typical Dinner Calories</span>
+                  </div>
+                  <div className="aspect-square rounded-3xl bg-accent p-6 flex flex-col justify-end">
+                    <span className="text-white font-bold text-2xl">17g</span>
+                    <span className="text-white/80 text-sm">Protein Per Shake</span>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="aspect-square rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col justify-end">
+                    <span className="text-accent font-bold text-2xl">9</span>
+                    <span className="text-white/50 text-sm">Days to Reset</span>
+                  </div>
+                  <div className="aspect-[4/5] rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col justify-end">
+                    <span className="text-accent font-bold text-2xl">8+</span>
+                    <span className="text-white/50 text-sm">Glasses of Water</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <PhoneMockup>
-            <div className="p-8 bg-purple-50 h-full">
-              <div className="text-accent font-bold text-sm mb-2">Day 3 / C9</div>
-              <h3 className="text-3xl font-bold text-ink mb-8">Daily Checklist</h3>
-              <div className="space-y-4">
-                {['Morning Supplements', 'Aloe Vera Drink', 'Light Movement', 'Healthy Shake'].map(task => (
-                  <div key={task} className="flex items-center gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100">
-                    <CheckCircle2 className="w-6 h-6 text-purple-200" />
-                    <span className="font-bold text-ink">{task}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </PhoneMockup>
         </div>
       </section>
+
+      <section className="py-24 bg-slate-50" id="faq">
+        <div className="max-w-3xl mx-auto px-6 text-center mb-16">
+          <SectionHeader title="Expert Answers" subtitle="Everything you need to know about starting your C9 reset with confidence." />
+        </div>
+        <div className="max-w-3xl mx-auto px-6">
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            <AccordionItem value="item-1" className="border-none bg-white rounded-3xl px-8 py-2">
+              <AccordionTrigger className="text-lg font-bold hover:no-underline">What is the C9 Nutritional System?</AccordionTrigger>
+              <AccordionContent className="text-slate-500 text-base leading-relaxed">
+                The C9 system is a nine-day nutritional change program designed to help you jump-start your journey to a leaner, healthier you. It combines high-quality supplements with light movement and delicious, low-calorie recipes to reset your metabolic habits.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2" className="border-none bg-white rounded-3xl px-8 py-2">
+              <AccordionTrigger className="text-lg font-bold hover:no-underline">How much weight can I expect to lose?</AccordionTrigger>
+              <AccordionContent className="text-slate-500 text-base leading-relaxed">
+                While results vary for everyone, the C9 program is designed to help contribute to weight loss, a flatter stomach, and becoming leaner by training you to make better decisions about your nutrition and daily movement.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3" className="border-none bg-white rounded-3xl px-8 py-2">
+              <AccordionTrigger className="text-lg font-bold hover:no-underline">What can I eat during the program?</AccordionTrigger>
+              <AccordionContent className="text-slate-500 text-base leading-relaxed">
+                The program includes specific supplement intakes, high-protein shakes, and a list of "Free Foods" (fruits and vegetables) you can snack on. Starting from Day 3, you also enjoy structured 600-calorie meals.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4" className="border-none bg-white rounded-3xl px-8 py-2">
+              <AccordionTrigger className="text-lg font-bold hover:no-underline">Can I do the program more than once?</AccordionTrigger>
+              <AccordionContent className="text-slate-500 text-base leading-relaxed">
+                It is recommended to repeat the C9 reset biannually (twice a year) to maintain your nutritional awareness and keep your healthy habits on track.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
+
+      <section className="py-32 bg-accent overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-full opacity-20">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(circle_at_center,_white_0%,transparent_70%)]" />
+          <div className="absolute bottom-0 left-0 w-1/2 h-full bg-[radial-gradient(circle_at_center,_white_0%,transparent_70%)]" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+            <h2 className="text-5xl md:text-7xl font-bold text-white mb-10 leading-tight">Ready to start your<br />transformation?</h2>
+            <p className="text-white/80 text-xl md:text-2xl max-w-2xl mx-auto mb-16 leading-relaxed">
+              Join thousands of others who have successfully reset their health with the C9 program.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link to="/login" className="px-12 py-6 bg-white text-accent rounded-full text-xl font-bold shadow-2xl hover:bg-slate-50 transition-all hover:scale-105 active:scale-95">
+                Start Day 1 Now
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+
 
       <footer className="py-24 bg-slate-50 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
