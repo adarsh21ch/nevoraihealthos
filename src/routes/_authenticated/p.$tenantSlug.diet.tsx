@@ -4,6 +4,7 @@ import { useServerFn } from '@tanstack/react-start';
 import { getDietPlan } from '@/lib/diet.functions';
 import { supabase } from '@/integrations/supabase/client';
 import { Apple, Info, Scale } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/diet')({
   component: DietPage,
