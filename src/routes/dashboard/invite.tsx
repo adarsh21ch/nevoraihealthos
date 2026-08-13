@@ -38,7 +38,7 @@ function InvitePage() {
         <Button variant="ghost" size="icon" asChild className="rounded-full">
           <Link to="/dashboard"><ArrowLeft className="w-5 h-5" /></Link>
         </Button>
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900">Invite Customers</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900">Invite Students</h1>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
