@@ -6,13 +6,8 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
     access_code: z.string(),
     fbo_id: z.string(),
-    email: z.string().optional().nullable(),
-    phone: z.string().optional().nullable(),
-    facebook_id: z.string().optional().nullable(),
+    email: z.string().email(),
     password: z.string().min(6),
-  }).refine(data => data.email || data.phone || data.facebook_id, {
-    message: "At least one of email, phone, or Facebook ID is required",
-    path: ["email"]
   }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -30,22 +25,9 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 2. Create Auth User
-    let signupValue = "";
-    let signupMethod: 'email' | 'phone' | 'facebook' = 'email';
-
-    if (data.facebook_id) {
-      signupValue = `${data.facebook_id}@facebook.temp`;
-      signupMethod = 'facebook';
-    } else if (data.email) {
-      signupValue = data.email;
-      signupMethod = 'email';
-    } else if (data.phone) {
-      signupValue = data.phone;
-      signupMethod = 'phone';
-    }
-
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      ...(signupMethod === 'phone' ? { phone: signupValue, phone_confirm: true } : { email: signupValue, email_confirm: true }),
+      email: data.email,
+      email_confirm: true,
       password: data.password,
       user_metadata: { fbo_id: data.fbo_id }
     });
@@ -57,9 +39,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       .from("customers")
       .insert({
         user_id: authUser.user.id,
-        phone: data.phone,
         fbo_id: data.fbo_id,
-        facebook_id: data.facebook_id,
         name: "", // Initial empty name, will be filled in onboarding
       } as any)
       .select("id")
@@ -78,8 +58,8 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     return { 
       success: true, 
-      method: signupMethod, 
-      value: signupValue 
+      method: 'email', 
+      value: data.email 
     };
   });
 
@@ -90,12 +70,11 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Try finding by phone or Facebook ID or FBO ID
-    // We use .select("id, user_id") and cast to any to avoid TS errors with potentially missing columns
+    // Try finding by FBO ID
     const { data: customer } = await supabaseAdmin
       .from("customers")
       .select("user_id" as any)
-      .or(`phone.eq.${data.identifier},facebook_id.eq.${data.identifier},fbo_id.eq.${data.identifier}` as any)
+      .eq("fbo_id", data.identifier)
       .maybeSingle();
       
     if (customer && (customer as any).user_id) {
