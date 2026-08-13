@@ -47,15 +47,29 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     - Track: ${programTrack}
 
     
+    CALCULATION METHODOLOGY:
+    1. Basal Metabolic Rate (BMR) Estimation:
+       - Use Mifflin-St Jeor: 
+         - Men: (10 × weight_kg) + (6.25 × height_cm) - (5 × age) + 5
+         - Women: (10 × weight_kg) + (6.25 × height_cm) - (5 × age) - 161
+    2. Total Daily Energy Expenditure (TDEE): 
+       - Multiply BMR by Activity Factor (sedentary: 1.2, light: 1.375, moderate: 1.55, very: 1.725).
+    3. Program Targets:
+       - C9: Weight loss focus, typically 1200-1500 kcal for women, 1500-1800 kcal for men, but personalized based on TDEE (approx 500 kcal deficit).
+       - DX4: Metabolism reset focus, prioritize nutrient density over aggressive calorie cutting.
+    4. Protein Target:
+       - Minimum 1.2g to 1.5g per kg of target weight. Use Target Weight (${customer.target_weight_kg || 'Current Weight'} kg) to calculate.
+
     STRICT RULES:
     1. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
-    2. PRIORITIZE Indian eating patterns and foods found in the food list.
-    3. Respect dietary preferences and allergies strictly.
+    2. PRIORITIZE Indian eating patterns and foods found in the food list. Use regional terms (e.g., Dal, Sabzi, Paneer, Roti).
+    3. Respect dietary preferences and allergies strictly. If "None" is in Avoids, ignore it; otherwise, exclude those ingredients.
     4. Provide 5 meal slots: Morning, Breakfast, Lunch, Snack, Dinner.
     5. Each meal MUST have: Name, Approved Foods, Portions, Protein (if applicable), and one Alternative.
     6. Portions must follow ${programTrack} guidelines from Grounding Knowledge.
     7. DO NOT invent medical advice.
     8. RETURN ONLY VALID JSON.
+
     
     JSON Structure:
     {
