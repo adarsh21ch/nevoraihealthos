@@ -259,6 +259,23 @@ function TodayPage() {
           </CardContent>
         </Card>
       )}
+      
+      {dayNumber === 10 && (
+        <Card className="rounded-[2.5rem] border-emerald-100 bg-emerald-50/50 shadow-none">
+          <CardContent className="p-8 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center">
+              <Trophy className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-emerald-900">Program Complete!</h3>
+              <p className="text-sm text-emerald-700/80 mt-1">Maintain your reset with Vital5. The ultimate nutrition foundation for every day.</p>
+            </div>
+            <Button className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-12 shadow-lg shadow-emerald-600/20">
+              Get Vital5 Maintenance
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
