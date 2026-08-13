@@ -163,6 +163,26 @@ function TodayPage() {
         </div>
       </div>
 
+      {/* AI Coach Insight */}
+      {insights?.message && (
+        <section className="bg-health-green/5 border border-health-green/10 rounded-[2.5rem] p-6 animate-in fade-in slide-in-from-top-4 duration-1000 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Sparkles className="w-12 h-12 text-health-green" />
+          </div>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-health-green/20 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-health-green" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-health-green/60">AI Coach Assistant</h4>
+              <p className="text-sm font-medium text-ink leading-relaxed">
+                "{insights.message}"
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Hydration Tracker */}
       <section className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm space-y-6">
         <div className="flex justify-between items-center">
