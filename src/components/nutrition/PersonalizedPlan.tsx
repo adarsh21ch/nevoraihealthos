@@ -146,7 +146,7 @@ export function PersonalizedPlan() {
           asChild
           className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100"
         >
-          <Link to="/p/$tenantSlug/profile" params={{ tenantSlug }}>Complete Profile</Link>
+          <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: tenantSlug as any }}>Complete Profile</Link>
         </Button>
       </div>
     );
@@ -177,7 +177,7 @@ export function PersonalizedPlan() {
             asChild
             className="text-[10px] font-black uppercase tracking-widest text-slate-400"
           >
-            <Link to="/p/$tenantSlug/profile" params={{ tenantSlug }}>Review Health Profile</Link>
+            <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: tenantSlug as any }}>Review Health Profile</Link>
           </Button>
         </div>
       </div>

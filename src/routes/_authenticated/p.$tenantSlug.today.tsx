@@ -411,7 +411,7 @@ function TodayPage() {
             variant="outline"
             className="w-full h-14 border-white/20 text-white hover:bg-white/10 rounded-2xl font-bold flex gap-2"
           >
-            <Link to="/p/$tenantSlug/diet" params={{ tenantSlug }}>
+            <Link to="/p/$tenantSlug/diet" params={{ tenantSlug: tenantSlug as any }}>
               Continue <ArrowRight className="w-4 h-4" />
             </Link>
           </Button>
