@@ -435,7 +435,7 @@ function TodayPage() {
           asChild
           className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 hover:text-ink transition-colors"
         >
-          <Link to={`/p/${tenantSlug}/journey`}>View Full Journey <ArrowRight className="ml-2 w-3 h-3" /></Link>
+          <Link to={`/p/${tenantSlug}/journey` as any}>View Full Journey <ArrowRight className="ml-2 w-3 h-3" /></Link>
         </Button>
       </section>
     </div>
