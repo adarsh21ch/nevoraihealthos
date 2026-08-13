@@ -116,7 +116,8 @@ export const getTodayData = createServerFn({ method: "GET" })
           dayNumber
       };
     } catch (e: any) {
-      return { state: 'error', message: e.message };
+      console.error("Error in getTodayData:", e);
+      return { state: 'error', message: e.message || "An unexpected error occurred while loading your daily protocol." };
     }
   });
 
