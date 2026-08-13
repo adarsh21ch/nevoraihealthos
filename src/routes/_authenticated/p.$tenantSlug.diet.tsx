@@ -12,7 +12,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import * as React from 'react';
 import { PersonalizedPlan } from '@/components/nutrition/PersonalizedPlan';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/diet')({
@@ -20,7 +20,7 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug/diet')({
 });
 
 function DietPage() {
-  const [activeTab, setActiveTab] = useState<'plan' | 'free' | 'recipes'>('plan');
+  const [activeTab, setActiveTab] = React.useState<'plan' | 'free' | 'recipes'>('plan');
 
   const { data: freeFoods } = useQuery({
     queryKey: ['free-foods'],

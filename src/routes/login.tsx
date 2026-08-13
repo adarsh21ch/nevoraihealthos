@@ -47,22 +47,21 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const [isAuthChecking, setIsAuthChecking] = useState(true);
-  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [isAuthChecking, setIsAuthChecking] = React.useState(true);
+  const [authMode, setAuthMode] = React.useState<"signin" | "signup">("signin");
   
   // Sign in states
-  const [identifier, setIdentifier] = useState("");
-
-  const [signInPassword, setSignInPassword] = useState("");
+  const [identifier, setIdentifier] = React.useState("");
+  const [signInPassword, setSignInPassword] = React.useState("");
   
   // Sign up states
-  const [fboId, setFboId] = useState("");
-  const [accessCode, setAccessCode] = useState("");
-  const [email, setEmail] = useState("");
-  const [signUpPassword, setSignUpPassword] = useState("");
+  const [fboId, setFboId] = React.useState("");
+  const [accessCode, setAccessCode] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [signUpPassword, setSignUpPassword] = React.useState("");
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const navigate = useNavigate();
   
   React.useEffect(() => {

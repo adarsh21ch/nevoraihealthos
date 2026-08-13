@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useServerFn } from '@tanstack/react-start';
@@ -53,7 +53,7 @@ function TodayPage() {
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (data && 'redirect' in data && data.redirect) {
       console.log("Redirecting to:", data.redirect);
       navigate({ to: data.redirect as any });
