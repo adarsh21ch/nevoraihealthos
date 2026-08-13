@@ -52,7 +52,7 @@ function InvitePage() {
                 <QrCode className="w-32 h-32 text-slate-900" />
               </div>
               <div className="text-center space-y-1">
-                <code className="text-xs font-bold text-slate-500 break-all px-4 block">/p/fat2fit/join</code>
+                <code className="text-xs font-bold text-slate-500 break-all px-4 block">/login</code>
                 <div className="text-lg font-black text-slate-900 bg-white px-4 py-2 rounded-xl border border-slate-200 inline-block mt-2">
                   FAT2FIT
                 </div>
