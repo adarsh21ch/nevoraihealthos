@@ -428,6 +428,7 @@ function OnboardingPage() {
                     <p className="text-[10px] text-slate-400">Which foods do you typically avoid or dislike?</p>
                     <div className="grid grid-cols-2 gap-2">
                       {['Dairy', 'Gluten', 'Sugar', 'Caffeine', 'Processed', 'Nuts', 'Soy', 'None'].map(f => {
+
                         const isSelected = formData.disliked_foods.includes(f);
                         return (
                           <button
