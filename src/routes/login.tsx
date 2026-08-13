@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate, redirect, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
+import { resolveLoginIdentifier } from "@/lib/auth.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,6 +50,7 @@ function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const resolveIdentifier = useServerFn(resolveLoginIdentifier);
   const { tenant: currentTenant } = Route.useRouteContext();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -56,8 +59,18 @@ function LoginPage() {
     setError(null);
 
     try {
+      let loginEmail = identifier;
+      
+      // If the identifier doesn't look like an email, try to resolve it
+      if (!identifier.includes('@')) {
+        const resolution = await resolveIdentifier({ data: { identifier } });
+        if (resolution.found) {
+          loginEmail = resolution.value;
+        }
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: identifier,
+        email: loginEmail,
         password,
       });
 
