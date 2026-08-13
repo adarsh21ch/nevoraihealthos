@@ -1,15 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { 
-  ArrowRight, BarChart3, Zap, CheckCircle2, Package, Users, Goal, Award, 
+  ArrowRight, BarChart3, Zap, CheckCircle2, Users, Goal, Award, 
   Activity, Droplets, Utensils, Sparkles, Apple, Clock, ShieldCheck, 
   Heart, Scale, ChevronRight, MessageSquare, Plus, Star
 } from "lucide-react";
 import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon } from "@/components/landing/LandingComponents";
-import heroAsset from "@/assets/hero_c9.pdf.asset.json";
-import lifestyleAsset from "@/assets/lifestyle.pdf.asset.json";
-import wellnessAsset from "@/assets/wellness.pdf.asset.json";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const Route = createFileRoute("/")({
@@ -176,7 +172,9 @@ function Index() {
           </div>
         </div>
       </section>
+
       <section className="py-24 bg-surface" id="how-it-works">
+        <div className="max-w-7xl mx-auto px-6">
           <SectionHeader badge="The Program" title="What’s inside the C9 System?" subtitle="Everything you need to reset your body and transform your nutrition over 9 powerful days." />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
             <FeatureCard 
@@ -322,8 +320,6 @@ function Index() {
           </motion.div>
         </div>
       </section>
-
-
 
       <footer className="py-24 bg-slate-50 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
