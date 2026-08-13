@@ -88,8 +88,10 @@ function AdminDashboard() {
           <Outlet />
         </div>
       </main>
+      </main>
     </div>
     </ClientOnly>
+
   );
 }
 
