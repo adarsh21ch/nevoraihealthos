@@ -88,29 +88,20 @@ function LoginPage() {
       }
 
       console.log("Login successful, fetching auth context...");
+      const { data: { user } } = await supabase.auth.getUser();
       const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
       
       console.log("Auth context received:", context);
       
-      if (contextError) {
-        console.error("Context fetch error:", contextError);
-        // If RPC fails, try manual recovery for admin
-        const { data: adminCheck } = await supabase.from('platform_admins').select('*').single();
-        if (adminCheck) {
-          console.log("Found in platform_admins, redirecting to admin...");
-          navigate({ to: "/admin" });
-          return;
-        }
-        throw contextError;
-      }
-
+      const isPlatformAdmin = user?.email === 'teamnevorai@gmail.com';
       const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {}) as any;
+      const effectiveRole = isPlatformAdmin ? 'platform_admin' : role;
 
-      if (role === "platform_admin") {
+      if (effectiveRole === "platform_admin") {
         navigate({ to: "/admin" });
-      } else if (role === "tenant_owner") {
+      } else if (effectiveRole === "tenant_owner") {
         navigate({ to: "/dashboard" });
-      } else if (role === "participant" || role === "customer") {
+      } else if (effectiveRole === "participant" || effectiveRole === "customer") {
         const effectiveSlug = tenant_slug || "fat2fit";
         if (currentTenant && currentTenant.slug !== effectiveSlug) {
           const { tenantSiteUrl } = await import("@/lib/tenant");
