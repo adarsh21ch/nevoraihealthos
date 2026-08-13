@@ -43,11 +43,19 @@ function AdminContentManagement() {
       </div>
 
       <Tabs defaultValue="programs" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
-          <TabsTrigger value="programs" className="flex gap-2"><Layout className="h-4 w-4" /> Programs</TabsTrigger>
-          <TabsTrigger value="products" className="flex gap-2"><Package className="h-4 w-4" /> Products</TabsTrigger>
-          <TabsTrigger value="tips" className="flex gap-2"><MessageSquare className="h-4 w-4" /> Tips</TabsTrigger>
-          <TabsTrigger value="faqs" className="flex gap-2"><HelpCircle className="h-4 w-4" /> FAQs</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 mb-8 bg-slate-100 p-1 rounded-2xl h-14">
+          <TabsTrigger value="programs" className="flex gap-2 rounded-xl data-[state=active]:bg-white data-[state=active]:text-accent data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-[10px] transition-all">
+            <Layout className="h-4 w-4" /> Programs
+          </TabsTrigger>
+          <TabsTrigger value="products" className="flex gap-2 rounded-xl data-[state=active]:bg-white data-[state=active]:text-accent data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-[10px] transition-all">
+            <Package className="h-4 w-4" /> Products
+          </TabsTrigger>
+          <TabsTrigger value="tips" className="flex gap-2 rounded-xl data-[state=active]:bg-white data-[state=active]:text-accent data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-[10px] transition-all">
+            <MessageSquare className="h-4 w-4" /> Tips
+          </TabsTrigger>
+          <TabsTrigger value="faqs" className="flex gap-2 rounded-xl data-[state=active]:bg-white data-[state=active]:text-accent data-[state=active]:shadow-sm font-bold uppercase tracking-widest text-[10px] transition-all">
+            <HelpCircle className="h-4 w-4" /> FAQs
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="programs">
