@@ -100,29 +100,40 @@ function TodayPage() {
 
   const state = data.state;
   if (state !== 'success') {
+    const isNoContent = state === 'no_content';
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center space-y-6">
-        <div className="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center">
-          <Calendar className="w-8 h-8" />
+        <div className={cn(
+          "w-16 h-16 rounded-full flex items-center justify-center",
+          isNoContent ? "bg-emerald-50 text-emerald-500" : "bg-slate-50 text-slate-400"
+        )}>
+          {isNoContent ? <Sparkles className="w-8 h-8" /> : <Calendar className="w-8 h-8" />}
         </div>
         <div className="space-y-2">
           <h2 className="text-2xl font-serif italic font-bold text-ink">
-            {state === 'no_content' ? "Preparing your Journey" : `Day ${data.dayNumber || '...'} Protocol`}
+            {isNoContent ? "Journey Pending" : `Day ${data.dayNumber || '...'} Protocol`}
           </h2>
           <p className="text-slate-500 max-w-xs mx-auto">
-            {state === 'no_content' 
-              ? "Your program content is being generated. Please check back in a moment." 
+            {isNoContent 
+              ? "Your enrollment is being processed. If you just completed onboarding, your protocol will appear here shortly." 
               : (data.message || "Checking status...")}
           </p>
         </div>
-        {state === 'not_a_customer' && (
-          <Button onClick={() => navigate({ to: '/onboarding' as any })} className="bg-health-green rounded-2xl text-white">
-            Start Onboarding
+        
+        <div className="flex flex-col gap-3 w-full max-w-[200px]">
+          {state === 'not_a_customer' && (
+            <Button onClick={() => navigate({ to: '/onboarding' as any })} className="bg-health-green rounded-2xl text-white w-full">
+              Start Onboarding
+            </Button>
+          )}
+          <Button 
+            onClick={() => queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] })} 
+            variant="outline" 
+            className="rounded-2xl w-full"
+          >
+            Refresh Status
           </Button>
-        )}
-        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] })} variant="outline" className="rounded-2xl">
-          Refresh
-        </Button>
+        </div>
       </div>
     );
   }

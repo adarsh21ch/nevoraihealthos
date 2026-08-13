@@ -51,15 +51,18 @@ export const getTodayData = createServerFn({ method: "GET" })
       // 1. Get customer and their active program
       const { data: customer, error: customerErr } = await supabase
         .from("customers")
-        .select("id, onboarding_complete, program_id")
+        .select("id, onboarding_complete, program_id, track")
         .eq("user_id", userId)
         .single();
+
+      console.log("[getTodayData] Customer:", { customer, error: customerErr });
 
       if (customerErr || !customer) return { state: 'not_a_customer' };
       if (!customer.onboarding_complete) {
         return { state: 'success', redirect: "/onboarding" };
       }
 
+      // Check for active program in participant_programs table
       const { data: activeProgram, error: progErr } = await supabase
         .from("participant_programs")
         .select("program_id, start_date, track")
@@ -68,16 +71,23 @@ export const getTodayData = createServerFn({ method: "GET" })
         .limit(1)
         .maybeSingle();
 
+      console.log("[getTodayData] Active Program:", { activeProgram, error: progErr });
+
+      // Fallback: Use program_id from customer table if participant_programs is empty
       const actualProgramId = activeProgram?.program_id || customer.program_id;
+      const actualTrack = activeProgram?.track || customer.track || 'standard';
 
       if (!actualProgramId) {
-        return { state: 'no_content', message: "No active program found." };
+        console.warn("[getTodayData] No program_id found for user:", userId);
+        return { state: 'no_content', message: "No active program found. Please contact support or complete enrollment." };
       }
 
       const todayStr = getISTDateString();
-      // If we don't have a start_date, we might be in a weird state, but try to recover or show content
+      // If we don't have a start_date, we default to Day 1
       const dayNumber = activeProgram?.start_date ? getProgramDayNumber(activeProgram.start_date) : 1;
       
+      console.log("[getTodayData] Calculated Day:", { dayNumber, todayStr, startDate: activeProgram?.start_date });
+
       // If program is finished (Day 10+)
       if (dayNumber > 9) {
           return { state: 'success', dayNumber, redirect: '/p/fat2fit/complete' as any };
