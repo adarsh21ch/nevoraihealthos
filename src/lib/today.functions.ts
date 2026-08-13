@@ -111,7 +111,8 @@ export const getTodayData = createServerFn({ method: "GET" })
           supabase.rpc("get_day_with_tasks", {
               _program_id: actualProgramId,
               _date: todayStr,
-              _start_date: activeProgram?.start_date || todayStr
+              _start_date: activeProgram?.start_date || todayStr,
+              _track: actualTrack
           } as any)
       ]);
 
@@ -119,7 +120,7 @@ export const getTodayData = createServerFn({ method: "GET" })
       
       return {
           state: 'success',
-          customer: { ...customer, track: activeProgram?.track || 'standard' },
+          customer: { ...customer, track: actualTrack },
           todayStr,
           dailyLog: logRes.data,
           dayContent,
