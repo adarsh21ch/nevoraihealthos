@@ -88,28 +88,36 @@ function LoginPage() {
       }
 
       console.log("Login successful, fetching auth context...");
+      const { data: { user } } = await supabase.auth.getUser();
       const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
-      if (contextError) throw contextError;
+      
+      console.log("Auth context received:", context);
+      
+      const isPlatformAdmin = user?.email === 'teamnevorai@gmail.com';
+      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {}) as any;
+      const effectiveRole = isPlatformAdmin ? 'platform_admin' : role;
 
-      const { role, tenant_slug, onboarding_complete, custom_domain } = context as any;
-
-      if (role === "platform_admin") {
+      if (effectiveRole === "platform_admin") {
         navigate({ to: "/admin" });
-      } else if (role === "tenant_owner") {
+      } else if (effectiveRole === "tenant_owner") {
         navigate({ to: "/dashboard" });
-      } else if (role === "customer") {
-        if (currentTenant && currentTenant.slug !== tenant_slug) {
+      } else if (effectiveRole === "participant" || effectiveRole === "customer") {
+        const effectiveSlug = tenant_slug || "fat2fit";
+        if (currentTenant && currentTenant.slug !== effectiveSlug) {
           const { tenantSiteUrl } = await import("@/lib/tenant");
-          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain });
+          const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
           window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
           return;
         }
 
         if (onboarding_complete) {
-          navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } });
+          navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: effectiveSlug } });
         } else {
           navigate({ to: "/onboarding" });
         }
+      } else {
+        console.log("Unknown role, defaulting to dashboard...");
+        navigate({ to: "/dashboard" });
       }
     } catch (error: any) {
       setError(error.message || "Incorrect identifier or password");
