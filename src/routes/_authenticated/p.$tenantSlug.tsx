@@ -40,9 +40,14 @@ function TenantLayout() {
   return (
     <div className="min-h-screen bg-surface pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-12 h-10 bg-ink rounded-xl rotate-3 flex items-center justify-center shadow-lg">
-            <span className="text-white font-black text-sm tracking-tighter">F2F</span>
+        <div className="flex items-center gap-2.5 group cursor-pointer">
+          <div className="relative">
+            <div className="w-11 h-9 bg-ink rounded-lg rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-lg">
+              <span className="text-white font-black text-xs tracking-tighter">F2F</span>
+            </div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-accent rounded-md flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+               <div className="w-1.5 h-1.5 bg-white rounded-full" />
+            </div>
           </div>
           <div>
             <h1 className="text-sm font-black text-ink uppercase tracking-tight">Fat<span className="text-accent">2</span>Fit</h1>
