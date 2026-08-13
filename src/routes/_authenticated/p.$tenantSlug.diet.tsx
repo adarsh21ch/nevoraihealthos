@@ -56,12 +56,12 @@ function DietPage() {
       </header>
 
       {/* Tabs */}
-      <div className="flex bg-slate-50 p-1.5 rounded-[2.5rem] md:rounded-full gap-1 sticky top-24 z-30 shadow-sm border border-slate-100 max-w-2xl">
+      <div className="flex bg-slate-100 p-1.5 rounded-[2.5rem] md:rounded-full gap-1 sticky top-24 z-30 shadow-sm border border-slate-200/50 max-w-2xl">
         <button 
             onClick={() => setActiveTab('plan')}
             className={cn(
                 "flex-1 py-4 md:py-5 rounded-[2rem] md:rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest transition-all",
-                activeTab === 'plan' ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
+                activeTab === 'plan' ? "bg-emerald-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
             )}
         >
             My Personalized Plan
@@ -70,7 +70,7 @@ function DietPage() {
             onClick={() => setActiveTab('free')}
             className={cn(
                 "flex-1 py-4 md:py-5 rounded-[2rem] md:rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest transition-all",
-                activeTab === 'free' ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
+                activeTab === 'free' ? "bg-emerald-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
             )}
         >
             Free Foods
@@ -79,7 +79,7 @@ function DietPage() {
             onClick={() => setActiveTab('recipes')}
             className={cn(
                 "flex-1 py-4 md:py-5 rounded-[2rem] md:rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest transition-all",
-                activeTab === 'recipes' ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
+                activeTab === 'recipes' ? "bg-emerald-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
             )}
         >
             Explore Recipes

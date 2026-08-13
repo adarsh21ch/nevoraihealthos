@@ -117,26 +117,28 @@ export function PersonalizedPlan() {
           </p>
         </div>
         
-        <div className="bg-slate-50 rounded-3xl p-6 space-y-4 text-left">
+        <div className="bg-slate-50 rounded-3xl p-8 space-y-6 text-left border border-slate-100">
            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Profile Completion</span>
-              <span className="text-[10px] font-black text-health-green">{readiness.percent || 0}%</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Profile Completion</span>
+              <span className="text-[11px] font-bold text-health-green bg-emerald-50 px-3 py-1 rounded-full">{readiness.percent || 0}%</span>
            </div>
-           <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-             <div className="h-full bg-health-green transition-all duration-1000" style={{ width: `${readiness.percent || 0}%` }} />
+           <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+             <div className="h-full bg-health-green transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.3)]" style={{ width: `${readiness.percent || 0}%` }} />
            </div>
            
-           <div className="space-y-2 pt-2">
-             <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Missing Information:</span>
-             <div className="grid grid-cols-1 gap-2">
-               {readiness.missing.slice(0, 4).map((m: any) => (
-                 <div key={m.field} className="flex items-center gap-2 text-slate-600">
-                    <AlertCircle className="w-3 h-3 text-amber-400" />
-                    <span className="text-xs font-bold">{m.label}</span>
+           <div className="space-y-4 pt-2">
+             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200 pb-2 block">Missing Information:</span>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+               {readiness.missing.slice(0, 6).map((m: any) => (
+                 <div key={m.field} className="flex items-center gap-2.5 text-slate-700 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span className="text-xs font-bold leading-none">{m.label}</span>
                  </div>
                ))}
-               {readiness.missing.length > 4 && (
-                 <span className="text-[9px] font-bold text-slate-400 italic">+{readiness.missing.length - 4} more details</span>
+               {readiness.missing.length > 6 && (
+                 <div className="flex items-center justify-center p-3">
+                    <span className="text-[10px] font-bold text-slate-400 italic">+{readiness.missing.length - 6} more details</span>
+                 </div>
                )}
              </div>
            </div>
