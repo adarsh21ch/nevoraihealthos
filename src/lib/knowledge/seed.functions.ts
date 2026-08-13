@@ -47,8 +47,19 @@ Movement: 30 mins low-impact exercise daily.`,
 Fruits (Limited): Green Apple, Berries.`,
         status: 'APPROVED',
         tags: ['free foods', 'vegetables']
+      },
+      {
+        type: 'PROTEIN',
+        program: 'GENERAL',
+        title: 'Fat2Fit Protein Calculation Rules',
+        content: `Standard calculation: 1.2g to 1.5g of protein per kg of TARGET weight.
+Example: If target weight is 70kg, daily protein target is 84g to 105g.
+Source: Fat2Fit Internal Nutrition Guidelines 2024.`,
+        status: 'APPROVED',
+        tags: ['calculation', 'protein']
       }
     ];
+
 
     for (const item of initialKnowledge) {
       await supabase.from('knowledge_base').upsert(item, { onConflict: 'title' });
