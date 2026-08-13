@@ -151,10 +151,16 @@ function OnboardingPage() {
 
     setIsSaving(true);
     try {
+      const genderMap: Record<string, string> = {
+        'Male': 'male',
+        'Female': 'female',
+        'Other': 'other'
+      };
+
       await updateProfile({
         data: {
           name: formData.name.trim(),
-          gender: formData.gender,
+          gender: genderMap[formData.gender] || formData.gender,
           dob: formData.dob,
           height_cm: Number(formData.height_cm),
           weight_kg: Number(formData.weight_kg),

@@ -67,7 +67,12 @@ function ProfilePage() {
       fields: [
         { label: 'Name', value: profile.name, key: 'name' },
         { label: 'DOB', value: profile.dob, key: 'dob', type: 'date' },
-        { label: 'Sex', value: profile.gender, key: 'gender', options: ['Male', 'Female', 'Other'] }
+        { 
+          label: 'Sex', 
+          value: profile.gender ? (profile.gender.charAt(0).toUpperCase() + profile.gender.slice(1)) : null, 
+          key: 'gender', 
+          options: ['Male', 'Female', 'Other'] 
+        }
       ]
     },
     { 
