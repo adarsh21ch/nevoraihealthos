@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
         name: 'Fat2Fit',
         slug: 'fat-to-fit',
         primary_color: '#7C3AED',
-        tagline: 'Your 9-day reset, guided day by day.',
+        tagline: '9-Day Reset Protocol',
         whatsapp: '+919876543210'
       }
     };
@@ -41,8 +41,8 @@ function TenantLayout() {
     <div className="min-h-screen bg-surface pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 bg-ink rounded-xl rotate-3 flex items-center justify-center shadow-lg">
-            <span className="text-white font-black text-sm tracking-tighter">F2</span>
+          <div className="w-12 h-10 bg-ink rounded-xl rotate-3 flex items-center justify-center shadow-lg">
+            <span className="text-white font-black text-sm tracking-tighter">F2F</span>
           </div>
           <div>
             <h1 className="text-sm font-black text-ink uppercase tracking-tight">Fat<span className="text-accent">2</span>Fit</h1>
