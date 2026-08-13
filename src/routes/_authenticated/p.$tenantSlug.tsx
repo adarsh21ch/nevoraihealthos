@@ -6,15 +6,15 @@ import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
-    if (params.tenantSlug !== 'fat2fit') {
-      throw redirect({ to: '/p/fat2fit/today' as any });
+    if (params.tenantSlug !== 'fit-to-fit') {
+      throw redirect({ to: '/p/fit-to-fit/today' as any });
     }
     return {
       tenant: {
-        id: 'fat2fit-id',
-        name: 'Fat2Fit',
-        slug: 'fat2fit',
-        primary_color: '#16a34a',
+        id: 'fit-to-fit-id',
+        name: 'Fit to Fit',
+        slug: 'fit-to-fit',
+        primary_color: '#7C3AED',
         tagline: 'Your 9-day reset, guided day by day.',
         whatsapp: '+919876543210'
       }
@@ -27,25 +27,25 @@ function TenantLayout() {
   const { tenant } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' });
   const location = useLocation();
 
-  const primaryColor = tenant.primary_color || '#16a34a';
+  const primaryColor = tenant.primary_color || '#7C3AED';
 
   const navItems = [
-    { label: 'Today', icon: Home, href: `/p/fat2fit/today` },
-    { label: 'Journey', icon: Calendar, href: `/p/fat2fit/journey` },
-    { label: 'Diet', icon: Trophy, href: `/p/fat2fit/diet` },
-    { label: 'Kit', icon: Package, href: `/p/fat2fit/kit` },
-    { label: 'Guide', icon: BookOpen, href: `/p/fat2fit/guide` },
+    { label: 'Today', icon: Home, href: `/p/fit-to-fit/today` },
+    { label: 'Journey', icon: Calendar, href: `/p/fit-to-fit/journey` },
+    { label: 'Diet', icon: Trophy, href: `/p/fit-to-fit/diet` },
+    { label: 'Kit', icon: Package, href: `/p/fit-to-fit/kit` },
+    { label: 'Guide', icon: BookOpen, href: `/p/fit-to-fit/guide` },
   ];
 
   return (
     <div className="min-h-screen bg-surface pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-lg">
+          <div className="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-bold text-lg">
             F
           </div>
           <div>
-            <h1 className="text-sm font-bold text-slate-900 leading-none">Fat2Fit</h1>
+            <h1 className="text-sm font-bold text-slate-900 leading-none">Fit to Fit</h1>
             <p className="text-[10px] text-slate-400 font-medium mt-1">Your 9-day reset</p>
           </div>
         </div>

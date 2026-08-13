@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { getISTDateString } from "./date-utils";
+import { getISTDateString, getProgramDayNumber } from "./date-utils";
 
 export type DayTask = {
   id: string;
@@ -38,6 +38,7 @@ export type TodayDataResult = {
   dailyLog?: any;
   dayContent?: ProgramDayContent;
   redirect?: string;
+  dayNumber?: number;
 };
 
 export const getTodayData = createServerFn({ method: "GET" })
@@ -47,34 +48,57 @@ export const getTodayData = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
 
     try {
+      // 1. Get customer and their active program
       const { data: customer, error: customerErr } = await supabase
         .from("customers")
-        .select("id, program_id, start_date, onboarding_complete")
+        .select("id, onboarding_complete")
         .eq("user_id", userId)
         .single();
 
       if (customerErr || !customer) return { state: 'not_a_customer' };
-
       if (!customer.onboarding_complete) {
         return { state: 'success', redirect: "/onboarding" };
       }
 
-      if (!customer.program_id || !customer.start_date) {
+      const { data: activeProgram, error: progErr } = await supabase
+        .from("participant_programs")
+        .select("program_id, start_date, track")
+        .eq("participant_id", userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (progErr || !activeProgram || !activeProgram.start_date) {
         return { state: 'no_content' };
       }
 
       const todayStr = getISTDateString();
+      const dayNumber = getProgramDayNumber(activeProgram.start_date);
       
+      // If program is finished (Day 10+)
+      if (dayNumber > 9) {
+          return { state: 'success', dayNumber, redirect: '/p/fit-to-fit/complete' as any };
+      }
+
+      // 2. Fetch daily log and tasks
       const [logRes, dayContentRes] = await Promise.all([
           supabase.from("daily_logs")
-              .select("id, note, task_completions(day_task_id)")
+              .select(`
+                id, 
+                note, 
+                water_glasses, 
+                sleep_hours, 
+                mood, 
+                energy_level,
+                task_completions(day_task_id)
+              `)
               .eq("customer_id", customer.id)
               .eq("log_date", todayStr)
               .maybeSingle(),
           supabase.rpc("get_day_with_tasks", {
-              _program_id: customer.program_id,
+              _program_id: activeProgram.program_id,
               _date: todayStr,
-              _start_date: customer.start_date
+              _start_date: activeProgram.start_date
           } as any)
       ]);
 
@@ -82,10 +106,11 @@ export const getTodayData = createServerFn({ method: "GET" })
       
       return {
           state: 'success',
-          customer,
+          customer: { ...customer, track: activeProgram.track },
           todayStr,
           dailyLog: logRes.data,
           dayContent,
+          dayNumber
       };
     } catch (e: any) {
       return { state: 'error', message: e.message };
@@ -137,19 +162,31 @@ export const updateDailyLog = createServerFn({ method: "POST" })
       logDate: z.string(),
       dayNumber: z.number().int(),
       note: z.string().optional(),
+      water_glasses: z.number().int().min(0).max(20).optional(),
+      sleep_hours: z.number().min(0).max(24).optional(),
+      mood: z.string().optional(),
+      energy_level: z.string().optional(),
     })
   }).parse(data))
   .handler(async ({ context, data: input }) => {
     const { supabase } = context;
     const { data } = input;
+    
+    const updateData: any = {
+      customer_id: data.customerId,
+      log_date: data.logDate,
+      day_number: data.dayNumber,
+    };
+
+    if (data.note !== undefined) updateData.note = data.note;
+    if (data.water_glasses !== undefined) updateData.water_glasses = data.water_glasses;
+    if (data.sleep_hours !== undefined) updateData.sleep_hours = data.sleep_hours;
+    if (data.mood !== undefined) updateData.mood = data.mood;
+    if (data.energy_level !== undefined) updateData.energy_level = data.energy_level;
+
     const { error } = await supabase
       .from("daily_logs")
-      .upsert({
-        customer_id: data.customerId,
-        log_date: data.logDate,
-        day_number: data.dayNumber,
-        ...(data.note !== undefined ? { note: data.note } : {}),
-      }, { onConflict: 'customer_id, log_date' });
+      .upsert(updateData, { onConflict: 'customer_id, log_date' });
 
     if (error) throw error;
     return { success: true };
