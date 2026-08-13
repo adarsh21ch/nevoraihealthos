@@ -15,7 +15,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
     
     if (cErr || !customer) throw new Error("Customer not found");
 
-    const { data: program, error: pErr } = await supabase
+    const { data: program } = await supabase
       .from("programs")
       .select("id, name, duration_days, next_program_code")
       .eq("id", customer.program_id)
@@ -83,6 +83,16 @@ export const getCompletionData = createServerFn({ method: "GET" })
         }));
       })()
     };
+  });
+
+export const createReferral = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({
+    leadName: z.string(),
+    leadPhone: z.string(),
+  }).parse)
+  .handler(async ({ context, data }) => {
+    return { success: true }; // Placeholder
   });
 
 export const updateShareConsent = createServerFn({ method: "POST" })

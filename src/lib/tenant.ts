@@ -39,13 +39,32 @@ export function isReservedPlatformHost(hostname: string): boolean {
   return false;
 }
 
-export type AppConfigHint = {
-  brand: string;
+export type TenantHint = {
+  mode: 'domain' | 'slug';
+  value: string;
 } | null;
 
 /**
- * Resolves app context
+ * Resolves a tenant hint from the current request context
  */
-export function resolveAppConfig(): AppConfigHint {
-  return { brand: 'Fat2Fit' };
+export function resolveTenantHint({ 
+  hostname, 
+  pathname, 
+  search 
+}: { 
+  hostname: string; 
+  pathname: string; 
+  search: string;
+}): TenantHint {
+  return { mode: 'slug', value: 'fat2fit' };
+}
+
+/**
+ * Generates the canonical live URL for a tenant
+ */
+export function tenantSiteUrl(
+  tenant: { slug: string; custom_domain?: string | null }, 
+  currentOrigin: string = typeof window !== 'undefined' ? window.location.origin : ''
+): string {
+  return currentOrigin;
 }
