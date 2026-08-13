@@ -43,7 +43,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +57,7 @@ function LoginPage() {
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: identifier,
         password,
       });
 
@@ -144,13 +144,13 @@ function LoginPage() {
               </div>
             )}
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email / ID</Label>
+              <Label htmlFor="identifier" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email / Phone / FB ID</Label>
               <Input
-                id="email"
+                id="identifier"
                 type="text"
-                placeholder="name@example.com or FBO ID"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email, Phone, or Facebook ID"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 required
                 className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-slate-900/5 transition-all"
               />
