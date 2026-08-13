@@ -393,7 +393,6 @@ function TodayPage() {
             </div>
           );
         })}
-            </div>
           </div>
         </div>
       </div>
@@ -443,37 +442,3 @@ function TodayPage() {
   );
 }
 
-        <div className="bg-ink rounded-[2.5rem] p-8 space-y-4">
-          <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-health-green">Next Up</span>
-            <p className="text-white font-medium">Complete today's nutrition check-in</p>
-          </div>
-          <Button 
-            asChild
-            variant="outline"
-            className="w-full h-14 border-white/20 text-white hover:bg-white/10 rounded-2xl font-bold flex gap-2"
-          >
-            <Link to="/p/$tenantSlug/diet" params={{ tenantSlug: tenantSlug as any }}>
-              Continue <ArrowRight className="w-4 h-4" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      <footer className="py-12 px-6 text-center opacity-40">
-        <div className="flex items-center justify-center gap-2 mb-2 group cursor-pointer">
-          <div className="relative">
-            <div className="w-8 h-7 bg-ink rounded-lg rotate-2 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-sm">
-              <span className="text-white font-black text-[10px] tracking-tighter">F2F</span>
-            </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-health-green rounded-sm flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-               <div className="w-1 h-1 bg-white rounded-full" />
-            </div>
-          </div>
-          <span className="text-xs font-black tracking-tighter text-ink uppercase">Fat<span className="text-health-green">2</span>Fit</span>
-        </div>
-        <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Powered by Nevorai Technologies</p>
-      </footer>
-    </div>
-  );
-}
