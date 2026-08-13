@@ -54,13 +54,24 @@ export const upsertKnowledgeItem = createServerFn({ method: "POST" })
     const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: userId, _role: 'admin' });
     if (!isAdmin) throw new Error("Unauthorized: Admin access required");
 
+    const upsertData: any = {
+      title: data.title,
+      content: data.content,
+      type: data.type,
+      status: data.status,
+      created_by: userId,
+      updated_at: new Date().toISOString()
+    };
+
+    if (data.id) upsertData.id = data.id;
+    if (data.category !== undefined) upsertData.category = data.category;
+    if (data.program !== undefined) upsertData.program = data.program;
+    if (data.tags !== undefined) upsertData.tags = data.tags;
+    if (data.metadata !== undefined) upsertData.metadata = data.metadata;
+
     const { data: item, error } = await supabase
       .from("knowledge_base")
-      .upsert({
-        ...data,
-        created_by: userId,
-        updated_at: new Date().toISOString()
-      })
+      .upsert(upsertData)
       .select()
       .single();
 
