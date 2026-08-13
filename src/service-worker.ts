@@ -1,7 +1,3 @@
-/// <reference lib="webworker" />
-
-declare const self: ServiceWorkerGlobalScope;
-
 const CACHE_NAME = 'fat2fit-v1';
 const STATIC_ASSETS = [
   '/',
@@ -15,16 +11,19 @@ const EXCLUDED_PREFIXES = [
   '/supabase/',
 ];
 
-self.addEventListener('install', (event: ExtendableEvent) => {
+// Use any to bypass TS redeclare issues in global scope
+const sw = (self as any);
+
+sw.addEventListener('install', (event: any) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS);
     })
   );
-  self.skipWaiting();
+  sw.skipWaiting();
 });
 
-self.addEventListener('activate', (event: ExtendableEvent) => {
+sw.addEventListener('activate', (event: any) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -32,14 +31,15 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
+          return Promise.resolve(false);
         })
       );
     })
   );
-  self.clients.claim();
+  sw.clients.claim();
 });
 
-self.addEventListener('fetch', (event: FetchEvent) => {
+sw.addEventListener('fetch', (event: any) => {
   const url = new URL(event.request.url);
 
   if (
@@ -77,6 +77,6 @@ self.addEventListener('fetch', (event: FetchEvent) => {
         }
         return new Response('Network error occurred', { status: 408 });
       });
-    }) as Promise<Response>
+    })
   );
 });
