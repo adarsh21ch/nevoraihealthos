@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CoachRouteImport } from './routes/coach'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
@@ -63,6 +64,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -269,6 +275,7 @@ const AdminContentProgramsProgramIdDaysRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/coach': typeof CoachRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/coach': typeof CoachRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -397,6 +406,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/coach'
     | '/dashboard'
     | '/faq'
     | '/how-it-works'
@@ -438,6 +448,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/coach'
     | '/faq'
     | '/how-it-works'
     | '/login'
@@ -480,6 +491,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/admin'
+    | '/coach'
     | '/dashboard'
     | '/faq'
     | '/how-it-works'
@@ -524,6 +536,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  CoachRoute: typeof CoachRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
@@ -559,6 +572,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -929,6 +949,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  CoachRoute: CoachRoute,
   DashboardRoute: DashboardRouteWithChildren,
   FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
