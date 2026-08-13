@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useServerFn } from '@tanstack/react-start';
 import { getMyProfile } from '@/lib/profile/profile.functions';
 
-export const Route = createFileRoute('/_authenticated/p//profile')({
+export const Route = createFileRoute('/_authenticated/p/$tenantSlug/profile')({
   component: ProfilePage,
 });
 

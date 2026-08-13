@@ -30,11 +30,11 @@ function TenantLayout() {
   const primaryColor = tenant.primary_color || '#7C3AED';
 
   const navItems = [
-    { label: 'Today', icon: Home, href: `/p/fat-to-fit/today` },
-    { label: 'Journey', icon: Calendar, href: `/p/fat-to-fit/journey` },
-    { label: 'Diet', icon: Trophy, href: `/p/fat-to-fit/diet` },
-    { label: 'Kit', icon: Package, href: `/p/fat-to-fit/kit` },
-    { label: 'Guide', icon: BookOpen, href: `/p/fat-to-fit/guide` },
+    { label: 'Today', icon: Home, href: `/p/${tenant.slug}/today` },
+    { label: 'Journey', icon: Calendar, href: `/p/${tenant.slug}/journey` },
+    { label: 'Diet', icon: Trophy, href: `/p/${tenant.slug}/diet` },
+    { label: 'Kit', icon: Package, href: `/p/${tenant.slug}/kit` },
+    { label: 'Profile', icon: User, href: `/p/${tenant.slug}/profile` },
   ];
 
   return (
