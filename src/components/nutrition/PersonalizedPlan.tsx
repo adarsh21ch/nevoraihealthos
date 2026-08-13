@@ -68,42 +68,45 @@ export function PersonalizedPlan() {
 
   if (isPlanLoading) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 space-y-4">
-        <div className="w-12 h-12 rounded-full border-4 border-emerald-100 border-t-health-green animate-spin" />
-        <p className="text-sm font-medium text-slate-400 uppercase tracking-widest">Designing your plan...</p>
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <RefreshCw className="w-8 h-8 text-health-green animate-spin" />
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Nutrition Plan...</p>
+      </div>
+    );
+  }
+  
+  if (!plan) {
+    return (
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 text-center space-y-6 shadow-sm">
+        <div className="w-20 h-20 bg-emerald-50 text-health-green rounded-[2rem] flex items-center justify-center mx-auto mb-4">
+          <Utensils className="w-10 h-10" />
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-serif italic font-bold text-ink">Ready for your plan?</h3>
+          <p className="text-sm text-slate-500 max-w-[240px] mx-auto leading-relaxed">
+            Your personalized 9-day metabolic reset nutrition engine is ready.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 pt-4">
+          <Button 
+            onClick={() => generateMutation.mutate()} 
+            disabled={generateMutation.isPending}
+            className="h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+          >
+            {generateMutation.isPending ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Generate Plan"}
+          </Button>
+          <Button 
+            variant="ghost" 
+            asChild
+            className="h-14 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
+          >
+            <a href="/onboarding">Review Health Profile</a>
+          </Button>
+        </div>
       </div>
     );
   }
 
-  if (!plan) {
-    return (
-      <div className="text-center p-8 bg-white border border-slate-100 rounded-[2.5rem] space-y-6">
-        <div className="w-16 h-16 bg-emerald-50 text-health-green rounded-full flex items-center justify-center mx-auto">
-          <Sparkles className="w-8 h-8" />
-        </div>
-        <div className="space-y-2">
-          <h3 className="text-xl font-bold text-ink italic font-serif">Personalize Your Path</h3>
-          <p className="text-sm text-slate-500">We need a few details to craft your nutrition plan based on your metabolism and track.</p>
-        </div>
-        <div className="space-y-3">
-          <Button 
-            onClick={() => generateMutation.mutate()} 
-            disabled={generateMutation.isPending}
-            className="w-full h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.2em]"
-          >
-            {generateMutation.isPending ? "Generating..." : "Generate My Plan"}
-          </Button>
-          <Button 
-            variant="ghost"
-            asChild
-            className="w-full h-12 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-400"
-          >
-            <a href="/onboarding">Update Health Profile</a>
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
 
   const planData = plan.plan_data as any;
