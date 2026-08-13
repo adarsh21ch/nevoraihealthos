@@ -12,8 +12,8 @@ import { Link, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw redirect({ to: "/login" });
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) throw redirect({ to: "/login" });
     
     // Recovery check: platform admins skip the RPC lookup if needed
     if (user.email === 'teamnevorai@gmail.com') return;
