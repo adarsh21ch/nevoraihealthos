@@ -58,9 +58,8 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       .insert({
         user_id: authUser.user.id,
         phone: data.phone || signupValue,
-        fbo_id: data.fbo_id,
         name: "", // Initial empty name, will be filled in onboarding
-      })
+      } as any)
       .select("id")
       .single();
 
