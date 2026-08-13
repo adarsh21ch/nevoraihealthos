@@ -58,8 +58,8 @@ function AdminDashboard() {
           
           <nav className="flex-1 space-y-2 overflow-y-auto pr-2 custom-scrollbar">
               <NavItem icon={LayoutDashboard} label="Overview" to="/admin" />
-              <NavItem icon={Users} label="Users" to="/admin/tenants" />
-              <NavItem icon={FileText} label="Content" to="/admin/content" />
+              <NavItem icon={Users} label="Users" to="/admin/tenants/" />
+              <NavItem icon={FileText} label="Content" to="/admin/content/" />
               <NavItem icon={Key} label="Access Codes" to="/admin/access-codes" />
               <NavItem icon={Settings} label="Settings" to="/admin/settings" />
           </nav>
@@ -163,17 +163,18 @@ function RouteContent({ stats }: { stats: any[] }) {
 }
 
 function NavItem({ icon: Icon, label, to }: any) {
+    const isExact = to === '/admin';
+    
     return (
         <Link 
           to={to}
-          activeOptions={{ exact: true }}
+          activeOptions={{ exact: isExact }}
           className={cn(
             "w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all font-bold text-sm",
             "text-slate-400 hover:bg-slate-800 hover:text-white"
           )}
           activeProps={{ className: "bg-accent text-white shadow-lg shadow-purple-900/20" }}
         >
-
             <Icon className="w-5 h-5" />
             {label}
         </Link>
