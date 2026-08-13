@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { LayoutDashboard, Users, Settings, LogOut, FileText, Database } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { LayoutDashboard, Users, Settings, LogOut, FileText, Database, Activity } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/admin')({
   component: AdminDashboard,
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/admin')({
 function AdminDashboard() {
   const stats = [
     { label: 'Total Users', value: '128', icon: Users },
-    { label: 'Active Programs', value: '84', icon: ActivityIcon },
+    { label: 'Active Programs', value: '84', icon: Activity },
     { label: 'System Health', value: 'Good', icon: Database },
   ];
 
@@ -99,10 +99,3 @@ function NavItem({ icon: Icon, label, active = false }: any) {
         </button>
     );
 }
-
-function ActivityIcon(props: any) {
-    return <ActivityIcon {...props} />; // Placeholder fix
-}
-
-import { Activity as ActivityIconLucide, Activity } from 'lucide-react';
-import { cn } from '@/lib/utils';
