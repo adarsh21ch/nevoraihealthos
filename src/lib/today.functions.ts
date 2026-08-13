@@ -109,7 +109,7 @@ export const getTodayData = createServerFn({ method: "GET" })
       
       return {
           state: 'success',
-          customer: { ...customer, track: activeProgram.track },
+          customer: { ...customer, track: activeProgram?.track || 'standard' },
           todayStr,
           dailyLog: logRes.data,
           dayContent,
