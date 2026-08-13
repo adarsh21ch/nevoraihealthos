@@ -39,7 +39,7 @@ export function PersonalizedPlan() {
   const { data: plan, isLoading: isPlanLoading } = useQuery({
     queryKey: ['my-nutrition-plan'],
     queryFn: () => getPlan(),
-    enabled: readiness?.ready
+    enabled: !!readiness?.ready
   });
 
   const { data: mealLogs } = useQuery({
