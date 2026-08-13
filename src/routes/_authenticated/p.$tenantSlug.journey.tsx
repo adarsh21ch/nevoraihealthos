@@ -75,20 +75,24 @@ function JourneyPage() {
     );
   }
 
-  if (!data || 'state' in data && data.state === 'no_content') {
+  if (!data || (data && 'state' in data && data.state === 'no_content')) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center space-y-8">
-        <div className="w-20 h-20 bg-slate-50 text-slate-300 rounded-[2.5rem] flex items-center justify-center shadow-inner">
-          <Trophy className="w-10 h-10" />
+        <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-[2.5rem] flex items-center justify-center shadow-inner">
+          <Sparkles className="w-10 h-10" />
         </div>
         <div className="space-y-3">
-          <h2 className="text-3xl font-serif italic font-bold text-ink">Your Story Begins Soon</h2>
+          <h2 className="text-3xl font-serif italic font-bold text-ink">Protocol in Preparation</h2>
           <p className="text-slate-500 max-w-xs mx-auto leading-relaxed font-medium">
-            We're preparing your metabolic reset protocol. Check back once your enrollment is finalized.
+            We're setting up your metabolic reset schedule. This usually happens immediately after enrollment is finalized.
           </p>
         </div>
-        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['journey', tenantSlug] })} variant="outline" className="rounded-2xl">
-          Refresh
+        <Button 
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['journey', tenantSlug] })} 
+          variant="outline" 
+          className="rounded-2xl px-8"
+        >
+          Check Enrollment Status
         </Button>
       </div>
     );

@@ -18,20 +18,27 @@ export const getJourneyData = createServerFn({ method: "GET" })
     try {
       // 1. Get customer and their active program reference in parallel
       const [customerRes, activeProgramRes] = await Promise.all([
-        supabase.from("customers").select("id, onboarding_complete").eq("user_id", userId).single(),
+        supabase.from("customers").select("id, onboarding_complete, program_id, track").eq("user_id", userId).single(),
         supabase.from("participant_programs").select("id, program_id, start_date, track").eq("participant_id", userId).order('created_at', { ascending: false }).limit(1).maybeSingle()
       ]);
 
       const customer = customerRes.data;
       const activeProgram = activeProgramRes.data;
 
+      console.log("[getJourneyData] Debug:", { customer, activeProgram });
+
       if (!customer) return { state: 'not_a_customer' };
-      if (!activeProgram) return { state: 'no_content' };
+      
+      const actualProgramId = activeProgram?.program_id || customer.program_id;
+      if (!actualProgramId) {
+        console.warn("[getJourneyData] No program_id found");
+        return { state: 'no_content' };
+      }
 
       // 2. Fetch program, days, and completions in parallel
       const [programRes, daysRes, completionsRes] = await Promise.all([
-        supabase.from("programs").select("id, name, duration_days").eq("id", activeProgram.program_id).single(),
-        supabase.from("program_days").select("id, day_number, title, focus").eq("program_id", activeProgram.program_id).order("day_number", { ascending: true }),
+        supabase.from("programs").select("id, name, duration_days").eq("id", actualProgramId).single(),
+        supabase.from("program_days").select("id, day_number, title, focus").eq("program_id", actualProgramId).order("day_number", { ascending: true }),
         supabase.from("task_completions").select("day_task_id, log_date").eq("customer_id", customer.id)
       ]);
 
@@ -40,7 +47,7 @@ export const getJourneyData = createServerFn({ method: "GET" })
 
       return {
         state: 'success',
-        customer: { ...customer, start_date: activeProgram.start_date, track: activeProgram.track },
+        customer: { ...customer, start_date: activeProgram?.start_date, track: activeProgram?.track || customer.track },
         program: programRes.data,
         programDays: daysRes.data ?? [],
         completions: completionsRes.data ?? []
