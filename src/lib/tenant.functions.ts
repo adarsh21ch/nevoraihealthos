@@ -16,7 +16,7 @@ export const getAppSettings = createServerFn({ method: "GET" })
       return { settings: null, error: error.message };
     }
     
-    return { settings };
+    return { settings: settings as any };
   });
 
 export const getTenantByHint = createServerFn({ method: "GET" })
@@ -45,7 +45,7 @@ export const getTenantByHint = createServerFn({ method: "GET" })
         name: tenant?.brand_name || 'Fat2Fit',
         tagline: tenant?.tagline,
         primary_color: '#16a34a',
-        logo_url: null
+        logo_url: (tenant as any)?.logo_url || null
       }
     };
   });
