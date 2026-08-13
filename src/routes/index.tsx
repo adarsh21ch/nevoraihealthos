@@ -334,11 +334,16 @@ function Index() {
 
       <footer className="py-24 bg-slate-50 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="flex items-center justify-center gap-3 mb-8 group">
-            <div className="w-12 h-11 bg-ink rounded-xl rotate-3 flex items-center justify-center shadow-xl">
-              <span className="text-white font-black text-xl tracking-tighter">F2F</span>
+          <div className="flex items-center justify-center gap-3 mb-8 group cursor-pointer">
+            <div className="relative">
+              <div className="w-12 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl">
+                <span className="text-white font-black text-xl tracking-tighter">F2F</span>
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                 <div className="w-2 h-2 bg-white rounded-full" />
+              </div>
             </div>
-            <span className="text-2xl font-black tracking-tighter text-ink uppercase italic">Fat<span className="text-accent not-italic">2</span>Fit</span>
+            <span className="text-2xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
           </div>
           <p className="text-slate-500 mb-2">© 2026 Fat2Fit. All rights reserved.</p>
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Build by Nevorai Technologies</p>
