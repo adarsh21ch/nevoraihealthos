@@ -12,6 +12,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { updateMyProfile } from "@/lib/profile/profile.functions";
 import { toast } from "sonner";
+import { AppLogo } from "@/components/ui/app-logo";
+
 
 export const Route = createFileRoute("/onboarding")({
   ssr: false,
