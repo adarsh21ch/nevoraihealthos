@@ -96,19 +96,27 @@ export const Route = createRootRouteWithContext<{
   isCustomDomain: boolean;
 }>()({
   loader: async ({ context }) => {
-    const info = await getRequestInfo();
-    const hint = resolveTenantHint(info);
-    
-    let tenant = null;
-    if (hint) {
-      const result = await getTenantByHint({ data: hint });
-      tenant = result.tenant;
+    try {
+      const info = await getRequestInfo();
+      const hint = resolveTenantHint(info);
+      
+      let tenant = null;
+      if (hint) {
+        const result = await getTenantByHint({ data: hint });
+        tenant = result.tenant;
+      }
+      
+      return {
+        tenant,
+        isCustomDomain: hint?.mode === 'domain',
+      };
+    } catch (error) {
+      console.error("Root loader failed:", error);
+      return {
+        tenant: null,
+        isCustomDomain: false,
+      };
     }
-    
-    return {
-      tenant,
-      isCustomDomain: hint?.mode === 'domain',
-    };
   },
   head: ({ loaderData }) => ({
     meta: [
