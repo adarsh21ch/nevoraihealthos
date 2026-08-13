@@ -32,8 +32,11 @@ export const getMyNutritionPlan = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    // Use cast to any to bypass temporary type mismatch while Supabase types regenerate
-    const { data: plan, error } = await (supabase.from("nutrition_plans") as any)
+    // Use a completely untyped approach for the table name to bypass the "never" error
+    // until Supabase types are fully synchronized in the environment.
+    const table: any = "nutrition_plans";
+    const { data: plan, error } = await supabase
+      .from(table)
       .select("*")
       .eq("participant_id", userId)
       .eq("status", "PUBLISHED")
@@ -56,8 +59,10 @@ export const logMealStatus = createServerFn({ method: "POST" })
   }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
+    const table: any = "meal_logs";
 
-    const { error } = await (supabase.from("meal_logs") as any)
+    const { error } = await supabase
+      .from(table)
       .upsert({
         participant_id: userId,
         plan_id: data.planId,
@@ -79,7 +84,10 @@ export const getMealLogs = createServerFn({ method: "GET" })
   }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { data: logs, error } = await (supabase.from("meal_logs") as any)
+    const table: any = "meal_logs";
+    
+    const { data: logs, error } = await supabase
+      .from(table)
       .select("*")
       .eq("participant_id", userId)
       .eq("log_date", data.date);
@@ -118,7 +126,9 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
     });
 
     // 3. Store the plan
-    const { data: newPlan, error: storeError } = await (supabase.from("nutrition_plans") as any)
+    const table: any = "nutrition_plans";
+    const { data: newPlan, error: storeError } = await supabase
+      .from(table)
       .insert({
         participant_id: userId,
         tenant_id: (customer as any).tenant_id,
