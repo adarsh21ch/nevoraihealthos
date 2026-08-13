@@ -58,6 +58,7 @@ export const Route = createFileRoute('/_authenticated')({
       }
       return { authContext };
     } catch (e) {
+      if (e instanceof Error && (e as any).status === 307) throw e;
       console.error("Auth gate error:", e);
       throw redirect({ to: '/login' });
     }
