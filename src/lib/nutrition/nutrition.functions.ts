@@ -121,10 +121,11 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
 
     // 2. Validate Profile Readiness
     const requiredFields = ['name', 'age', 'height_cm', 'weight_kg', 'waist_cm', 'goal', 'activity_level', 'diet_preference'];
-    const missing = requiredFields.filter(f => !customer[f]);
+    const missing = requiredFields.filter(f => !(customer as any)[f]);
     if (missing.length > 0) {
       throw new Error(`Profile incomplete. Please provide: ${missing.join(', ')}`);
     }
+
 
     // 3. Call Gemini Nutrition Engine
 

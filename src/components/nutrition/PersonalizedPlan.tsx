@@ -82,19 +82,29 @@ export function PersonalizedPlan() {
           <Sparkles className="w-8 h-8" />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-bold text-ink italic font-serif">No Plan Yet</h3>
-          <p className="text-sm text-slate-500">Let's build a personalized nutrition plan tailored to your goals and lifestyle.</p>
+          <h3 className="text-xl font-bold text-ink italic font-serif">Personalize Your Path</h3>
+          <p className="text-sm text-slate-500">We need a few details to craft your nutrition plan based on your metabolism and track.</p>
         </div>
-        <Button 
-          onClick={() => generateMutation.mutate()} 
-          disabled={generateMutation.isPending}
-          className="w-full h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-bold"
-        >
-          {generateMutation.isPending ? "Generating..." : "Generate My Plan"}
-        </Button>
+        <div className="space-y-3">
+          <Button 
+            onClick={() => generateMutation.mutate()} 
+            disabled={generateMutation.isPending}
+            className="w-full h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.2em]"
+          >
+            {generateMutation.isPending ? "Generating..." : "Generate My Plan"}
+          </Button>
+          <Button 
+            variant="ghost"
+            asChild
+            className="w-full h-12 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-400"
+          >
+            <a href="/onboarding">Update Health Profile</a>
+          </Button>
+        </div>
       </div>
     );
   }
+
 
   const planData = plan.plan_data as any;
 
