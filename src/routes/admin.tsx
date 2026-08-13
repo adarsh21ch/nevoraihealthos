@@ -12,8 +12,8 @@ import { Link, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw redirect({ to: "/login" });
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) throw redirect({ to: "/login" });
     
     // Recovery check: platform admins skip the RPC lookup if needed
     if (user.email === 'teamnevorai@gmail.com') return;
@@ -40,34 +40,39 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="h-screen bg-slate-50 flex overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-72 bg-slate-900 text-white p-8 space-y-10 flex flex-col border-r border-slate-800">
-        <div className="flex items-center gap-4 px-2">
-            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center font-black text-white shadow-lg shadow-purple-900/20 rotate-3">F2F</div>
-            <div className="flex flex-col">
-              <span className="font-black text-lg tracking-tighter uppercase leading-none">Health OS</span>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Admin Portal</span>
-            </div>
-        </div>
-        
-        <nav className="flex-1 space-y-2">
-            <NavItem icon={LayoutDashboard} label="Overview" to="/admin" />
-            <NavItem icon={Users} label="Users" to="/admin/tenants" />
-            <NavItem icon={FileText} label="Content" to="/admin/content" />
-            <NavItem icon={Key} label="Access Codes" to="/admin/access-codes" />
-            <NavItem icon={Settings} label="Settings" to="/admin/settings" />
-        </nav>
+      <aside className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-800 shrink-0">
+        <div className="p-8 space-y-10 flex flex-col h-full">
+          <div className="flex items-center gap-4 px-2">
+              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center font-black text-white shadow-lg shadow-purple-900/20 rotate-3">F2F</div>
+              <div className="flex flex-col">
+                <span className="font-black text-lg tracking-tighter uppercase leading-none">Health OS</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Admin Portal</span>
+              </div>
+          </div>
+          
+          <nav className="flex-1 space-y-2 overflow-y-auto pr-2 custom-scrollbar">
+              <NavItem icon={LayoutDashboard} label="Overview" to="/admin" />
+              <NavItem icon={Users} label="Users" to="/admin/tenants" />
+              <NavItem icon={FileText} label="Content" to="/admin/content" />
+              <NavItem icon={Key} label="Access Codes" to="/admin/access-codes" />
+              <NavItem icon={Settings} label="Settings" to="/admin/settings" />
+          </nav>
 
-        <div className="pt-8 border-t border-slate-800">
-          <Button 
-            variant="ghost" 
-            className="w-full text-slate-400 hover:text-white hover:bg-slate-800 justify-start gap-3 px-4 h-12 rounded-xl transition-all"
-            onClick={() => supabase.auth.signOut()}
-          >
-              <LogOut className="w-5 h-5" />
-              <span className="font-bold text-sm">Sign Out</span>
-          </Button>
+          <div className="pt-8 mt-auto border-t border-slate-800">
+            <Button 
+              variant="ghost" 
+              className="w-full text-slate-400 hover:text-white hover:bg-slate-800 justify-start gap-3 px-4 h-12 rounded-xl transition-all"
+              onClick={async () => {
+                const { error } = await supabase.auth.signOut();
+                if (!error) window.location.href = '/login';
+              }}
+            >
+                <LogOut className="w-5 h-5" />
+                <span className="font-bold text-sm">Sign Out</span>
+            </Button>
+          </div>
         </div>
       </aside>
 

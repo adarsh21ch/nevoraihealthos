@@ -4,10 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 export const Route = createFileRoute('/_authenticated')({
   ssr: false,
   beforeLoad: async ({ location }) => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     const user = session?.user;
 
-    if (!user) {
+    if (sessionError || !user) {
       throw redirect({
         to: '/login',
         search: { redirect: location.href },
@@ -23,6 +23,13 @@ export const Route = createFileRoute('/_authenticated')({
           tenant_slug: 'fat2fit'
         } 
       };
+    }
+
+    // Optimization: Return early if already in an admin session (trust cookie/storage)
+    // to avoid RPC overhead on every transition
+    const existingContext = (window as any).__AUTH_CONTEXT;
+    if (existingContext && existingContext.role === 'platform_admin') {
+        return { authContext: existingContext };
     }
 
     // Check session for role to avoid RPC if possible

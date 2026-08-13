@@ -88,16 +88,16 @@ function LoginPage() {
       if (signInError) throw signInError;
 
       console.log("Login successful, resolving identity...");
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
       
-      if (!user) {
+      if (userError || !user) {
         throw new Error("Authentication failed: No user session found");
       }
 
       // Hardcoded admin redirect (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
-        navigate({ to: "/admin" });
+        window.location.href = '/admin'; // Direct navigation to avoid SPA state lag
         return;
       }
 
