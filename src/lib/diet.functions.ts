@@ -21,10 +21,10 @@ export const getDietPlan = createServerFn({ method: "POST" })
       targetCalories,
       notice: "This is a base metabolic estimate. Follow the daily tasks in your Today view for the C9 protocol timing.",
       days3to9: [
-        { id: '1', slot: 'morning', name: 'Aloe & Therm', description: '2 Garcinia, 1 Therm, 120ml Aloe, 1 Lite Ultra shake.', is_product: true },
-        { id: '2', slot: 'mid_morning', name: 'Fiber', description: '1 Fiber packet in 300ml water.', is_product: true },
-        { id: '3', slot: 'noon', name: 'Lunch Shake', description: '1 Lite Ultra shake, 1 Therm.', is_product: true },
-        { id: '4', slot: 'evening', name: '600 Cal Meal', description: 'Your main balanced meal of the day.', is_product: false }
+        { id: '1', slot: 'morning', name: 'Morning Protocol', description: '2 Garcinia + 1 Therm (wait 30m) → 120ml Aloe + 1 scoop Lite Ultra.', is_product: true },
+        { id: '2', slot: 'mid_morning', name: 'Fiber Boost', description: '1 Fiber packet in 300ml water. Take separately from nutrients.', is_product: true },
+        { id: '3', slot: 'noon', name: 'Midday Fuel', description: '2 Garcinia + 1 Therm (wait 30m) → 1 scoop Lite Ultra.', is_product: true },
+        { id: '4', slot: 'early_evening', name: '600 Cal Meal', description: 'Healthy Indian meal (e.g. 1 bowl Dal, 1 Roti, green salad).', is_product: false }
       ]
     };
   });

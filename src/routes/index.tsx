@@ -139,7 +139,7 @@ function Index() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
           >
-            Your 9-Day reset. <span className="relative inline-block">Guided daily<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-ink/10 rounded-full" /></span>.
+            Run your C9 wellness program with <span className="relative inline-block">perfect clarity<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-ink/10 rounded-full" /></span>.
           </motion.h1>
           
           <motion.p 
@@ -148,7 +148,7 @@ function Index() {
             transition={{ delay: 0.2 }}
             className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-16 font-medium"
           >
-            A science-based nutritional reset to help you jumpstart your wellness journey, lose inches, and feel lighter in just nine days.
+            The dedicated portal for the Fat2Fit reset. Track your supplements, plan your Indian 600-cal meals, and reach your transformation goals with daily expert guidance.
           </motion.p>
 
           <motion.div 
@@ -255,15 +255,15 @@ function Index() {
           <div className="md:col-span-8 p-12 rounded-[3rem] bg-white border border-slate-100 hover:shadow-2xl hover:shadow-blue-50/50 transition-all duration-500 group relative overflow-hidden">
             <div className="relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-10 group-hover:scale-110 transition-transform duration-500">
-                <Layers className="w-8 h-8" />
+                <Package className="w-8 h-8" />
               </div>
-              <h4 className="text-3xl font-bold text-slate-900 mb-6">Multi-Tenant Orchestration</h4>
+              <h4 className="text-3xl font-bold text-slate-900 mb-6">C9 Smart Protocol</h4>
               <p className="text-slate-500 text-lg leading-relaxed max-w-md">
-                Launch unlimited distributor-branded portals on a single core. Complete data isolation with zero infrastructure overhead.
+                Pre-loaded with the official 2024 C9 timings. From morning Aloe to evening Therm, your daily schedule is automated and optimized.
               </p>
               <div className="mt-12 flex gap-4">
-                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">RLS Isolated</div>
-                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">Dynamic Theming</div>
+                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">Metric Units</div>
+                <div className="px-4 py-2 rounded-xl bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-100">Reset & Steady Tracks</div>
               </div>
             </div>
             <div className="absolute bottom-0 right-0 w-80 h-80 bg-linear-to-br from-blue-50 to-transparent rounded-full -mb-20 -mr-20 group-hover:scale-125 transition-transform duration-700" />
@@ -274,9 +274,9 @@ function Index() {
               <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-blue-400 mb-10 group-hover:rotate-12 transition-transform">
                 <Zap className="w-8 h-8" />
               </div>
-              <h4 className="text-3xl font-bold mb-6">Smart Program Engine</h4>
+              <h4 className="text-3xl font-bold mb-6">Progress Intelligence</h4>
               <p className="text-slate-400 text-lg leading-relaxed">
-                Visual workflow builder for health journeys. Automate tasks, follow-ups, and biometric tracking.
+                Measurement locks for Days 1 & 10 to focus on true transformation. Interactive charts and private photo gallery for visual proof.
               </p>
               <div className="mt-10 pt-10 border-t border-white/10 flex items-center justify-between">
                 <span className="text-sm font-bold opacity-60">Learn more</span>

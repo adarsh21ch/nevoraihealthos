@@ -57,7 +57,13 @@ function ProgressPage() {
   const photos = photoResult?.data || [];
 
   const addMutation = useMutation({
-    mutationFn: (data: any) => addMeasurementFn({ data: { ...data, customerId, day_number: measurements.length === 0 ? 1 : 10 } }),
+    mutationFn: (data: any) => {
+      const day = todayData && !('redirect' in todayData) ? (todayData as any).dayContent?.day_number : 0;
+      if (day !== 1 && day !== 10) {
+        throw new Error("Measurements are only recorded on Day 1 and Day 10 per C9 protocol.");
+      }
+      return addMeasurementFn({ data: { ...data, customerId, day_number: day } });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['measurements'] });
       setIsAdding(false);
