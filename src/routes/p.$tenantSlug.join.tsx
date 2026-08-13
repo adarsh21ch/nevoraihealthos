@@ -160,6 +160,7 @@ function JoinPage() {
               onChange={(e) => setFboId(e.target.value)}
               className="h-12 rounded-xl border-slate-200"
               autoComplete="off"
+              required
             />
           </div>
 
@@ -174,6 +175,7 @@ function JoinPage() {
               onChange={(e) => setAccessCode(e.target.value)}
               className="h-12 rounded-xl border-slate-200"
               autoComplete="off"
+              required
             />
           </div>
 
