@@ -48,19 +48,22 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 4. Create Customer Row (Legacy support)
+    // We now have dropped NOT NULL constraints on phone, distributor_id, track, language
     const { data: customer, error: customerError } = await supabaseAdmin
       .from("customers")
       .insert({
         user_id: authUser.user.id,
         fbo_id: data.fbo_id,
-        name: "", 
+        name: data.email.split('@')[0], // Use email prefix as temporary name
+        onboarding_complete: false,
       } as any)
       .select("id")
       .single();
 
     if (customerError || !customer) {
+      console.error("Customer creation error:", customerError);
       await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
-      throw customerError;
+      throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
     // 5. Mark access code as used
