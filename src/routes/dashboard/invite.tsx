@@ -44,16 +44,22 @@ function InvitePage() {
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="bg-white border-slate-100 rounded-[2.5rem] shadow-sm">
           <CardHeader className="px-8 pt-8 pb-4">
-            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Join Link</CardTitle>
+            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Join Link & Access Code</CardTitle>
           </CardHeader>
           <CardContent className="px-8 pb-8 space-y-6">
             <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col items-center gap-6">
               <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
                 <QrCode className="w-32 h-32 text-slate-900" />
               </div>
-              <code className="text-xs font-bold text-slate-500 break-all text-center px-4">/p/fat2fit/join</code>
-              <Button className="w-full bg-slate-900 text-white font-bold rounded-xl" onClick={() => { navigator.clipboard.writeText(joinUrl); toast.success("Link copied"); }}>
-                <Copy className="w-4 h-4 mr-2" /> Copy Link
+              <div className="text-center space-y-1">
+                <code className="text-xs font-bold text-slate-500 break-all px-4 block">/p/fat2fit/join</code>
+                <div className="text-lg font-black text-slate-900 bg-white px-4 py-2 rounded-xl border border-slate-200 inline-block mt-2">
+                  FAT2FIT
+                </div>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Access Code</p>
+              </div>
+              <Button className="w-full bg-slate-900 text-white font-bold rounded-xl" onClick={() => { navigator.clipboard.writeText(`${joinUrl} (Code: FAT2FIT)`); toast.success("Link & Code copied"); }}>
+                <Copy className="w-4 h-4 mr-2" /> Copy Invitation
               </Button>
             </div>
           </CardContent>
