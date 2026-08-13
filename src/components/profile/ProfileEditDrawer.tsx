@@ -56,9 +56,10 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
       });
       
       // Allergies is an array
-      if (typeof scrubbedData.allergies === 'string') {
-        scrubbedData.allergies = scrubbedData.allergies.split(',').map(s => s.trim()).filter(Boolean);
+      if (typeof scrubbedData['allergies'] === 'string') {
+        scrubbedData['allergies'] = scrubbedData['allergies'].split(',').map(s => s.trim()).filter(Boolean);
       }
+
 
       return updateProfile({ data: scrubbedData });
     },
