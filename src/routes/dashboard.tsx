@@ -11,7 +11,8 @@ export const Route = createFileRoute("/dashboard")({
     if (!user) throw redirect({ to: "/login" });
     
     const { data: context } = await supabase.rpc("get_my_auth_context");
-    if ((context as any)?.role !== "tenant_owner") {
+    const role = (context as any)?.role;
+    if (role !== "tenant_owner" && role !== "platform_admin") {
       toast.error("Access denied: Tenant Owner only");
       throw redirect({ to: "/login" });
     }

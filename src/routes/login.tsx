@@ -74,13 +74,20 @@ function LoginPage() {
         }
       }
 
+      console.log("Attempting sign in with:", loginEmail);
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
+        email: loginEmail.trim(),
         password: signInPassword,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("Email or phone number is required")) {
+          throw new Error("Please enter your email/FBO ID and password");
+        }
+        throw error;
+      }
 
+      console.log("Login successful, fetching auth context...");
       const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
       if (contextError) throw contextError;
 

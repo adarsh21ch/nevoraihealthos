@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,15 @@ import { LayoutDashboard, Users, Settings, LogOut, FileText, Database, Activity 
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/admin')({
+  beforeLoad: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw redirect({ to: "/login" });
+    
+    const { data: context } = await supabase.rpc("get_my_auth_context");
+    if ((context as any)?.role !== "platform_admin") {
+      throw redirect({ to: "/login" });
+    }
+  },
   component: AdminDashboard,
 });
 
