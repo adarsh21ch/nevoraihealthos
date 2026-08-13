@@ -41,7 +41,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
         user_id: authUser.user.id,
         fbo_id: data.fbo_id,
         name: "", // Initial empty name, will be filled in onboarding
-      })
+      } as any)
       .select("id")
       .single();
 
@@ -73,7 +73,7 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
     // Try finding by FBO ID
     const { data: customer } = await supabaseAdmin
       .from("customers")
-      .select("user_id")
+      .select("user_id" as any)
       .eq("fbo_id" as any, data.identifier)
       .maybeSingle();
       
