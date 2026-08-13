@@ -67,6 +67,7 @@ export const Route = createFileRoute('/_authenticated')({
             throw redirect({ to: newPath as any });
         }
 
+
         if (role === 'participant') {
           if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
               throw redirect({ to: '/onboarding' });
