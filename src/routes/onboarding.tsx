@@ -109,7 +109,7 @@ function OnboardingPage() {
         } as any);
       }
 
-      navigate({ to: "/p/fat-to-fit/today" as any });
+      navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: 'fat-to-fit' } as any });
     } catch (err: any) {
       setError(err.message);
     } finally {
