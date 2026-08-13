@@ -74,8 +74,9 @@ function LoginPage() {
         }
       }
 
+      console.log("Attempting sign in with:", loginEmail);
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
+        email: loginEmail.trim(),
         password: signInPassword,
       });
 
