@@ -26,8 +26,10 @@ import { Route as ProgramRouteImport } from './routes/program'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminAccessCodesRouteImport } from './routes/admin/access-codes'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminTipsRouteImport } from './routes/admin/tips'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardAccessRouteImport } from './routes/dashboard/access'
@@ -136,6 +138,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
+  id: '/access-codes',
+  path: '/access-codes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -144,6 +151,11 @@ const AdminProductsRoute = AdminProductsRouteImport.update({
 const AdminProgramsRoute = AdminProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTipsRoute = AdminTipsRouteImport.update({
@@ -288,8 +300,10 @@ export interface FileRoutesByFullPath {
   '/program': typeof ProgramRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
@@ -329,8 +343,10 @@ export interface FileRoutesByTo {
   '/program': typeof ProgramRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
@@ -374,8 +390,10 @@ export interface FileRoutesById {
   '/program': typeof ProgramRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/tips': typeof AdminTipsRoute
   '/dashboard/access': typeof DashboardAccessRoute
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
@@ -419,8 +437,10 @@ export interface FileRouteTypes {
     | '/program'
     | '/signup'
     | '/terms'
+    | '/admin/access-codes'
     | '/admin/products'
     | '/admin/programs'
+    | '/admin/settings'
     | '/admin/tips'
     | '/dashboard/access'
     | '/dashboard/at-risk'
@@ -460,8 +480,10 @@ export interface FileRouteTypes {
     | '/program'
     | '/signup'
     | '/terms'
+    | '/admin/access-codes'
     | '/admin/products'
     | '/admin/programs'
+    | '/admin/settings'
     | '/admin/tips'
     | '/dashboard/access'
     | '/dashboard/at-risk'
@@ -504,8 +526,10 @@ export interface FileRouteTypes {
     | '/program'
     | '/signup'
     | '/terms'
+    | '/admin/access-codes'
     | '/admin/products'
     | '/admin/programs'
+    | '/admin/settings'
     | '/admin/tips'
     | '/dashboard/access'
     | '/dashboard/at-risk'
@@ -672,6 +696,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/access-codes': {
+      id: '/admin/access-codes'
+      path: '/access-codes'
+      fullPath: '/admin/access-codes'
+      preLoaderRoute: typeof AdminAccessCodesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/products': {
       id: '/admin/products'
       path: '/products'
@@ -684,6 +715,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/admin/programs'
       preLoaderRoute: typeof AdminProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tips': {
@@ -891,8 +929,10 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAccessCodesRoute: typeof AdminAccessCodesRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTipsRoute: typeof AdminTipsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminTenantsTenantIdRoute: typeof AdminTenantsTenantIdRoute
@@ -902,8 +942,10 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAccessCodesRoute: AdminAccessCodesRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminProgramsRoute: AdminProgramsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminTipsRoute: AdminTipsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminTenantsTenantIdRoute: AdminTenantsTenantIdRoute,

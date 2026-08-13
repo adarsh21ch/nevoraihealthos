@@ -25,18 +25,18 @@ function AdminTenants() {
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-5xl font-bold tracking-tight text-ink leading-none">Customers</h1>
-        <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Global customer list for Fat2Fit.</p>
+        <h1 className="text-5xl font-bold tracking-tight text-ink leading-none font-serif italic">Customers</h1>
+        <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Global directory for all program participants.</p>
       </div>
 
       <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
             <TableRow className="border-slate-100 bg-slate-50/50 hover:bg-slate-50/50">
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Customer</TableHead>
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Phone</TableHead>
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Program</TableHead>
-              <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] py-6">Joined</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Customer</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Phone</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Program</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Joined</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
