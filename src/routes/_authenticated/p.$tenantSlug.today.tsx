@@ -191,32 +191,32 @@ function TodayPage() {
   const slotsOrder = ['morning', 'mid_morning', 'noon', 'early_evening', 'evening', 'all_day'];
 
   return (
-    <div className="animate-in fade-in duration-500 space-y-8 md:space-y-12">
+    <div className="animate-in fade-in duration-500 space-y-8 md:space-y-12 pb-12 lg:pb-0">
       {/* Header & Progress Ring */}
-      <div className="flex flex-col md:flex-row justify-between items-start gap-6">
-        <div>
-          <h2 className="text-sm font-bold text-slate-400 mb-1">Good morning, {customer?.name?.split(' ')[0] || 'there'}</h2>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="space-y-1">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Day {dayNumber} of 9</p>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl md:text-5xl lg:text-6xl font-bold text-ink tracking-tight italic font-serif uppercase leading-none">Day {dayNumber} of 9</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-ink tracking-tight italic font-serif uppercase leading-none">Today's Protocol</h2>
           </div>
         </div>
-        <div className="flex items-center gap-6 bg-white p-4 pr-8 rounded-[2rem] border border-slate-100 shadow-sm">
-          <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+        <div className="flex items-center gap-4 bg-white p-4 pr-6 rounded-3xl border border-slate-100 shadow-sm">
+          <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
             <svg className="w-full h-full -rotate-90">
-              <circle cx="32" cy="32" r="28" fill="none" stroke="#F1F5F9" strokeWidth="5" />
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#F1F5F9" strokeWidth="4" />
               <circle
-                cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="5"
-                strokeDasharray={175.9} strokeDashoffset={175.9 * (1 - progressPercent / 100)}
+                cx="24" cy="24" r="21" fill="none" stroke="currentColor" strokeWidth="4"
+                strokeDasharray={131.9} strokeDashoffset={131.9 * (1 - progressPercent / 100)}
                 strokeLinecap="round" className="text-health-green transition-all duration-1000 ease-out"
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center">
-              <span className="text-xs font-black text-ink">{progressPercent}%</span>
+              <span className="text-[10px] font-black text-ink">{progressPercent}%</span>
             </div>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Overall Progress</p>
-            <p className="text-sm font-bold text-ink">{completedTasks} of {totalTasks} tasks complete</p>
+            <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Overall Progress</p>
+            <p className="text-xs font-bold text-ink">{completedTasks} of {totalTasks} tasks</p>
           </div>
         </div>
       </div>
