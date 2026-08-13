@@ -40,10 +40,12 @@ export function AppLogo({ className, iconOnly = false, variant = 'dark' }: AppLo
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
       <div className={cn(
-        "w-10 h-10 rounded-xl flex items-center justify-center font-black text-white shadow-lg rotate-3 shrink-0",
+        "rounded-xl flex items-center justify-center font-black text-white shadow-lg rotate-3 shrink-0 overflow-hidden",
+        iconOnly ? "h-10 w-10" : "w-10 h-10",
         variant === 'dark' ? "bg-accent shadow-purple-900/20" : "bg-white/20 shadow-black/20"
       )}>
-        F2F
+        <span className={cn(iconOnly ? "text-[10px]" : "text-xs")}>F2F</span>
+
       </div>
       {!iconOnly && (
         <h1 className={cn(

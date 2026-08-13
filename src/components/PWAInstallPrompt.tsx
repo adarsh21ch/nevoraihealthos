@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Share, PlusSquare, X } from "lucide-react";
+import { AppLogo } from "./ui/app-logo";
+
 import { toast } from "sonner";
 
 export function PWAInstallPrompt() {
@@ -71,9 +73,10 @@ export function PWAInstallPrompt() {
         </button>
 
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-10 bg-ink rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg">
-            F2F
+          <div className="w-12 h-10 bg-ink rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+            <AppLogo iconOnly variant="light" className="scale-75" />
           </div>
+
           <div>
             <h3 className="font-bold text-ink">Install Fat2Fit</h3>
             <p className="text-xs text-slate-500">Add to home screen for the full experience.</p>
