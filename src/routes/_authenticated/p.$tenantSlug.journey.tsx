@@ -153,7 +153,8 @@ function JourneyPage() {
 
               {/* Day Content Card */}
               <Link
-                to={isFuture ? undefined : `/p/${tenantSlug}/today`}
+                to={isFuture ? "/p/$tenantSlug/journey" : "/p/$tenantSlug/today"}
+                params={{ tenantSlug }}
                 disabled={isFuture}
                 className={cn(
                   "flex-1 p-6 rounded-[2.2rem] border transition-all duration-500 text-left relative overflow-hidden",
