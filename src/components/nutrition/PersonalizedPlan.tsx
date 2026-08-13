@@ -17,8 +17,10 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyNutritionPlan, generateMyPersonalizedPlan, logMealStatus, getMealLogs } from "@/lib/nutrition/nutrition.functions";
+import { validateProfileReadiness } from "@/lib/profile/profile.functions";
 import { getISTDateString } from "@/lib/date-utils";
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
 
 export function PersonalizedPlan() {
   const queryClient = useQueryClient();
@@ -27,10 +29,17 @@ export function PersonalizedPlan() {
   const generatePlan = useServerFn(generateMyPersonalizedPlan);
   const logMutationFn = useServerFn(logMealStatus);
   const getLogs = useServerFn(getMealLogs);
+  const checkReadiness = useServerFn(validateProfileReadiness);
+
+  const { data: readiness, isLoading: isReadinessLoading } = useQuery({
+    queryKey: ['profile-readiness'],
+    queryFn: () => checkReadiness()
+  });
 
   const { data: plan, isLoading: isPlanLoading } = useQuery({
     queryKey: ['my-nutrition-plan'],
-    queryFn: () => getPlan()
+    queryFn: () => getPlan(),
+    enabled: readiness?.ready
   });
 
   const { data: mealLogs } = useQuery({
