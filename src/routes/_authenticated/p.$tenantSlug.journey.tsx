@@ -103,26 +103,28 @@ function JourneyPage() {
   const currentDay = customer?.start_date ? getProgramDayNumber(customer.start_date) : 1;
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-16 pb-32 animate-in fade-in duration-1000">
+    <div className="w-full animate-in fade-in duration-1000">
       {/* Editorial Header */}
-      <header className="mb-12 relative">
-        <div className="flex items-center gap-2 mb-4">
-           <div className="w-6 h-6 rounded-lg bg-health-green/10 flex items-center justify-center">
-             <Trophy className="w-3.5 h-3.5 text-health-green" />
+      <header className="mb-16 relative">
+        <div className="flex items-center gap-3 mb-6">
+           <div className="w-8 h-8 rounded-xl bg-health-green/10 flex items-center justify-center">
+             <Trophy className="w-4 h-4 text-health-green" />
            </div>
-           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Day {currentDay} of {duration}</span>
+           <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em]">Day {currentDay} of {duration}</span>
         </div>
-        <h1 className="text-6xl font-bold text-ink tracking-tighter italic font-serif leading-none">Your Journey</h1>
-        <div className="flex items-baseline gap-3 mt-6">
-          <p className="text-slate-500 font-medium text-sm italic">"You're building consistency, one day at a time."</p>
-          <div className="h-1 flex-1 bg-slate-100 rounded-full relative overflow-hidden">
+        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-ink tracking-tighter italic font-serif leading-none">Your Journey</h1>
+        <div className="flex flex-col md:flex-row md:items-center gap-6 mt-10">
+          <p className="text-slate-500 font-medium text-lg italic max-w-md">"You're building consistency, one day at a time."</p>
+          <div className="h-2 flex-1 bg-slate-100 rounded-full relative overflow-hidden">
             <div 
-              className="absolute inset-y-0 left-0 bg-health-green transition-all duration-1000" 
+              className="absolute inset-y-0 left-0 bg-health-green shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-1000" 
               style={{ width: `${Math.min(100, (currentDay / duration) * 100)}%` }}
             />
           </div>
+          <span className="text-[11px] font-black text-ink uppercase tracking-widest">{Math.round((currentDay / duration) * 100)}% Complete</span>
         </div>
       </header>
+
 
       {/* AI Coach Milestone Insight */}
       {insights?.message && (
