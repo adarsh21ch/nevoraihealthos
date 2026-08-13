@@ -459,8 +459,52 @@ function OnboardingPage() {
                     </div>
                   </div>
                 )}
+                
+                {/* Timing */}
+                {currentStep.id === 'timing' && (
+                  <div className="space-y-4">
+                    <h2 className="text-2xl font-serif italic font-bold text-ink">Meal Timing</h2>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Wake up time</Label>
+                        <Input type="time" value={formData.wake_time} onChange={e => updateField('wake_time', e.target.value)} className="h-14 rounded-2xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Sleep time</Label>
+                        <Input type="time" value={formData.sleep_time} onChange={e => updateField('sleep_time', e.target.value)} className="h-14 rounded-2xl" />
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-                {/* Program Track */}
+                {/* Health Concerns */}
+                {currentStep.id === 'health' && (
+                  <div className="space-y-4">
+                    <h2 className="text-2xl font-serif italic font-bold text-ink">Health Concerns</h2>
+                    <p className="text-[10px] text-slate-400">Any allergies or health issues we should know about?</p>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Allergies (comma separated)</Label>
+                        <Input 
+                          placeholder="e.g. Peanuts, Shellfish" 
+                          value={formData.allergies.join(', ')} 
+                          onChange={e => updateField('allergies', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} 
+                          className="h-14 rounded-2xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Other Concerns</Label>
+                        <textarea 
+                          className="w-full h-32 p-4 rounded-2xl bg-slate-50 border-none text-sm" 
+                          placeholder="e.g. Hypertension, Diabetes, etc."
+                          value={formData.health_concerns}
+                          onChange={e => updateField('health_concerns', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {currentStep.id === 'program' && (
                   <div className="space-y-4">
                     <h2 className="text-2xl font-serif italic font-bold text-ink">Select Program</h2>
