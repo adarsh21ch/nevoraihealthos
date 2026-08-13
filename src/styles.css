@@ -4,11 +4,11 @@
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "DM Serif Display", serif;
 
-  --color-accent: #7C3AED;
+  --color-accent: #8B5CF6; /* Vibrant Violet */
   --color-accent-soft: #F5F3FF;
-  --color-surface: #FCFBF8;
-  --color-ink: #1A1A1A;
-  --color-muted: #64748B;
+  --color-surface: #FDFCFB; /* Warm Paper White */
+  --color-ink: #0F172A; /* Deep Navy Ink */
+  --color-muted: #475569;
 
   --radius-3xl: 1.5rem;
   --radius-4xl: 2rem;

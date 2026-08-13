@@ -121,8 +121,8 @@ function OnboardingPage() {
     <div className="min-h-screen bg-surface flex flex-col items-center p-6 font-sans">
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        <div className="text-center space-y-4 pt-12">
-          <div className="w-20 h-16 bg-accent text-white rounded-3xl flex items-center justify-center font-bold text-2xl mx-auto shadow-xl shadow-purple-200">F2F</div>
+        <div className="text-center space-y-6 pt-12">
+          <div className="w-20 h-16 bg-ink text-white rounded-3xl rotate-3 flex items-center justify-center font-black text-3xl mx-auto shadow-2xl">F2</div>
           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
               <div className="h-full bg-accent transition-all duration-500 ease-out" style={{ width: `${(step / TOTAL_STEPS) * 100}%` }} />
           </div>

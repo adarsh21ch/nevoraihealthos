@@ -23,9 +23,16 @@ function Index() {
     <div className="flex flex-col min-h-screen bg-surface selection:bg-purple-100">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-accent rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-200 text-center">F2F</div>
-            <span className="text-xl font-bold tracking-tight text-ink">Fat2Fit</span>
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="relative">
+              <div className="w-11 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl">
+                <span className="text-white font-black text-xl tracking-tighter">F2</span>
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                 <div className="w-2 h-2 bg-white rounded-full" />
+              </div>
+            </div>
+            <span className="text-2xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             {['Program', 'How It Works', 'Nutrition', 'FAQ'].map(item => (
@@ -37,26 +44,26 @@ function Index() {
       </nav>
 
       <header className="relative pt-48 pb-36 px-6 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-100/40 via-surface to-surface" />
+        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-violet-100/50 via-surface to-surface" />
         <div className="max-w-7xl mx-auto text-center relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-sm font-bold uppercase tracking-[0.2em] mb-8 animate-pulse">
-              The Ultimate 9-Day Metabolic Reset
+            <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-accent/20">
+              The Metabolic Renaissance
             </span>
-            <h1 className="text-6xl md:text-[9rem] font-serif italic tracking-tighter text-ink leading-[0.85] mb-12">
-              Lose weight. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-tighter">Gain vitality.</span>
+            <h1 className="text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12">
+              Shed the old. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em] block mt-4">Embrace the Fit.</span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
-              Join the premium C9 wellness system. A science-backed reset designed to strip away toxicity and kickstart sustainable weight loss in just nine days.
+              Join the elite Fat2Fit 9-day reset. A masterclass in metabolic efficiency, designed to transform your cellular energy and reveal your true vitality.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link to="/login" className="group relative px-10 py-5 bg-accent text-white rounded-full text-lg font-bold shadow-2xl shadow-purple-200/50 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 overflow-hidden">
-                <span className="relative z-10">Start Your Transformation</span>
+              <Link to="/login" className="group relative px-12 py-6 bg-ink text-white rounded-2xl text-lg font-black uppercase tracking-widest shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-3 overflow-hidden">
+                <span className="relative z-10">Start The Reset</span>
                 <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-accent to-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
-              <a href="#program" className="px-10 py-5 bg-white text-ink border border-slate-200 rounded-full text-lg font-bold transition-all hover:border-accent hover:text-accent hover:shadow-lg">
-                Explore The Science
+              <a href="#program" className="px-12 py-6 bg-white text-ink border-2 border-slate-100 rounded-2xl text-lg font-bold transition-all hover:border-accent hover:text-accent hover:shadow-xl">
+                The Protocol
               </a>
             </div>
           </motion.div>
