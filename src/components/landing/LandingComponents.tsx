@@ -7,10 +7,10 @@ export const FeatureCard = ({ icon: Icon, title, description, color = "accent" }
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    className="p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-accent/30 transition-all shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(124,58,237,0.1)] group relative overflow-hidden"
+    className="p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-emerald-200 transition-all shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(16,185,129,0.1)] group relative overflow-hidden"
   >
     <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-125 duration-700" />
-    <div className={`w-16 h-16 bg-accent-soft text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white group-hover:rotate-6 transition-all duration-500 relative z-10 shadow-sm shadow-purple-100`}>
+    <div className={`w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-500 group-hover:text-white group-hover:rotate-6 transition-all duration-500 relative z-10 shadow-sm shadow-emerald-100`}>
       <Icon className="w-8 h-8" />
     </div>
     <h4 className="text-2xl font-bold text-ink mb-4 relative z-10 group-hover:text-accent transition-colors">{title}</h4>
@@ -97,8 +97,8 @@ export const StatBox = ({ label, value, description }: { label: string, value: s
 export const StepIcon = ({ day, active, completed }: { day: number, active?: boolean, completed?: boolean }) => (
   <div className="flex flex-col items-center gap-2">
     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold transition-all ${
-      active ? 'bg-accent text-white shadow-lg shadow-purple-200' : 
-      completed ? 'bg-purple-100 text-accent' : 'bg-slate-50 text-slate-400'
+      active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' : 
+      completed ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'
     }`}>
       {completed ? <CheckCircle2 className="w-6 h-6" /> : day}
     </div>
