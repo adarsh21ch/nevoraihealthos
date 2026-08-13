@@ -42,11 +42,13 @@ function Index() {
   const { tenant } = Route.useRouteContext();
   const navigate = useNavigate();
 
-  // Always redirect to the Fat2Fit join flow as the primary entry point
+  // Redirect to login if unauthenticated (managed by Route beforeLoad in some cases, but here as a failsafe)
+  // Or simply let the landing page render. The user wants to "merge" auth, so landing should probably point to /login.
+  // We'll remove the auto-redirect to let the landing page be visible.
   useEffect(() => {
-    const slug = tenant?.slug || "fat2fit";
-    navigate({ to: '/p/$tenantSlug/join', params: { tenantSlug: slug }, replace: true });
-  }, [tenant, navigate]);
+    // If we wanted to force login:
+    // navigate({ to: '/login', replace: true });
+  }, []);
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -166,7 +168,7 @@ function Index() {
               to="/login" 
               className="w-full sm:w-auto px-12 py-6 glass-card text-ink rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
             >
-              <ShieldCheck className="w-5 h-5 text-ink" /> Admin Access
+              <Users className="w-5 h-5 text-ink" /> Partner Program
             </Link>
           </motion.div>
         </motion.div>
