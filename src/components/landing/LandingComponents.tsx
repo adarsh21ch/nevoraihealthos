@@ -7,14 +7,14 @@ export const FeatureCard = ({ icon: Icon, title, description, color = "accent" }
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    className="p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-accent/30 transition-all shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(124,58,237,0.08)] group relative overflow-hidden"
+    className="p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-accent/30 transition-all shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(124,58,237,0.1)] group relative overflow-hidden"
   >
-    <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
-    <div className={`w-16 h-16 bg-purple-50 text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform relative z-10`}>
+    <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-125 duration-700" />
+    <div className={`w-16 h-16 bg-accent-soft text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white group-hover:rotate-6 transition-all duration-500 relative z-10 shadow-sm shadow-purple-100`}>
       <Icon className="w-8 h-8" />
     </div>
-    <h4 className="text-2xl font-bold text-ink mb-4 relative z-10">{title}</h4>
-    <p className="text-slate-500 text-base leading-relaxed relative z-10">{description}</p>
+    <h4 className="text-2xl font-bold text-ink mb-4 relative z-10 group-hover:text-accent transition-colors">{title}</h4>
+    <p className="text-slate-500 text-base leading-relaxed relative z-10 group-hover:text-slate-600 transition-colors">{description}</p>
   </motion.div>
 );
 
@@ -69,16 +69,17 @@ export const PillarCard = ({ number, title, description, icon: Icon }: { number:
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ delay: number * 0.05 }}
-    className="relative p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group"
+    className="relative p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group overflow-hidden"
   >
-    <div className="flex justify-between items-start mb-8">
-      <div className="w-14 h-14 bg-slate-50 text-accent rounded-2xl flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors">
+    <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-150 duration-700" />
+    <div className="flex justify-between items-start mb-8 relative z-10">
+      <div className="w-14 h-14 bg-slate-50 text-accent rounded-2xl flex items-center justify-center group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
         <Icon className="w-7 h-7" />
       </div>
-      <span className="text-5xl font-black text-slate-100 group-hover:text-accent/10 transition-colors leading-none">{number}</span>
+      <span className="text-5xl font-black text-slate-100 group-hover:text-accent/20 transition-all duration-500 leading-none">{number}</span>
     </div>
-    <h4 className="text-2xl font-bold text-ink mb-4">{title}</h4>
-    <p className="text-slate-500 text-base leading-relaxed">{description}</p>
+    <h4 className="text-2xl font-bold text-ink mb-4 relative z-10 group-hover:text-accent transition-colors">{title}</h4>
+    <p className="text-slate-500 text-base leading-relaxed relative z-10 group-hover:text-slate-600 transition-colors">{description}</p>
   </motion.div>
 );
 
