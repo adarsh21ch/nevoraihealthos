@@ -121,7 +121,7 @@ export const Route = createRootRouteWithContext<{
       { property: "og:description", content: "Personalized infrastructure for your Fat2Fit wellness journey." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@HealthOS" },
+      { name: "twitter:site", content: "@Fat2Fit" },
     ],
     links: [
       {
