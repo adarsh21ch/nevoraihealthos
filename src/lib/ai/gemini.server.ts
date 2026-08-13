@@ -39,24 +39,36 @@ export async function generateCoachMessage({ geminiKey, customer, logs, measurem
 /**
  * Handles interactive chat with the AI assistant
  */
-export async function chatWithAi({ geminiKey, userMessage, customerName, track }: { 
+export async function chatWithAi({ supabase, geminiKey, userMessage, customerName, track }: { 
+  supabase: any;
   geminiKey: string; 
   userMessage: string; 
   customerName: string;
   track: string;
 }) {
+  // 1. Retrieve relevant knowledge for the chat
+  const { getRelevantKnowledge } = await import("./knowledge.server");
+  const knowledgeContext = await getRelevantKnowledge(supabase, {
+    program: track === 'DX4' ? 'DX4' : 'C9',
+    types: ['PROGRAM', 'NUTRITION', 'FAQ', 'FOOD', 'PROTEIN']
+  });
+
   const prompt = `
-    You are the Fat2Fit AI Assistant. You help participants with their 9-day reset journey.
+    You are the Fat2Fit AI Assistant. You help participants with their journey.
     User Name: ${customerName}
     Program Track: ${track}
     
-    Rules:
-    1. Be concise and professional.
-    2. Answer questions about the C9/DX4 protocol.
-    3. If they ask about medical issues, tell them to consult their doctor/GP.
-    4. Focus on hydration, movement, and following the supplement schedule.
+    FAT2FIT KNOWLEDGE BASE:
+    ${knowledgeContext}
     
-    User Question: ${userMessage}
+    RULES:
+    1. Answer ONLY based on the Fat2Fit Knowledge Base provided above.
+    2. If the information is not in the Knowledge Base, say: "I don't have that information in my Fat2Fit program guide. Please check with your coach."
+    3. Be concise and professional.
+    4. Focus on hydration, movement, and program compliance.
+    5. If they ask about medical issues, tell them to consult their doctor.
+    
+    USER QUESTION: ${userMessage}
   `;
 
   return callGemini(geminiKey, prompt);

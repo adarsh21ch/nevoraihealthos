@@ -74,6 +74,7 @@ export const askAiAssistant = createServerFn({ method: "POST" })
       .single();
 
     const response = await chatWithAi({
+      supabase,
       geminiKey,
       userMessage: data.message,
       customerName: customer?.name || "Participant",

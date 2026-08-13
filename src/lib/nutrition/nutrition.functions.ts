@@ -8,12 +8,17 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export interface NutritionPlan {
   id: string;
   participant_id: string;
-  tenant_id: string;
+  distributor_id: string;
   version: number;
   status: 'DRAFT' | 'AI_GENERATED' | 'PENDING_REVIEW' | 'APPROVED' | 'PUBLISHED' | 'ARCHIVED';
   plan_data: any;
-  generated_at: string;
+  knowledge_version?: string;
+  rule_version?: string;
   model_info: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
+  changes_summary?: string;
+  generated_at: string;
 }
 
 export interface MealLog {
@@ -117,6 +122,7 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
     // 2. Call Gemini Nutrition Engine
     const { generateNutritionPlan } = await import("../ai/nutrition.server");
     const planResult = await generateNutritionPlan({
+      supabase,
       geminiKey,
       customer,
       latestMeasurement,
@@ -129,10 +135,11 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
       .from(table)
       .insert({
         participant_id: userId,
-        tenant_id: (customer as any).tenant_id,
+        distributor_id: (customer as any).distributor_id,
         status: 'PUBLISHED',
         plan_data: planResult,
-        model_info: 'gemini-1.5-pro'
+        model_info: 'gemini-1.5-pro',
+        knowledge_version: planResult.knowledge_version || '1.0'
       })
       .select()
       .single();

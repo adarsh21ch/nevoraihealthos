@@ -55,6 +55,62 @@ export type Database = {
           },
         ]
       }
+      ai_generation_logs: {
+        Row: {
+          completion_tokens: number | null
+          created_at: string | null
+          distributor_id: string
+          error_message: string | null
+          generation_type: string
+          id: string
+          knowledge_version: string | null
+          model: string
+          participant_id: string
+          prompt_tokens: number | null
+          rule_version: string | null
+          safety_flags: string[] | null
+          status: string
+        }
+        Insert: {
+          completion_tokens?: number | null
+          created_at?: string | null
+          distributor_id: string
+          error_message?: string | null
+          generation_type: string
+          id?: string
+          knowledge_version?: string | null
+          model: string
+          participant_id: string
+          prompt_tokens?: number | null
+          rule_version?: string | null
+          safety_flags?: string[] | null
+          status: string
+        }
+        Update: {
+          completion_tokens?: number | null
+          created_at?: string | null
+          distributor_id?: string
+          error_message?: string | null
+          generation_type?: string
+          id?: string
+          knowledge_version?: string | null
+          model?: string
+          participant_id?: string
+          prompt_tokens?: number | null
+          rule_version?: string | null
+          safety_flags?: string[] | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_generation_logs_distributor_id_fkey"
+            columns: ["distributor_id"]
+            isOneToOne: false
+            referencedRelation: "distributors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_admins: {
         Row: {
           created_at: string
@@ -360,6 +416,109 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_base: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          created_by: string | null
+          distributor_id: string | null
+          id: string
+          metadata: Json | null
+          program: string | null
+          source: string | null
+          status: string
+          tags: string[] | null
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          distributor_id?: string | null
+          id?: string
+          metadata?: Json | null
+          program?: string | null
+          source?: string | null
+          status?: string
+          tags?: string[] | null
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          distributor_id?: string | null
+          id?: string
+          metadata?: Json | null
+          program?: string | null
+          source?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_base_distributor_id_fkey"
+            columns: ["distributor_id"]
+            isOneToOne: false
+            referencedRelation: "distributors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_logs: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          log_date: string
+          meal_id: string
+          participant_id: string
+          plan_id: string
+          status: string
+          substitution_data: Json | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          log_date: string
+          meal_id: string
+          participant_id: string
+          plan_id: string
+          status: string
+          substitution_data?: Json | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          log_date?: string
+          meal_id?: string
+          participant_id?: string
+          plan_id?: string
+          status?: string
+          substitution_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_logs_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "nutrition_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meals: {
         Row: {
           calorie_bucket: number
@@ -496,6 +655,68 @@ export type Database = {
           participant_id?: string
         }
         Relationships: []
+      }
+      nutrition_plans: {
+        Row: {
+          changes_summary: string | null
+          created_at: string | null
+          distributor_id: string
+          generated_at: string | null
+          id: string
+          knowledge_version: string | null
+          model_info: string | null
+          participant_id: string
+          plan_data: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          rule_version: string | null
+          status: string
+          updated_at: string | null
+          version: number
+        }
+        Insert: {
+          changes_summary?: string | null
+          created_at?: string | null
+          distributor_id: string
+          generated_at?: string | null
+          id?: string
+          knowledge_version?: string | null
+          model_info?: string | null
+          participant_id: string
+          plan_data: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rule_version?: string | null
+          status: string
+          updated_at?: string | null
+          version?: number
+        }
+        Update: {
+          changes_summary?: string | null
+          created_at?: string | null
+          distributor_id?: string
+          generated_at?: string | null
+          id?: string
+          knowledge_version?: string | null
+          model_info?: string | null
+          participant_id?: string
+          plan_data?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rule_version?: string | null
+          status?: string
+          updated_at?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nutrition_plans_distributor_id_fkey"
+            columns: ["distributor_id"]
+            isOneToOne: false
+            referencedRelation: "distributors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       participant_programs: {
         Row: {

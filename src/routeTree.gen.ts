@@ -27,6 +27,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin/access-codes'
+import { Route as AdminKnowledgeRouteImport } from './routes/admin/knowledge'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
@@ -36,6 +37,7 @@ import { Route as DashboardAccessRouteImport } from './routes/dashboard/access'
 import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
 import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
 import { Route as DashboardInviteRouteImport } from './routes/dashboard/invite'
+import { Route as DashboardPlansRouteImport } from './routes/dashboard/plans'
 import { Route as DashboardProductsRouteImport } from './routes/dashboard/products'
 import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder'
 import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
@@ -143,6 +145,11 @@ const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
   path: '/access-codes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminKnowledgeRoute = AdminKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -186,6 +193,11 @@ const DashboardBrandingRoute = DashboardBrandingRouteImport.update({
 const DashboardInviteRoute = DashboardInviteRouteImport.update({
   id: '/invite',
   path: '/invite',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPlansRoute = DashboardPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardProductsRoute = DashboardProductsRouteImport.update({
@@ -301,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/knowledge': typeof AdminKnowledgeRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -309,6 +322,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/plans': typeof DashboardPlansRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
@@ -344,6 +358,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/knowledge': typeof AdminKnowledgeRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -352,6 +367,7 @@ export interface FileRoutesByTo {
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/plans': typeof DashboardPlansRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
@@ -391,6 +407,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/knowledge': typeof AdminKnowledgeRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -399,6 +416,7 @@ export interface FileRoutesById {
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/plans': typeof DashboardPlansRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
@@ -438,6 +456,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/admin/access-codes'
+    | '/admin/knowledge'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -446,6 +465,7 @@ export interface FileRouteTypes {
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/invite'
+    | '/dashboard/plans'
     | '/dashboard/products'
     | '/dashboard/reorder'
     | '/dashboard/testimonials'
@@ -481,6 +501,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/admin/access-codes'
+    | '/admin/knowledge'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -489,6 +510,7 @@ export interface FileRouteTypes {
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/invite'
+    | '/dashboard/plans'
     | '/dashboard/products'
     | '/dashboard/reorder'
     | '/dashboard/testimonials'
@@ -527,6 +549,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/admin/access-codes'
+    | '/admin/knowledge'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -535,6 +558,7 @@ export interface FileRouteTypes {
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/invite'
+    | '/dashboard/plans'
     | '/dashboard/products'
     | '/dashboard/reorder'
     | '/dashboard/testimonials'
@@ -703,6 +727,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAccessCodesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/knowledge': {
+      id: '/admin/knowledge'
+      path: '/knowledge'
+      fullPath: '/admin/knowledge'
+      preLoaderRoute: typeof AdminKnowledgeRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/products': {
       id: '/admin/products'
       path: '/products'
@@ -764,6 +795,13 @@ declare module '@tanstack/react-router' {
       path: '/invite'
       fullPath: '/dashboard/invite'
       preLoaderRoute: typeof DashboardInviteRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/plans': {
+      id: '/dashboard/plans'
+      path: '/plans'
+      fullPath: '/dashboard/plans'
+      preLoaderRoute: typeof DashboardPlansRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/products': {
@@ -930,6 +968,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAccessCodesRoute: typeof AdminAccessCodesRoute
+  AdminKnowledgeRoute: typeof AdminKnowledgeRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -943,6 +982,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAccessCodesRoute: AdminAccessCodesRoute,
+  AdminKnowledgeRoute: AdminKnowledgeRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminProgramsRoute: AdminProgramsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
@@ -962,6 +1002,7 @@ interface DashboardRouteChildren {
   DashboardAtRiskRoute: typeof DashboardAtRiskRoute
   DashboardBrandingRoute: typeof DashboardBrandingRoute
   DashboardInviteRoute: typeof DashboardInviteRoute
+  DashboardPlansRoute: typeof DashboardPlansRoute
   DashboardProductsRoute: typeof DashboardProductsRoute
   DashboardReorderRoute: typeof DashboardReorderRoute
   DashboardTestimonialsRoute: typeof DashboardTestimonialsRoute
@@ -975,6 +1016,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAtRiskRoute: DashboardAtRiskRoute,
   DashboardBrandingRoute: DashboardBrandingRoute,
   DashboardInviteRoute: DashboardInviteRoute,
+  DashboardPlansRoute: DashboardPlansRoute,
   DashboardProductsRoute: DashboardProductsRoute,
   DashboardReorderRoute: DashboardReorderRoute,
   DashboardTestimonialsRoute: DashboardTestimonialsRoute,
