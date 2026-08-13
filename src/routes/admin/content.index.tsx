@@ -179,12 +179,72 @@ function FastListTab({ data, isLoading, onSave, queryKey, columns }: any) {
 }
 
 // ... ProgramsTab and ProductsTab remain (I'll keep them short for brevity)
-function ProgramsTab({ programs, isLoading, onSave }: any) {
-  // Existing implementation
-  return <div>Existing Programs Tab</div>;
+function ProgramsTab({ programs, isLoading }: any) {
+  return (
+    <Card className="border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white">
+      <CardHeader className="flex flex-row justify-between items-center p-8 bg-slate-50/50 border-b border-slate-100">
+        <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Programs</CardTitle>
+        <Button className="bg-accent text-white rounded-xl h-10 px-6 font-bold shadow-lg shadow-purple-100">
+          <Plus className="mr-2 h-4 w-4" /> Add Program
+        </Button>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-slate-100 bg-slate-50/30 hover:bg-slate-50/30">
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Name</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Duration</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6 text-right pr-10">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow><TableCell colSpan={3} className="py-20 text-center"><Loader2 className="animate-spin h-6 w-6 text-slate-300 mx-auto" /></TableCell></TableRow>
+            ) : programs?.map((p: any) => (
+              <TableRow key={p.id} className="border-slate-100 hover:bg-slate-50 transition-colors">
+                <TableCell className="pl-10 py-7 font-bold text-ink">{p.name}</TableCell>
+                <TableCell className="text-slate-500 font-medium">{p.duration_days} Days</TableCell>
+                <TableCell className="text-right pr-10"><Button variant="ghost" size="icon" className="rounded-lg text-slate-300 hover:text-accent"><Edit2 className="h-4 w-4" /></Button></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
 }
 
-function ProductsTab({ products, isLoading, onSave }: any) {
-  // Existing implementation
-  return <div>Existing Products Tab</div>;
+function ProductsTab({ products, isLoading }: any) {
+  return (
+    <Card className="border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white">
+      <CardHeader className="flex flex-row justify-between items-center p-8 bg-slate-50/50 border-b border-slate-100">
+        <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Products</CardTitle>
+        <Button className="bg-accent text-white rounded-xl h-10 px-6 font-bold shadow-lg shadow-purple-100">
+          <Plus className="mr-2 h-4 w-4" /> Add Product
+        </Button>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-slate-100 bg-slate-50/30 hover:bg-slate-50/30">
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Product</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Code</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6 text-right pr-10">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow><TableCell colSpan={3} className="py-20 text-center"><Loader2 className="animate-spin h-6 w-6 text-slate-300 mx-auto" /></TableCell></TableRow>
+            ) : products?.map((p: any) => (
+              <TableRow key={p.id} className="border-slate-100 hover:bg-slate-50 transition-colors">
+                <TableCell className="pl-10 py-7 font-bold text-ink">{p.name}</TableCell>
+                <TableCell className="text-slate-500 font-medium">{p.code}</TableCell>
+                <TableCell className="text-right pr-10"><Button variant="ghost" size="icon" className="rounded-lg text-slate-300 hover:text-accent"><Edit2 className="h-4 w-4" /></Button></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
 }
