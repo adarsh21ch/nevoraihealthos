@@ -141,15 +141,29 @@ function FastListTab({ data, isLoading, onSave, queryKey, columns }: any) {
               {items.map((item: any, idx: number) => (
                 <TableRow key={idx}>
                   {columns.map((col: any) => (
-                    <TableCell key={col.field}>
+                    <TableCell key={col.field} className="py-6">
                       {col.type === "textarea" ? 
-                        <Textarea defaultValue={item[col.field]} onBlur={(e) => setItems(items.map((i, k) => k === idx ? { ...i, [col.field]: e.target.value } : i))} /> :
-                        <Input type={col.type} defaultValue={item[col.field]} onBlur={(e) => setItems(items.map((i, k) => k === idx ? { ...i, [col.field]: col.type === "number" ? parseInt(e.target.value) : e.target.value } : i))} />
+                        <Textarea 
+                          defaultValue={item[col.field]} 
+                          onBlur={(e) => setItems(items.map((i, k) => k === idx ? { ...i, [col.field]: e.target.value } : i))} 
+                          className="min-h-[100px] rounded-xl border-slate-200"
+                        /> :
+                        <Input 
+                          type={col.type} 
+                          defaultValue={item[col.field]} 
+                          onBlur={(e) => setItems(items.map((i, k) => k === idx ? { ...i, [col.field]: col.type === "number" ? parseInt(e.target.value) : e.target.value } : i))} 
+                          className="h-10 rounded-xl border-slate-200"
+                        />
                       }
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <Button variant="ghost" size="icon" onClick={() => mutation.mutate(items[idx])}>
+                  <TableCell className="text-right pr-10">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => mutation.mutate(items[idx])}
+                      className="text-slate-300 hover:text-accent hover:bg-purple-50 rounded-lg transition-colors"
+                    >
                       <Save className="h-4 w-4" />
                     </Button>
                   </TableCell>
