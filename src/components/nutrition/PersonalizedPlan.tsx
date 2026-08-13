@@ -147,7 +147,7 @@ export function PersonalizedPlan() {
             asChild
             className="h-14 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
           >
-            <Link to="/p/fat-to-fit/profile">Review Health Profile</Link>
+            <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: 'fat-to-fit' }}>Review Health Profile</Link>
           </Button>
         </div>
       </div>
