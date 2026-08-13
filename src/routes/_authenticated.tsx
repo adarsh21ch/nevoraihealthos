@@ -22,9 +22,9 @@ export const Route = createFileRoute('/_authenticated')({
 
     // Gating logic based on Premium Fat2Fit roles
     if (location.pathname.startsWith('/admin')) {
-      if (role !== 'admin') throw redirect({ to: '/login' });
+      if (role !== 'platform_admin' && role !== 'admin') throw redirect({ to: '/login' });
     } else if (location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
-      if (role !== 'coach' && role !== 'admin') throw redirect({ to: '/login' });
+      if (role !== 'tenant_owner' && role !== 'coach' && role !== 'admin') throw redirect({ to: '/login' });
     } else if (location.pathname.startsWith('/p/')) {
       if (role === 'participant') {
         if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
