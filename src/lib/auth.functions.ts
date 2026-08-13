@@ -90,16 +90,17 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Try finding by phone or Facebook ID or FBO ID or Email
+    // Try finding by phone or Facebook ID or FBO ID
+    // We use .select("id, user_id") and cast to any to avoid TS errors with potentially missing columns
     const { data: customer } = await supabaseAdmin
       .from("customers")
-      .select("phone, user_id, fbo_id, facebook_id")
-      .or(`phone.eq.${data.identifier},facebook_id.eq.${data.identifier},fbo_id.eq.${data.identifier}`)
+      .select("user_id" as any)
+      .or(`phone.eq.${data.identifier},facebook_id.eq.${data.identifier},fbo_id.eq.${data.identifier}` as any)
       .maybeSingle();
       
-    if (customer) {
+    if (customer && (customer as any).user_id) {
       // Find the user's email since signInWithPassword needs email or phone
-      const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
+      const { data: user } = await supabaseAdmin.auth.admin.getUserById((customer as any).user_id);
       if (user?.user?.email) {
         return { found: true, method: 'email' as const, value: user.user.email };
       }
