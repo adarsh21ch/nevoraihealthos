@@ -72,8 +72,21 @@ export const updateMyProfile = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
     
-    // If DOB is provided, calculate age
+    // Mapping frontend display values to database check constraint values
     let finalData = { ...data };
+    if (data.gender) {
+      const genderMap: Record<string, string> = {
+        'Male': 'male',
+        'Female': 'female',
+        'Other': 'other'
+      };
+      // Only map if it's one of the known frontend values
+      if (genderMap[data.gender]) {
+        finalData.gender = genderMap[data.gender];
+      }
+    }
+
+    // If DOB is provided, calculate age
     if (data.dob) {
       const birthDate = new Date(data.dob);
       const today = new Date();
@@ -90,7 +103,11 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       .update(finalData as any)
       .eq("user_id", userId);
 
-    if (error) throw error;
+    if (error) {
+      console.error("[updateMyProfile] Database error:", error);
+      throw new Error(error.message || "Failed to update profile");
+    }
+    
     return { success: true };
   });
 
