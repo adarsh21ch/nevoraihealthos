@@ -12,9 +12,9 @@ const EXCLUDED_PREFIXES = [
 ];
 
 // Use any to bypass TS redeclare issues in global scope
-const sw = (self as any);
+const sw = self;
 
-sw.addEventListener('install', (event: any) => {
+sw.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS);
@@ -23,7 +23,7 @@ sw.addEventListener('install', (event: any) => {
   sw.skipWaiting();
 });
 
-sw.addEventListener('activate', (event: any) => {
+sw.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -31,7 +31,7 @@ sw.addEventListener('activate', (event: any) => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
-          return Promise.resolve(false);
+          return Promise.resolve(undefined);
         })
       );
     })
@@ -39,7 +39,7 @@ sw.addEventListener('activate', (event: any) => {
   sw.clients.claim();
 });
 
-sw.addEventListener('fetch', (event: any) => {
+sw.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   if (
