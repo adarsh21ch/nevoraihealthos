@@ -51,7 +51,7 @@ export const getTodayData = createServerFn({ method: "GET" })
       // 1. Get customer and their active program
       const { data: customer, error: customerErr } = await supabase
         .from("customers")
-        .select("id, onboarding_complete")
+        .select("id, onboarding_complete, program_id")
         .eq("user_id", userId)
         .single();
 
@@ -68,12 +68,15 @@ export const getTodayData = createServerFn({ method: "GET" })
         .limit(1)
         .maybeSingle();
 
-      if (progErr || !activeProgram || !activeProgram.start_date) {
-        return { state: 'no_content' };
+      const actualProgramId = activeProgram?.program_id || customer.program_id;
+
+      if (!actualProgramId) {
+        return { state: 'no_content', message: "No active program found." };
       }
 
       const todayStr = getISTDateString();
-      const dayNumber = getProgramDayNumber(activeProgram.start_date);
+      // If we don't have a start_date, we might be in a weird state, but try to recover or show content
+      const dayNumber = activeProgram?.start_date ? getProgramDayNumber(activeProgram.start_date) : 1;
       
       // If program is finished (Day 10+)
       if (dayNumber > 9) {
@@ -96,9 +99,9 @@ export const getTodayData = createServerFn({ method: "GET" })
               .eq("log_date", todayStr)
               .maybeSingle(),
           supabase.rpc("get_day_with_tasks", {
-              _program_id: activeProgram.program_id,
+              _program_id: actualProgramId,
               _date: todayStr,
-              _start_date: activeProgram.start_date
+              _start_date: activeProgram?.start_date || todayStr
           } as any)
       ]);
 
