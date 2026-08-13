@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       access_codes: {
         Row: {
+          coach_id: string | null
           code: string
           created_at: string
           customer_id: string | null
@@ -25,6 +26,7 @@ export type Database = {
           used_at: string | null
         }
         Insert: {
+          coach_id?: string | null
           code: string
           created_at?: string
           customer_id?: string | null
@@ -34,6 +36,7 @@ export type Database = {
           used_at?: string | null
         }
         Update: {
+          coach_id?: string | null
           code?: string
           created_at?: string
           customer_id?: string | null
@@ -101,6 +104,7 @@ export type Database = {
           created_at: string
           disclaimer_accepted_at: string | null
           distributor_id: string
+          fbo_id: string | null
           gender: string | null
           goal_weight_kg: number | null
           height_cm: number | null
@@ -122,6 +126,7 @@ export type Database = {
           created_at?: string
           disclaimer_accepted_at?: string | null
           distributor_id?: string
+          fbo_id?: string | null
           gender?: string | null
           goal_weight_kg?: number | null
           height_cm?: number | null
@@ -143,6 +148,7 @@ export type Database = {
           created_at?: string
           disclaimer_accepted_at?: string | null
           distributor_id?: string
+          fbo_id?: string | null
           gender?: string | null
           goal_weight_kg?: number | null
           height_cm?: number | null
@@ -392,6 +398,47 @@ export type Database = {
           },
         ]
       }
+      participant_programs: {
+        Row: {
+          coach_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          participant_id: string
+          program_id: string
+          start_date: string | null
+          track: string | null
+        }
+        Insert: {
+          coach_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          participant_id: string
+          program_id: string
+          start_date?: string | null
+          track?: string | null
+        }
+        Update: {
+          coach_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          participant_id?: string
+          program_id?: string
+          start_date?: string | null
+          track?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participant_programs_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_admins: {
         Row: {
           created_at: string
@@ -592,6 +639,7 @@ export type Database = {
           day_task_id: string
           id: string
           log_date: string
+          participant_program_id: string | null
         }
         Insert: {
           completed_at?: string
@@ -599,6 +647,7 @@ export type Database = {
           day_task_id: string
           id?: string
           log_date: string
+          participant_program_id?: string | null
         }
         Update: {
           completed_at?: string
@@ -606,6 +655,7 @@ export type Database = {
           day_task_id?: string
           id?: string
           log_date?: string
+          participant_program_id?: string | null
         }
         Relationships: [
           {
@@ -620,6 +670,13 @@ export type Database = {
             columns: ["day_task_id"]
             isOneToOne: false
             referencedRelation: "day_tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_completions_participant_program_id_fkey"
+            columns: ["participant_program_id"]
+            isOneToOne: false
+            referencedRelation: "participant_programs"
             referencedColumns: ["id"]
           },
         ]
@@ -645,6 +702,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -663,13 +738,20 @@ export type Database = {
       }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
       get_my_auth_context: { Args: never; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_app_admin: { Args: { _uid?: string }; Returns: boolean }
       is_my_distributor: { Args: { _customer: string }; Returns: boolean }
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
       my_customer_id: { Args: never; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "coach" | "participant"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -796,6 +878,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "coach", "participant"],
+    },
   },
 } as const

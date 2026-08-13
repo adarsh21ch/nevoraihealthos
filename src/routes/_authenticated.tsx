@@ -20,12 +20,13 @@ export const Route = createFileRoute('/_authenticated')({
 
     const { role, onboarding_complete } = authContext as any;
 
+    // Gating logic based on Premium Fit to Fit roles
     if (location.pathname.startsWith('/admin')) {
       if (role !== 'admin') throw redirect({ to: '/login' });
     } else if (location.pathname.startsWith('/dashboard')) {
-      if (role !== 'distributor' && role !== 'admin') throw redirect({ to: '/login' });
+      if (role !== 'coach' && role !== 'admin') throw redirect({ to: '/login' });
     } else if (location.pathname.startsWith('/p/')) {
-      if (role === 'customer' && !onboarding_complete && !location.pathname.endsWith('/onboarding')) {
+      if (role === 'participant' && !onboarding_complete && !location.pathname.endsWith('/onboarding')) {
         throw redirect({ to: '/onboarding' });
       }
     }
