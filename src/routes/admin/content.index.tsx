@@ -101,8 +101,9 @@ function FastListTab({ data, isLoading, onSave, queryKey, columns }: any) {
   const queryClient = useQueryClient();
   const [items, setItems] = useState<any[]>(data || []);
   
-  // Initialize on load
-  useState(() => { if (data) setItems(data); });
+  useEffect(() => {
+    if (data) setItems(data);
+  }, [data]);
 
   const mutation = useMutation({
     mutationFn: onSave,
