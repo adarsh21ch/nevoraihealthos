@@ -4,9 +4,7 @@ import { z } from "zod";
 
 export const createCustomerAccount = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
-    tenant_slug: z.string(),
     access_code: z.string(),
-    fbo_id: z.string(),
     email: z.string().optional().nullable(),
     phone: z.string().optional().nullable(),
     facebook_id: z.string().optional().nullable(),
@@ -18,41 +16,19 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // 1. Resolve tenant by slug
-    const { data: tenant, error: tenantError } = await supabaseAdmin
-      .from("tenants")
-      .select("id")
-      .eq("slug", data.tenant_slug)
-      .single();
-
-    if (tenantError || !tenant) {
-      throw new Error("Invalid tenant or access code");
-    }
-
-    // Check access code
+    // 1. Check access code
     const { data: creds, error: credsError } = await supabaseAdmin
-      .from("tenant_signup_credentials")
-      .select("access_code")
-      .eq("tenant_id", tenant.id)
-      .single();
-
-    if (credsError || creds.access_code !== data.access_code) {
-      throw new Error("Invalid tenant or access code");
-    }
-
-    // 2. Check if fbo_id exists
-    const { data: existingCustomer } = await supabaseAdmin
-      .from("customers")
-      .select("id")
-      .eq("fbo_id", data.fbo_id)
+      .from("access_codes")
+      .select("id, phone")
+      .eq("code", data.access_code)
+      .is("used_at", null)
       .maybeSingle();
 
-    if (existingCustomer) {
-      throw new Error("Already registered — try logging in");
+    if (credsError || !creds) {
+      throw new Error("Invalid or already used access code");
     }
 
-    // 3. Create Auth User
-    // If Facebook ID is used, we create a mock email to use as the primary identifier
+    // 2. Create Auth User
     let signupValue = "";
     let signupMethod: 'email' | 'phone' | 'facebook' = 'email';
 
@@ -74,23 +50,27 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     if (authError) throw authError;
 
-    // 4. Create Customer Row
-    const { error: customerError } = await supabaseAdmin
+    // 3. Create Customer Row
+    const { data: customer, error: customerError } = await supabaseAdmin
       .from("customers")
       .insert({
-        tenant_id: tenant.id,
         user_id: authUser.user.id,
-        fbo_id: data.fbo_id,
-        email: data.email || (signupMethod === 'facebook' ? signupValue : null),
-        phone: data.phone || null,
-        name: "", // Initial empty name, will be filled in onboarding wizard step 1
-      });
+        phone: data.phone || signupValue,
+        name: "", // Initial empty name, will be filled in onboarding
+      })
+      .select("id")
+      .single();
 
-    if (customerError) {
-      // Cleanup auth user on failure
+    if (customerError || !customer) {
       await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
       throw customerError;
     }
+
+    // 4. Mark access code as used
+    await supabaseAdmin
+      .from("access_codes")
+      .update({ used_at: new Date().toISOString(), customer_id: customer.id })
+      .eq("id", creds.id);
 
     return { 
       success: true, 
@@ -106,29 +86,14 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Sequential lookups to avoid injection in .or()
-    const tryFind = async (column: 'fbo_id' | 'email' | 'phone') => {
-      const { data: customer } = await supabaseAdmin
-        .from("customers")
-        .select("email, phone")
-        .eq(column, data.identifier)
-        .maybeSingle();
-      return customer;
-    };
+    // Try finding by phone (the identifier used for customers usually)
+    const { data: customer } = await supabaseAdmin
+      .from("customers")
+      .select("phone")
+      .eq("phone", data.identifier)
+      .maybeSingle();
 
-    const customer =
-      (await tryFind("fbo_id")) ??
-      (await tryFind("email")) ??
-      (await tryFind("phone"));
-
-    if (!customer) {
-      return { found: false };
-    }
-
-    // Determine real auth identity
-    if (customer.email) {
-      return { found: true, method: 'email' as const, value: customer.email };
-    } else if (customer.phone) {
+    if (customer) {
       return { found: true, method: 'phone' as const, value: customer.phone };
     }
 
@@ -144,9 +109,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
-    // Check authorization using the RLS-protected function via request-scoped client
     const { data: canAccess, error: accessError } = await supabase.rpc("can_access_customer", { 
-      _uid: userId,
       _customer: data.customerId 
     });
 
