@@ -125,7 +125,7 @@ function OnboardingPage() {
         waist_cm: Number(waist)
       } as any);
 
-      navigate({ to: "/p/fat2fit/today" as any });
+      navigate({ to: "/p/c9/today" as any });
     } catch (err: any) {
       setError(err.message);
     } finally {
