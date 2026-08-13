@@ -36,10 +36,10 @@ function AdminContentManagement() {
   const { data: faqs, isLoading: loadingFAQs } = useQuery({ queryKey: ["admin-faqs"], queryFn: () => getFAQsFn() });
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Content Management</h1>
-        <Button variant="outline" asChild><Link to="/admin">Back to Performance</Link></Button>
+    <div className="space-y-10 animate-in fade-in duration-500">
+      <div>
+        <h1 className="text-5xl font-bold tracking-tight text-ink leading-none font-serif italic">Content Management</h1>
+        <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Global library for programs, products, and insights.</p>
       </div>
 
       <Tabs defaultValue="programs" className="w-full">
