@@ -103,41 +103,53 @@ function JourneyPage() {
   const currentDay = customer?.start_date ? getProgramDayNumber(customer.start_date) : 1;
 
   return (
-    <div className="w-full animate-in fade-in duration-1000">
+    <div className="w-full animate-in fade-in duration-1000 max-w-6xl mx-auto lg:px-8">
       {/* Editorial Header */}
       <header className="mb-16 relative">
-        <div className="flex items-center gap-3 mb-6">
-           <div className="w-8 h-8 rounded-xl bg-health-green/10 flex items-center justify-center">
-             <Trophy className="w-4 h-4 text-health-green" />
-           </div>
-           <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em]">Day {currentDay} of {duration}</span>
-        </div>
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-ink tracking-tighter italic font-serif leading-none">Your Journey</h1>
-        <div className="flex flex-col md:flex-row md:items-center gap-6 mt-10">
-          <p className="text-slate-500 font-medium text-lg italic max-w-md">"You're building consistency, one day at a time."</p>
-          <div className="h-2 flex-1 bg-slate-100 rounded-full relative overflow-hidden">
-            <div 
-              className="absolute inset-y-0 left-0 bg-health-green shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-1000" 
-              style={{ width: `${Math.min(100, (currentDay / duration) * 100)}%` }}
-            />
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-8 h-8 rounded-xl bg-health-green/10 flex items-center justify-center">
+                 <Trophy className="w-4 h-4 text-health-green" />
+               </div>
+               <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em]">Day {currentDay} of {duration}</span>
+            </div>
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-ink tracking-tighter italic font-serif leading-none">Your Journey</h1>
           </div>
-          <span className="text-[11px] font-black text-ink uppercase tracking-widest">{Math.round((currentDay / duration) * 100)}% Complete</span>
+          
+          <div className="flex flex-col gap-6 md:w-full md:max-w-md">
+            <p className="text-slate-500 font-medium text-lg italic">"You're building consistency, one day at a time."</p>
+            <div className="space-y-3">
+              <div className="h-2 w-full bg-slate-100 rounded-full relative overflow-hidden">
+                <div 
+                  className="absolute inset-y-0 left-0 bg-health-green shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-1000" 
+                  style={{ width: `${Math.min(100, (currentDay / duration) * 100)}%` }}
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
+                <span className="text-[11px] font-black text-ink uppercase tracking-widest">{Math.round((currentDay / duration) * 100)}% Complete</span>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
 
       {/* AI Coach Milestone Insight */}
       {insights?.message && (
-        <section className="bg-emerald-900 text-white rounded-[2.5rem] p-8 mb-12 relative overflow-hidden shadow-2xl shadow-emerald-900/20">
-          <div className="absolute top-0 right-0 p-6 opacity-20 rotate-12">
-            <Sparkles className="w-20 h-20 text-health-green" />
+        <section className="bg-emerald-900 text-white rounded-[2.5rem] p-8 lg:p-12 mb-16 relative overflow-hidden shadow-2xl shadow-emerald-900/20">
+          <div className="absolute top-0 right-0 p-6 lg:p-10 opacity-20 rotate-12">
+            <Sparkles className="w-24 h-24 lg:w-32 lg:h-32 text-health-green" />
           </div>
-          <div className="relative z-10 space-y-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-health-green" />
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-health-green">AI Coach Perspective</h4>
+          <div className="relative z-10 space-y-6 max-w-3xl">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-health-green" />
+              </div>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-health-green">AI Coach Perspective</h4>
             </div>
-            <p className="text-lg font-serif italic font-medium leading-relaxed text-emerald-50">
+            <p className="text-2xl md:text-3xl lg:text-4xl font-serif italic font-medium leading-tight text-emerald-50">
               "{insights.message}"
             </p>
           </div>
@@ -145,9 +157,9 @@ function JourneyPage() {
       )}
 
       {/* Timeline Interface */}
-      <div className="relative space-y-6">
+      <div className="relative space-y-8 lg:space-y-12">
         {/* Connection Line */}
-        <div className="absolute left-[27.5px] top-10 bottom-10 w-0.5 bg-slate-100 -z-10" />
+        <div className="absolute left-[27.5px] lg:left-[39.5px] top-10 bottom-10 w-0.5 bg-slate-100 -z-10" />
 
         {[...Array(duration)].map((_, i) => {
           const dayNum = i + 1;
@@ -158,22 +170,22 @@ function JourneyPage() {
           
           return (
             <div key={dayNum} className={cn(
-              "flex gap-6 items-start group transition-all duration-500",
+              "flex gap-6 lg:gap-10 items-start group transition-all duration-500",
               isPast && "opacity-50"
             )}>
               {/* Day Indicator Node */}
               <div className={cn(
-                "w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 z-10 transition-all duration-500 mt-2",
+                "w-14 h-14 lg:w-20 lg:h-20 rounded-2xl lg:rounded-3xl flex items-center justify-center shrink-0 border-2 z-10 transition-all duration-500 mt-2",
                 isToday ? "bg-white border-health-green scale-110 shadow-2xl shadow-health-green/20" : 
                 isPast ? "bg-health-green border-health-green text-white" : 
                 "bg-slate-50 border-slate-100 text-slate-300 group-hover:border-slate-200"
               )}>
                 {isPast ? (
-                  <CheckCircle2 className="w-7 h-7" />
+                  <CheckCircle2 className="w-7 h-7 lg:w-10 lg:h-10" />
                 ) : isFuture ? (
-                  <Lock className="w-5 h-5 opacity-40" />
+                  <Lock className="w-5 h-5 lg:w-7 lg:h-7 opacity-40" />
                 ) : (
-                  <span className="font-bold text-2xl italic font-serif text-ink">{dayNum}</span>
+                  <span className="font-bold text-2xl lg:text-4xl italic font-serif text-ink">{dayNum}</span>
                 )}
               </div>
 
@@ -183,30 +195,30 @@ function JourneyPage() {
                 params={{ tenantSlug }}
                 disabled={isFuture}
                 className={cn(
-                  "flex-1 p-6 rounded-[2.2rem] border transition-all duration-500 text-left relative overflow-hidden",
+                  "flex-1 p-6 lg:p-10 rounded-[2.2rem] lg:rounded-[3rem] border transition-all duration-500 text-left relative overflow-hidden",
                   isToday ? "bg-white border-slate-100 shadow-md ring-1 ring-slate-100/50" :
                   isPast ? "bg-slate-50/50 border-transparent" :
                   "bg-transparent border-transparent"
                 )}
               >
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-2">
+                <div className="flex justify-between items-center gap-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-3">
                       <h3 className={cn(
-                        "font-bold text-xl tracking-tight leading-none",
+                        "font-bold text-xl lg:text-3xl tracking-tight leading-none",
                         isFuture ? "text-slate-400" : "text-ink"
                       )}>
                         Day {dayNum}
                       </h3>
                       {isToday && (
-                        <span className="px-2 py-0.5 bg-health-green/10 text-health-green text-[9px] font-black uppercase tracking-widest rounded-full">Active</span>
+                        <span className="px-3 py-1 bg-health-green/10 text-health-green text-[10px] font-black uppercase tracking-widest rounded-full">Active Now</span>
                       )}
                       {isPast && (
-                        <span className="text-[9px] font-black text-health-green uppercase tracking-widest">Completed</span>
+                        <span className="text-[10px] font-black text-health-green uppercase tracking-widest">Completed</span>
                       )}
                     </div>
                     {dayInfo?.title ? (
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">{dayInfo.title}</span>
+                      <span className="text-[10px] lg:text-xs font-black text-slate-400 uppercase tracking-[0.2em]">{dayInfo.title}</span>
                     ) : (
                       <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest italic">Protocol Locked</span>
                     )}
@@ -220,25 +232,30 @@ function JourneyPage() {
                 </div>
                 
                 {isToday && (
-                  <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-1 duration-700">
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
-                      {dayInfo?.focus || "Focusing on your metabolic reset through hydration and movement."}
-                    </p>
-                    <Button 
-                      asChild
-                      className="w-full bg-health-green text-white rounded-2xl font-bold h-12 shadow-lg shadow-emerald-100"
-                    >
-                      <Link to="/p/$tenantSlug/today" params={{ tenantSlug }}>
-                        Continue Day {dayNum}
-                      </Link>
-                    </Button>
+                  <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 animate-in fade-in slide-in-from-top-1 duration-700">
+                    <div className="space-y-4">
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Daily Focus</h4>
+                      <p className="text-base lg:text-lg text-slate-500 font-medium leading-relaxed italic font-serif">
+                        "{dayInfo?.focus || "Focusing on your metabolic reset through hydration and movement."}"
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-end">
+                      <Button 
+                        asChild
+                        className="w-full lg:w-auto lg:px-12 bg-health-green hover:bg-health-green/90 text-white rounded-2xl font-bold h-16 shadow-lg shadow-emerald-950/5 text-lg"
+                      >
+                        <Link to="/p/$tenantSlug/today" params={{ tenantSlug }}>
+                          Enter Today's Dashboard
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 )}
 
                 {isFuture && (
-                  <div className="mt-2 flex items-center gap-2">
+                  <div className="mt-4 flex items-center gap-2">
                     <Lock className="w-3 h-3 text-slate-300" />
-                    <span className="text-[10px] text-slate-400 font-medium italic">Complete today's journey to continue</span>
+                    <span className="text-[10px] text-slate-400 font-medium italic">Complete previous days to reveal this protocol</span>
                   </div>
                 )}
               </Link>
