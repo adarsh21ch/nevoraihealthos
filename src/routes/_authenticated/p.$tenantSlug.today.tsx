@@ -32,13 +32,56 @@ function TodayPage() {
     }
   }, [data, navigate]);
 
-  if (isLoading) return <div className="p-8 text-center text-slate-400">Loading your day...</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 space-y-4 animate-in fade-in duration-500">
+        <div className="w-16 h-16 border-4 border-health-green/20 border-t-health-green rounded-full animate-spin"></div>
+        <p className="text-slate-400 font-serif italic text-lg">Preparing your reset day...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center space-y-6">
+        <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center">
+          <Info className="w-8 h-8" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-serif italic font-bold text-ink">Something went wrong</h2>
+          <p className="text-slate-500 max-w-xs mx-auto">We couldn't load your daily protocol. Please try refreshing the page.</p>
+        </div>
+        <Button onClick={() => window.location.reload()} variant="outline" className="rounded-2xl">
+          Refresh Page
+        </Button>
+      </div>
+    );
+  }
+
   if (!data || 'redirect' in data) return null;
 
   const state = data.state;
   if (state !== 'success') {
-     // Handle error/no content states (omitted for brevity, assume plan logic)
-     return <div className="p-8 text-center">{data.message || "Checking status..."}</div>;
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center space-y-6">
+        <div className="w-16 h-16 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center">
+          <Calendar className="w-8 h-8" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-serif italic font-bold text-ink">Day {data.dayNumber || '...'} Protocol</h2>
+          <p className="text-slate-500 max-w-xs mx-auto">
+            {state === 'no_content' 
+              ? "Your program content is being generated. Please check back in a moment." 
+              : (data.message || "Checking status...")}
+          </p>
+        </div>
+        {state === 'not_a_customer' && (
+          <Button onClick={() => navigate({ to: '/onboarding' })} className="bg-health-green rounded-2xl text-white">
+            Start Onboarding
+          </Button>
+        )}
+      </div>
+    );
   }
 
   const { customer, dayContent, dailyLog, dayNumber } = data as any;
