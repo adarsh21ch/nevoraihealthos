@@ -48,10 +48,10 @@ function Index() {
         <div className="max-w-7xl mx-auto text-center relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-accent/20">
-              9-Day Reset Protocol
+              9-Day Program
             </span>
             <h1 className="text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12">
-              Shed the old. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em] block mt-4">Embrace the Fit.</span>
+              9-Day Reset. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em] block mt-4">Get Healthy.</span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
               Join the elite Fat2Fit 9-day reset. A masterclass in metabolic efficiency, designed to transform your cellular energy and reveal your true vitality.
