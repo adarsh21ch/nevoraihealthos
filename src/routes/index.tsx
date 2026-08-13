@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { 
@@ -9,6 +10,7 @@ import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon 
 import { AppLogo } from "@/components/ui/app-logo";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ClientOnly } from "@/components/ui/client-only";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,7 +25,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="flex flex-col min-h-screen bg-surface selection:bg-emerald-100">
+    <ClientOnly>
+      <div className="flex flex-col min-h-screen bg-surface selection:bg-emerald-100">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 group cursor-pointer">
