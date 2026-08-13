@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useEffect } from "react";
+import * as React from "react";
 import { resolveLoginIdentifier, createCustomerAccount } from "@/lib/auth.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -65,7 +65,7 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   
-  useEffect(() => {
+  React.useEffect(() => {
     const checkInitialSession = async () => {
       // Small delay to allow session restoration
       await new Promise(resolve => setTimeout(resolve, 500));

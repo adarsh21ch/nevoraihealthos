@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { ClientOnly } from '@/components/ui/client-only';
 import { supabase } from '@/integrations/supabase/client';
 
