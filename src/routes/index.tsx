@@ -15,6 +15,7 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Fat2Fit — Your 9-Day Metabolic Reset" },
       { name: "description", content: "Fat2Fit simplifies your 9-day health journey. Track hydration, movement, and nutrition with expert guidance every step of the way." },
+
     ],
   }),
   component: Index,
