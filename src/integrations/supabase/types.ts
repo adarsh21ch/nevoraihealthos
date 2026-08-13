@@ -552,6 +552,39 @@ export type Database = {
           },
         ]
       }
+      recipes: {
+        Row: {
+          calories: number
+          category: string
+          created_at: string | null
+          id: string
+          ingredients: string[]
+          instructions: string
+          is_veg: boolean | null
+          name: string
+        }
+        Insert: {
+          calories: number
+          category: string
+          created_at?: string | null
+          id?: string
+          ingredients: string[]
+          instructions: string
+          is_veg?: boolean | null
+          name: string
+        }
+        Update: {
+          calories?: number
+          category?: string
+          created_at?: string | null
+          id?: string
+          ingredients?: string[]
+          instructions?: string
+          is_veg?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
       task_completions: {
         Row: {
           completed_at: string
