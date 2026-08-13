@@ -30,7 +30,7 @@ const STEPS = [
   { id: 'lifestyle', title: 'Lifestyle', icon: Info },
   { id: 'activity', title: 'Activity', icon: Info },
   { id: 'diet', title: 'Diet', icon: Utensils },
-  { id: 'preferences', title: 'Preferences', icon: Utensils },
+  { id: 'preferences', title: 'Avoids', icon: Utensils },
   { id: 'cooking', title: 'Cooking', icon: Utensils },
   { id: 'timing', title: 'Timing', icon: Info },
   { id: 'health', title: 'Health', icon: Heart },
@@ -406,7 +406,36 @@ function OnboardingPage() {
                       ))}
                     </div>
                   </div>
+                {/* Preferences - Avoids */}
+                {currentStep.id === 'preferences' && (
+                  <div className="space-y-4">
+                    <h2 className="text-2xl font-serif italic font-bold text-ink">Food Avoidance</h2>
+                    <p className="text-[10px] text-slate-400">Which foods do you typically avoid or dislike?</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {['Dairy', 'Gluten', 'Sugar', 'Caffeine', 'Processed', 'Nuts', 'Soy'].map(f => {
+                        const isSelected = formData.disliked_foods.includes(f);
+                        return (
+                          <button
+                            key={f}
+                            onClick={() => {
+                              const next = isSelected 
+                                ? formData.disliked_foods.filter(i => i !== f)
+                                : [...formData.disliked_foods, f];
+                              updateField('disliked_foods', next);
+                            }}
+                            className={cn(
+                              "p-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
+                              isSelected ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400"
+                            )}
+                          >
+                            {f}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
+
 
                 {/* Cooking Access */}
                 {currentStep.id === 'cooking' && (
