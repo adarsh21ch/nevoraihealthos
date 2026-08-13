@@ -122,8 +122,8 @@ export const Route = createRootRouteWithContext<{
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Fat2Fit | Personalized Health Program" },
-      { name: "description", content: "Personalized infrastructure for your Fat2Fit wellness journey." },
+      { title: "Fat2Fit | 9-Day Reset Protocol" },
+      { name: "description", content: "Simplified metabolic wellness for your 9-day Fat2Fit journey." },
       { name: "author", content: "Nevorai" },
       { property: "og:title", content: "Fat2Fit | Personalized Health Program" },
       { property: "og:description", content: "Personalized infrastructure for your Fat2Fit wellness journey." },

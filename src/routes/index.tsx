@@ -11,8 +11,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Fat2Fit — Your 9-Day C9 Wellness Journey" },
-      { name: "description", content: "Fat2Fit brings your C9 wellness journey into one simple experience with guided daily activities, nutrition, hydration, movement, progress tracking and coach accountability." },
+      { title: "Fat2Fit — Your 9-Day Metabolic Reset" },
+      { name: "description", content: "Fat2Fit simplifies your 9-day health journey. Track hydration, movement, and nutrition with expert guidance every step of the way." },
     ],
   }),
   component: Index,
@@ -25,8 +25,8 @@ function Index() {
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="relative">
-              <div className="w-11 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl">
-                <span className="text-white font-black text-xl tracking-tighter">F2</span>
+              <div className="w-12 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl">
+                <span className="text-white font-black text-xl tracking-tighter">F2F</span>
               </div>
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                  <div className="w-2 h-2 bg-white rounded-full" />
@@ -48,7 +48,7 @@ function Index() {
         <div className="max-w-7xl mx-auto text-center relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-accent/20">
-              The Metabolic Renaissance
+              9-Day Reset Protocol
             </span>
             <h1 className="text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12">
               Shed the old. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em] block mt-4">Embrace the Fit.</span>
@@ -134,12 +134,12 @@ function Index() {
             <PhoneMockup>
               <div className="p-8 bg-purple-50 h-full">
                 <div className="flex justify-between items-center mb-8">
-                  <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-bold text-sm">F</div>
-                  <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / C9</div>
+                  <div className="w-11 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-bold text-sm">F2F</div>
+                  <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / 9</div>
                 </div>
                 
                 <h3 className="text-3xl font-bold text-ink mb-2 font-serif">Daily Log</h3>
-                <p className="text-slate-500 text-sm mb-8 font-medium">Your 9-day weight loss companion.</p>
+                <p className="text-slate-500 text-sm mb-8 font-medium">9-Day Reset Companion</p>
                 
                 <div className="space-y-4">
                   {[
@@ -156,7 +156,7 @@ function Index() {
                       className="flex items-center gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-accent/50 transition-colors"
                     >
                       <div className="w-6 h-6 rounded-lg border-2 border-slate-200 flex items-center justify-center group-hover:bg-accent group-hover:border-accent transition-all">
-                        <CheckCircle2 className="w-4 h-4 text-white opacity-0 group-hover:opacity-100" />
+                        <CheckCircle2 className="w-4 h-4 text-white opacity-100" />
                       </div>
                       <div>
                         <div className="font-bold text-ink text-sm">{task.title}</div>
@@ -230,7 +230,7 @@ function Index() {
             </div>
             <div className="relative z-10 grid md:grid-cols-2 gap-16 items-center">
               <div>
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">Metabolic Reset</span>
+                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">9-Day Protocol</span>
                 <h2 className="text-4xl md:text-7xl font-serif italic text-white mb-8 leading-tight">Master your <br/>nutritional <span className="text-accent not-italic">Engine.</span></h2>
                 <div className="space-y-6">
                   {[

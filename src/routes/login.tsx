@@ -146,8 +146,8 @@ function LoginPage() {
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
           <div className="flex items-center gap-3 mb-16 group">
-            <div className="w-14 h-14 bg-ink rounded-2xl rotate-3 flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-transform">
-              <span className="text-white font-black text-2xl tracking-tighter">F2</span>
+            <div className="w-16 h-14 bg-ink rounded-2xl rotate-3 flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-transform">
+              <span className="text-white font-black text-2xl tracking-tighter">F2F</span>
             </div>
             <span className="text-3xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
           </div>
