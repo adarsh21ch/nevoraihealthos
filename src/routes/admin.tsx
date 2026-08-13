@@ -93,11 +93,8 @@ function AdminDashboard() {
   );
 }
 
-}
-
-
-
 function RouteContent({ stats }: { stats: any[] }) {
+
   const isOverview = window.location.pathname === '/admin' || window.location.pathname === '/admin/';
   
   if (!isOverview) return null;
