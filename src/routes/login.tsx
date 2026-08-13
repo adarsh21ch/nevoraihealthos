@@ -145,20 +145,20 @@ function LoginPage() {
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
-          <div className="w-12 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-2xl mb-12 shadow-lg shadow-purple-200">F</div>
+          <div className="w-16 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-xl mb-12 shadow-lg shadow-purple-200">F2F</div>
           <h1 className="text-6xl font-bold tracking-tight text-ink mb-6 leading-tight">
             Wellness simplified.<br/>
             <span className="text-accent/60">Guided daily.</span>
           </h1>
           <p className="text-xl text-slate-500 max-w-md font-medium leading-relaxed">
-            The premier platform for Fit to Fit wellness programs. Access your personalized journey or manage your participants.
+            The premier platform for Fat2Fit wellness programs. Access your personalized journey or manage your participants.
           </p>
         </div>
         
         <div className="flex items-center gap-8 text-slate-300">
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-ink">2026</span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Fit to Fit Edition</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Fat2Fit Edition</span>
           </div>
           <div className="w-px h-8 bg-slate-100"></div>
           <div className="flex flex-col">
@@ -172,7 +172,7 @@ function LoginPage() {
       <div className="flex-1 flex flex-col justify-center items-center p-6 lg:p-12 overflow-y-auto">
         <div className="w-full max-w-sm space-y-8 py-12">
           <div className="lg:hidden flex justify-center mb-8">
-            <div className="w-12 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-2xl shadow-lg shadow-purple-200">F</div>
+            <div className="w-16 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-purple-200">F2F</div>
           </div>
           
           <div className="space-y-2 text-center lg:text-left">
@@ -332,7 +332,7 @@ function LoginPage() {
               </p>
             )}
             <div className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
-              Fit to Fit &copy; 2026
+              Fat2Fit &copy; 2026
             </div>
           </div>
         </div>

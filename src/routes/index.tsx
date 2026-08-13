@@ -11,8 +11,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Fit to Fit — Your 9-Day C9 Wellness Journey" },
-      { name: "description", content: "Fit to Fit brings your C9 wellness journey into one simple experience with guided daily activities, nutrition, hydration, movement, progress tracking and coach accountability." },
+      { title: "Fat2Fit — Your 9-Day C9 Wellness Journey" },
+      { name: "description", content: "Fat2Fit brings your C9 wellness journey into one simple experience with guided daily activities, nutrition, hydration, movement, progress tracking and coach accountability." },
     ],
   }),
   component: Index,
@@ -24,8 +24,8 @@ function Index() {
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-accent rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-200">F</div>
-            <span className="text-xl font-bold tracking-tight text-ink">Fit to Fit</span>
+            <div className="w-10 h-10 bg-accent rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-200 text-center">F2F</div>
+            <span className="text-xl font-bold tracking-tight text-ink">Fat2Fit</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             {['Program', 'How It Works', 'Nutrition', 'FAQ'].map(item => (
@@ -76,7 +76,7 @@ function Index() {
 
       <section className="py-24 bg-ink text-white" id="program">
         <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader dark title="The Fit to Fit C9 Engine" subtitle="A scientifically designed 9-day plan that combines nutritional supplements, guided meal plans, and daily movement for a holistic reset." />
+          <SectionHeader dark title="The Fat2Fit C9 Engine" subtitle="A scientifically designed 9-day plan that combines nutritional supplements, guided meal plans, and daily movement for a holistic reset." />
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
             <PillarCard number={1} title="Goal Setting" description="Start with clarity." icon={Goal} />
             <PillarCard number={2} title="Guided Intake" description="Program supplement support." icon={Activity} />
