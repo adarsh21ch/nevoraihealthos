@@ -83,6 +83,8 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       // Only map if it's one of the known frontend values
       if (genderMap[data.gender]) {
         finalData.gender = genderMap[data.gender];
+      } else if (['male', 'female', 'other'].includes(data.gender.toLowerCase())) {
+        finalData.gender = data.gender.toLowerCase();
       }
     }
 
