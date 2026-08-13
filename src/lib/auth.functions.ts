@@ -5,6 +5,7 @@ import { z } from "zod";
 export const createCustomerAccount = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
     access_code: z.string(),
+    fbo_id: z.string(),
     email: z.string().optional().nullable(),
     phone: z.string().optional().nullable(),
     facebook_id: z.string().optional().nullable(),
@@ -16,7 +17,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // 1. Check access code
+    // 1. Check access code and FBO ID
     const { data: creds, error: credsError } = await supabaseAdmin
       .from("access_codes")
       .select("id, phone")
