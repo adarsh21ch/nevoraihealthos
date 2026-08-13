@@ -6,14 +6,14 @@ import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
   loader: async ({ params }) => {
-    if (params.tenantSlug !== 'fit-to-fit') {
-      throw redirect({ to: '/p/fit-to-fit/today' as any });
+    if (params.tenantSlug !== 'fat-to-fit') {
+      throw redirect({ to: '/p/fat-to-fit/today' as any });
     }
     return {
       tenant: {
-        id: 'fit-to-fit-id',
-        name: 'Fit to Fit',
-        slug: 'fit-to-fit',
+        id: 'fat-to-fit-id',
+        name: 'Fat2Fit',
+        slug: 'fat-to-fit',
         primary_color: '#7C3AED',
         tagline: 'Your 9-day reset, guided day by day.',
         whatsapp: '+919876543210'
@@ -30,22 +30,22 @@ function TenantLayout() {
   const primaryColor = tenant.primary_color || '#7C3AED';
 
   const navItems = [
-    { label: 'Today', icon: Home, href: `/p/fit-to-fit/today` },
-    { label: 'Journey', icon: Calendar, href: `/p/fit-to-fit/journey` },
-    { label: 'Diet', icon: Trophy, href: `/p/fit-to-fit/diet` },
-    { label: 'Kit', icon: Package, href: `/p/fit-to-fit/kit` },
-    { label: 'Guide', icon: BookOpen, href: `/p/fit-to-fit/guide` },
+    { label: 'Today', icon: Home, href: `/p/fat-to-fit/today` },
+    { label: 'Journey', icon: Calendar, href: `/p/fat-to-fit/journey` },
+    { label: 'Diet', icon: Trophy, href: `/p/fat-to-fit/diet` },
+    { label: 'Kit', icon: Package, href: `/p/fat-to-fit/kit` },
+    { label: 'Guide', icon: BookOpen, href: `/p/fat-to-fit/guide` },
   ];
 
   return (
     <div className="min-h-screen bg-surface pb-24 font-sans" style={{ '--accent': primaryColor } as any}>
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-bold text-lg">
-            F
+          <div className="w-12 h-10 rounded-lg bg-accent text-white flex items-center justify-center font-bold text-sm">
+            F2F
           </div>
           <div>
-            <h1 className="text-sm font-bold text-slate-900 leading-none">Fit to Fit</h1>
+            <h1 className="text-sm font-bold text-slate-900 leading-none">Fat2Fit</h1>
             <p className="text-[10px] text-slate-400 font-medium mt-1">Your 9-day reset</p>
           </div>
         </div>

@@ -109,7 +109,7 @@ function OnboardingPage() {
         } as any);
       }
 
-      navigate({ to: "/p/fit-to-fit/today" as any });
+      navigate({ to: "/p/fat-to-fit/today" as any });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -122,7 +122,7 @@ function OnboardingPage() {
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
         <div className="text-center space-y-4 pt-12">
-          <div className="w-16 h-16 bg-accent text-white rounded-3xl flex items-center justify-center font-bold text-3xl mx-auto shadow-xl shadow-purple-200">F</div>
+          <div className="w-20 h-16 bg-accent text-white rounded-3xl flex items-center justify-center font-bold text-2xl mx-auto shadow-xl shadow-purple-200">F2F</div>
           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
               <div className="h-full bg-accent transition-all duration-500 ease-out" style={{ width: `${(step / TOTAL_STEPS) * 100}%` }} />
           </div>
@@ -131,7 +131,7 @@ function OnboardingPage() {
         <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 space-y-8 shadow-sm">
           {error && <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-[11px] font-black uppercase tracking-widest border border-red-100">{error}</div>}
 
-          {step === 1 && <div className="text-center py-4"><h2 className="text-4xl font-bold text-ink leading-tight">Welcome to<br/>Fit to Fit.</h2></div>}
+          {step === 1 && <div className="text-center py-4"><h2 className="text-4xl font-bold text-ink leading-tight">Welcome to<br/>Fat2Fit.</h2></div>}
           
           {step === 2 && (
             <div className="space-y-4"><h2 className="text-2xl font-bold">What's your name?</h2>
