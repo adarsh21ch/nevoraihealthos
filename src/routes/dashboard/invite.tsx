@@ -27,8 +27,8 @@ function InvitePage() {
   const brandName = settings?.brand_name || "Fat2Fit";
   
   const joinUrl = typeof window !== 'undefined' 
-    ? `${window.location.origin}/p/fat2fit/join`
-    : `/p/fat2fit/join`;
+    ? `${window.location.origin}/login`
+    : `/login`;
   
   const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl} and use Access Code: FAT2FIT to create your account.`;
 
