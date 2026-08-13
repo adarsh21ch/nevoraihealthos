@@ -87,10 +87,12 @@ function AdminDashboard() {
           <RouteContent stats={stats} />
           <Outlet />
         </div>
-      </div>
+      </main>
+    </div>
     </ClientOnly>
   );
 }
+
 
 
 function RouteContent({ stats }: { stats: any[] }) {
