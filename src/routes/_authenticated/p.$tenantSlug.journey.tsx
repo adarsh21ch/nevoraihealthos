@@ -21,15 +21,23 @@ function JourneyPage() {
   if (isLoading) return <div className="p-8 text-center text-slate-400">Loading your journey...</div>;
   if (error || data?.state !== 'success') return <div className="p-8 text-center text-red-500">Error loading journey: {data?.message || 'Unknown error'}</div>;
 
-  const { customer, program, programDays, completions } = data as any;
-  const duration = program?.duration_days || 9;
+  const { customer, program, programDays } = data as any;
+  const duration = (program?.duration_days as number) || 9;
   
-  // Real calculation of current day
   const getProgramDayNumber = (startDate: string) => {
     const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
     const tParts = today.split('-').map(Number);
     const sParts = startDate.slice(0, 10).split('-').map(Number);
-    const diff = Date.UTC(tParts[0], tParts[1]-1, tParts[2]) - Date.UTC(sParts[0], sParts[1]-1, sParts[2]);
+    
+    const ty = tParts[0] ?? new Date().getFullYear();
+    const tm = tParts[1] ?? (new Date().getMonth() + 1);
+    const td = tParts[2] ?? new Date().getDate();
+    
+    const sy = sParts[0] ?? ty;
+    const sm = sParts[1] ?? tm;
+    const sd = sParts[2] ?? td;
+
+    const diff = Date.UTC(ty, tm - 1, td) - Date.UTC(sy, sm - 1, sd);
     return Math.floor(diff / 86400000) + 1;
   };
   
