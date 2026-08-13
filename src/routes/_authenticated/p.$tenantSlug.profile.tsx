@@ -214,18 +214,18 @@ function ProfilePage() {
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <BookOpen className="w-6 h-6" />
+                <Package className="w-6 h-6" />
               </div>
               <div className="text-left">
                 <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Program Overview</h4>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Understanding the 9-Day Reset</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">View Reset Kit & Guides</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
           </Link>
           
           <button 
-            onClick={() => setActiveSection(sections.find(s => s.id === 'goals'))}
+            onClick={() => setActiveSection(sections.find(s => s.id === 'body'))}
             className="w-full flex items-center justify-between bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm group"
           >
             <div className="flex items-center gap-4">
@@ -233,8 +233,8 @@ function ProfilePage() {
                 <Target className="w-6 h-6" />
               </div>
               <div className="text-left">
-                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Goal Setting</h4>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Setting your reset intentions</p>
+                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Update Body Metrics</h4>
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Weight, waist, and target goals</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
