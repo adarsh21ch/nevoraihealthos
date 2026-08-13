@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { checkAiStatus } from "@/lib/admin-settings.functions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { BrandingSettings } from "@/components/admin/BrandingSettings";
 
 export const Route = createFileRoute("/admin/settings")({
   component: AdminSettings,
@@ -22,8 +23,10 @@ function AdminSettings() {
     <div className="space-y-10 animate-in fade-in duration-500">
       <div>
         <h1 className="text-5xl font-bold tracking-tight text-ink leading-none font-serif italic">Platform Settings</h1>
-        <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Configure global system parameters and AI integrations.</p>
+        <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Configure global system parameters and application branding.</p>
       </div>
+
+      <BrandingSettings />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* AI Integration Card */}
