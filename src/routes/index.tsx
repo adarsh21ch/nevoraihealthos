@@ -68,8 +68,8 @@ function Index() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2.5 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-ink rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">H</div>
-            <span className="text-xl font-bold tracking-tight text-ink">Health OS</span>
+            <div className="w-10 h-10 bg-ink rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">F</div>
+            <span className="text-xl font-bold tracking-tight text-ink">Fat2Fit</span>
           </motion.div>
           
           <div className="hidden md:flex items-center gap-10">
@@ -492,7 +492,7 @@ function Index() {
             <div className="lg:col-span-5 space-y-10">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">H</div>
-                <span className="text-2xl font-bold tracking-tight text-slate-900">Health OS</span>
+                <span className="text-2xl font-bold tracking-tight text-slate-900">Fat2Fit</span>
               </div>
               <p className="text-slate-500 text-lg leading-relaxed max-w-sm font-medium">
                 The premier infrastructure for modern health programs and wellness distribution at scale.
@@ -527,7 +527,7 @@ function Index() {
           </div>
           
           <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p className="text-slate-400 text-sm font-medium">© 2026 Health OS Platform. All rights reserved.</p>
+            <p className="text-slate-400 text-sm font-medium">© 2026 Fat2Fit. All rights reserved.</p>
             <div className="flex items-center gap-8">
               <Link to="/login" className="text-sm font-bold text-slate-900">Staff Portal</Link>
               <a href="/admin" className="text-sm font-bold text-slate-900">Admin Console</a>
