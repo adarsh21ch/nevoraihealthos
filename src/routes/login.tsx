@@ -88,16 +88,22 @@ function LoginPage() {
       }
 
       console.log("Login successful, resolving identity...");
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Authentication failed: No user session found");
+      const { data: authData } = await supabase.auth.getUser();
+      const user = authData?.user;
+      
+      if (!user) {
+        console.error("No user returned from session");
+        throw new Error("Authentication failed: No user session found");
+      }
 
-      // Hardcoded client-side check for the admin email
+      // 1. HARDWIRED ADMIN CHECK (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com') {
         console.log("Platform admin recognized via email, redirecting...");
         navigate({ to: "/admin" });
         return;
       }
 
+      // 2. DATABASE RESOLUTION
       const { data: context } = await supabase.rpc("get_my_auth_context");
       
       const effectiveContext = (context ?? {
