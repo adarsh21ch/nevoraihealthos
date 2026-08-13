@@ -335,65 +335,66 @@ function TodayPage() {
           </section>
 
           {/* Daily Checklist (Right side on desktop) */}
-          <div id="tasks-section" className="space-y-10 bg-white rounded-[2.5rem] p-8 lg:p-10 border border-slate-100 shadow-sm">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Daily Checklist</h3>
+          <section className="bg-white rounded-[2.5rem] p-8 lg:p-10 border border-slate-100 shadow-sm flex flex-col h-[700px] lg:h-[800px]">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-8">Daily Checklist</h3>
 
-        
-        {slotsOrder.map(slot => {
-          const slotTasks = tasksBySlot?.[slot];
-          if (!slotTasks?.length) return null;
+            <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-10 custom-scrollbar">
+              {slotsOrder.map(slot => {
+                const slotTasks = tasksBySlot?.[slot];
+                if (!slotTasks?.length) return null;
 
-          return (
-            <div key={slot} className="space-y-4">
-              <div className="flex items-center gap-3 px-2">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    {slot.replace('_', ' ')}
-                  </h4>
-                  <div className="h-px flex-1 bg-slate-100"></div>
-              </div>
-              
-              <div className="space-y-3">
-                {slotTasks.map((task: any) => {
-                  const isCompleted = dailyLog?.task_completions?.some(
-                    (c: any) => c.day_task_id === task.id
-                  ) || false;
-                  return (
-                    <button 
-                      key={task.id}
-                      onClick={() => handleToggleTask(task.id, isCompleted)}
-                      className={cn(
-                        "w-full flex items-center gap-4 p-5 rounded-[2rem] border transition-all duration-300 text-left",
-                        isCompleted ? "bg-slate-50 border-slate-100 opacity-60" : "bg-white border-slate-100 shadow-sm hover:border-health-green/20"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all border-2",
-                        isCompleted ? "bg-health-green border-health-green text-white" : "bg-slate-50 border-slate-100 text-slate-200"
-                      )}>
-                        {isCompleted ? <Check className="w-5 h-5" /> : <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <h4 className={cn(
-                          "font-bold text-ink leading-tight text-sm",
-                          isCompleted && "line-through text-slate-400"
-                        )}>
-                          {task.title}
+                return (
+                  <div key={slot} className="space-y-4">
+                    <div className="flex items-center gap-3 px-2">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                          {slot.replace('_', ' ')}
                         </h4>
-                        {task.detail && (
-                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
-                            {task.detail}
-                          </p>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                        <div className="h-px flex-1 bg-slate-100"></div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {slotTasks.map((task: any) => {
+                        const isCompleted = dailyLog?.task_completions?.some(
+                          (c: any) => c.day_task_id === task.id
+                        ) || false;
+                        return (
+                          <button 
+                            key={task.id}
+                            onClick={() => handleToggleTask(task.id, isCompleted)}
+                            className={cn(
+                              "w-full flex items-center gap-4 p-5 rounded-[2rem] border transition-all duration-300 text-left",
+                              isCompleted ? "bg-slate-50 border-slate-100 opacity-60" : "bg-white border-slate-100 shadow-sm hover:border-health-green/20"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all border-2",
+                              isCompleted ? "bg-health-green border-health-green text-white" : "bg-slate-50 border-slate-100 text-slate-200"
+                            )}>
+                              {isCompleted ? <Check className="w-5 h-5" /> : <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <h4 className={cn(
+                                "font-bold text-ink leading-tight text-sm",
+                                isCompleted && "line-through text-slate-400"
+                              )}>
+                                {task.title}
+                              </h4>
+                              {task.detail && (
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                  {task.detail}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-          </div>
+          </section>
         </div>
       </div>
 
