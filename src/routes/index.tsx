@@ -90,7 +90,93 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 bg-surface" id="how-it-works">
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+          <div>
+            <SectionHeader centered={false} badge="Daily Experience" title="Everything in your pocket." subtitle="Your daily checklist, meal tracker, hydration log, and movement goals. Stay connected with your coach and monitor your progress in real-time." />
+            <div className="flex gap-4 mb-12">
+              <div className="flex flex-col gap-2">
+                <StepIcon day={1} completed />
+                <div className="w-[1px] h-8 bg-purple-100 mx-auto" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <StepIcon day={2} completed />
+                <div className="w-[1px] h-8 bg-purple-100 mx-auto" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <StepIcon day={3} active />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+                <MessageSquare className="w-8 h-8 text-accent mb-4" />
+                <h4 className="font-bold text-ink mb-2">Direct Coaching</h4>
+                <p className="text-slate-500 text-sm">Real-time feedback and support from your wellness coach.</p>
+              </div>
+              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+                <Star className="w-8 h-8 text-accent mb-4" />
+                <h4 className="font-bold text-ink mb-2">Milestones</h4>
+                <p className="text-slate-500 text-sm">Earn badges and celebrate every victory along the 9 days.</p>
+              </div>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="absolute -top-10 -right-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-10" />
+            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-purple-100/50 rounded-full blur-3xl -z-10" />
+            <PhoneMockup>
+              <div className="p-8 bg-purple-50 h-full">
+                <div className="flex justify-between items-center mb-8">
+                  <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-bold text-sm">F</div>
+                  <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / C9</div>
+                </div>
+                
+                <h3 className="text-3xl font-bold text-ink mb-2">Checklist</h3>
+                <p className="text-slate-500 text-sm mb-8">Your goals for today.</p>
+                
+                <div className="space-y-4">
+                  {[
+                    { title: 'Morning Supplements', time: '08:00 AM' },
+                    { title: 'Aloe Vera Drink', time: '08:15 AM' },
+                    { title: 'Light Movement', time: '10:00 AM' },
+                    { title: 'Healthy Shake', time: '01:00 PM' }
+                  ].map((task, i) => (
+                    <motion.div 
+                      key={task.title} 
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + i * 0.1 }}
+                      className="flex items-center gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 group hover:border-accent/50 transition-colors"
+                    >
+                      <div className="w-6 h-6 rounded-lg border-2 border-slate-200 flex items-center justify-center group-hover:bg-accent group-hover:border-accent transition-all">
+                        <CheckCircle2 className="w-4 h-4 text-white opacity-0 group-hover:opacity-100" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-ink text-sm">{task.title}</div>
+                        <div className="text-[10px] text-slate-400 font-medium">{task.time}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <div className="mt-8 p-6 bg-accent rounded-3xl text-white shadow-lg shadow-purple-200">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Water Intake</span>
+                    <Plus className="w-4 h-4" />
+                  </div>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(glass => (
+                      <div key={glass} className={`h-8 flex-1 rounded-lg ${glass <= 5 ? 'bg-white' : 'bg-white/20'}`} />
+                    ))}
+                  </div>
+                  <div className="mt-4 text-2xl font-bold">5 / 8 <span className="text-sm font-normal opacity-80">Glasses</span></div>
+                </div>
+              </div>
+            </PhoneMockup>
+          </div>
+        </div>
+      </section>
+
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeader badge="The Program" title="What’s inside the C9 System?" subtitle="Everything you need to reset your body and transform your nutrition over 9 powerful days." />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
