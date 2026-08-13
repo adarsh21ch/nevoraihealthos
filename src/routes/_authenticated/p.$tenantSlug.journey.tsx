@@ -23,21 +23,31 @@ function JourneyPage() {
 
   const { customer, program, programDays, completions } = data as any;
   const duration = program?.duration_days || 9;
-  const currentDay = 1; // Simplification for now
+  
+  // Real calculation of current day
+  const getProgramDayNumber = (startDate: string) => {
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+    const tParts = today.split('-').map(Number);
+    const sParts = startDate.slice(0, 10).split('-').map(Number);
+    const diff = Date.UTC(tParts[0], tParts[1]-1, tParts[2]) - Date.UTC(sParts[0], sParts[1]-1, sParts[2]);
+    return Math.floor(diff / 86400000) + 1;
+  };
+  
+  const currentDay = customer?.start_date ? getProgramDayNumber(customer.start_date) : 1;
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-8 animate-in fade-in duration-500">
-      <header className="mb-12">
-        <div className="flex items-center gap-2 mb-3">
-           <Trophy className="w-4 h-4 text-slate-400" />
-           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Program Map</span>
+    <div className="max-w-md mx-auto px-6 pt-16 pb-24 animate-in fade-in duration-700">
+      <header className="mb-16">
+        <div className="flex items-center gap-2 mb-4">
+           <Trophy className="w-5 h-5 text-accent" />
+           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Program Map</span>
         </div>
-        <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Your Journey</h1>
-        <p className="text-slate-500 font-medium text-lg mt-2">{program?.name}</p>
+        <h1 className="text-5xl font-bold text-ink tracking-tighter italic font-serif">Your Journey</h1>
+        <p className="text-slate-500 font-medium text-lg mt-3">{program?.name}</p>
       </header>
 
-      <div className="relative space-y-6">
-        <div className="absolute left-6 top-4 bottom-4 w-px bg-slate-100 -z-10" />
+      <div className="relative space-y-8">
+        <div className="absolute left-7 top-4 bottom-4 w-px bg-slate-100 -z-10" />
 
         {[...Array(duration)].map((_, i) => {
           const dayNum = i + 1;
@@ -48,24 +58,24 @@ function JourneyPage() {
           const dayInfo = programDays?.find((d: any) => d.day_number === dayNum);
           
           return (
-            <div key={dayNum} className="flex gap-6 items-center">
+            <div key={dayNum} className="flex gap-8 items-center group">
               <div className={cn(
-                "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border-2 z-10 transition-all",
-                isToday ? "bg-white border-accent scale-110 shadow-lg" : 
+                "w-14 h-14 rounded-[1.5rem] flex items-center justify-center shrink-0 border-2 z-10 transition-all duration-500",
+                isToday ? "bg-white border-accent scale-110 shadow-xl shadow-purple-100" : 
                 isPast ? "bg-accent border-accent text-white" : 
                 "bg-slate-50 border-slate-100 text-slate-300"
               )}>
                 {isPast ? (
-                  <CheckCircle2 className="w-6 h-6" />
+                  <CheckCircle2 className="w-7 h-7" />
                 ) : isFuture ? (
-                  <Lock className="w-4 h-4 opacity-50" />
+                  <Lock className="w-5 h-5 opacity-50" />
                 ) : (
-                  <span className="font-bold text-lg">{dayNum}</span>
+                  <span className="font-bold text-xl italic font-serif">{dayNum}</span>
                 )}
               </div>
 
               <div className={cn(
-                "flex-1 p-5 rounded-[2rem] border transition-all",
+                "flex-1 p-6 rounded-[2.5rem] border transition-all duration-500",
                 isToday ? "bg-white border-slate-200 shadow-sm" :
                 isPast ? "bg-slate-50/50 border-slate-100 opacity-60" :
                 "bg-transparent border-transparent opacity-40"
@@ -73,13 +83,13 @@ function JourneyPage() {
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <h3 className={cn(
-                      "font-bold text-base leading-none",
-                      isFuture ? "text-slate-400" : "text-slate-900"
+                      "font-bold text-lg leading-tight",
+                      isFuture ? "text-slate-400" : "text-ink"
                     )}>
                       Day {dayNum}
                     </h3>
                     {dayInfo?.title && (
-                      <span className="text-xs font-medium text-slate-500 mt-1">{dayInfo.title}</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{dayInfo.title}</span>
                     )}
                   </div>
                 </div>
