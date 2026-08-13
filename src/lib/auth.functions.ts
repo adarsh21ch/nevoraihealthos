@@ -12,10 +12,10 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // 1. Check access code and FBO ID
+    // 1. Check access code
     const { data: creds, error: credsError } = await supabaseAdmin
       .from("access_codes")
-      .select("id, phone")
+      .select("id, coach_id")
       .eq("code", data.access_code)
       .is("used_at", null)
       .maybeSingle();
@@ -34,13 +34,26 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     if (authError) throw authError;
 
-    // 3. Create Customer Row
+    // 3. Assign Role (Participant)
+    const { error: roleError } = await supabaseAdmin
+      .from("user_roles")
+      .insert({
+        user_id: authUser.user.id,
+        role: 'participant'
+      });
+    
+    if (roleError) {
+        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+        throw roleError;
+    }
+
+    // 4. Create Customer Row (Legacy support)
     const { data: customer, error: customerError } = await supabaseAdmin
       .from("customers")
       .insert({
         user_id: authUser.user.id,
         fbo_id: data.fbo_id,
-        name: "", // Initial empty name, will be filled in onboarding
+        name: "", 
       } as any)
       .select("id")
       .single();
@@ -50,7 +63,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw customerError;
     }
 
-    // 4. Mark access code as used
+    // 5. Mark access code as used
     await supabaseAdmin
       .from("access_codes")
       .update({ used_at: new Date().toISOString(), customer_id: customer.id })
@@ -70,21 +83,17 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Try finding by FBO ID
+    // Try finding by FBO ID in customers table
     const { data: customer } = await supabaseAdmin
       .from("customers")
-      .select("user_id" as any)
-      .eq("fbo_id" as any, data.identifier)
+      .select("user_id")
+      .eq("fbo_id", data.identifier)
       .maybeSingle();
       
-    if (customer && (customer as any).user_id) {
-      // Find the user's email since signInWithPassword needs email or phone
-      const { data: user } = await supabaseAdmin.auth.admin.getUserById((customer as any).user_id);
+    if (customer && customer.user_id) {
+      const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
       if (user?.user?.email) {
         return { found: true, method: 'email' as const, value: user.user.email };
-      }
-      if (user?.user?.phone) {
-        return { found: true, method: 'phone' as const, value: user.user.phone };
       }
     }
 
@@ -97,7 +106,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     customerId: z.string().uuid(),
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     const { data: canAccess, error: accessError } = await supabase.rpc("can_access_customer", { 
