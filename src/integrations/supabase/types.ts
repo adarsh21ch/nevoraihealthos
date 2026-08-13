@@ -22,7 +22,7 @@ export type Database = {
           customer_id: string | null
           expires_at: string | null
           id: string
-          phone: string
+          phone: string | null
           used_at: string | null
         }
         Insert: {
@@ -32,7 +32,7 @@ export type Database = {
           customer_id?: string | null
           expires_at?: string | null
           id?: string
-          phone: string
+          phone?: string | null
           used_at?: string | null
         }
         Update: {
@@ -42,7 +42,7 @@ export type Database = {
           customer_id?: string | null
           expires_at?: string | null
           id?: string
-          phone?: string
+          phone?: string | null
           used_at?: string | null
         }
         Relationships: [
