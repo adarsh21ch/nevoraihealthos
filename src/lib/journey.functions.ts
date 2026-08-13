@@ -41,9 +41,9 @@ export const getJourneyData = createServerFn({ method: "GET" })
       return {
         state: 'success',
         customer: { ...customer, start_date: activeProgram.start_date, track: activeProgram.track },
-        program,
-        programDays,
-        completions
+        program: programRes.data,
+        programDays: daysRes.data ?? [],
+        completions: completionsRes.data ?? []
       };
     } catch (e: any) {
       return { state: 'error', message: e.message };
