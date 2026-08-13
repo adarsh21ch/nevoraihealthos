@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useLoaderData, redirect } from '@tanstack/react-router';
-import { Home, Calendar, Trophy, Package, BookOpen, MessageCircle } from 'lucide-react';
+import { Home, Calendar, Trophy, Package, User, MessageCircle } from 'lucide-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
