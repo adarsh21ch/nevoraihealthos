@@ -155,70 +155,118 @@ export type Database = {
       }
       customers: {
         Row: {
+          activity_level: string | null
           age: number | null
+          allergies: string[] | null
           completed_at: string | null
+          cooking_access: string | null
           created_at: string
+          diet_preference: string | null
           disclaimer_accepted_at: string | null
+          disliked_foods: string[] | null
           distributor_id: string | null
+          dob: string | null
           fbo_id: string | null
           gender: string | null
+          goal: string | null
           goal_weight_kg: number | null
+          health_concerns: string | null
           height_cm: number | null
+          hip_cm: number | null
           id: string
           language: string | null
+          lifestyle: string | null
+          lifestyle_details: Json | null
+          meal_timing: Json | null
           name: string
           onboarding_complete: boolean
           phone: string | null
           program_id: string | null
           share_consent: boolean
           start_date: string | null
+          target_weight_kg: number | null
+          thigh_cm: number | null
           track: string | null
           updated_at: string
           user_id: string | null
+          waist_cm: number | null
+          weight_kg: number | null
         }
         Insert: {
+          activity_level?: string | null
           age?: number | null
+          allergies?: string[] | null
           completed_at?: string | null
+          cooking_access?: string | null
           created_at?: string
+          diet_preference?: string | null
           disclaimer_accepted_at?: string | null
+          disliked_foods?: string[] | null
           distributor_id?: string | null
+          dob?: string | null
           fbo_id?: string | null
           gender?: string | null
+          goal?: string | null
           goal_weight_kg?: number | null
+          health_concerns?: string | null
           height_cm?: number | null
+          hip_cm?: number | null
           id?: string
           language?: string | null
+          lifestyle?: string | null
+          lifestyle_details?: Json | null
+          meal_timing?: Json | null
           name?: string
           onboarding_complete?: boolean
           phone?: string | null
           program_id?: string | null
           share_consent?: boolean
           start_date?: string | null
+          target_weight_kg?: number | null
+          thigh_cm?: number | null
           track?: string | null
           updated_at?: string
           user_id?: string | null
+          waist_cm?: number | null
+          weight_kg?: number | null
         }
         Update: {
+          activity_level?: string | null
           age?: number | null
+          allergies?: string[] | null
           completed_at?: string | null
+          cooking_access?: string | null
           created_at?: string
+          diet_preference?: string | null
           disclaimer_accepted_at?: string | null
+          disliked_foods?: string[] | null
           distributor_id?: string | null
+          dob?: string | null
           fbo_id?: string | null
           gender?: string | null
+          goal?: string | null
           goal_weight_kg?: number | null
+          health_concerns?: string | null
           height_cm?: number | null
+          hip_cm?: number | null
           id?: string
           language?: string | null
+          lifestyle?: string | null
+          lifestyle_details?: Json | null
+          meal_timing?: Json | null
           name?: string
           onboarding_complete?: boolean
           phone?: string | null
           program_id?: string | null
           share_consent?: boolean
           start_date?: string | null
+          target_weight_kg?: number | null
+          thigh_cm?: number | null
           track?: string | null
           updated_at?: string
           user_id?: string | null
+          waist_cm?: number | null
+          weight_kg?: number | null
         }
         Relationships: [
           {
