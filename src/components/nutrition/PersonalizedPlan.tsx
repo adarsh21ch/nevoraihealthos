@@ -146,9 +146,11 @@ export function PersonalizedPlan() {
 
         <Button 
           asChild
-          className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100"
+          className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100 flex items-center justify-center transition-all duration-300"
         >
-          <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: tenantSlug as any }}>Complete Profile</Link>
+          <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: tenantSlug as any }}>
+            Complete Profile
+          </Link>
         </Button>
       </div>
     );
