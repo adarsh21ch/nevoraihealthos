@@ -38,10 +38,10 @@ function DashboardLayout() {
       <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-10">
-            <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200">H</div>
+            <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200">F</div>
             <div>
-               <span className="block font-bold text-lg tracking-tight text-slate-900 leading-none">Health OS</span>
-               <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Owner Portal</span>
+               <span className="block font-bold text-lg tracking-tight text-slate-900 leading-none">Fat2Fit</span>
+               <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Coach Portal</span>
             </div>
           </div>
           
