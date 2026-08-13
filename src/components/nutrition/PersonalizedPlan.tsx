@@ -25,7 +25,7 @@ export function PersonalizedPlan() {
   const today = getISTDateString();
   const getPlan = useServerFn(getMyNutritionPlan);
   const generatePlan = useServerFn(generateMyPersonalizedPlan);
-  const logStatus = useServerFn(logMealStatus);
+  const logMutationFn = useServerFn(logMealStatus);
   const getLogs = useServerFn(getMealLogs);
 
   const { data: plan, isLoading: isPlanLoading } = useQuery({
@@ -35,7 +35,7 @@ export function PersonalizedPlan() {
 
   const { data: mealLogs } = useQuery({
     queryKey: ['meal-logs', today],
-    queryFn: () => getLogs({ date: today }),
+    queryFn: () => getLogs({ data: { date: today } } as any),
     enabled: !!plan
   });
 
@@ -52,12 +52,14 @@ export function PersonalizedPlan() {
 
   const logMutation = useMutation({
     mutationFn: (vars: { mealId: string, status: 'COMPLETED' | 'SKIPPED' | 'SUBSTITUTED' }) => 
-      logStatus({
-        planId: plan!.id,
-        mealId: vars.mealId,
-        date: today,
-        status: vars.status
-      }),
+      logMutationFn({
+        data: {
+          planId: plan!.id,
+          mealId: vars.mealId,
+          date: today,
+          status: vars.status
+        }
+      } as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['meal-logs', today] });
       toast.success("Meal status updated!");
