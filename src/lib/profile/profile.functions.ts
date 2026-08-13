@@ -116,6 +116,8 @@ export const validateProfileReadiness = createServerFn({ method: "GET" })
     if (!profile.activity_level) missing.push('Activity Level');
     if (!profile.diet_preference) missing.push('Dietary Preference');
     if (!profile.track) missing.push('Program Track');
+    if (!profile.cooking_access) missing.push('Cooking Access');
+
 
     return {
       ready: missing.length === 0,
