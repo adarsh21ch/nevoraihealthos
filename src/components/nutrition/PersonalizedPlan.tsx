@@ -17,8 +17,10 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyNutritionPlan, generateMyPersonalizedPlan, logMealStatus, getMealLogs } from "@/lib/nutrition/nutrition.functions";
+import { validateProfileReadiness } from "@/lib/profile/profile.functions";
 import { getISTDateString } from "@/lib/date-utils";
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
 
 export function PersonalizedPlan() {
   const queryClient = useQueryClient();
@@ -27,10 +29,17 @@ export function PersonalizedPlan() {
   const generatePlan = useServerFn(generateMyPersonalizedPlan);
   const logMutationFn = useServerFn(logMealStatus);
   const getLogs = useServerFn(getMealLogs);
+  const checkReadiness = useServerFn(validateProfileReadiness);
+
+  const { data: readiness, isLoading: isReadinessLoading } = useQuery({
+    queryKey: ['profile-readiness'],
+    queryFn: () => checkReadiness()
+  });
 
   const { data: plan, isLoading: isPlanLoading } = useQuery({
     queryKey: ['my-nutrition-plan'],
-    queryFn: () => getPlan()
+    queryFn: () => getPlan(),
+    enabled: !!readiness?.ready
   });
 
   const { data: mealLogs } = useQuery({
@@ -66,11 +75,49 @@ export function PersonalizedPlan() {
     }
   });
 
-  if (isPlanLoading) {
+  if (isReadinessLoading || isPlanLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
         <RefreshCw className="w-8 h-8 text-health-green animate-spin" />
         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Nutrition Plan...</p>
+      </div>
+    );
+  }
+
+  if (readiness && !readiness.ready) {
+    return (
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 text-center space-y-6 shadow-sm">
+        <div className="w-20 h-20 bg-emerald-50 text-health-green rounded-[2rem] flex items-center justify-center mx-auto mb-4">
+          <Sparkles className="w-10 h-10" />
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-serif italic font-bold text-ink">Personalize Your Plan</h3>
+          <p className="text-sm text-slate-500 max-w-[240px] mx-auto leading-relaxed">
+            We need a few more details before we can build your plan around your body and lifestyle.
+          </p>
+        </div>
+        
+        <div className="space-y-2 text-left max-w-[240px] mx-auto py-2">
+           <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Missing Information:</span>
+           {readiness.missing.slice(0, 3).map((m: any) => (
+             <div key={m.field} className="flex items-center gap-2 text-slate-600">
+                <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                <span className="text-xs font-bold">{m.label}</span>
+             </div>
+           ))}
+           {readiness.missing.length > 3 && (
+             <span className="text-[9px] font-bold text-slate-400 italic">+{readiness.missing.length - 3} more</span>
+           )}
+        </div>
+
+        <div className="flex flex-col gap-3 pt-4">
+          <Button 
+            asChild
+            className="h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+          >
+            <Link to="/onboarding">Complete My Profile</Link>
+          </Button>
+        </div>
       </div>
     );
   }
@@ -84,7 +131,7 @@ export function PersonalizedPlan() {
         <div className="space-y-2">
           <h3 className="text-2xl font-serif italic font-bold text-ink">Ready for your plan?</h3>
           <p className="text-sm text-slate-500 max-w-[240px] mx-auto leading-relaxed">
-            Your personalized 9-day metabolic reset nutrition engine is ready.
+            Your profile is complete. We can now create your personalized 9-day metabolic reset nutrition plan.
           </p>
         </div>
         <div className="flex flex-col gap-3 pt-4">
@@ -93,14 +140,14 @@ export function PersonalizedPlan() {
             disabled={generateMutation.isPending}
             className="h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
           >
-            {generateMutation.isPending ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Generate Plan"}
+            {generateMutation.isPending ? <RefreshCw className="w-5 h-5 animate-spin" /> : "Create My Plan"}
           </Button>
           <Button 
             variant="ghost" 
             asChild
             className="h-14 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
           >
-            <a href="/onboarding">Review Health Profile</a>
+            <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: 'fat-to-fit' }}>Review Health Profile</Link>
           </Button>
         </div>
       </div>

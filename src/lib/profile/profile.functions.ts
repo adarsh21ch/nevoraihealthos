@@ -104,23 +104,29 @@ export const validateProfileReadiness = createServerFn({ method: "GET" })
       .eq("user_id", userId)
       .single();
 
-    if (!profile) return { ready: false, missing: ['Profile record'] };
+    if (!profile) return { ready: false, missing: [{ field: 'name', label: 'Profile record', step: 0 }] };
 
     const missing = [];
-    if (!profile.name) missing.push('Name');
-    if (!profile.age && !profile.dob) missing.push('Age/DOB');
-    if (!profile.height_cm) missing.push('Height');
-    if (!profile.weight_kg) missing.push('Weight');
-    if (!profile.waist_cm) missing.push('Waist');
-    if (!profile.goal) missing.push('Goal');
-    if (!profile.activity_level) missing.push('Activity Level');
-    if (!profile.diet_preference) missing.push('Dietary Preference');
-    if (!profile.track) missing.push('Program Track');
-    if (!profile.cooking_access) missing.push('Cooking Access');
-
+    if (!profile.name) missing.push({ field: 'name', label: 'Name', step: 1 });
+    if (!profile.dob) missing.push({ field: 'dob', label: 'Date of Birth', step: 1 });
+    if (!profile.gender) missing.push({ field: 'gender', label: 'Gender', step: 1 });
+    if (!profile.height_cm) missing.push({ field: 'height_cm', label: 'Height', step: 2 });
+    if (!profile.weight_kg) missing.push({ field: 'weight_kg', label: 'Weight', step: 2 });
+    if (!profile.waist_cm) missing.push({ field: 'waist_cm', label: 'Waist', step: 2 });
+    if (!profile.goal) missing.push({ field: 'goal', label: 'Primary Goal', step: 3 });
+    if (!profile.lifestyle) missing.push({ field: 'lifestyle', label: 'Lifestyle Type', step: 4 });
+    if (!profile.activity_level) missing.push({ field: 'activity_level', label: 'Activity Level', step: 5 });
+    if (!profile.diet_preference) missing.push({ field: 'diet_preference', label: 'Dietary Preference', step: 6 });
+    if (!profile.cooking_access) missing.push({ field: 'cooking_access', label: 'Cooking Access', step: 8 });
+    
+    // Calculate completeness
+    const totalFields = 11;
+    const completeCount = totalFields - missing.length;
+    const percent = Math.round((completeCount / totalFields) * 100);
 
     return {
       ready: missing.length === 0,
-      missing
+      missing,
+      percent
     };
   });

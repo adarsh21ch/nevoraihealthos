@@ -9,7 +9,8 @@ import {
   Info, 
   Search, 
   CheckCircle2,
-  ChevronRight
+  ChevronRight,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -82,6 +83,31 @@ function DietPage() {
       </div>
 
       {activeTab === 'plan' && <PersonalizedPlan />}
+
+      {activeTab === 'free' && (
+        <section className="bg-emerald-50 rounded-[2.5rem] p-8 space-y-6 border border-emerald-100 shadow-sm mb-6">
+          <div className="flex items-center gap-3 text-emerald-600">
+            <BookOpen className="w-5 h-5" />
+            <h3 className="font-bold">Nutrition Education</h3>
+          </div>
+          <div className="space-y-4">
+            <button className="w-full bg-white p-5 rounded-2xl flex items-center justify-between group shadow-sm">
+              <div className="text-left">
+                <h4 className="text-sm font-bold text-ink group-hover:text-accent transition-colors">Hydration Strategy</h4>
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Optimizing water intake</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-accent transition-all" />
+            </button>
+            <button className="w-full bg-white p-5 rounded-2xl flex items-center justify-between group shadow-sm">
+              <div className="text-left">
+                <h4 className="text-sm font-bold text-ink group-hover:text-accent transition-colors">Food Education</h4>
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Making better choices</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-accent transition-all" />
+            </button>
+          </div>
+        </section>
+      )}
 
 
       {activeTab === 'free' ? (

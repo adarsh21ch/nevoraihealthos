@@ -1,8 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { BookOpen, PlayCircle, FileText, ExternalLink, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/guide')({
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: `/p/${params.tenantSlug}/profile` as any });
+  },
   component: GuidePage,
 });
 
