@@ -14,6 +14,8 @@ import { resolveTenantHint } from "@/lib/tenant";
 import { getTenantByHint } from "@/lib/tenant.functions";
 import { TenantProvider } from "@/lib/tenant-context";
 import { TenantGate } from "@/components/site/TenantGate";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -174,14 +176,26 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { tenant, isCustomDomain } = Route.useLoaderData();
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('SW registered:', reg))
+          .catch(err => console.error('SW error:', err));
+      });
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TenantProvider tenant={tenant as any} isCustomDomain={isCustomDomain}>
         <TenantGate isPlatformPage={!isCustomDomain && !tenant}>
           <Outlet />
+          <PWAInstallPrompt />
         </TenantGate>
       </TenantProvider>
       <Toaster />
     </QueryClientProvider>
   );
 }
+

@@ -1,5 +1,7 @@
 /// <reference lib="webworker" />
 
+declare const self: ServiceWorkerGlobalScope;
+
 const CACHE_NAME = 'fat2fit-v1';
 const STATIC_ASSETS = [
   '/',
@@ -8,15 +10,12 @@ const STATIC_ASSETS = [
   '/favicon.ico',
 ];
 
-// Exclude authenticated routes and API calls from caching
 const EXCLUDED_PREFIXES = [
   '/api/',
   '/supabase/',
 ];
 
-const self = (globalThis as unknown) as ServiceWorkerGlobalScope;
-
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (event: ExtendableEvent) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS);
@@ -25,7 +24,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', (event: ExtendableEvent) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -40,14 +39,13 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', (event: FetchEvent) => {
   const url = new URL(event.request.url);
 
-  // Never cache POST requests or requests to excluded prefixes
   if (
     event.request.method !== 'GET' ||
     EXCLUDED_PREFIXES.some(prefix => url.pathname.startsWith(prefix)) ||
-    url.hostname.includes('supabase.co') // Don't cache direct Supabase API calls
+    url.hostname.includes('supabase.co')
   ) {
     return;
   }
@@ -59,7 +57,6 @@ self.addEventListener('fetch', (event) => {
       }
 
       return fetch(event.request).then((networkResponse) => {
-        // Only cache successful GET requests to static assets or app shell
         if (
           !networkResponse || 
           networkResponse.status !== 200 || 
@@ -75,12 +72,11 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse;
       }).catch(() => {
-        // Offline fallback for navigation requests
         if (event.request.mode === 'navigate') {
           return caches.match('/');
         }
         return new Response('Network error occurred', { status: 408 });
       });
-    })
+    }) as Promise<Response>
   );
 });
