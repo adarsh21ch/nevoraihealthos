@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { Loader2, ArrowRight, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding")({
   ssr: false,
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
 });
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 6;
 
 function OnboardingPage() {
   const navigate = useNavigate();
@@ -26,19 +26,22 @@ function OnboardingPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Form State
   const [name, setName] = useState("");
-  const [gender, setGender] = useState<"female" | "male" | "other">("female");
-  const [age, setAge] = useState("");
-  const [heightCm, setHeightCm] = useState("");
-  const [goalWeight, setGoalWeight] = useState("");
-  const [programId, setProgramId] = useState("7e7677a0-1e66-4fbb-9e6e-4af3c56119d2");
-  const [didDX4, setDidDX4] = useState(false);
-  const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [goal, setGoal] = useState<string>("");
+  const [goalImportance, setGoalImportance] = useState("");
+  
+  // Measurements
   const [weight, setWeight] = useState("");
+  const [chest, setChest] = useState("");
   const [waist, setWaist] = useState("");
+  const [hips, setHips] = useState("");
+  const [thighs, setThighs] = useState("");
+
+  const [didDX4, setDidDX4] = useState<boolean | null>(null);
   const [consent, setConsent] = useState(false);
 
-  const { data: me, isLoading: loadingMe } = useQuery({
+  const { data: me } = useQuery({
     queryKey: ["onboarding-me"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -53,34 +56,14 @@ function OnboardingPage() {
     },
   });
 
-  const { data: programs } = useQuery({
-    queryKey: ["onboarding-programs"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("programs")
-        .select("id, code, name, duration_days")
-        .order("sort_order", { ascending: true })
-        .limit(20);
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
-
   const validateStep = () => {
-    if (step === 1) {
-      if (!name.trim()) return "Enter your full name";
-      if (!age || Number(age) < 12) return "Enter a valid age";
-      if (!heightCm) return "Enter your height in cm";
+    if (step === 2 && !name.trim()) return "Please enter your name";
+    if (step === 3 && !goal) return "Please choose a goal";
+    if (step === 4 && !goalImportance.trim()) return "Tell us why this matters to you";
+    if (step === 5) {
+      if (!weight || !waist) return "Weight and waist are required for baseline tracking";
     }
-    if (step === 2) {
-      if (!goalWeight) return "Enter a goal weight";
-      if (!programId) return "Choose a program";
-    }
-    if (step === 3) {
-      if (!weight) return "Enter your weight";
-      if (!waist) return "Enter your waist size";
-    }
-    if (step === 4 && !consent) return "Please accept the notice";
+    if (step === 6 && didDX4 === null) return "Please select an option for DX4";
     return null;
   };
 
@@ -92,38 +75,46 @@ function OnboardingPage() {
   };
 
   const finish = async () => {
-    const msg = validateStep();
-    if (msg) return setError(msg);
+    if (!consent) return setError("Please accept the medical disclaimer");
     if (!me?.id) return setError("Customer not found");
 
     setIsSaving(true);
     try {
+      // 1. Update Customer Record
       const { error: err } = await supabase
         .from("customers")
         .update({
           name: name.trim(),
-          gender,
-          age: Number(age),
-          height_cm: Number(heightCm),
-          goal_weight_kg: Number(goalWeight),
-          program_id: programId,
-          track: didDX4 ? 'DX4' : 'standard',
-          start_date: startDate,
           onboarding_complete: true,
-          disclaimer_accepted_at: new Date().toISOString()
+          disclaimer_accepted_at: new Date().toISOString(),
+          track: didDX4 ? 'DX4' : 'standard'
         } as any)
         .eq("id", me.id);
       
       if (err) throw err;
 
-      // Add baseline measurement
+      // 2. Add baseline measurements
       await supabase.from("measurements").insert({
         customer_id: me.id,
         day_number: 1,
-        taken_on: startDate,
+        taken_on: new Date().toISOString().slice(0, 10),
         weight_kg: Number(weight),
-        waist_cm: Number(waist)
+        chest_cm: Number(chest) || null,
+        waist_cm: Number(waist),
+        hip_cm: Number(hips) || null,
+        thigh_cm: Number(thighs) || null
       } as any);
+
+      // 3. Update Participant Program
+      const { data: prog } = await supabase.from('programs').select('id').eq('code', 'c9').single();
+      if (prog) {
+        await supabase.from('participant_programs').insert({
+          participant_id: (await supabase.auth.getUser()).data.user?.id,
+          program_id: prog.id,
+          track: didDX4 ? 'DX4' : 'standard',
+          start_date: new Date().toISOString().slice(0, 10)
+        } as any);
+      }
 
       navigate({ to: "/p/c9/today" as any });
     } catch (err: any) {
@@ -133,145 +124,208 @@ function OnboardingPage() {
     }
   };
 
+  const goals = [
+    "Weight management",
+    "Better eating habits",
+    "More energy",
+    "Improved consistency",
+    "Healthier lifestyle",
+    "Custom goal"
+  ];
+
   return (
-    <div className="min-h-screen bg-surface px-5 py-10 flex flex-col items-center font-sans">
-      <div className="w-full max-w-sm space-y-8">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-2xl mx-auto mb-4 shadow-lg shadow-slate-200">F</div>
-          <h1 className="text-3xl font-bold tracking-tight text-ink">Set up your profile</h1>
-          <p className="text-slate-400 text-sm font-medium">Step {step} of {TOTAL_STEPS}</p>
-        </div>
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        <div className="bg-white border border-slate-100 rounded-3xl p-6 space-y-4 shadow-sm">
-          {error && <div className="p-3 rounded-xl bg-red-50 text-red-600 text-xs font-bold border border-red-100">{error}</div>}
-          
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-accent text-white rounded-3xl flex items-center justify-center font-bold text-3xl mx-auto shadow-xl shadow-purple-200">F</div>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight text-ink italic">Fit to Fit</h1>
+            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div 
+                    className="h-full bg-accent transition-all duration-500 ease-out" 
+                    style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+                />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 space-y-8 shadow-sm">
+          {error && (
+            <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-[11px] font-black uppercase tracking-widest border border-red-100">
+              {error}
+            </div>
+          )}
+
           {step === 1 && (
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Full Name</Label>
-                <Input value={name} onChange={e => setName(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="John Doe" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Age</Label>
-                <Input type="number" value={age} onChange={e => setAge(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="25" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Height (cm)</Label>
-                <Input type="number" value={heightCm} onChange={e => setHeightCm(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="175" />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gender</Label>
-                <div className="flex gap-2">
-                  {['female', 'male', 'other'].map((g) => (
-                    <button
-                      key={g}
-                      onClick={() => setGender(g as any)}
-                      className={`flex-1 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border ${
-                        gender === g ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-400 border-slate-100 hover:border-slate-200'
-                      }`}
-                    >
-                      {g}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div className="space-y-6 text-center py-4">
+              <h2 className="text-4xl font-bold text-ink leading-tight">Welcome to<br/>Fit to Fit.</h2>
+              <p className="text-slate-500 font-medium text-lg px-4">
+                Let's personalize your C9 journey for maximum impact.
+              </p>
             </div>
           )}
 
           {step === 2 && (
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Goal Weight (kg)</Label>
-                <Input type="number" value={goalWeight} onChange={e => setGoalWeight(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="70" />
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-ink">What's your name?</h2>
+                <p className="text-slate-400 text-sm font-medium">We'll use this in your personalized portal.</p>
               </div>
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Choose Program</Label>
-                <div className="space-y-2">
-                  {programs?.filter((p: any) => ['DX4', 'C9', 'F15', 'V5'].includes(p.code)).map((p: any) => (
-                    <button 
-                      key={p.id}
-                      onClick={() => setProgramId(p.id)}
-                      className={`w-full p-4 rounded-2xl border text-left transition-all group ${programId === p.id ? 'border-slate-900 bg-slate-50 ring-2 ring-slate-900/5' : 'border-slate-100 hover:border-slate-200'}`}
-                    >
-                      <p className="font-bold text-slate-900">{p.name}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{p.duration_days} days</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-4 pt-2">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Pre-Program Track</Label>
-                <div 
-                  onClick={() => setDidDX4(!didDX4)}
-                  className={cn(
-                    "p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all",
-                    didDX4 ? "border-slate-900 bg-slate-50 ring-2 ring-slate-900/5" : "border-slate-100 hover:border-slate-200"
-                  )}
-                >
-                  <div>
-                    <p className="font-bold text-slate-900">Did you complete DX4 first?</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                      {didDX4 ? "Yes, 18 shakes track" : "No, standard 15 shakes track"}
-                    </p>
-                  </div>
-                  <Checkbox checked={didDX4} className="rounded-full" />
-                </div>
-              </div>
-              <div className="space-y-1.5 pt-2">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Start Date</Label>
-                <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="h-12 rounded-xl border-slate-200" />
+              <div className="space-y-2">
+                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</Label>
+                <Input 
+                  value={name} 
+                  onChange={e => setName(e.target.value)} 
+                  className="h-14 rounded-2xl border-slate-200 text-lg px-5 bg-slate-50/50 focus:bg-white transition-colors" 
+                  placeholder="e.g. Sarah Jenkins"
+                  autoFocus
+                />
               </div>
             </div>
           )}
 
           {step === 3 && (
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Current Weight (kg)</Label>
-                <Input type="number" value={weight} onChange={e => setWeight(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="80" />
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-ink">Choose your goal.</h2>
+                <p className="text-slate-400 text-sm font-medium">This helps us keep you motivated.</p>
               </div>
-              <div className="space-y-1.5">
-                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Waist Measurement (cm)</Label>
-                <Input type="number" value={waist} onChange={e => setWaist(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="90" />
+              <div className="grid grid-cols-1 gap-3">
+                {goals.map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setGoal(g)}
+                    className={cn(
+                      "w-full p-4 rounded-2xl border text-left transition-all flex items-center justify-between group",
+                      goal === g 
+                        ? "border-accent bg-purple-50 ring-4 ring-purple-100" 
+                        : "border-slate-100 hover:border-slate-200 bg-white"
+                    )}
+                  >
+                    <span className={cn(
+                      "font-bold text-sm uppercase tracking-widest",
+                      goal === g ? "text-accent" : "text-slate-600"
+                    )}>{g}</span>
+                    {goal === g && <CheckCircle2 className="w-5 h-5 text-accent" />}
+                  </button>
+                ))}
               </div>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
-                Take your measurements first thing in the morning for maximum accuracy.
-              </p>
             </div>
           )}
 
           {step === 4 && (
             <div className="space-y-6">
-              <div className="p-4 bg-blue-50 border border-blue-100 rounded-2xl space-y-3">
-                <h3 className="text-xs font-black text-blue-900 uppercase tracking-widest">Health Disclaimer</h3>
-                <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
-                  Before starting any new diet or exercise program, please consult with your healthcare professional. The Fat2Fit program is a wellness initiative, not medical treatment.
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-ink italic leading-tight">"Why is this goal important to you?"</h2>
+                <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                  Connecting with your 'why' makes consistency easier when things get challenging.
                 </p>
               </div>
-              <div className="flex items-start space-x-3">
-                <Checkbox id="terms" checked={consent} onCheckedChange={(val) => setConsent(!!val)} className="mt-1 border-slate-300 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900" />
-                <Label htmlFor="terms" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider leading-relaxed cursor-pointer">
-                  I understand this is a nutritional program and I am responsible for my own health and well-being.
-                </Label>
+              <div className="space-y-2">
+                <textarea 
+                  value={goalImportance} 
+                  onChange={e => setGoalImportance(e.target.value)}
+                  className="w-full min-h-[160px] p-5 rounded-3xl border border-slate-200 bg-slate-50/50 focus:bg-white text-ink font-medium leading-relaxed focus:ring-4 focus:ring-purple-100 transition-all outline-none"
+                  placeholder="I want to feel more energetic playing with my kids..."
+                />
               </div>
             </div>
           )}
 
-          <div className="flex gap-3 pt-4">
+          {step === 5 && (
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-ink italic">Starting measurements</h2>
+                <p className="text-slate-400 text-sm font-medium">Your Day 1 baseline. Accuracy is key.</p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Weight (kg)</Label>
+                  <Input type="number" value={weight} onChange={e => setWeight(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="85.0" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Chest/Back (cm)</Label>
+                  <Input type="number" value={chest} onChange={e => setChest(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="102" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Waist (cm)</Label>
+                  <Input type="number" value={waist} onChange={e => setWaist(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="94" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hips (cm)</Label>
+                  <Input type="number" value={hips} onChange={e => setHips(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="108" />
+                </div>
+                <div className="col-span-2 space-y-1.5">
+                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Thighs (cm)</Label>
+                  <Input type="number" value={thighs} onChange={e => setThighs(e.target.value)} className="h-12 rounded-xl border-slate-200" placeholder="62" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 6 && (
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <div className="space-y-2 text-center">
+                    <h2 className="text-2xl font-bold text-ink">Did you complete DX4 immediately before C9?</h2>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                    <button
+                        onClick={() => setDidDX4(true)}
+                        className={cn(
+                            "p-6 rounded-3xl border-2 transition-all text-center space-y-2",
+                            didDX4 === true ? "border-accent bg-purple-50" : "border-slate-100 bg-white"
+                        )}
+                    >
+                        <span className="block text-2xl">⚡</span>
+                        <span className="block font-black text-xs uppercase tracking-widest">Yes, DX4 First</span>
+                    </button>
+                    <button
+                        onClick={() => setDidDX4(false)}
+                        className={cn(
+                            "p-6 rounded-3xl border-2 transition-all text-center space-y-2",
+                            didDX4 === false ? "border-accent bg-purple-50" : "border-slate-100 bg-white"
+                        )}
+                    >
+                        <span className="block text-2xl">🌱</span>
+                        <span className="block font-black text-xs uppercase tracking-widest">No, C9 Only</span>
+                    </button>
+                </div>
+              </div>
+
+              <div className="space-y-6 pt-4 border-t border-slate-100">
+                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[11px] text-amber-900 font-medium leading-relaxed italic">
+                  "I understand that the C9 program is a nutritional supplement program and not a substitute for professional medical advice. I am starting this journey at my own responsibility."
+                </div>
+                <div className="flex items-center space-x-3">
+                    <Checkbox id="terms" checked={consent} onCheckedChange={(val) => setConsent(!!val)} className="w-6 h-6 rounded-lg border-slate-300 data-[state=checked]:bg-accent" />
+                    <Label htmlFor="terms" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider leading-tight cursor-pointer">
+                      I accept the medical disclaimer
+                    </Label>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-4">
             {step > 1 && (
-              <Button variant="ghost" onClick={() => setStep(s => s - 1)} className="flex-1 h-12 rounded-xl border border-slate-100 font-bold">
+              <Button variant="ghost" onClick={() => setStep(s => s - 1)} className="flex-1 h-14 rounded-2xl border border-slate-100 font-black uppercase tracking-widest text-[11px]">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
               </Button>
             )}
             <Button 
               onClick={step === TOTAL_STEPS ? finish : next} 
               disabled={isSaving}
-              className="flex-[2] h-12 bg-slate-900 text-white hover:bg-slate-800 font-bold rounded-xl shadow-lg shadow-slate-900/10 group"
+              className="flex-[2] h-14 bg-accent text-white hover:bg-accent/90 font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl shadow-purple-200 group"
             >
               {isSaving ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : step === TOTAL_STEPS ? (
-                "Finish Setup"
+                "Start My C9 Journey"
               ) : (
                 <>
                   Continue <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -282,8 +336,8 @@ function OnboardingPage() {
         </div>
 
         <div className="text-center pt-8">
-          <p className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">
-            Fat2Fit &copy; 2026
+          <p className="text-slate-300 text-[10px] font-black uppercase tracking-widest">
+            Fit to Fit &copy; 2026
           </p>
         </div>
       </div>
