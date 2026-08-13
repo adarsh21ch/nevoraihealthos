@@ -186,25 +186,40 @@ export type Database = {
           created_at: string
           customer_id: string
           day_number: number
+          energy_level: number | null
+          hunger_level: number | null
           id: string
           log_date: string
+          mood: string | null
           note: string | null
+          sleep_hours: number | null
+          water_glasses: number | null
         }
         Insert: {
           created_at?: string
           customer_id: string
           day_number: number
+          energy_level?: number | null
+          hunger_level?: number | null
           id?: string
           log_date: string
+          mood?: string | null
           note?: string | null
+          sleep_hours?: number | null
+          water_glasses?: number | null
         }
         Update: {
           created_at?: string
           customer_id?: string
           day_number?: number
+          energy_level?: number | null
+          hunger_level?: number | null
           id?: string
           log_date?: string
+          mood?: string | null
           note?: string | null
+          sleep_hours?: number | null
+          water_glasses?: number | null
         }
         Relationships: [
           {
@@ -318,6 +333,33 @@ export type Database = {
         }
         Relationships: []
       }
+      free_foods: {
+        Row: {
+          calories_approx: number | null
+          category: string
+          created_at: string | null
+          id: string
+          name: string
+          serving_size: string | null
+        }
+        Insert: {
+          calories_approx?: number | null
+          category: string
+          created_at?: string | null
+          id?: string
+          name: string
+          serving_size?: string | null
+        }
+        Update: {
+          calories_approx?: number | null
+          category?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          serving_size?: string | null
+        }
+        Relationships: []
+      }
       meals: {
         Row: {
           calorie_bucket: number
@@ -397,6 +439,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      movement_logs: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          duration_minutes: number
+          id: string
+          intensity: string | null
+          log_date: string | null
+          participant_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          duration_minutes: number
+          id?: string
+          intensity?: string | null
+          log_date?: string | null
+          participant_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          duration_minutes?: number
+          id?: string
+          intensity?: string | null
+          log_date?: string | null
+          participant_id?: string
+        }
+        Relationships: []
       }
       participant_programs: {
         Row: {
