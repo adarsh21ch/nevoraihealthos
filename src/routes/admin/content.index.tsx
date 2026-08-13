@@ -71,9 +71,8 @@ function AdminContentManagement() {
             onSave={(data: any) => saveTip({ data })}
             queryKey={["admin-tips"]}
             columns={[
-              { label: "Category", field: "category", type: "text" },
-              { label: "Title", field: "title", type: "text" },
               { label: "Body", field: "body", type: "textarea" },
+              { label: "Day", field: "day_number", type: "number" },
               { label: "Order", field: "sort_order", type: "number" }
             ]}
           />
@@ -85,7 +84,6 @@ function AdminContentManagement() {
             onSave={(data: any) => saveFAQ({ data })}
             queryKey={["admin-faqs"]}
             columns={[
-              { label: "Category", field: "category", type: "text" },
               { label: "Question", field: "question", type: "text" },
               { label: "Answer", field: "answer", type: "textarea" },
               { label: "Order", field: "sort_order", type: "number" }
@@ -228,7 +226,7 @@ function ProductsTab({ products, isLoading }: any) {
           <TableHeader>
             <TableRow className="border-slate-100 bg-slate-50/30 hover:bg-slate-50/30">
               <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Product</TableHead>
-              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Code</TableHead>
+              <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Short Name</TableHead>
               <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6 text-right pr-10">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -238,7 +236,7 @@ function ProductsTab({ products, isLoading }: any) {
             ) : products?.map((p: any) => (
               <TableRow key={p.id} className="border-slate-100 hover:bg-slate-50 transition-colors">
                 <TableCell className="pl-10 py-7 font-bold text-ink">{p.name}</TableCell>
-                <TableCell className="text-slate-500 font-medium">{p.code}</TableCell>
+                <TableCell className="text-slate-500 font-medium">{p.short_name}</TableCell>
                 <TableCell className="text-right pr-10"><Button variant="ghost" size="icon" className="rounded-lg text-slate-300 hover:text-accent"><Edit2 className="h-4 w-4" /></Button></TableCell>
               </TableRow>
             ))}
