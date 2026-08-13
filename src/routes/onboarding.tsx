@@ -187,7 +187,7 @@ function OnboardingPage() {
               <div className="space-y-1.5">
                 <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Choose Program</Label>
                 <div className="space-y-2">
-                  {programs?.filter(p => ['DX4', 'C9', 'F15', 'V5'].includes(p.code)).map(p => (
+                  {programs?.filter((p: any) => ['DX4', 'C9', 'F15', 'V5'].includes(p.code)).map((p: any) => (
                     <button 
                       key={p.id}
                       onClick={() => setProgramId(p.id)}
