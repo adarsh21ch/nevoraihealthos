@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="flex flex-col min-h-screen bg-surface selection:bg-purple-100">
+    <div className="flex flex-col min-h-screen bg-surface selection:bg-emerald-100">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 group cursor-pointer">
@@ -47,11 +47,11 @@ function Index() {
         <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-violet-100/50 via-surface to-surface" />
         <div className="max-w-7xl mx-auto text-center relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-accent/20">
+            <span className="inline-block px-5 py-2 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-emerald-200">
               9-Day Program
             </span>
             <h1 className="text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12">
-              9-Day Reset. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em] block mt-4">Get Healthy.</span>
+              9-Day Reset. <br/><span className="relative inline-block mt-4"><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em]">Get Healthy.</span><motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.8, duration: 0.6 }} className="absolute -bottom-2 left-0 right-0 h-4 bg-emerald-400/20 -z-10 origin-left" /></span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
               Join the elite Fat2Fit 9-day reset. A masterclass in metabolic efficiency, designed to transform your cellular energy and reveal your true vitality.
@@ -60,7 +60,7 @@ function Index() {
               <Link to="/login" className="group relative px-12 py-6 bg-ink text-white rounded-2xl text-lg font-black uppercase tracking-widest shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-3 overflow-hidden">
                 <span className="relative z-10">Start The Reset</span>
                 <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                <div className="absolute inset-0 bg-gradient-to-r from-accent to-violet-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
               <a href="#program" className="px-12 py-6 bg-white text-ink border-2 border-slate-100 rounded-2xl text-lg font-bold transition-all hover:border-accent hover:text-accent hover:shadow-xl">
                 The Protocol
@@ -104,11 +104,11 @@ function Index() {
             <div className="flex gap-4 mb-12">
               <div className="flex flex-col gap-2">
                 <StepIcon day={1} completed />
-                <div className="w-[1px] h-8 bg-purple-100 mx-auto" />
+                <div className="w-[1px] h-8 bg-emerald-100 mx-auto" />
               </div>
               <div className="flex flex-col gap-2">
                 <StepIcon day={2} completed />
-                <div className="w-[1px] h-8 bg-purple-100 mx-auto" />
+                <div className="w-[1px] h-8 bg-emerald-100 mx-auto" />
               </div>
               <div className="flex flex-col gap-2">
                 <StepIcon day={3} active />
@@ -129,10 +129,10 @@ function Index() {
             </div>
           </div>
           <div className="relative">
-            <div className="absolute -top-10 -right-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-10" />
-            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-purple-100/50 rounded-full blur-3xl -z-10" />
+            <div className="absolute -top-10 -right-10 w-64 h-64 bg-emerald-50 rounded-full blur-3xl -z-10" />
+            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-emerald-100/50 rounded-full blur-3xl -z-10" />
             <PhoneMockup>
-              <div className="p-8 bg-purple-50 h-full">
+              <div className="p-8 bg-emerald-50/50 h-full">
                 <div className="flex justify-between items-center mb-8">
                   <div className="w-11 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-bold text-sm">F2F</div>
                   <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / 9</div>
@@ -166,7 +166,7 @@ function Index() {
                   ))}
                 </div>
                 
-                <div className="mt-8 p-6 bg-accent rounded-3xl text-white shadow-lg shadow-purple-200">
+                <div className="mt-8 p-6 bg-emerald-600 rounded-3xl text-white shadow-lg shadow-emerald-200">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Water Intake</span>
                     <Plus className="w-4 h-4" />
