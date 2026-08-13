@@ -121,7 +121,11 @@ export const Route = createRootRouteWithContext<{
   head: ({ loaderData }) => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" },
+      { name: "theme-color", content: "#064E3B" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Fat2Fit" },
       { title: "Fat2Fit | 9-Day Reset Protocol" },
       { name: "description", content: "Simplified metabolic wellness for your 9-day Fat2Fit journey." },
       { name: "author", content: "Nevorai" },
@@ -130,6 +134,7 @@ export const Route = createRootRouteWithContext<{
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Fat2Fit" },
+
     ],
     links: [
       {
@@ -140,6 +145,9 @@ export const Route = createRootRouteWithContext<{
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "apple-touch-icon", href: "https://nevoraihealthos.lovable.app/lovable-uploads/67a99f36-3b1a-4d2d-88b1-389d311394a5.png" },
+
     ],
   }),
   shellComponent: RootShell,

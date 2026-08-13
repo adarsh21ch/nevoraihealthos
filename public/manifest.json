@@ -1,0 +1,30 @@
+{
+  "name": "Fat2Fit",
+  "short_name": "Fat2Fit",
+  "description": "Your 9-Day Metabolic Reset Protocol.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#064E3B",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://nevoraihealthos.lovable.app/lovable-uploads/67a99f36-3b1a-4d2d-88b1-389d311394a5.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://nevoraihealthos.lovable.app/lovable-uploads/67a99f36-3b1a-4d2d-88b1-389d311394a5.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "id": "com.nevorai.fat2fit",
+  "scope": "/"
+}
