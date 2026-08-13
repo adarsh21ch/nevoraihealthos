@@ -42,7 +42,6 @@ export const createProgressPhoto = createServerFn({ method: "POST" })
     customerId: z.string(),
     storagePath: z.string(),
     takenOn: z.string(),
-    pose: z.enum(['front', 'side', 'back']),
     dayNumber: z.number(),
   }).parse)
   .handler(async ({ data, context }) => {
@@ -59,7 +58,6 @@ export const createProgressPhoto = createServerFn({ method: "POST" })
       .insert({
         customer_id: data.customerId,
         storage_path: data.storagePath,
-        pose: data.pose,
         day_number: data.dayNumber,
         share_consent: false,
       });

@@ -64,21 +64,20 @@ export const getCompletionData = createServerFn({ method: "GET" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: photos } = await supabaseAdmin
           .from("progress_photos")
-          .select("id, storage_path, pose, created_at")
+          .select("id, storage_path, created_at")
           .eq("customer_id", customer.id)
           .eq("share_consent", true)
           .order("created_at", { ascending: true });
         
         if (!photos || photos.length === 0) return [];
         
-        return await Promise.all(photos.map(async (p) => {
+        return await Promise.all((photos as any[]).map(async (p) => {
           const { data: signed } = await supabaseAdmin.storage
             .from("progress-photos")
             .createSignedUrl(p.storage_path, 3600);
           return {
             id: p.id,
             photo_url: signed?.signedUrl || null,
-            pose: p.pose,
             created_at: p.created_at
           };
         }));

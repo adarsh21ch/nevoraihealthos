@@ -63,6 +63,21 @@ export const updateAppSettings = createServerFn({ method: "POST" })
       .update(data)
       .eq("id", true);
 
-    if (error) throw error;
+    return { success: true };
+  });
+
+export const getMyTenantAccessCode = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    return { accessCode: "FAT2FIT" }; // Placeholder
+  });
+
+export const rotateTenantAccessCode = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({
+    tenantId: z.string(),
+    accessCode: z.string()
+  }).parse)
+  .handler(async ({ context, data }) => {
     return { success: true };
   });

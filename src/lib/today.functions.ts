@@ -70,7 +70,7 @@ export const getTodayData = createServerFn({ method: "GET" })
               .eq("customer_id", customer.id)
               .eq("log_date", todayStr)
               .maybeSingle(),
-          supabase.rpc("get_program_day_with_tasks", {
+          supabase.rpc("get_day_with_tasks", {
               _program_id: customer.program_id,
               _date: todayStr,
               _start_date: customer.start_date
