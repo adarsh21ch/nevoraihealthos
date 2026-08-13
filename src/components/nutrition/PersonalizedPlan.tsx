@@ -17,24 +17,30 @@ import {
   Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyNutritionPlan, generateMyPersonalizedPlan, logMealStatus, getMealLogs } from "@/lib/nutrition/nutrition.functions";
-import { validateProfileReadiness } from "@/lib/profile/profile.functions";
+import { validateProfileReadiness, getMyProfile } from "@/lib/profile/profile.functions";
 import { getISTDateString } from "@/lib/date-utils";
 import { toast } from "sonner";
-import { Link } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function PersonalizedPlan() {
   const queryClient = useQueryClient();
+  const { tenantSlug } = useParams({ from: '/_authenticated/p/$tenantSlug' });
   const today = getISTDateString();
   const getPlan = useServerFn(getMyNutritionPlan);
   const generatePlan = useServerFn(generateMyPersonalizedPlan);
   const logMutationFn = useServerFn(logMealStatus);
   const getLogs = useServerFn(getMealLogs);
   const checkReadiness = useServerFn(validateProfileReadiness);
+  const getProfile = useServerFn(getMyProfile);
+
+  const { data: profile } = useQuery({
+    queryKey: ['my-profile'],
+    queryFn: () => getProfile()
+  });
 
   const { data: readiness, isLoading: isReadinessLoading } = useQuery({
     queryKey: ['profile-readiness'],
@@ -140,7 +146,7 @@ export function PersonalizedPlan() {
           asChild
           className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100"
         >
-          <Link to="/p/fat-to-fit/profile">Complete Profile</Link>
+          <Link to="/p/$tenantSlug/profile" params={{ tenantSlug }}>Complete Profile</Link>
         </Button>
       </div>
     );
@@ -171,7 +177,7 @@ export function PersonalizedPlan() {
             asChild
             className="text-[10px] font-black uppercase tracking-widest text-slate-400"
           >
-            <Link to="/p/fat-to-fit/profile">Review Health Profile</Link>
+            <Link to="/p/$tenantSlug/profile" params={{ tenantSlug }}>Review Health Profile</Link>
           </Button>
         </div>
       </div>
@@ -213,8 +219,10 @@ export function PersonalizedPlan() {
     );
   }
 
-  const planData = plan.plan_data as any;
-  const customer = readiness?.profile;
+  const planData = plan ? (plan.plan_data as any) : null;
+  const customer = profile;
+
+  if (!planData) return null;
 
   // 19. MY PLAN — GENERATED STATE
   return (
