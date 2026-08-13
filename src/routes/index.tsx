@@ -68,8 +68,8 @@ function Index() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-2.5 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-ink rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">H</div>
-            <span className="text-xl font-bold tracking-tight text-ink">Health OS</span>
+            <div className="w-10 h-10 bg-ink rounded-xl flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-500 shadow-lg shadow-slate-200">F</div>
+            <span className="text-xl font-bold tracking-tight text-ink">Fat2Fit</span>
           </motion.div>
           
           <div className="hidden md:flex items-center gap-10">
