@@ -49,21 +49,22 @@ export const getCompletionData = createServerFn({ method: "GET" })
 
     const { data: appSettings } = await supabase
       .from("app_settings")
-      .select("brand_name")
+      .select("brand_name, whatsapp_number")
       .eq("id", true)
       .single();
 
     return {
       brand_name: appSettings?.brand_name || "Fat2Fit",
+      whatsapp_number: appSettings?.whatsapp_number || "",
       customer,
-      program,
+      program: program || { name: "Program", duration_days: 9 },
       stats,
       nextProgram,
       photos: await (async () => {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: photos } = await supabaseAdmin
           .from("progress_photos")
-          .select("id, storage_path, pose, created_at")
+          .select("id, storage_path, pose, taken_on, created_at")
           .eq("customer_id", customer.id)
           .eq("share_consent", true)
           .order("created_at", { ascending: true });
@@ -78,7 +79,8 @@ export const getCompletionData = createServerFn({ method: "GET" })
             id: p.id,
             photo_url: signed?.signedUrl || null,
             pose: p.pose,
-            created_at: p.created_at
+            created_at: p.created_at,
+            taken_on: p.taken_on
           };
         }));
       })()
@@ -92,7 +94,7 @@ export const createReferral = createServerFn({ method: "POST" })
     leadPhone: z.string(),
   }).parse)
   .handler(async ({ context, data }) => {
-    return { success: true }; // Placeholder
+    return { success: true };
   });
 
 export const updateShareConsent = createServerFn({ method: "POST" })
