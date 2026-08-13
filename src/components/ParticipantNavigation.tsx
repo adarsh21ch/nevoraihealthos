@@ -2,6 +2,7 @@ import { Home, Calendar, Trophy, Package, User, MessageCircle } from 'lucide-rea
 import { Link, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { AppLogo } from '@/components/ui/app-logo';
 
 interface SidebarProps {
   tenant: {
@@ -24,20 +25,7 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
   return (
     <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 bg-white border-r border-slate-100 z-50">
       <div className="p-8 pb-10">
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative">
-            <div className="w-11 h-9 bg-ink rounded-lg rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-lg">
-              <span className="text-white font-black text-xs tracking-tighter">F2F</span>
-            </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-accent rounded-md flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-               <div className="w-1.5 h-1.5 bg-white rounded-full" />
-            </div>
-          </div>
-          <div>
-            <h1 className="text-sm font-black text-ink uppercase tracking-tight">Fat<span className="text-health-green">2</span>Fit</h1>
-            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Protocol Active</p>
-          </div>
-        </div>
+        <AppLogo />
       </div>
 
       <nav className="flex-1 px-4 space-y-2">

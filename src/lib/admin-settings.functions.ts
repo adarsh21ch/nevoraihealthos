@@ -9,6 +9,31 @@ const adminAuth = async (context: any) => {
   return true;
 };
 
+export const updateBranding = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({
+    logoUrl: z.string().url().optional().nullable(),
+    brandName: z.string().min(2).optional(),
+    tagline: z.string().optional(),
+  }).parse(data))
+  .handler(async ({ context, data }) => {
+    await adminAuth(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const updateData: any = {};
+    if (data.logoUrl !== undefined) updateData.logo_url = data.logoUrl;
+    if (data.brandName) updateData.brand_name = data.brandName;
+    if (data.tagline !== undefined) updateData.tagline = data.tagline;
+
+    const { error } = await supabaseAdmin
+      .from('app_settings')
+      .update(updateData)
+      .eq('id', true);
+
+    if (error) throw new Error(`Failed to update branding: ${error.message}`);
+    return { success: true };
+  });
+
 export const updatePlatformSettings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
@@ -16,13 +41,6 @@ export const updatePlatformSettings = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ context, data }) => {
     await adminAuth(context);
-    
-    // In a production app, we would store this in a 'platform_settings' table or similar.
-    // However, since this is a Lovable/Supabase environment, the most direct way to 
-    // "configure" the app immediately as requested is to provide a way to set the secret.
-    // For now, we will assume the user will use the `add_secret` flow via chat, 
-    // but we can provide a UI that explains this or attempts to verify the key.
-    
     return { success: true, message: "Settings update triggered. Please ensure GOOGLE_GEMINI_API_KEY is set in your project secrets." };
   });
 

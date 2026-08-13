@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { useServerFn } from '@tanstack/react-start';
 import { getDashboardStats } from '@/lib/dashboard.functions';
 import { Link, Outlet } from '@tanstack/react-router';
+import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
@@ -45,9 +46,8 @@ function AdminDashboard() {
       <aside className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-800 shrink-0">
         <div className="p-8 space-y-10 flex flex-col h-full">
           <div className="flex items-center gap-4 px-2">
-              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center font-black text-white shadow-lg shadow-purple-900/20 rotate-3">F2F</div>
+              <AppLogo variant="light" />
               <div className="flex flex-col">
-                <span className="font-black text-lg tracking-tighter uppercase leading-none">Health OS</span>
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Admin Portal</span>
               </div>
           </div>
