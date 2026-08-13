@@ -97,7 +97,7 @@ function OnboardingPage() {
   }, [me]);
 
   const validateStep = () => {
-    const currentStepId = STEPS[step].id;
+    const currentStepId = STEPS[step]?.id;
     if (currentStepId === 'basic') {
       if (!formData.name.trim()) return "Name is required";
       if (!formData.dob) return "Date of Birth is required";
