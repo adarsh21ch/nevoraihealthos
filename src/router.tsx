@@ -13,7 +13,9 @@ export const getRouter = () => {
       isCustomDomain: false,
     },
     scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
+    defaultPreload: "intent",
+    defaultPreloadStaleTime: 30000,
+    defaultStaleTime: 60000,
   });
 
   return router;

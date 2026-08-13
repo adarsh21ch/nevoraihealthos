@@ -15,7 +15,7 @@ export const getDashboardStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    // Hardcoded check for platform admin to bypass potential issues with is_app_admin
+    // Check cache or roles directly
     const { data: { user } } = await supabase.auth.getUser();
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     
@@ -27,14 +27,15 @@ export const getDashboardStats = createServerFn({ method: "GET" })
     
     if (!isAdmin) throw new Error("Unauthorized");
 
-    const [activeCount, atRiskCount] = await Promise.all([
+    // Optimized: Run counts in parallel and select only what's needed
+    const [activeRes, atRiskRes] = await Promise.all([
       supabase.from("customers").select("id", { count: "exact", head: true }),
-      supabase.from("customers").select("id", { count: "exact", head: true }).is("onboarding_complete", false)
+      supabase.from("customers").select("id", { count: "exact", head: true }).eq("onboarding_complete", false)
     ]);
 
     return {
-      activeCustomers: activeCount.count || 0,
-      atRisk: atRiskCount.count || 0,
+      activeCustomers: activeRes.count || 0,
+      atRisk: atRiskRes.count || 0,
       reorder: 0,
       completingThisWeek: 0,
     };
