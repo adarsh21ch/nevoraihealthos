@@ -36,36 +36,40 @@ function Index() {
         </div>
       </nav>
 
-      <header className="relative pt-40 pb-32 px-6 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-100/50 via-white to-white" />
-        <div className="max-w-7xl mx-auto text-center">
+      <header className="relative pt-48 pb-36 px-6 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-100/40 via-surface to-surface" />
+        <div className="max-w-7xl mx-auto text-center relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-sm font-bold uppercase tracking-[0.2em] mb-8">The 9-Day Reset</span>
-            <h1 className="text-6xl md:text-[8rem] font-bold tracking-tighter text-ink leading-[0.9] mb-10">
-              Transform your <br/><span className="text-accent italic">well-being.</span>
+            <span className="inline-block px-5 py-2 rounded-full bg-accent/10 text-accent text-sm font-bold uppercase tracking-[0.2em] mb-8 animate-pulse">
+              The Ultimate 9-Day Metabolic Reset
+            </span>
+            <h1 className="text-6xl md:text-[9rem] font-serif italic tracking-tighter text-ink leading-[0.85] mb-12">
+              Lose weight. <br/><span className="text-accent not-italic font-sans font-black uppercase tracking-tighter">Gain vitality.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed">
-              Experience the premium Fit to Fit C9 system: a 9-day nutritional reset designed to kickstart your journey toward a leaner, more vibrant version of yourself.
+            <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
+              Join the premium C9 wellness system. A science-backed reset designed to strip away toxicity and kickstart sustainable weight loss in just nine days.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link to="/login" className="px-10 py-5 bg-accent text-white rounded-full text-lg font-bold shadow-lg shadow-purple-200/50 transition-all hover:scale-105 active:scale-95 flex items-center gap-3">
-                Start Your Program <ArrowRight className="w-5 h-5" />
+              <Link to="/login" className="group relative px-10 py-5 bg-accent text-white rounded-full text-lg font-bold shadow-2xl shadow-purple-200/50 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 overflow-hidden">
+                <span className="relative z-10">Start Your Transformation</span>
+                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-accent opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
-              <a href="#program" className="px-10 py-5 bg-white text-ink border border-slate-200 rounded-full text-lg font-bold transition-all hover:border-accent hover:text-accent">
-                Explore the C9 System
+              <a href="#program" className="px-10 py-5 bg-white text-ink border border-slate-200 rounded-full text-lg font-bold transition-all hover:border-accent hover:text-accent hover:shadow-lg">
+                Explore The Science
               </a>
             </div>
           </motion.div>
         </div>
       </header>
 
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader title="Why Weight Matters" subtitle="It’s not just about the number on the scale. It's about vitality, clarity, and how you feel in your own body every single day." />
-          <div className="grid md:grid-cols-3 gap-8 mt-16">
-            <StatBox label="Energy" value="300%" description="Improve your daily energy levels naturally." />
-            <StatBox label="Focus" value="CLARITY" description="Clear the fog of processed food dependency." />
-            <StatBox label="Balance" value="STABLE" description="Regulate your metabolism for long-term health." />
+      <section className="py-32 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <SectionHeader title="Stop struggling. Start thriving." subtitle="Fatigue and weight gain are often signals of a metabolic system out of balance. Our reset addresses the root cause." />
+          <div className="grid md:grid-cols-3 gap-10 mt-20">
+            <StatBox label="Energy Spike" value="3X" description="Natural energy without the caffeine crash." />
+            <StatBox label="Mental Clarity" value="SHARP" description="Eliminate brain fog and food cravings." />
+            <StatBox label="Metabolism" value="STOKED" description="Ignite your body's fat-burning potential." />
           </div>
         </div>
       </section>
@@ -127,8 +131,8 @@ function Index() {
                   <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / C9</div>
                 </div>
                 
-                <h3 className="text-3xl font-bold text-ink mb-2">Checklist</h3>
-                <p className="text-slate-500 text-sm mb-8">Your goals for today.</p>
+                <h3 className="text-3xl font-bold text-ink mb-2 font-serif">Daily Log</h3>
+                <p className="text-slate-500 text-sm mb-8 font-medium">Your 9-day weight loss companion.</p>
                 
                 <div className="space-y-4">
                   {[
@@ -219,8 +223,8 @@ function Index() {
             </div>
             <div className="relative z-10 grid md:grid-cols-2 gap-16 items-center">
               <div>
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">Nutrition Focus</span>
-                <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">Master your daily intake.</h2>
+                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">Metabolic Reset</span>
+                <h2 className="text-4xl md:text-7xl font-serif italic text-white mb-8 leading-tight">Master your <br/>nutritional <span className="text-accent not-italic">Engine.</span></h2>
                 <div className="space-y-6">
                   {[
                     "Free Foods list for guilt-free snacking.",
