@@ -25,6 +25,13 @@ export const Route = createFileRoute('/_authenticated')({
       };
     }
 
+    // Optimization: Return early if already in an admin session (trust cookie/storage)
+    // to avoid RPC overhead on every transition
+    const existingContext = (window as any).__AUTH_CONTEXT;
+    if (existingContext && existingContext.role === 'platform_admin') {
+        return { authContext: existingContext };
+    }
+
     // Check session for role to avoid RPC if possible
     // Note: In a production app, we'd store the role in user_metadata or a custom claim
     // For now, we still use the RPC but with better error handling
