@@ -4,6 +4,7 @@ import { useServerFn } from '@tanstack/react-start';
 import { getDietPlan } from '@/lib/diet.functions';
 import { supabase } from '@/integrations/supabase/client';
 import { Apple, Info, Scale } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/diet')({
   component: DietPage,
@@ -83,6 +84,28 @@ function DietPage() {
             </div>
           ))}
         </div>
+
+        {plan?.recipes && plan.recipes.length > 0 && (
+          <div className="space-y-6 pt-4 border-t border-slate-100">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 pl-2">Indian 600-Cal Options</h3>
+            <div className="grid gap-4">
+              {plan.recipes.map((recipe: any) => (
+                <div key={recipe.name} className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-slate-900 text-lg">{recipe.name}</h4>
+                    <Badge variant="outline" className="text-[9px] border-slate-200">{recipe.calories} kcal</Badge>
+                  </div>
+                  <p className="text-xs text-slate-500 mb-3">{recipe.instructions}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {recipe.ingredients.slice(0, 3).map((ing: string) => (
+                      <span key={ing} className="text-[9px] bg-slate-50 px-2 py-1 rounded-full font-bold text-slate-400 uppercase tracking-wider">{ing}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

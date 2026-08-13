@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 import { Loader2, ArrowRight, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding")({
@@ -31,6 +32,7 @@ function OnboardingPage() {
   const [heightCm, setHeightCm] = useState("");
   const [goalWeight, setGoalWeight] = useState("");
   const [programId, setProgramId] = useState("");
+  const [didDX4, setDidDX4] = useState(false);
   const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [weight, setWeight] = useState("");
   const [waist, setWaist] = useState("");
@@ -105,6 +107,7 @@ function OnboardingPage() {
           height_cm: Number(heightCm),
           goal_weight_kg: Number(goalWeight),
           program_id: programId,
+          track: didDX4 ? 'DX4' : 'standard',
           start_date: startDate,
           onboarding_complete: true,
           disclaimer_accepted_at: new Date().toISOString()
@@ -196,7 +199,25 @@ function OnboardingPage() {
                   ))}
                 </div>
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-4 pt-2">
+                <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Pre-Program Track</Label>
+                <div 
+                  onClick={() => setDidDX4(!didDX4)}
+                  className={cn(
+                    "p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all",
+                    didDX4 ? "border-slate-900 bg-slate-50 ring-2 ring-slate-900/5" : "border-slate-100 hover:border-slate-200"
+                  )}
+                >
+                  <div>
+                    <p className="font-bold text-slate-900">Did you complete DX4 first?</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                      {didDX4 ? "Yes, 18 shakes track" : "No, standard 15 shakes track"}
+                    </p>
+                  </div>
+                  <Checkbox checked={didDX4} className="rounded-full" />
+                </div>
+              </div>
+              <div className="space-y-1.5 pt-2">
                 <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Start Date</Label>
                 <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="h-12 rounded-xl border-slate-200" />
               </div>

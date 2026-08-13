@@ -25,7 +25,8 @@ function DashboardLayout() {
   const navItems = [
     { name: "Overview", icon: LayoutDashboard, path: "/dashboard/" },
     { name: "Customers", icon: Users, path: "/dashboard/customers/" },
-    { name: "Reorder", icon: Package, path: "/dashboard/reorder" },
+    { name: "Products", icon: Package, path: "/dashboard/products" },
+    { name: "Reorder", icon: TrendingUp, path: "/dashboard/reorder" },
     { name: "At-risk", icon: TrendingUp, path: "/dashboard/at-risk" },
     { name: "Access Control", icon: Key, path: "/dashboard/access" },
     { name: "Testimonials", icon: MessageSquare, path: "/dashboard/testimonials" },
