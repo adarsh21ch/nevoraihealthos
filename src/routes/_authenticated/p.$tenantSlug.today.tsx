@@ -235,15 +235,39 @@ function TodayPage() {
                 <h3 className="text-3xl lg:text-4xl font-serif italic font-bold leading-tight">Small actions. Consistent progress.</h3>
               </div>
               
-              {primaryTask && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {primaryTask && (
+                  <div className="bg-white/10 border border-white/10 rounded-3xl p-6 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-emerald-300/60 mb-1">Up Next</p>
+                      <h4 className="font-bold text-sm lg:text-base line-clamp-1">{primaryTask.title}</h4>
+                    </div>
+                    <Activity className="w-5 h-5 text-health-green shrink-0 ml-2" />
+                  </div>
+                )}
+
+                {/* Integrated Hydration */}
                 <div className="bg-white/10 border border-white/10 rounded-3xl p-6 flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-300/60 mb-1">Up Next</p>
-                    <h4 className="font-bold text-base lg:text-lg">{primaryTask.title}</h4>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-300/60 mb-1">Hydration</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-bold text-lg">{dailyLog?.water_glasses || 0}</span>
+                      <span className="text-[10px] text-emerald-300/60 uppercase font-black">/ 8 glasses</span>
+                    </div>
                   </div>
-                  <Activity className="w-6 h-6 text-health-green" />
+                  <div className="relative w-10 h-10 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90">
+                      <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
+                      <circle
+                        cx="20" cy="20" r="18" fill="none" stroke="#10B981" strokeWidth="3"
+                        strokeDasharray={113.1} strokeDashoffset={113.1 * (1 - Math.min(1, (dailyLog?.water_glasses || 0) / 8))}
+                        strokeLinecap="round" className="transition-all duration-1000 ease-out"
+                      />
+                    </svg>
+                    <Droplets className="absolute w-4 h-4 text-health-green fill-current" />
+                  </div>
                 </div>
-              )}
+              </div>
 
               <Button 
                 className="w-full h-16 bg-health-green hover:bg-health-green/90 text-white rounded-2xl font-bold text-base shadow-lg shadow-emerald-950/20"
@@ -254,6 +278,31 @@ function TodayPage() {
               >
                 Start Today's Plan
               </Button>
+            </div>
+          </section>
+
+          {/* Quick Hydration Logger (Hidden on large desktop if we want to save space, but keeping it functional) */}
+          <section className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
+            <div className="flex justify-between items-center mb-6">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Log Hydration</h4>
+                <span className="text-xs font-bold text-health-green">{dailyLog?.water_glasses || 0} of 8 glasses</span>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                {[...Array(8)].map((_, i) => {
+                    const isActive = (dailyLog?.water_glasses || 0) > i;
+                    return (
+                        <button 
+                            key={i} 
+                            onClick={() => updateWater(isActive ? i : i + 1)}
+                            className={cn(
+                                "w-12 h-12 rounded-xl flex items-center justify-center transition-all border-2 shrink-0",
+                                isActive ? "bg-health-green border-health-green text-white" : "bg-slate-50 border-transparent text-slate-200 hover:border-slate-100"
+                            )}
+                        >
+                            <Droplets className={cn("w-5 h-5", isActive ? "fill-current" : "")} />
+                        </button>
+                    );
+                })}
             </div>
           </section>
 
@@ -296,43 +345,7 @@ function TodayPage() {
           )}
         </div>
 
-        <div className="space-y-8 lg:space-y-12">
-          {/* Hydration Tracker */}
-          <section className="bg-white rounded-[2.5rem] p-8 lg:p-10 border border-slate-100 shadow-sm space-y-8">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h3 className="font-bold text-ink italic font-serif text-2xl lg:text-3xl">Today's Hydration</h3>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Goal: 8 glasses (2L)</p>
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-3xl font-bold text-health-green italic font-serif">{dailyLog?.water_glasses || 0}<span className="text-slate-200 mx-1">/</span>8</span>
-                  <div className="w-24 h-1.5 bg-slate-50 rounded-full mt-2 overflow-hidden">
-                    <div 
-                      className="h-full bg-health-green transition-all duration-500" 
-                      style={{ width: `${Math.min(100, ((dailyLog?.water_glasses || 0) / 8) * 100)}%` }}
-                    />
-                  </div>
-                </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-                {[...Array(8)].map((_, i) => {
-                    const isActive = (dailyLog?.water_glasses || 0) > i;
-                    return (
-                        <button 
-                            key={i} 
-                            onClick={() => updateWater(isActive ? i : i + 1)}
-                            className={cn(
-                                "h-14 lg:h-16 rounded-2xl flex items-center justify-center transition-all border-2",
-                                isActive ? "bg-health-green border-health-green text-white shadow-lg shadow-emerald-900/10" : "bg-slate-50 border-transparent text-slate-200 hover:border-slate-100"
-                            )}
-                        >
-                            <Droplets className={cn("w-6 h-6", isActive ? "fill-current" : "")} />
-                        </button>
-                    );
-                })}
-            </div>
-            <p className="text-[10px] text-slate-400 font-medium italic text-center">Tap to log each glass of water</p>
-          </section>
+        <div id="tasks-section" className="space-y-8 lg:space-y-12">
 
           {/* Daily Checklist (Right side on desktop) */}
           <section className="bg-white rounded-[2.5rem] p-8 lg:p-10 border border-slate-100 shadow-sm flex flex-col h-[700px] lg:h-[800px]">
