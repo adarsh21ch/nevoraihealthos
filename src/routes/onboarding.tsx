@@ -406,7 +406,9 @@ function OnboardingPage() {
                       ))}
                     </div>
                   </div>
+                )}
                 {/* Preferences - Avoids */}
+
                 {currentStep.id === 'preferences' && (
                   <div className="space-y-4">
                     <h2 className="text-2xl font-serif italic font-bold text-ink">Food Avoidance</h2>
