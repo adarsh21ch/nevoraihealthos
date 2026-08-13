@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import * as React from 'react';
 import { 
   User, 
   Ruler, 
@@ -19,15 +20,19 @@ import { useServerFn } from '@tanstack/react-start';
 import { getMyProfile, validateProfileReadiness } from '@/lib/profile/profile.functions';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { ProfileEditDrawer } from '@/components/profile/ProfileEditDrawer';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/profile')({
   component: ProfilePage,
 });
 
+
 function ProfilePage() {
   const { tenantSlug } = Route.useParams();
   const getProfile = useServerFn(getMyProfile);
   const checkReadiness = useServerFn(validateProfileReadiness);
+  
+  const [activeSection, setActiveSection] = React.useState<any>(null);
 
   const { data: profile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['my-profile'],
@@ -38,6 +43,7 @@ function ProfilePage() {
     queryKey: ['profile-readiness'],
     queryFn: () => checkReadiness(),
   });
+
 
   if (isProfileLoading || isReadinessLoading) {
     return (
@@ -59,9 +65,9 @@ function ProfilePage() {
       title: 'Personal', 
       icon: User, 
       fields: [
-        { label: 'Name', value: profile.name },
-        { label: 'DOB', value: profile.dob },
-        { label: 'Sex', value: profile.gender }
+        { label: 'Name', value: profile.name, key: 'name' },
+        { label: 'DOB', value: profile.dob, key: 'dob', type: 'date' },
+        { label: 'Sex', value: profile.gender, key: 'gender', options: ['Male', 'Female', 'Other'] }
       ]
     },
     { 
@@ -69,9 +75,9 @@ function ProfilePage() {
       title: 'Body', 
       icon: Ruler, 
       fields: [
-        { label: 'Height', value: profile.height_cm ? `${profile.height_cm} cm` : null },
-        { label: 'Weight', value: profile.weight_kg ? `${profile.weight_kg} kg` : null },
-        { label: 'Waist', value: profile.waist_cm ? `${profile.waist_cm} cm` : null }
+        { label: 'Height (cm)', value: profile.height_cm ? `${profile.height_cm} cm` : null, key: 'height_cm', type: 'number' },
+        { label: 'Weight (kg)', value: profile.weight_kg ? `${profile.weight_kg} kg` : null, key: 'weight_kg', type: 'number' },
+        { label: 'Waist (cm)', value: profile.waist_cm ? `${profile.waist_cm} cm` : null, key: 'waist_cm', type: 'number' }
       ]
     },
     { 
@@ -79,8 +85,8 @@ function ProfilePage() {
       title: 'Goals', 
       icon: Target, 
       fields: [
-        { label: 'Primary Goal', value: profile.goal },
-        { label: 'Target Weight', value: profile.target_weight_kg ? `${profile.target_weight_kg} kg` : null }
+        { label: 'Primary Goal', value: profile.goal, key: 'goal', options: ['Weight Loss', 'Weight Management', 'Body Composition', 'Energy & Habits'] },
+        { label: 'Target Weight (kg)', value: profile.target_weight_kg ? `${profile.target_weight_kg} kg` : null, key: 'target_weight_kg', type: 'number' }
       ]
     },
     { 
@@ -88,8 +94,8 @@ function ProfilePage() {
       title: 'Lifestyle', 
       icon: Info, 
       fields: [
-        { label: 'Activity Level', value: profile.activity_level },
-        { label: 'Lifestyle', value: profile.lifestyle }
+        { label: 'Activity Level', value: profile.activity_level, key: 'activity_level', options: ['sedentary', 'light', 'moderate', 'very'] },
+        { label: 'Lifestyle', value: profile.lifestyle, key: 'lifestyle', options: ['Office Worker', 'Business Owner', 'Student', 'Homemaker', 'Shift Worker', 'Retired'] }
       ]
     },
     { 
@@ -97,8 +103,8 @@ function ProfilePage() {
       title: 'Diet', 
       icon: Utensils, 
       fields: [
-        { label: 'Diet Preference', value: profile.diet_preference },
-        { label: 'Cooking Access', value: profile.cooking_access }
+        { label: 'Diet Preference', value: profile.diet_preference, key: 'diet_preference', options: ['Vegetarian', 'Non-Vegetarian', 'Egg-Inclusive', 'Vegan'] },
+        { label: 'Cooking Access', value: profile.cooking_access, key: 'cooking_access', options: ['Full Kitchen', 'Basic Access', 'Limited (Hostel/Office)', 'No Cooking'] }
       ]
     },
     { 
@@ -106,11 +112,13 @@ function ProfilePage() {
       title: 'Safety / Health', 
       icon: ShieldCheck, 
       fields: [
-        { label: 'Allergies', value: profile.allergies?.join(', ') },
-        { label: 'Health Concerns', value: profile.health_concerns }
+        { label: 'Allergies (comma separated)', value: profile.allergies?.join(', '), key: 'allergies' },
+        { label: 'Health Concerns', value: profile.health_concerns, key: 'health_concerns', type: 'textarea' }
       ]
     }
   ];
+
+
 
   return (
     <div className="max-w-md mx-auto px-6 pt-16 pb-24 animate-in fade-in duration-700 space-y-10">
@@ -241,7 +249,11 @@ function ProfilePage() {
                               </div>
                               <span className="font-bold text-ink text-lg italic font-serif tracking-tight">{section.title}</span>
                           </div>
-                          <Button variant="ghost" className="h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-health-green hover:bg-emerald-50/50">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => setActiveSection(section)}
+                            className="h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-health-green hover:bg-emerald-50/50"
+                          >
                             Edit
                           </Button>
                       </div>
@@ -259,6 +271,14 @@ function ProfilePage() {
             ))}
         </div>
       </div>
+
+      <ProfileEditDrawer 
+        isOpen={!!activeSection} 
+        onClose={() => setActiveSection(null)} 
+        section={activeSection} 
+        profile={profile}
+      />
     </div>
   );
 }
+
