@@ -119,7 +119,17 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
 
     if (!customer) throw new Error("Customer profile not found");
 
-    // 2. Call Gemini Nutrition Engine
+    // 2. Validate Profile Readiness
+    const requiredFields = ['name', 'dob', 'height_cm', 'weight_kg', 'waist_cm', 'goal', 'activity_level', 'diet_preference', 'cooking_access'];
+    const missing = requiredFields.filter(f => !(customer as any)[f]);
+    if (missing.length > 0) {
+      throw new Error(`Profile incomplete. Missing: ${missing.join(', ')}`);
+    }
+
+
+
+    // 3. Call Gemini Nutrition Engine
+
     const { generateNutritionPlan } = await import("../ai/nutrition.server");
     const planResult = await generateNutritionPlan({
       supabase,
