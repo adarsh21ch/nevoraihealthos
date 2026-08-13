@@ -176,8 +176,7 @@ function Index() {
           </div>
         </div>
       </section>
-
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-24 bg-surface" id="how-it-works">
           <SectionHeader badge="The Program" title="What’s inside the C9 System?" subtitle="Everything you need to reset your body and transform your nutrition over 9 powerful days." />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
             <FeatureCard 
