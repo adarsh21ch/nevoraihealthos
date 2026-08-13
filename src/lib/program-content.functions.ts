@@ -19,7 +19,7 @@ export const getProgramContent = createServerFn({ method: "GET" })
       .from("programs")
       .select("*")
       .eq("id", customer.program_id)
-      .single();
+      .maybeSingle();
 
     const { data: products } = await supabase
       .from("products")

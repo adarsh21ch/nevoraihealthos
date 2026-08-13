@@ -10,7 +10,7 @@ export const getProgressPhotos = createServerFn({ method: "GET" })
     const userId = context.userId;
     
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer: data.customerId
+      _customer: data.customerId
     });
     if (!allowed) throw new Error("Unauthorized");
 
@@ -18,7 +18,7 @@ export const getProgressPhotos = createServerFn({ method: "GET" })
       .from("progress_photos")
       .select("*")
       .eq("customer_id", data.customerId)
-      .order("taken_on", { ascending: true });
+      .order("created_at", { ascending: true });
 
     if (error) throw error;
     
@@ -43,14 +43,14 @@ export const createProgressPhoto = createServerFn({ method: "POST" })
     storagePath: z.string(),
     takenOn: z.string(),
     pose: z.enum(['front', 'side', 'back']),
-    dayNumber: z.number().optional(),
+    dayNumber: z.number(),
   }).parse)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const userId = context.userId;
     
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer: data.customerId
+      _customer: data.customerId
     });
     if (!allowed) throw new Error("Unauthorized");
 
@@ -59,9 +59,8 @@ export const createProgressPhoto = createServerFn({ method: "POST" })
       .insert({
         customer_id: data.customerId,
         storage_path: data.storagePath,
-        taken_on: data.takenOn,
         pose: data.pose,
-        day_number: data.dayNumber || 1,
+        day_number: data.dayNumber,
         share_consent: false,
       });
 
@@ -88,7 +87,7 @@ export const updatePhotoConsent = createServerFn({ method: "POST" })
     if (!photoData) throw new Error("Photo not found");
 
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer: photoData.customer_id
+      _customer: photoData.customer_id
     });
     if (!allowed) throw new Error("Unauthorized");
 
@@ -119,7 +118,7 @@ export const deleteProgressPhoto = createServerFn({ method: "POST" })
     if (!photoData) throw new Error("Photo not found");
 
     const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
-      _uid: userId, _customer: photoData.customer_id
+      _customer: photoData.customer_id
     });
     if (!allowed) throw new Error("Unauthorized");
 

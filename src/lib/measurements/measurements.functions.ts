@@ -28,7 +28,7 @@ export const addMeasurement = createServerFn({ method: "POST" })
     thigh_cm: z.number().nullable().optional(),
     arm_cm: z.number().nullable().optional(),
     taken_on: z.string().optional(),
-    day_number: z.number().optional(),
+    day_number: z.number(), // Required by schema
   }).parse)
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -38,8 +38,8 @@ export const addMeasurement = createServerFn({ method: "POST" })
       .from("measurements")
       .insert({
         customer_id: customerId,
-        taken_on: rest.taken_on || new Date().toISOString(),
-        day_number: rest.day_number || 1,
+        taken_on: (rest.taken_on || new Date().toISOString()).split('T')[0],
+        day_number: rest.day_number,
         weight_kg: rest.weight_kg ?? null,
         waist_cm: rest.waist_cm ?? null,
         hip_cm: rest.hip_cm ?? null,

@@ -53,9 +53,12 @@ export const getCompletionData = createServerFn({ method: "GET" })
       .eq("id", true)
       .single();
 
+    const brandName = appSettings?.brand_name || "Fat2Fit";
+    const whatsapp = appSettings?.whatsapp_number || "";
+
     return {
-      brand_name: appSettings?.brand_name || "Fat2Fit",
-      whatsapp_number: appSettings?.whatsapp_number || "",
+      brand_name: brandName,
+      whatsapp_number: whatsapp,
       customer,
       program: program || { name: "Program", duration_days: 9 },
       stats,
@@ -64,7 +67,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: photos } = await supabaseAdmin
           .from("progress_photos")
-          .select("id, storage_path, pose, taken_on, created_at")
+          .select("id, storage_path, pose, created_at")
           .eq("customer_id", customer.id)
           .eq("share_consent", true)
           .order("created_at", { ascending: true });
@@ -80,7 +83,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
             photo_url: signed?.signedUrl || null,
             pose: p.pose,
             created_at: p.created_at,
-            taken_on: p.taken_on
+            taken_on: p.created_at // Use created_at if taken_on is missing
           };
         }));
       })()
