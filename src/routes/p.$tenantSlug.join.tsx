@@ -18,7 +18,7 @@ export const Route = createFileRoute("/p/$tenantSlug/join")({
         content:
           "Create your account with your distributor's access code and start your guided wellness program.",
       },
-      { property: "og:title", content: "Join the program | Health OS" },
+      { property: "og:title", content: "Join the program | Fat2Fit" },
       {
         property: "og:description",
         content: "Create your account with your distributor's access code and start your program.",

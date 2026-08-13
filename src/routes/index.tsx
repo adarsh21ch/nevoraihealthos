@@ -492,7 +492,7 @@ function Index() {
             <div className="lg:col-span-5 space-y-10">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">H</div>
-                <span className="text-2xl font-bold tracking-tight text-slate-900">Health OS</span>
+                <span className="text-2xl font-bold tracking-tight text-slate-900">Fat2Fit</span>
               </div>
               <p className="text-slate-500 text-lg leading-relaxed max-w-sm font-medium">
                 The premier infrastructure for modern health programs and wellness distribution at scale.
