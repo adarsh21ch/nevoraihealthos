@@ -3,8 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { LayoutDashboard, Users, Settings, LogOut, FileText, Database, Activity } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, FileText, Database, Activity, Key } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useServerFn } from '@tanstack/react-start';
+import { getDashboardStats } from '@/lib/dashboard.functions';
+import { Link, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
