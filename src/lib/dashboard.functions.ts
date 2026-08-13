@@ -157,10 +157,10 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const { data: row, error } = await supabase
       .from("customers")
       .select(
-        `id, name, phone, email, share_consent, user_id, start_date,
+        `id, name, phone, share_consent, user_id, start_date,
          programs(id, name, duration_days),
          measurements(id, weight_kg, waist_cm, hip_cm, chest_cm, thigh_cm, arm_cm, taken_on),
-         progress_photos(id, storage_path, pose, created_at),
+         progress_photos(id, storage_path, created_at),
          daily_logs(id, log_date, day_number, note)`
       )
       .eq("id", data.customerId)
@@ -177,7 +177,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
           const { data: signed } = await supabaseAdmin.storage
             .from("progress-photos")
             .createSignedUrl(p.storage_path, 60 * 60);
-          return { id: p.id, photo_url: signed?.signedUrl ?? null, type: p.pose, created_at: p.created_at };
+          return { id: p.id, photo_url: signed?.signedUrl ?? null, created_at: p.created_at };
         }),
       );
     }
@@ -186,7 +186,6 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
       id: (row as any).id,
       name: (row as any).name,
       phone: (row as any).phone,
-      email: (row as any).email,
       share_consent: (row as any).share_consent,
       user_id: (row as any).user_id,
       day_number: (row as any).start_date ? istDayNumber((row as any).start_date) : null,
