@@ -47,6 +47,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
       ...(signupMethod === 'phone' ? { phone: signupValue, phone_confirm: true } : { email: signupValue, email_confirm: true }),
       password: data.password,
+      user_metadata: { fbo_id: data.fbo_id }
     });
 
     if (authError) throw authError;
@@ -57,6 +58,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       .insert({
         user_id: authUser.user.id,
         phone: data.phone || signupValue,
+        fbo_id: data.fbo_id,
         name: "", // Initial empty name, will be filled in onboarding
       })
       .select("id")
