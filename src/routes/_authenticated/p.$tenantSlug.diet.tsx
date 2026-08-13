@@ -1,112 +1,141 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { useServerFn } from '@tanstack/react-start';
-import { getDietPlan } from '@/lib/diet.functions';
 import { supabase } from '@/integrations/supabase/client';
-import { Apple, Info, Scale } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { 
+  Utensils, 
+  Leaf, 
+  Info, 
+  Search, 
+  CheckCircle2,
+  ChevronRight
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/diet')({
   component: DietPage,
 });
 
 function DietPage() {
-  const { data: customerMetrics } = useQuery({
-    queryKey: ['customer-metrics'],
+  const [activeTab, setActiveTab] = useState<'free' | 'recipes'>('free');
+  
+  const { data: freeFoods } = useQuery({
+    queryKey: ['free-foods'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
-      const { data, error } = await supabase
-        .from('customers')
-        .select('age, height_cm, goal_weight_kg, gender')
-        .eq('user_id', user.id)
-        .single();
-      if (error) throw error;
-      return data;
+      const { data } = await supabase
+        .from('free_foods')
+        .select('*')
+        .order('category');
+      return data || [];
     }
   });
 
-  const dietPlanFn = useServerFn(getDietPlan);
-  const { data: plan, isLoading } = useQuery({
-    queryKey: ['diet-plan', customerMetrics],
-    enabled: !!customerMetrics && !!customerMetrics.age,
-    queryFn: () => dietPlanFn({ 
-      data: { 
-        age: customerMetrics!.age!, 
-        height: Number(customerMetrics!.height_cm!), 
-        weight: Number(customerMetrics!.goal_weight_kg || 70), // Fallback
-        gender: (customerMetrics!.gender as any) || 'female'
-      } 
-    })
-  });
-
-  if (isLoading) return <div className="p-8 text-center text-slate-400">Calculating your personalized plan...</div>;
-
-  if (!customerMetrics?.age) {
-    return (
-      <div className="p-8 text-center min-h-[60vh] flex flex-col items-center justify-center">
-        <Info className="w-12 h-12 text-slate-200 mb-4" />
-        <p className="text-slate-500 font-medium">Please complete your profile during onboarding to see your diet plan.</p>
-      </div>
-    );
-  }
+  const recipes = [
+      { title: 'Green Goddess Shake', cal: 180, time: '5m', cat: 'Shakes' },
+      { title: 'Berry Antioxidant', cal: 210, time: '5m', cat: 'Shakes' },
+      { title: 'Quinoa Power Bowl', cal: 550, time: '20m', cat: 'Meals' },
+      { title: 'Grilled Salmon & Asparagus', cal: 580, time: '15m', cat: 'Meals' },
+  ];
 
   return (
-    <div className="max-w-md mx-auto px-6 pt-12 pb-24 space-y-8 animate-in fade-in duration-500">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Fat2Fit Plan</h1>
+    <div className="max-w-md mx-auto px-6 pt-16 pb-24 animate-in fade-in duration-700 space-y-10">
+      <header>
+        <div className="flex items-center gap-2 mb-4">
+           <Utensils className="w-5 h-5 text-accent" />
+           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">C9 Nutrition</span>
+        </div>
+        <h1 className="text-5xl font-bold text-ink tracking-tighter italic font-serif">Diet & Recipes</h1>
+      </header>
+
+      <div className="flex bg-slate-50 p-1.5 rounded-[2rem] gap-1">
+        <button 
+            onClick={() => setActiveTab('free')}
+            className={cn(
+                "flex-1 py-4 rounded-[1.8rem] text-[10px] font-black uppercase tracking-widest transition-all",
+                activeTab === 'free' ? "bg-white text-ink shadow-sm" : "text-slate-400"
+            )}
+        >
+            Free Foods
+        </button>
+        <button 
+            onClick={() => setActiveTab('recipes')}
+            className={cn(
+                "flex-1 py-4 rounded-[1.8rem] text-[10px] font-black uppercase tracking-widest transition-all",
+                activeTab === 'recipes' ? "bg-white text-ink shadow-sm" : "text-slate-400"
+            )}
+        >
+            Recipes
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col items-center gap-3 shadow-sm">
-          <Scale className="w-5 h-5 text-slate-400" />
-          <div className="text-center">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Target</p>
-            <p className="text-xl font-bold text-slate-900">{plan?.targetCalories} kcal</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-8">
-        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 pl-2">Daily Schedule (Days 3-9)</h3>
-        <div className="space-y-0">
-          {plan?.days3to9.map((item: any, idx: number) => (
-            <div key={item.id} className="flex gap-6 group">
-              <div className="flex flex-col items-center">
-                <div className="w-3 h-3 rounded-full border-2 border-slate-200 mt-1.5 group-hover:border-slate-900" />
-                {idx !== plan.days3to9.length - 1 && <div className="w-0.5 flex-1 bg-slate-100 my-1" />}
-              </div>
-              <div className="flex-1 pb-10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">{item.slot.replace('_', ' ')}</p>
-                <h4 className="font-bold text-slate-900 text-lg leading-tight">{item.name}</h4>
-                <p className="text-sm text-slate-500 mt-2 font-medium leading-relaxed">{item.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {plan?.recipes && plan.recipes.length > 0 && (
-          <div className="space-y-6 pt-4 border-t border-slate-100">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 pl-2">Indian 600-Cal Options</h3>
-            <div className="grid gap-4">
-              {plan.recipes.map((recipe: any) => (
-                <div key={recipe.name} className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-slate-900 text-lg">{recipe.name}</h4>
-                    <Badge variant="outline" className="text-[9px] border-slate-200">{recipe.calories} kcal</Badge>
-                  </div>
-                  <p className="text-xs text-slate-500 mb-3">{recipe.instructions}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {recipe.ingredients.slice(0, 3).map((ing: string) => (
-                      <span key={ing} className="text-[9px] bg-slate-50 px-2 py-1 rounded-full font-bold text-slate-400 uppercase tracking-wider">{ing}</span>
-                    ))}
-                  </div>
+      {activeTab === 'free' ? (
+        <div className="space-y-8">
+            <section className="bg-purple-50 rounded-[2.5rem] p-8 space-y-4">
+                <div className="flex items-center gap-3 text-accent">
+                    <Info className="w-5 h-5" />
+                    <h3 className="font-bold">Protocol Info</h3>
                 </div>
-              ))}
+                <p className="text-sm text-purple-900/70 leading-relaxed font-medium">
+                    Free foods are low-glycemic index items you can enjoy to help curb hunger. Stick to the suggested servings for best results.
+                </p>
+            </section>
+
+            <div className="space-y-6">
+                {['unlimited', '1_serving', '2_servings'].map(cat => {
+                    const items = freeFoods?.filter(f => f.category === cat);
+                    if (!items?.length) return null;
+
+                    return (
+                        <div key={cat} className="space-y-4">
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-2">
+                                {cat.replace('_', ' ')}
+                            </h4>
+                            <div className="grid grid-cols-1 gap-3">
+                                {items.map(food => (
+                                    <div key={food.id} className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex justify-between items-center">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                                <Leaf className="w-5 h-5" />
+                                            </div>
+                                            <span className="font-bold text-ink">{food.name}</span>
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                                            {food.serving_size || 'Fresh'}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+            {recipes.map(recipe => (
+                <button key={recipe.title} className="w-full text-left bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm group space-y-4">
+                    <div className="flex justify-between items-start">
+                        <span className="px-4 py-1.5 rounded-full bg-slate-50 text-[9px] font-black uppercase tracking-widest text-slate-400">
+                            {recipe.cat}
+                        </span>
+                        <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-accent group-hover:translate-x-1 transition-all" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-ink tracking-tight mb-2 group-hover:text-accent transition-colors">
+                            {recipe.title}
+                        </h3>
+                        <div className="flex gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            <span>{recipe.cal} Calories</span>
+                            <span>•</span>
+                            <span>{recipe.time} Prep</span>
+                        </div>
+                    </div>
+                </button>
+            ))}
+        </div>
+      )}
     </div>
   );
 }

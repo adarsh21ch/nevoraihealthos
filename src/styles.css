@@ -1,88 +1,40 @@
 @import "tailwindcss";
+@import "./styles/custom-utilities.css";
 
 @theme {
-  --easing-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-}
-@source "../src";
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", serif;
 
-@theme {
-  --font-sans: "Inter", "system-ui", -apple-system, sans-serif;
-  
-  /* Neutrals */
-  --color-surface: #FCFBF8;
-  --color-ink: #1E293B;
-  --color-slate-50: #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-300: #cbd5e1;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #64748b;
-  --color-slate-600: #475569;
-  --color-slate-700: #334155;
-  --color-slate-800: #1e293b;
-  --color-slate-900: #0f172a;
-
-  /* Brand default - Premium Purple */
   --color-accent: #7C3AED;
-  --color-accent-soft: #DDD6FE;
-  --color-accent-foreground: #ffffff;
+  --color-accent-soft: #F5F3FF;
+  --color-surface: #FCFBF8;
+  --color-ink: #1A1A1A;
+  --color-muted: #64748B;
 
-  /* Radius scale */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1.25rem;
-  --radius-2xl: 2rem;
-  --radius-3xl: 3rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.5rem;
+}
 
-  /* Shadows */
-  --shadow-subtle: 0 1px 3px 0 rgb(0 0 0 / 0.02), 0 1px 2px -1px rgb(0 0 0 / 0.02);
-  --shadow-raised: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+@utility accent-text {
+  color: var(--color-accent);
+}
+
+@utility accent-bg {
+  background-color: var(--color-accent);
+}
+
+@utility accent-bg-soft {
+  background-color: var(--color-accent-soft);
 }
 
 @layer base {
   body {
-    background-color: var(--color-surface);
-    color: var(--color-ink);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Accessibility & Tap targets */
-  button, a {
-    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+    @apply bg-surface text-ink antialiased;
   }
 }
 
-@layer utilities {
-  .text-ink { color: var(--color-ink); }
-  .text-muted { color: var(--color-slate-500); }
-  .bg-surface { background-color: var(--color-surface); }
-  .border-subtle { border-color: var(--color-slate-100); }
-  
-  .touch-optimized {
-    @apply active:scale-95 transition-transform duration-150;
-  }
-
-  .accent-bg {
-    background-color: var(--accent, var(--color-accent));
-  }
-
-  .accent-bg-soft {
-    background-color: color-mix(in srgb, var(--accent, var(--color-accent)) 10%, transparent);
-  }
-
-  .accent-text {
-    color: var(--accent, var(--color-accent));
-  }
-
-  .accent-border {
-    border-color: var(--accent, var(--color-accent));
-  }
-
-  .accent-shadow {
-    --tw-shadow-color: color-mix(in srgb, var(--accent, var(--color-accent)) 20%, transparent);
-    box-shadow: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
-  }
+/* Custom Component Styles */
+.glass-panel {
+  @apply bg-white/80 backdrop-blur-md border border-slate-100 shadow-sm;
 }

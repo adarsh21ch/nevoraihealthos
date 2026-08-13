@@ -23,11 +23,13 @@ export const Route = createFileRoute('/_authenticated')({
     // Gating logic based on Premium Fit to Fit roles
     if (location.pathname.startsWith('/admin')) {
       if (role !== 'admin') throw redirect({ to: '/login' });
-    } else if (location.pathname.startsWith('/dashboard')) {
+    } else if (location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
       if (role !== 'coach' && role !== 'admin') throw redirect({ to: '/login' });
     } else if (location.pathname.startsWith('/p/')) {
-      if (role === 'participant' && !onboarding_complete && !location.pathname.endsWith('/onboarding')) {
-        throw redirect({ to: '/onboarding' });
+      if (role === 'participant') {
+        if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
+            throw redirect({ to: '/onboarding' });
+        }
       }
     }
     return { authContext };
