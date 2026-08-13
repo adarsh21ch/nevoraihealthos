@@ -30,7 +30,9 @@ function KnowledgeAdminPage() {
   const { data: items, isLoading } = useQuery({
     queryKey: ['knowledge-items', filter],
     queryFn: () => getKnowledgeItems({ 
-      status: filter === 'ALL' ? undefined : filter as any 
+      data: {
+        status: filter === 'ALL' ? undefined : filter as any 
+      }
     })
   });
 
@@ -39,8 +41,10 @@ function KnowledgeAdminPage() {
       const item = items?.find(i => i.id === vars.id);
       if (!item) throw new Error("Item not found");
       return upsertKnowledgeItem({
-        ...item,
-        status: vars.status
+        data: {
+          ...item,
+          status: vars.status
+        }
       });
     },
     onSuccess: () => {

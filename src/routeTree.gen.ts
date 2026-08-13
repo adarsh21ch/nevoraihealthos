@@ -27,6 +27,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin/access-codes'
+import { Route as AdminKnowledgeRouteImport } from './routes/admin/knowledge'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
@@ -141,6 +142,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
   id: '/access-codes',
   path: '/access-codes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminKnowledgeRoute = AdminKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
@@ -301,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/knowledge': typeof AdminKnowledgeRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -344,6 +351,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/knowledge': typeof AdminKnowledgeRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -391,6 +399,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/knowledge': typeof AdminKnowledgeRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -438,6 +447,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/admin/access-codes'
+    | '/admin/knowledge'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -481,6 +491,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/admin/access-codes'
+    | '/admin/knowledge'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -527,6 +538,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/terms'
     | '/admin/access-codes'
+    | '/admin/knowledge'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -701,6 +713,13 @@ declare module '@tanstack/react-router' {
       path: '/access-codes'
       fullPath: '/admin/access-codes'
       preLoaderRoute: typeof AdminAccessCodesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/knowledge': {
+      id: '/admin/knowledge'
+      path: '/knowledge'
+      fullPath: '/admin/knowledge'
+      preLoaderRoute: typeof AdminKnowledgeRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/products': {
@@ -930,6 +949,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAccessCodesRoute: typeof AdminAccessCodesRoute
+  AdminKnowledgeRoute: typeof AdminKnowledgeRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -943,6 +963,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAccessCodesRoute: AdminAccessCodesRoute,
+  AdminKnowledgeRoute: AdminKnowledgeRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminProgramsRoute: AdminProgramsRoute,
   AdminSettingsRoute: AdminSettingsRoute,

@@ -25,9 +25,9 @@ export const getKnowledgeItems = createServerFn({ method: "GET" })
     const { supabase } = context;
     let query = supabase.from("knowledge_base").select("*");
 
-    if (data.type) query = query.eq("type", data.type);
-    if (data.program) query = query.eq("program", data.program);
-    if (data.status) query = query.eq("status", data.status);
+    if (data?.type) query = query.eq("type", data.type);
+    if (data?.program) query = query.eq("program", data.program);
+    if (data?.status) query = query.eq("status", data.status);
 
     const { data: items, error } = await query.order("created_at", { ascending: false });
     if (error) throw error;
