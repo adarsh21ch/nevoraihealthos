@@ -202,14 +202,14 @@ function LoginPage() {
             <span className="text-accent not-italic font-sans font-black uppercase tracking-tighter">Unlocked.</span>
           </h1>
           <p className="text-xl text-slate-500 max-w-md font-medium leading-relaxed">
-            Welcome to the Fat2Fit elite portal. Your 9-day metabolic evolution starts here.
+            Welcome to the {currentTenant?.name || 'Fat2Fit'} elite portal. Your 9-day metabolic evolution starts here.
           </p>
         </div>
         
         <div className="flex items-center gap-8 text-slate-300">
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-ink">2026</span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Fat2Fit Edition</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{currentTenant?.name || 'Fat2Fit'} Edition</span>
           </div>
           <div className="w-px h-8 bg-slate-100"></div>
           <div className="flex flex-col">

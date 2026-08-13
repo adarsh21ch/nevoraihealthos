@@ -6,6 +6,8 @@ import {
   Heart, Scale, ChevronRight, MessageSquare, Plus, Star
 } from "lucide-react";
 import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon } from "@/components/landing/LandingComponents";
+import { AppLogo } from "@/components/ui/app-logo";
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const Route = createFileRoute("/")({
@@ -13,6 +15,7 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Fat2Fit — Your 9-Day Metabolic Reset" },
       { name: "description", content: "Fat2Fit simplifies your 9-day health journey. Track hydration, movement, and nutrition with expert guidance every step of the way." },
+
     ],
   }),
   component: Index,
@@ -25,15 +28,16 @@ function Index() {
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="relative">
-              <div className="w-12 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl">
-                <span className="text-white font-black text-xl tracking-tighter">F2F</span>
+              <div className="w-12 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl overflow-hidden">
+                <AppLogo iconOnly variant="light" className="scale-75" />
               </div>
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                  <div className="w-2 h-2 bg-white rounded-full" />
               </div>
             </div>
-            <span className="text-2xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
+            <AppLogo className="hidden sm:flex" />
           </div>
+
           <div className="hidden md:flex items-center gap-8">
             {['Program', 'How It Works', 'Nutrition', 'FAQ'].map(item => (
               <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} className="text-[12px] font-bold text-slate-500 hover:text-accent transition-colors uppercase tracking-widest">{item}</a>
@@ -134,7 +138,7 @@ function Index() {
             <PhoneMockup>
               <div className="p-8 bg-emerald-50/50 h-full">
                 <div className="flex justify-between items-center mb-8">
-                  <div className="w-11 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-bold text-sm">F2F</div>
+                  <AppLogo iconOnly className="h-10 w-11 bg-accent rounded-xl flex items-center justify-center text-white" variant="light" />
                   <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / 9</div>
                 </div>
                 

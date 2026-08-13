@@ -8,7 +8,8 @@ export const Route = createFileRoute('/api/manifest/json')({
         const { settings } = await getAppSettings()
         
         const brandName = settings?.brand_name || 'Fat2Fit'
-        const logoUrl = (settings as any)?.logo_url || 'https://nevoraihealthos.lovable.app/lovable-uploads/67a99f36-3b1a-4d2d-88b1-389d311394a5.png'
+        const logoUrl = (settings as any)?.logo_url || 'https://nevoraihealthos.lovable.app/__l5e/assets-v1/6707b7b1-6c3f-4fc2-8570-dac0df3e22c8/app-icon.png'
+
         
         const manifest = {
           "name": brandName,
@@ -21,10 +22,11 @@ export const Route = createFileRoute('/api/manifest/json')({
           "orientation": "portrait",
           "icons": [
             {
-              "src": "/favicon.ico",
+              "src": logoUrl,
               "sizes": "64x64 32x32 24x24 16x16",
-              "type": "image/x-icon"
+              "type": logoUrl.endsWith('.ico') ? "image/x-icon" : "image/png"
             },
+
             {
               "src": logoUrl,
               "sizes": "192x192",

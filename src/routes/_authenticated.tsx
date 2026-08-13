@@ -67,6 +67,7 @@ export const Route = createFileRoute('/_authenticated')({
             throw redirect({ to: newPath as any });
         }
 
+
         if (role === 'participant') {
           if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
               throw redirect({ to: '/onboarding' });
@@ -86,22 +87,32 @@ function AuthenticatedLayout() {
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const checkSession = async () => {
-      // Small delay to allow session restoration and context loading
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setIsInitializing(false);
+      // Allow session to hydrate from storage
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (mounted) {
+        // Small stabilization delay
+        setTimeout(() => {
+          if (mounted) setIsInitializing(false);
+        }, 600);
+      }
     };
 
     checkSession();
 
-    // Listen for auth changes to handle session expiry or logout
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         window.location.href = '/login';
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (isInitializing) {
@@ -110,4 +121,5 @@ function AuthenticatedLayout() {
 
   return <Outlet />;
 }
+
 
