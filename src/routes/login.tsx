@@ -145,9 +145,14 @@ function LoginPage() {
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
-          <div className="flex items-center gap-3 mb-16 group">
-            <div className="w-16 h-14 bg-ink rounded-2xl rotate-3 flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-transform">
-              <span className="text-white font-black text-2xl tracking-tighter">F2F</span>
+          <div className="flex items-center gap-3 mb-16 group cursor-pointer">
+            <div className="relative">
+              <div className="w-16 h-14 bg-ink rounded-2xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-2xl">
+                <span className="text-white font-black text-2xl tracking-tighter">F2F</span>
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                 <div className="w-2.5 h-2.5 bg-white rounded-full" />
+              </div>
             </div>
             <span className="text-3xl font-black tracking-tighter text-ink uppercase">Fat<span className="text-accent">2</span>Fit</span>
           </div>
