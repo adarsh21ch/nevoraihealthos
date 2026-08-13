@@ -49,8 +49,6 @@ function LoginPage() {
   const [fboId, setFboId] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [facebookId, setFacebookId] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -125,8 +123,6 @@ function LoginPage() {
           access_code: accessCode.trim(),
           fbo_id: fboId.trim(),
           email: email.trim(),
-          phone: phone.trim(),
-          facebook_id: facebookId.trim(),
           password: signUpPassword,
         },
       });
@@ -218,11 +214,11 @@ function LoginPage() {
                 </div>
               )}
               <div className="space-y-1.5">
-                <Label htmlFor="identifier" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email / Phone / FB ID</Label>
+                <Label htmlFor="identifier" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Email / FBO ID</Label>
                 <Input
                   id="identifier"
                   type="text"
-                  placeholder="Email, Phone, or Facebook ID"
+                  placeholder="Email or FBO ID"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   required
@@ -301,29 +297,6 @@ function LoginPage() {
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="phone" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Phone</Label>
-                <Input
-                  id="phone"
-                  placeholder="+91..."
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  className="h-12 px-4 rounded-xl border-slate-200"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="facebookId" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Facebook ID</Label>
-                <Input
-                  id="facebookId"
-                  placeholder="FB Username or ID"
-                  value={facebookId}
-                  onChange={(e) => setFacebookId(e.target.value)}
-                  required
-                  className="h-12 px-4 rounded-xl border-slate-200"
-                />
-              </div>
 
               <div className="space-y-1.5">
                 <Label htmlFor="signup-password" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Password</Label>
