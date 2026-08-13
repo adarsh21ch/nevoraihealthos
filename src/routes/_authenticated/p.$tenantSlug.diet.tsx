@@ -9,7 +9,8 @@ import {
   Info, 
   Search, 
   CheckCircle2,
-  ChevronRight
+  ChevronRight,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
