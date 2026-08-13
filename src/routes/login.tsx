@@ -87,22 +87,31 @@ function LoginPage() {
         throw error;
       }
 
-      console.log("Login successful, fetching auth context...");
+      console.log("Login successful, resolving identity...");
       const { data: { user } } = await supabase.auth.getUser();
-      const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
-      
-      console.log("Auth context received:", context);
-      
-      const isPlatformAdmin = user?.email === 'teamnevorai@gmail.com';
-      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {}) as any;
-      const effectiveRole = isPlatformAdmin ? 'platform_admin' : role;
+      if (!user) throw new Error("Authentication failed: No user session found");
 
-      if (effectiveRole === "platform_admin") {
+      const { data: context } = await supabase.rpc("get_my_auth_context");
+      
+      // Recovery context if the database RPC is lagging or failing
+      const recoveryContext = {
+        role: user.email === 'teamnevorai@gmail.com' ? 'platform_admin' : 'participant',
+        tenant_slug: 'fat2fit',
+        onboarding_complete: false
+      };
+
+      const effectiveContext = (context ?? recoveryContext) as any;
+      const { role, tenant_slug, onboarding_complete, custom_domain } = effectiveContext;
+
+      console.log("Effective identity resolved:", { role, tenant_slug, onboarding_complete });
+
+      if (role === "platform_admin") {
         navigate({ to: "/admin" });
-      } else if (effectiveRole === "tenant_owner") {
+      } else if (role === "tenant_owner") {
         navigate({ to: "/dashboard" });
-      } else if (effectiveRole === "participant" || effectiveRole === "customer") {
+      } else if (role === "participant" || role === "customer" || role === "distributor") {
         const effectiveSlug = tenant_slug || "fat2fit";
+        
         if (currentTenant && currentTenant.slug !== effectiveSlug) {
           const { tenantSiteUrl } = await import("@/lib/tenant");
           const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
@@ -116,7 +125,7 @@ function LoginPage() {
           navigate({ to: "/onboarding" });
         }
       } else {
-        console.log("Unknown role, defaulting to dashboard...");
+        console.warn("Unrecognized role, falling back to dashboard:", role);
         navigate({ to: "/dashboard" });
       }
     } catch (error: any) {
