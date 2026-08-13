@@ -14,13 +14,18 @@ export const Route = createFileRoute("/login")({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Hardwired redirect if already signed in
+    if (user.email === 'teamnevorai@gmail.com') {
+      throw redirect({ to: "/admin" });
+    }
+
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { role, tenant_slug, onboarding_complete } = (authContext ?? {}) as any;
+    const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
 
     if (role === "platform_admin") throw redirect({ to: "/admin" });
     if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
     
-    if (role === "customer" && tenant_slug) {
+    if ((role === "customer" || role === "participant") && tenant_slug) {
       if (context.tenant && context.tenant.slug !== tenant_slug) {
         const { tenantSiteUrl } = await import("@/lib/tenant");
         const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
@@ -65,44 +70,54 @@ function LoginPage() {
     setError(null);
 
     try {
-      let loginEmail = identifier;
+      let loginEmail = identifier.trim();
       
-      if (!identifier.includes('@')) {
-        const resolution = await resolveIdentifier({ data: { identifier } });
+      if (!loginEmail.includes('@')) {
+        const resolution = await resolveIdentifier({ data: { identifier: loginEmail } });
         if (resolution.found) {
           loginEmail = resolution.value;
         }
       }
 
       console.log("Attempting sign in with:", loginEmail);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail.trim(),
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
         password: signInPassword,
       });
 
-      if (error) {
-        if (error.message.includes("Email or phone number is required")) {
-          throw new Error("Please enter your email/FBO ID and password");
-        }
-        throw error;
+      if (signInError) throw signInError;
+
+      console.log("Login successful, resolving identity...");
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Authentication failed: No user session found");
       }
 
-      console.log("Login successful, fetching auth context...");
-      const { data: { user } } = await supabase.auth.getUser();
-      const { data: context, error: contextError } = await supabase.rpc("get_my_auth_context");
-      
-      console.log("Auth context received:", context);
-      
-      const isPlatformAdmin = user?.email === 'teamnevorai@gmail.com';
-      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {}) as any;
-      const effectiveRole = isPlatformAdmin ? 'platform_admin' : role;
-
-      if (effectiveRole === "platform_admin") {
+      // Hardcoded admin redirect (Highest Priority)
+      if (user.email === 'teamnevorai@gmail.com') {
+        console.log("Platform admin recognized, redirecting to /admin...");
         navigate({ to: "/admin" });
-      } else if (effectiveRole === "tenant_owner") {
+        return;
+      }
+
+      const { data: context } = await supabase.rpc("get_my_auth_context");
+      
+      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {
+        role: 'participant',
+        tenant_slug: 'fat2fit',
+        onboarding_complete: false
+      }) as any;
+
+      console.log("Identity resolved:", { role, tenant_slug, onboarding_complete });
+
+      if (role === "platform_admin") {
+        navigate({ to: "/admin" });
+      } else if (role === "tenant_owner") {
         navigate({ to: "/dashboard" });
-      } else if (effectiveRole === "participant" || effectiveRole === "customer") {
+      } else if (role === "participant" || role === "customer" || role === "distributor") {
         const effectiveSlug = tenant_slug || "fat2fit";
+        
         if (currentTenant && currentTenant.slug !== effectiveSlug) {
           const { tenantSiteUrl } = await import("@/lib/tenant");
           const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
@@ -116,8 +131,7 @@ function LoginPage() {
           navigate({ to: "/onboarding" });
         }
       } else {
-        console.log("Unknown role, defaulting to dashboard...");
-        navigate({ to: "/dashboard" });
+        navigate({ to: "/onboarding" });
       }
     } catch (error: any) {
       setError(error.message || "Incorrect identifier or password");
