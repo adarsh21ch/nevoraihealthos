@@ -132,10 +132,6 @@ function LoginPage() {
       } else {
         navigate({ to: "/onboarding" });
       }
-      } else {
-        console.warn("Unrecognized role, falling back to dashboard:", role);
-        navigate({ to: "/dashboard" });
-      }
     } catch (error: any) {
       setError(error.message || "Incorrect identifier or password");
     } finally {
