@@ -116,7 +116,7 @@ function TodayPage() {
           </p>
         </div>
         {state === 'not_a_customer' && (
-          <Button onClick={() => navigate({ to: '/onboarding' })} className="bg-health-green rounded-2xl text-white">
+          <Button onClick={() => navigate({ to: '/onboarding' as any })} className="bg-health-green rounded-2xl text-white">
             Start Onboarding
           </Button>
         )}
