@@ -1,7 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
+import { ClientOnly } from '@/components/ui/client-only';
 import { supabase } from '@/integrations/supabase/client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { LayoutDashboard, Users, Settings, LogOut, FileText, Database, Activity, Key } from 'lucide-react';
@@ -41,7 +43,9 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="h-screen bg-slate-50 flex overflow-hidden">
+    <ClientOnly>
+      <div className="h-screen bg-slate-50 flex overflow-hidden">
+
       {/* Sidebar */}
       <aside className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-800 shrink-0">
         <div className="p-8 space-y-10 flex flex-col h-full">
@@ -83,21 +87,17 @@ function AdminDashboard() {
           <RouteContent stats={stats} />
           <Outlet />
         </div>
-      </main>
-    </div>
+      </div>
+    </ClientOnly>
   );
 }
 
+
 function RouteContent({ stats }: { stats: any[] }) {
   const isOverview = window.location.pathname === '/admin' || window.location.pathname === '/admin/';
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
+  
   if (!isOverview) return null;
+
 
   return (
     <>
@@ -165,12 +165,14 @@ function NavItem({ icon: Icon, label, to }: any) {
     return (
         <Link 
           to={to}
+          activeOptions={{ exact: true }}
           className={cn(
             "w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all font-bold text-sm",
             "text-slate-400 hover:bg-slate-800 hover:text-white"
           )}
           activeProps={{ className: "bg-accent text-white shadow-lg shadow-purple-900/20" }}
         >
+
             <Icon className="w-5 h-5" />
             {label}
         </Link>

@@ -150,7 +150,7 @@ export const Route = createRootRouteWithContext<{
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap" },
         { rel: "icon", href: logoUrl, type: logoUrl.endsWith('.ico') ? "image/x-icon" : "image/png" },
-        { rel: "manifest", href: "/api/manifest.json" },
+        { rel: "manifest", href: "/api/manifest" },
         { rel: "apple-touch-icon", href: logoUrl },
       ],
     };
