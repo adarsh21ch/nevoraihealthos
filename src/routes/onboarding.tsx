@@ -201,7 +201,7 @@ function OnboardingPage() {
 
 
       toast.success("Profile completed!");
-      navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: 'fat-to-fit' } as any });
+      navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: 'fat2fit' } as any });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -223,7 +223,7 @@ function OnboardingPage() {
         
         {/* Header & Progress */}
         <div className="text-center space-y-6">
-          <div className="w-24 h-16 bg-ink text-white rounded-3xl rotate-3 flex items-center justify-center font-black text-3xl mx-auto shadow-2xl">F2F</div>
+          <AppLogo iconOnly className="mx-auto" />
           <div className="space-y-2">
             <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div className="h-full bg-health-green transition-all duration-500 ease-out" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
