@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -83,9 +84,14 @@ function AdminDashboard() {
 }
 
 function RouteContent({ stats }: { stats: any[] }) {
-  const router = Route.useRouteContext();
   const isOverview = window.location.pathname === '/admin' || window.location.pathname === '/admin/';
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
   if (!isOverview) return null;
 
   return (
