@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { resolveLoginIdentifier, createCustomerAccount } from "@/lib/auth.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowRight } from "lucide-react";
+import { BrandedLoading } from "@/components/ui/branded-loading";
+
 
 export const Route = createFileRoute("/login")({
   ssr: false,
@@ -44,10 +46,12 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   
   // Sign in states
   const [identifier, setIdentifier] = useState("");
+
   const [signInPassword, setSignInPassword] = useState("");
   
   // Sign up states
@@ -60,7 +64,17 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   
+  useEffect(() => {
+    const checkInitialSession = async () => {
+      // Small delay to allow session restoration
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setIsAuthChecking(false);
+    };
+    checkInitialSession();
+  }, []);
+
   const resolveIdentifier = useServerFn(resolveLoginIdentifier);
+
   const signUp = useServerFn(createCustomerAccount);
   const { tenant: currentTenant } = Route.useRouteContext();
 
@@ -169,7 +183,12 @@ function LoginPage() {
     }
   };
 
+  if (isAuthChecking) {
+    return <BrandedLoading />;
+  }
+
   return (
+
     <div className="min-h-screen flex flex-col lg:flex-row bg-surface font-sans">
       {/* Left Side: Brand Context */}
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">

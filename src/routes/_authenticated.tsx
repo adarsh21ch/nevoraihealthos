@@ -1,11 +1,15 @@
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect } from 'react';
+import { BrandedLoading } from '@/components/ui/branded-loading';
 
 export const Route = createFileRoute('/_authenticated')({
   ssr: false,
+  component: AuthenticatedLayout,
   beforeLoad: async ({ location }) => {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     const user = session?.user;
+
 
     if (sessionError || !user) {
       throw redirect({
@@ -76,5 +80,34 @@ export const Route = createFileRoute('/_authenticated')({
       throw redirect({ to: '/login' });
     }
   },
-  component: () => <Outlet />,
 });
+
+function AuthenticatedLayout() {
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      // Small delay to allow session restoration and context loading
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setIsInitializing(false);
+    };
+
+    checkSession();
+
+    // Listen for auth changes to handle session expiry or logout
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        window.location.href = '/login';
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (isInitializing) {
+    return <BrandedLoading />;
+  }
+
+  return <Outlet />;
+}
+
