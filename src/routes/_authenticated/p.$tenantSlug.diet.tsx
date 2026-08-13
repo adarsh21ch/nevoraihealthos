@@ -13,13 +13,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { PersonalizedPlan } from '@/components/nutrition/PersonalizedPlan';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/diet')({
   component: DietPage,
 });
 
 function DietPage() {
-  const [activeTab, setActiveTab] = useState<'free' | 'recipes'>('free');
+  const [activeTab, setActiveTab] = useState<'plan' | 'free' | 'recipes'>('plan');
+
   
   const { data: freeFoods } = useQuery({
     queryKey: ['free-foods'],
@@ -51,6 +53,15 @@ function DietPage() {
 
       <div className="flex bg-slate-50 p-1.5 rounded-[2rem] gap-1">
         <button 
+            onClick={() => setActiveTab('plan')}
+            className={cn(
+                "flex-1 py-4 rounded-[1.8rem] text-[10px] font-black uppercase tracking-widest transition-all",
+                activeTab === 'plan' ? "bg-white text-ink shadow-sm" : "text-slate-400"
+            )}
+        >
+            My Plan
+        </button>
+        <button 
             onClick={() => setActiveTab('free')}
             className={cn(
                 "flex-1 py-4 rounded-[1.8rem] text-[10px] font-black uppercase tracking-widest transition-all",
@@ -69,6 +80,9 @@ function DietPage() {
             Recipes
         </button>
       </div>
+
+      {activeTab === 'plan' && <PersonalizedPlan />}
+
 
       {activeTab === 'free' ? (
         <div className="space-y-8">
