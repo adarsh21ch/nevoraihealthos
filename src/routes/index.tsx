@@ -130,7 +130,7 @@ function Index() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            Built for wellness distributors in India
+            Built for the C9 Nutritional Reset
           </motion.div>
           
           <motion.h1 
@@ -139,8 +139,7 @@ function Index() {
             transition={{ delay: 0.1 }}
             className="text-6xl md:text-[7.5rem] font-bold tracking-[-0.04em] text-slate-900 leading-[0.9] mb-10 max-w-6xl text-gradient"
           >
-            Run your wellness business without the <span className="relative inline-block">WhatsApp chaos<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-ink/10 rounded-full" /></span>.
-
+            Your 9-Day reset. <span className="relative inline-block">Guided daily<motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 0.8, duration: 0.8 }} className="absolute -bottom-2 left-0 h-2 bg-ink/10 rounded-full" /></span>.
           </motion.h1>
           
           <motion.p 
@@ -149,7 +148,7 @@ function Index() {
             transition={{ delay: 0.2 }}
             className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-16 font-medium"
           >
-            One place to onboard your customers, keep their details organised, and follow their program day by day — instead of scrolling through chat threads and spreadsheets.
+            A science-based nutritional reset to help you jumpstart your wellness journey, lose inches, and feel lighter in just nine days.
           </motion.p>
 
           <motion.div 
@@ -162,13 +161,13 @@ function Index() {
               to="/login" 
               className="w-full sm:w-auto px-12 py-6 bg-ink text-white rounded-[2rem] text-xl font-bold hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center gap-3 group"
             >
-              Get Your Portal <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              Join the Program <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
               to="/login" 
               className="w-full sm:w-auto px-12 py-6 glass-card text-ink rounded-[2rem] text-xl font-bold hover:bg-white hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center gap-3 group"
             >
-              <Users className="w-5 h-5 text-ink" /> Partner Program
+              <Users className="w-5 h-5 text-ink" /> Coach Login
             </Link>
           </motion.div>
         </motion.div>

@@ -147,6 +147,7 @@ function TodayPage() {
         <div>
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-bold text-slate-900 tracking-tight">Day {dayNumber}</span>
+            <span className="text-sm font-bold text-slate-300 uppercase tracking-[0.2em]">{dayNumber <= 2 && customer?.track !== 'DX4' ? 'Reset' : 'Steady'}</span>
           </div>
         </div>
         
@@ -222,7 +223,8 @@ function TodayPage() {
       </div>
 
       <div className="mt-8 bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
-        <h3 className="font-bold text-slate-900 mb-6">How are you feeling?</h3>
+        <h3 className="font-bold text-slate-900 mb-2">How are you feeling?</h3>
+        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-6">Day {dayNumber} is all about {dayNumber <= 2 ? 'cleansing' : 'rebuilding'}.</p>
         <div className="flex gap-3">
           {['Great', 'OK', 'Tough'].map(mood => (
             <button
@@ -240,6 +242,23 @@ function TodayPage() {
           ))}
         </div>
       </div>
+      
+      {dayNumber === 9 && (
+        <Card className="rounded-[2.5rem] border-blue-100 bg-blue-50/50 shadow-none">
+          <CardContent className="p-8 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center">
+              <Trophy className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-blue-900">Finish Strong</h3>
+              <p className="text-sm text-blue-700/80 mt-1">Ready to build your foundation? F15 is the next step in your journey.</p>
+            </div>
+            <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 shadow-lg shadow-blue-600/20">
+              Explore F15 Foundation
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
