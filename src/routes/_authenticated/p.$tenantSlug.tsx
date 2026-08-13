@@ -27,7 +27,7 @@ function TenantLayout() {
   const { tenant } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' });
   const location = useLocation();
 
-  const primaryColor = tenant.primary_color || '#7C3AED';
+  const primaryColor = tenant.primary_color || '#064E3B';
 
   const navItems = [
     { label: 'Today', icon: Home, href: `/p/${tenant.slug}/today` },
@@ -50,7 +50,7 @@ function TenantLayout() {
             </div>
           </div>
           <div>
-            <h1 className="text-sm font-black text-ink uppercase tracking-tight">Fat<span className="text-accent">2</span>Fit</h1>
+            <h1 className="text-sm font-black text-ink uppercase tracking-tight">Fat<span className="text-health-green">2</span>Fit</h1>
             <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Protocol Active</p>
           </div>
         </div>

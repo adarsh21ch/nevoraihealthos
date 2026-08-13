@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getJourneyData } from '@/lib/journey.functions';
 import { getCoachInsights } from '@/lib/ai/gemini.functions';
 import { cn } from '@/lib/utils';
-import { CheckCircle2, Lock, Trophy, Sparkles, ChevronRight, Info, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Lock, Trophy, Sparkles, ChevronRight, Info, AlertCircle, Calendar } from 'lucide-react';
 import { useServerFn } from '@tanstack/react-start';
 import { getProgramDayNumber } from '@/lib/date-utils';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/journey')({
   component: JourneyPage,
@@ -14,6 +15,7 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug/journey')({
 
 function JourneyPage() {
   const { tenantSlug } = Route.useParams();
+  const queryClient = useQueryClient();
   const getJourneyFn = useServerFn(getJourneyData);
   const getInsightsFn = useServerFn(getCoachInsights);
 
@@ -31,9 +33,25 @@ function JourneyPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 space-y-4 animate-in fade-in duration-500">
-        <div className="w-16 h-16 border-4 border-health-green/20 border-t-health-green rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-serif italic text-lg text-center">Mapping your path to health...</p>
+      <div className="max-w-md mx-auto px-6 pt-16 pb-32 space-y-12">
+        <div className="space-y-4">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-16 w-64" />
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-2 flex-1 rounded-full" />
+            <Skeleton className="h-4 w-12" />
+          </div>
+        </div>
+        <Skeleton className="h-32 w-full rounded-[2.5rem]" />
+        <div className="space-y-6">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex gap-6 items-start">
+              <Skeleton className="w-14 h-14 rounded-2xl shrink-0" />
+              <Skeleton className="h-24 flex-1 rounded-[2.2rem]" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -47,10 +65,10 @@ function JourneyPage() {
         <div className="space-y-2">
           <h2 className="text-3xl font-serif italic font-bold text-ink">Journey Interrupted</h2>
           <p className="text-slate-500 max-w-xs mx-auto text-sm font-medium">
-            {data && 'message' in data ? data.message : "We couldn't synchronize your program timeline. Please try again."}
+            {data && 'message' in data ? data.message : "We couldn't synchronize your program timeline."}
           </p>
         </div>
-        <Button onClick={() => window.location.reload()} variant="outline" className="rounded-2xl border-slate-200 px-8 py-6 h-auto font-bold text-ink shadow-sm hover:shadow-md transition-all">
+        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['journey', tenantSlug] })} variant="outline" className="rounded-2xl border-slate-200 px-8 py-6 h-auto font-bold text-ink shadow-sm hover:shadow-md transition-all">
           Retry Sync
         </Button>
       </div>
@@ -66,9 +84,12 @@ function JourneyPage() {
         <div className="space-y-3">
           <h2 className="text-3xl font-serif italic font-bold text-ink">Your Story Begins Soon</h2>
           <p className="text-slate-500 max-w-xs mx-auto leading-relaxed font-medium">
-            We're preparing your 9-day metabolic reset protocol. Check back once your enrollment is finalized.
+            We're preparing your metabolic reset protocol. Check back once your enrollment is finalized.
           </p>
         </div>
+        <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['journey', tenantSlug] })} variant="outline" className="rounded-2xl">
+          Refresh
+        </Button>
       </div>
     );
   }
@@ -85,24 +106,23 @@ function JourneyPage() {
            <div className="w-6 h-6 rounded-lg bg-health-green/10 flex items-center justify-center">
              <Trophy className="w-3.5 h-3.5 text-health-green" />
            </div>
-           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Phase One Map</span>
+           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Day {currentDay} of {duration}</span>
         </div>
         <h1 className="text-6xl font-bold text-ink tracking-tighter italic font-serif leading-none">Your Journey</h1>
-        <div className="flex items-baseline gap-3 mt-4">
-          <p className="text-slate-900 font-bold text-xl">{program?.name}</p>
-          <div className="h-1 flex-1 bg-slate-50 rounded-full relative overflow-hidden">
+        <div className="flex items-baseline gap-3 mt-6">
+          <p className="text-slate-500 font-medium text-sm italic">"You're building consistency, one day at a time."</p>
+          <div className="h-1 flex-1 bg-slate-100 rounded-full relative overflow-hidden">
             <div 
               className="absolute inset-y-0 left-0 bg-health-green transition-all duration-1000" 
               style={{ width: `${Math.min(100, (currentDay / duration) * 100)}%` }}
             />
           </div>
-          <span className="text-xs font-black text-slate-400 uppercase tracking-widest">{currentDay}/{duration}</span>
         </div>
       </header>
 
       {/* AI Coach Milestone Insight */}
       {insights?.message && (
-        <section className="bg-ink text-white rounded-[2.5rem] p-8 mb-12 relative overflow-hidden shadow-2xl shadow-ink/20">
+        <section className="bg-emerald-900 text-white rounded-[2.5rem] p-8 mb-12 relative overflow-hidden shadow-2xl shadow-emerald-900/20">
           <div className="absolute top-0 right-0 p-6 opacity-20 rotate-12">
             <Sparkles className="w-20 h-20 text-health-green" />
           </div>
@@ -111,7 +131,7 @@ function JourneyPage() {
               <Sparkles className="w-4 h-4 text-health-green" />
               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-health-green">AI Coach Perspective</h4>
             </div>
-            <p className="text-lg font-serif italic font-medium leading-relaxed text-slate-200">
+            <p className="text-lg font-serif italic font-medium leading-relaxed text-emerald-50">
               "{insights.message}"
             </p>
           </div>
@@ -119,9 +139,9 @@ function JourneyPage() {
       )}
 
       {/* Timeline Interface */}
-      <div className="relative space-y-4">
+      <div className="relative space-y-6">
         {/* Connection Line */}
-        <div className="absolute left-7 top-10 bottom-10 w-0.5 bg-slate-50 -z-10" />
+        <div className="absolute left-[27.5px] top-10 bottom-10 w-0.5 bg-slate-100 -z-10" />
 
         {[...Array(duration)].map((_, i) => {
           const dayNum = i + 1;
@@ -175,11 +195,14 @@ function JourneyPage() {
                       {isToday && (
                         <span className="px-2 py-0.5 bg-health-green/10 text-health-green text-[9px] font-black uppercase tracking-widest rounded-full">Active</span>
                       )}
+                      {isPast && (
+                        <span className="text-[9px] font-black text-health-green uppercase tracking-widest">Completed</span>
+                      )}
                     </div>
                     {dayInfo?.title ? (
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">{dayInfo.title}</span>
                     ) : (
-                      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest italic">Protocol details hidden</span>
+                      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest italic">Protocol Locked</span>
                     )}
                   </div>
                   {!isFuture && (
@@ -190,10 +213,27 @@ function JourneyPage() {
                   )}
                 </div>
                 
-                {isToday && dayInfo?.focus && (
-                  <p className="mt-4 text-sm text-slate-500 font-medium leading-relaxed line-clamp-2 animate-in fade-in slide-in-from-top-1 duration-700">
-                    {dayInfo.focus}
-                  </p>
+                {isToday && (
+                  <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-1 duration-700">
+                    <p className="text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
+                      {dayInfo?.focus || "Focusing on your metabolic reset through hydration and movement."}
+                    </p>
+                    <Button 
+                      asChild
+                      className="w-full bg-health-green text-white rounded-2xl font-bold h-12 shadow-lg shadow-emerald-100"
+                    >
+                      <Link to="/p/$tenantSlug/today" params={{ tenantSlug }}>
+                        Continue Day {dayNum}
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+
+                {isFuture && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <Lock className="w-3 h-3 text-slate-300" />
+                    <span className="text-[10px] text-slate-400 font-medium italic">Complete today's journey to continue</span>
+                  </div>
                 )}
               </Link>
             </div>

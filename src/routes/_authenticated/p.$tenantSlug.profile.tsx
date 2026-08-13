@@ -122,14 +122,14 @@ function ProfilePage() {
       {/* Profile Hub Card */}
       <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm space-y-8">
         <div className="flex items-center gap-5">
-            <div className="w-20 h-20 rounded-[2rem] bg-accent/5 text-accent flex items-center justify-center text-3xl font-black shadow-inner">
+            <div className="w-20 h-20 rounded-[2rem] bg-emerald-50 text-health-green flex items-center justify-center text-3xl font-black shadow-inner">
                 {profile.name?.charAt(0) || 'U'}
             </div>
             <div>
                 <h2 className="text-2xl font-bold text-ink italic font-serif leading-tight">{profile.name}</h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{profile.track || 'C9'} PROGRAM</span>
-                  <div className="w-1 h-1 rounded-full bg-slate-200" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
                   <span className="text-[10px] font-black uppercase tracking-widest text-health-green">Active</span>
                 </div>
             </div>
@@ -205,11 +205,11 @@ function ProfilePage() {
                 <BookOpen className="w-6 h-6" />
               </div>
               <div className="text-left">
-                <h4 className="font-bold text-ink group-hover:text-accent transition-colors">Program Overview</h4>
+                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Program Overview</h4>
                 <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Understanding the 9-Day Reset</p>
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-accent transition-all" />
+            <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
           </button>
           
           <button className="w-full flex items-center justify-between bg-white p-6 rounded-[2.2rem] border border-slate-100 shadow-sm group">
@@ -218,11 +218,11 @@ function ProfilePage() {
                 <Target className="w-6 h-6" />
               </div>
               <div className="text-left">
-                <h4 className="font-bold text-ink group-hover:text-accent transition-colors">Goal Setting</h4>
+                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Goal Setting</h4>
                 <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Setting your reset intentions</p>
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-accent transition-all" />
+            <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
           </button>
         </div>
       </div>
@@ -236,12 +236,12 @@ function ProfilePage() {
                     <div className="p-8 space-y-6">
                       <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
+                              <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-emerald-50 group-hover:text-health-green transition-colors">
                                   <section.icon className="w-5 h-5" />
                               </div>
                               <span className="font-bold text-ink text-lg italic font-serif tracking-tight">{section.title}</span>
                           </div>
-                          <Button variant="ghost" className="h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-accent hover:bg-accent/5">
+                          <Button variant="ghost" className="h-9 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-health-green hover:bg-emerald-50/50">
                             Edit
                           </Button>
                       </div>
