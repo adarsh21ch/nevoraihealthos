@@ -147,7 +147,7 @@ function KitPage() {
                               </span>
                           </div>
                           {product.video_url && (
-                              <button className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-400 hover:bg-health-green hover:text-white transition-all flex items-center justify-center shrink-0">
+                              <button className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-400 hover:bg-health-green hover:text-slate-900 transition-all flex items-center justify-center shrink-0">
                                   <PlayCircle className="w-7 h-7" />
                               </button>
                           )}

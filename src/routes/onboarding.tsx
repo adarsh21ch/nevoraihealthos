@@ -277,8 +277,9 @@ function OnboardingPage() {
                         <Input 
                           value={formData.name} 
                           onChange={e => updateField('name', e.target.value)} 
-                          className="h-14 rounded-2xl border-slate-200" 
+                          className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 text-ink font-bold focus:border-health-green/30" 
                           placeholder="Name" 
+
                         />
                       </div>
                       <div className="space-y-2">
@@ -287,7 +288,7 @@ function OnboardingPage() {
                           type="date"
                           value={formData.dob} 
                           onChange={e => updateField('dob', e.target.value)} 
-                          className="h-14 rounded-2xl border-slate-200" 
+                          className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 text-ink font-bold focus:border-health-green/30" 
                         />
                       </div>
                       <div className="space-y-2">
@@ -299,7 +300,7 @@ function OnboardingPage() {
                               onClick={() => updateField('gender', g)}
                               className={cn(
                                 "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
-                                formData.gender === g ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                                formData.gender === g ? "bg-health-green text-slate-900 border-health-green" : "border-slate-100 text-slate-400 hover:border-slate-200"
                               )}
                             >
                               {g}
@@ -321,19 +322,19 @@ function OnboardingPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1">Height (cm)</Label>
-                        <Input type="number" value={formData.height_cm} onChange={e => updateField('height_cm', e.target.value)} className="h-12 rounded-xl" placeholder="170" />
+                        <Input type="number" value={formData.height_cm} onChange={e => updateField('height_cm', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="170" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1">Weight (kg)</Label>
-                        <Input type="number" value={formData.weight_kg} onChange={e => updateField('weight_kg', e.target.value)} className="h-12 rounded-xl" placeholder="70" />
+                        <Input type="number" value={formData.weight_kg} onChange={e => updateField('weight_kg', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="70" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1">Waist (cm)</Label>
-                        <Input type="number" value={formData.waist_cm} onChange={e => updateField('waist_cm', e.target.value)} className="h-12 rounded-xl" placeholder="85" />
+                        <Input type="number" value={formData.waist_cm} onChange={e => updateField('waist_cm', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="85" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1 text-[9px]">Target Weight (kg)</Label>
-                        <Input type="number" value={formData.target_weight_kg} onChange={e => updateField('target_weight_kg', e.target.value)} className="h-12 rounded-xl" placeholder="65" />
+                        <Input type="number" value={formData.target_weight_kg} onChange={e => updateField('target_weight_kg', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="65" />
                       </div>
                     </div>
                   </div>
@@ -350,7 +351,7 @@ function OnboardingPage() {
                           onClick={() => updateField('goal', g)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.goal === g ? "bg-health-green text-white border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.goal === g ? "bg-health-green text-slate-900 border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {g}
@@ -371,7 +372,7 @@ function OnboardingPage() {
                           onClick={() => updateField('lifestyle', l)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.lifestyle === l ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.lifestyle === l ? "bg-health-green text-slate-900 border-health-green shadow-md" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {l}
@@ -397,11 +398,11 @@ function OnboardingPage() {
                           onClick={() => updateField('activity_level', a.id)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left transition-all",
-                            formData.activity_level === a.id ? "bg-health-green text-white border-health-green shadow-lg" : "border-slate-100 text-slate-600 hover:border-slate-200"
+                            formData.activity_level === a.id ? "bg-health-green text-slate-900 border-health-green shadow-lg" : "border-slate-100 text-slate-600 hover:border-slate-200"
                           )}
                         >
-                          <div className={cn("text-[10px] font-black uppercase tracking-widest mb-1", formData.activity_level === a.id ? "text-white" : "text-ink")}>{a.label}</div>
-                          <div className={cn("text-[10px] font-medium opacity-70", formData.activity_level === a.id ? "text-white" : "text-slate-400")}>{a.desc}</div>
+                          <div className={cn("text-[10px] font-black uppercase tracking-widest mb-1", formData.activity_level === a.id ? "text-slate-900" : "text-ink")}>{a.label}</div>
+                          <div className={cn("text-[10px] font-medium opacity-70", formData.activity_level === a.id ? "text-slate-900" : "text-slate-400")}>{a.desc}</div>
                         </button>
                       ))}
                     </div>
@@ -419,7 +420,7 @@ function OnboardingPage() {
                           onClick={() => updateField('diet_preference', d)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.diet_preference === d ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.diet_preference === d ? "bg-health-green text-slate-900 border-health-green shadow-md" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {d}
@@ -449,7 +450,7 @@ function OnboardingPage() {
                             }}
                             className={cn(
                               "p-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
-                              isSelected ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400"
+                              isSelected ? "bg-health-green text-slate-900 border-health-green shadow-sm" : "border-slate-100 text-slate-400"
                             )}
                           >
                             {f}
@@ -472,7 +473,7 @@ function OnboardingPage() {
                           onClick={() => updateField('cooking_access', c)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.cooking_access === c ? "bg-health-green text-white border-health-green shadow-lg" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.cooking_access === c ? "bg-health-green text-slate-900 border-health-green shadow-lg" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {c}
@@ -489,11 +490,11 @@ function OnboardingPage() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Wake up time</Label>
-                        <Input type="time" value={formData.wake_time} onChange={e => updateField('wake_time', e.target.value)} className="h-14 rounded-2xl" />
+                        <Input type="time" value={formData.wake_time} onChange={e => updateField('wake_time', e.target.value)} className="h-14 rounded-2xl bg-slate-50/50 text-ink font-bold" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Sleep time</Label>
-                        <Input type="time" value={formData.sleep_time} onChange={e => updateField('sleep_time', e.target.value)} className="h-14 rounded-2xl" />
+                        <Input type="time" value={formData.sleep_time} onChange={e => updateField('sleep_time', e.target.value)} className="h-14 rounded-2xl bg-slate-50/50 text-ink font-bold" />
                       </div>
                     </div>
                   </div>
@@ -511,13 +512,13 @@ function OnboardingPage() {
                           placeholder="e.g. Peanuts, Shellfish" 
                           value={formData.allergies.join(', ')} 
                           onChange={e => updateField('allergies', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} 
-                          className="h-14 rounded-2xl"
+                          className="h-14 rounded-2xl bg-slate-50/50 text-ink font-bold"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Other Concerns</Label>
                         <textarea 
-                          className="w-full h-32 p-4 rounded-2xl bg-slate-50 border-none text-sm" 
+                          className="w-full h-32 p-4 rounded-2xl bg-slate-50/50 border border-slate-100 text-ink font-bold text-sm" 
                           placeholder="e.g. Hypertension, Diabetes, etc."
                           value={formData.health_concerns}
                           onChange={e => updateField('health_concerns', e.target.value)}
@@ -535,7 +536,7 @@ function OnboardingPage() {
                         onClick={() => updateField('track', 'standard')}
                         className={cn(
                           "flex-1 p-6 rounded-[2.5rem] border text-center space-y-2 transition-all",
-                          formData.track === 'standard' ? "bg-ink text-white border-ink shadow-xl" : "border-slate-100 text-slate-400"
+                          formData.track === 'standard' ? "bg-health-green text-slate-900 border-health-green shadow-xl" : "border-slate-100 text-slate-400"
                         )}
                       >
                         <div className="text-2xl font-serif italic font-bold">C9</div>
@@ -545,7 +546,7 @@ function OnboardingPage() {
                         onClick={() => updateField('track', 'DX4')}
                         className={cn(
                           "flex-1 p-6 rounded-[2.5rem] border text-center space-y-2 transition-all",
-                          formData.track === 'DX4' ? "bg-ink text-white border-ink shadow-xl" : "border-slate-100 text-slate-400"
+                          formData.track === 'DX4' ? "bg-health-green text-slate-900 border-health-green shadow-xl" : "border-slate-100 text-slate-400"
                         )}
                       >
                         <div className="text-2xl font-serif italic font-bold">DX4</div>
@@ -590,13 +591,15 @@ function OnboardingPage() {
             )}
             <Button 
               onClick={step === STEPS.length - 1 ? finish : next} 
-              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
               disabled={isSaving}
             >
               {isSaving ? (
                 <Loader2 className="animate-spin w-5 h-5" />
               ) : (
-                step === STEPS.length - 1 ? "Start Journey" : "Continue"
+                <span className="relative z-10">
+                  {step === STEPS.length - 1 ? "Start Journey" : "Continue"}
+                </span>
               )}
             </Button>
           </div>

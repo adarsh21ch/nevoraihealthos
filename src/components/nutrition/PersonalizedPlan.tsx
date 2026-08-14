@@ -166,7 +166,7 @@ export function PersonalizedPlan() {
         <div className="bg-slate-50 rounded-3xl p-8 space-y-6 text-left border border-slate-100">
            <div className="flex justify-between items-center">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Profile Completion</span>
-              <span className="text-[11px] font-bold text-health-green bg-emerald-50 px-3 py-1 rounded-full">{readiness.percent || 0}%</span>
+              <span className="text-[11px] font-black text-health-green bg-health-green/10 px-3 py-1 rounded-full">{readiness.percent || 0}%</span>
            </div>
            <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
              <div className="h-full bg-health-green transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.3)]" style={{ width: `${readiness.percent || 0}%` }} />
@@ -182,7 +182,7 @@ export function PersonalizedPlan() {
                     const section = getSectionForField(m.field);
                     if (section) setActiveEditSection(section);
                   }}
-                  className="flex items-center gap-2.5 text-slate-700 bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:border-health-green/20 hover:bg-emerald-50/20 transition-all text-left group"
+                  className="flex items-center gap-2.5 text-ink bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm hover:border-health-green/40 hover:bg-health-green/5 transition-all text-left group"
                  >
                     <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 group-hover:text-health-green" />
                     <span className="text-xs font-bold leading-none">{m.label}</span>
@@ -204,7 +204,7 @@ export function PersonalizedPlan() {
               const section = getSectionForField(firstMissing);
               if (section) setActiveEditSection(section);
             }}
-            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100 flex items-center justify-center transition-all duration-300"
+            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-sm shadow-xl shadow-health-green/20 flex items-center justify-center transition-all duration-300"
           >
             Complete Profile Now
           </Button>
@@ -245,7 +245,7 @@ export function PersonalizedPlan() {
         <div className="flex flex-col gap-4">
           <Button 
             onClick={() => generateMutation.mutate()} 
-            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100"
+            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-sm shadow-xl shadow-health-green/20"
           >
             Create My Plan
           </Button>
