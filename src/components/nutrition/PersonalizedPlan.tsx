@@ -523,18 +523,20 @@ export function PersonalizedPlan() {
       </div>
 
       <AlertDialog open={isRegenerateAlertOpen} onOpenChange={setIsRegenerateAlertOpen}>
-        <AlertDialogContent className="rounded-[2.5rem] p-8">
+        <AlertDialogContent className="bg-white border-none shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-serif italic text-2xl">Regenerate AI Plan?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium">
+            <AlertDialogTitle className="font-serif italic text-3xl text-ink">Regenerate AI Plan?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 font-medium text-base pt-2">
               This will replace your current AI plan with a new one tailored to your latest profile and C9 synergetic products.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-4 gap-3">
-            <AlertDialogCancel className="rounded-2xl h-12 font-bold">Cancel</AlertDialogCancel>
+          <AlertDialogFooter className="mt-8 gap-4 sm:space-x-4">
+            <AlertDialogCancel className="flex-1 rounded-2xl h-14 font-black uppercase tracking-widest text-xs border-slate-200 text-slate-400 hover:bg-slate-50">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction 
               onClick={() => generateMutation.mutate()}
-              className="rounded-2xl h-12 bg-health-green hover:bg-health-green-dark text-white font-bold"
+              className="flex-1 rounded-2xl h-14 bg-health-green hover:bg-health-green-dark text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-health-green/20"
             >
               Continue
             </AlertDialogAction>
