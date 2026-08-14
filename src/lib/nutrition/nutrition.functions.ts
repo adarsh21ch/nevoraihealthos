@@ -141,14 +141,10 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
         activeProgram
       });
     } catch (aiError) {
-      console.error("[NutritionEngine] AI Failed, activating scientific fallback:", aiError);
-      const { generateFallbackNutritionPlan } = await import("./fallback.server");
-      planResult = generateFallbackNutritionPlan({
-        customer,
-        latestMeasurement,
-        programTrack: (activeProgram?.track === 'DX4' ? 'DX4' : 'C9')
-      });
-      modelUsed = 'scientific-fallback-v1';
+      console.error("[NutritionEngine] AI Failed:", aiError);
+      // Re-throw the error instead of using a fallback plan.
+      // The user wants a truly personalized AI plan or nothing.
+      throw new Error(`AI Coach is currently unavailable. Please try again in a moment. (Technical detail: ${aiError instanceof Error ? aiError.message : 'Unknown error'})`);
     }
 
     // 4. Store the plan

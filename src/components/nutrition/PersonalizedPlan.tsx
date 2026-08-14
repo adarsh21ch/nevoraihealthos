@@ -105,15 +105,10 @@ export function PersonalizedPlan() {
 
   const generateMutation = useMutation({
     mutationFn: () => generatePlan(),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-nutrition-plan'] });
       queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
-      
-      if (data.model_info?.includes('fallback')) {
-        toast.info("AI Coach is busy. Generated a scientific template based on your profile!");
-      } else {
-        toast.success("AI Nutrition Plan generated successfully!");
-      }
+      toast.success("AI Nutrition Plan generated successfully!");
     },
     onError: (err: any) => {
       console.error("Plan generation error:", err);
