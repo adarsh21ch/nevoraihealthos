@@ -44,7 +44,7 @@ function Index() {
 
           <div className="hidden md:flex items-center gap-8">
             {['Program', 'How It Works', 'Nutrition', 'FAQ'].map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} className="text-[12px] font-bold text-slate-500 hover:text-accent transition-colors uppercase tracking-widest">{item}</a>
+              <a key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-[12px] font-bold text-slate-500 hover:text-accent transition-colors uppercase tracking-widest">{item}</a>
             ))}
           </div>
           <Link to="/login" className="px-6 py-3 bg-ink text-white rounded-full text-sm font-bold hover:bg-slate-800 transition-all">Start Your Journey</Link>
