@@ -36,6 +36,11 @@ export const Route = createFileRoute('/admin')({
 });
 
 function AdminDashboard() {
+  const isOverviewPath = () => {
+    const path = window.location.pathname.replace(/\/$/, ""); // remove trailing slash
+    return path === "/admin";
+  };
+
   const getStatsFn = useServerFn(getDashboardStats);
   const { data: statsData } = useQuery({
     queryKey: ['admin-stats'],
