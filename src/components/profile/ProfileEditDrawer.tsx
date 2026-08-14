@@ -143,7 +143,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
   };
 
   const formContent = (
-    <div className="mx-auto w-full max-w-md flex flex-col h-full bg-white relative">
+    <div className="mx-auto w-full flex flex-col h-full bg-white relative overflow-hidden">
       {/* Header */}
       <div className="sticky top-0 z-20 bg-white px-6 pt-8 pb-4 border-b border-slate-50 flex items-center justify-between">
         <div>
@@ -159,7 +159,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
       </div>
       
       {/* Form Content */}
-      <ScrollArea className="flex-1 px-8 py-8 h-[50vh] md:h-auto">
+      <ScrollArea className="flex-1 px-8 py-10 h-[60vh] md:h-auto">
         <div className="space-y-8 pb-32">
           {section.fields.map(field => (
             <div key={field.key} className="space-y-3">
