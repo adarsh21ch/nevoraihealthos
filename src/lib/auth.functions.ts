@@ -132,6 +132,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
 
     const tempPassword = Math.random().toString(36).slice(-8);
     
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
       customer.user_id,
       { password: tempPassword }
