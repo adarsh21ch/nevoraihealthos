@@ -19,10 +19,16 @@ export const Route = createFileRoute('/admin')({
     if (userError || !user) throw redirect({ to: "/login" });
     
     // Recovery check: platform admins skip the RPC lookup if needed
-    if (user.email === 'teamnevorai@gmail.com') return;
+    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') return;
 
-    const { data: context } = await supabase.rpc("get_my_auth_context");
-    if ((context as any)?.role !== "platform_admin") {
+    try {
+      const { data: context, error: rpcError } = await supabase.rpc("get_my_auth_context");
+      if (rpcError || (context as any)?.role !== "platform_admin") {
+        throw redirect({ to: "/login" });
+      }
+    } catch (e) {
+      if (e instanceof Error && (e as any).status === 307) throw e;
+      // If RPC fails but it's a known admin email, we already returned above
       throw redirect({ to: "/login" });
     }
   },
