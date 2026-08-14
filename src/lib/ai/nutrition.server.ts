@@ -143,8 +143,15 @@ async function callGemini(apiKey: string, prompt: string) {
   );
 
   const data = await response.json();
+  if (data.error) {
+    console.error("Gemini API error:", data.error);
+    throw new Error(`Gemini API error: ${data.error.message || "Unknown error"}`);
+  }
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error("Empty Gemini response");
+  if (!text) {
+    console.error("Gemini Response Body:", JSON.stringify(data, null, 2));
+    throw new Error("Empty Gemini response - possible safety filter or quota issue");
+  }
   
   return JSON.parse(text);
 }

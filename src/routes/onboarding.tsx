@@ -300,7 +300,7 @@ function OnboardingPage() {
                               onClick={() => updateField('gender', g)}
                               className={cn(
                                 "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
-                                formData.gender === g ? "bg-health-green text-slate-900 border-health-green" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                                formData.gender === g ? "bg-health-green text-white border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
                               )}
                             >
                               {g}
@@ -351,7 +351,7 @@ function OnboardingPage() {
                           onClick={() => updateField('goal', g)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.goal === g ? "bg-health-green text-slate-900 border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.goal === g ? "bg-health-green text-white border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {g}
@@ -372,7 +372,7 @@ function OnboardingPage() {
                           onClick={() => updateField('lifestyle', l)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.lifestyle === l ? "bg-health-green text-slate-900 border-health-green shadow-md" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.lifestyle === l ? "bg-health-green text-white border-health-green shadow-md shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {l}
@@ -398,7 +398,7 @@ function OnboardingPage() {
                           onClick={() => updateField('activity_level', a.id)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left transition-all",
-                            formData.activity_level === a.id ? "bg-health-green text-slate-900 border-health-green shadow-lg" : "border-slate-100 text-slate-600 hover:border-slate-200"
+                            formData.activity_level === a.id ? "bg-health-green text-white border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-600 hover:border-slate-200"
                           )}
                         >
                           <div className={cn("text-[10px] font-black uppercase tracking-widest mb-1", formData.activity_level === a.id ? "text-slate-900" : "text-ink")}>{a.label}</div>

@@ -97,7 +97,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
             {field.options?.map((opt: string) => (
-              <SelectItem key={opt} value={opt} className="rounded-xl py-3 focus:bg-emerald-50 focus:text-health-green font-bold text-sm">
+              <SelectItem key={opt} value={opt} className="rounded-xl py-3 focus:bg-emerald-50 focus:text-health-green font-bold text-sm data-[state=checked]:text-health-green">
                 {opt}
               </SelectItem>
             ))}
@@ -174,7 +174,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
             disabled={mutation.isPending}
             className={cn(
               "flex-[2] h-14 rounded-2xl font-black text-[12px] uppercase tracking-[0.3em] transition-all duration-300",
-              mutation.isPending ? "bg-slate-100 text-slate-400" : "bg-health-green hover:bg-health-green-dark text-slate-900 shadow-xl shadow-health-green/20"
+              mutation.isPending ? "bg-slate-100 text-slate-400" : "bg-health-green hover:bg-health-green-dark text-white shadow-xl shadow-health-green/20"
             )}
           >
             {mutation.isPending ? "Saving..." : "Save Changes"}
