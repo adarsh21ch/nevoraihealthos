@@ -225,7 +225,7 @@ function TodayPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
         <div className="space-y-8 lg:space-y-12">
           {/* Today Hero Card */}
-          <section className="bg-emerald-900 text-white rounded-[2.5rem] p-8 lg:p-12 relative overflow-hidden shadow-xl shadow-emerald-900/10">
+          <section className="bg-ink text-white rounded-[2.5rem] p-8 lg:p-12 relative overflow-hidden shadow-xl shadow-emerald-950/20">
             <div className="absolute top-0 right-0 p-8 opacity-10">
               <Zap className="w-24 h-24 lg:w-32 lg:h-32" />
             </div>
@@ -270,7 +270,7 @@ function TodayPage() {
               </div>
 
               <Button 
-                className="w-full h-16 bg-health-green hover:bg-health-green/90 text-white rounded-2xl font-bold text-base shadow-lg shadow-emerald-950/20"
+                className="w-full h-16 bg-white text-ink hover:bg-slate-100 rounded-2xl font-bold text-base shadow-lg shadow-emerald-950/20"
                 onClick={() => {
                   const el = document.getElementById('tasks-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
