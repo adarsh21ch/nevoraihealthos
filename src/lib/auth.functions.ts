@@ -113,7 +113,6 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { supabase } = context;
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     const { data: canAccess, error: accessError } = await supabase.rpc("can_access_customer", { 
       _customer: data.customerId 
