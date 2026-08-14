@@ -96,6 +96,8 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       "knowledge_version": "1.0",
       "coach_notes": "Advice"
     }
+
+    STRICT: You must provide all text fields in the JSON (plan_summary, foods, portion_guidance, coach_notes, etc.) in ${customer.preferred_language || 'English'} language.
   `;
 
   try {
