@@ -15,7 +15,7 @@ import {
   Droplets,
   Flame,
   Clock,
-  UserEdit
+  User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
