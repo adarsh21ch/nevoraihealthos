@@ -46,22 +46,17 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     PROGRAM CONTEXT:
     - Track: ${programTrack}
 
-    
-    CALCULATION METHODOLOGY:
-    1. Basal Metabolic Rate (BMR) Estimation:
-       - Use Mifflin-St Jeor: 
-         - Men: (10 × weight_kg) + (6.25 × height_cm) - (5 × age) + 5
-         - Women: (10 × weight_kg) + (6.25 × height_cm) - (5 × age) - 161
-    2. Total Daily Energy Expenditure (TDEE): 
-       - Multiply BMR by Activity Factor (sedentary: 1.2, light: 1.375, moderate: 1.55, very: 1.725).
-    3. Program Targets:
-       - C9: Weight loss focus, typically 1200-1500 kcal for women, 1500-1800 kcal for men, but personalized based on TDEE (approx 500 kcal deficit).
-       - DX4: Metabolism reset focus, prioritize nutrient density over aggressive calorie cutting.
-    4. Protein Target:
-       - Minimum 1.2g to 1.5g per kg of target weight. Use Target Weight (${customer.target_weight_kg || 'Current Weight'} kg) to calculate.
-
-    STRICT RULES:
-    1. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
+    STRICT RULES FOR SYNERGETIC PRODUCTS (C9/DX4):
+    1. You MUST integrate the specific program supplements into the meal slots.
+    2. For C9 (standard):
+       - Morning: 2X Garcinia Plus (30 min before Aloe), 120ml Aloe Vera Gel, 1X Forever Therm.
+       - Breakfast: 1X Forever Lite Ultra (Shake), 1X Forever Fiber (separate from Lite Ultra).
+       - Lunch: 2X Garcinia Plus (30 min before Aloe), 120ml Aloe Vera Gel, 1X Forever Therm.
+       - Snack: 120ml Aloe Vera Gel.
+       - Dinner: 2X Garcinia Plus (30 min before Aloe), 120ml Aloe Vera Gel.
+    3. Ensure the product names are exact: "Forever Aloe Vera Gel", "Forever Garcinia Plus", "Forever Lite Ultra", "Forever Therm", "Forever Fiber".
+    4. Portions and timings MUST match the grounding knowledge for the current Day (Reset phase vs Build phase).
+    5. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
     2. Indian Diet Focus: Prioritize regional Indian eating patterns and ingredients found in the Indian market (Dal, Sabzi, Paneer, Roti, Curd, Poha). Ensure recipes use spices and items available in general Indian homes (Delhi/Urban focus).
     3. Diet Preferences (STRICT):
        - Vegetarian: No meat, no eggs, no fish.
