@@ -82,7 +82,7 @@ async function callGemini(apiKey: string, prompt: string) {
   const endpoints = [
     { version: 'v1', model: 'gemini-1.5-flash' },
     { version: 'v1beta', model: 'gemini-1.5-flash' },
-    { version: 'v1beta', model: 'gemini-pro' }
+    { version: 'v1', model: 'gemini-pro' } // Backup if flash fails
   ];
 
   let lastError = null;
