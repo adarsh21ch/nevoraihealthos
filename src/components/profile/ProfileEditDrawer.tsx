@@ -86,7 +86,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     },
     onSuccess: (res: any) => {
       if (res?.isPasswordUpdate) {
-        toast.success("Password updated successfully!");
+        toast.success("Password updated successfully! Please use it for your next login.");
       } else {
         queryClient.invalidateQueries({ queryKey: ['my-profile'] });
         queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
@@ -134,15 +134,16 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
       );
     }
 
-    return (
-      <Input 
-        type={field.type || 'text'}
-        value={value} 
-        onChange={e => onChange(e.target.value)}
-        className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all"
-        placeholder={field.label}
-      />
-    );
+      return (
+        <Input 
+          type={field.type || 'text'}
+          value={value} 
+          onChange={e => onChange(e.target.value)}
+          className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all"
+          placeholder={field.label}
+          autoComplete={field.key === 'password' ? 'new-password' : undefined}
+        />
+      );
   };
 
   const formContent = (
