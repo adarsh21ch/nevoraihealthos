@@ -8,10 +8,10 @@ export interface GeminiAttempt {
 }
 
 export const GEMINI_FALLBACK_CHAIN: GeminiAttempt[] = [
+  { version: 'v1', model: 'gemini-2.5-flash' },
   { version: 'v1', model: 'gemini-3.7-flash' },
   { version: 'v1', model: 'gemini-3.6-flash' },
   { version: 'v1', model: 'gemini-3.5-flash' },
-  { version: 'v1', model: 'gemini-2.5-flash' },
 ];
 
 export interface CallGeminiOptions {
