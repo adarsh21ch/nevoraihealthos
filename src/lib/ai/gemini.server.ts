@@ -78,28 +78,49 @@ export async function chatWithAi({ supabase, geminiKey, userMessage, customerNam
  * Low-level Gemini API caller
  */
 async function callGemini(apiKey: string, prompt: string) {
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 256,
-          },
-        }),
-      }
-    );
+  // Try multiple model endpoints to ensure maximum compatibility
+  const endpoints = [
+    { version: 'v1', model: 'gemini-1.5-flash' },
+    { version: 'v1beta', model: 'gemini-1.5-flash' },
+    { version: 'v1beta', model: 'gemini-pro' }
+  ];
 
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Let's keep pushing towards your goals today!";
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Stay focused on your journey. Consistency is the key to results.";
+  let lastError = null;
+
+  for (const endpoint of endpoints) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/${endpoint.version}/models/${endpoint.model}:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 256,
+            },
+          }),
+        }
+      );
+
+      const data = await response.json();
+      
+      if (data.error) {
+        console.error(`Gemini API Error (${endpoint.model} ${endpoint.version}):`, data.error);
+        lastError = data.error;
+        continue;
+      }
+
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) return text;
+    } catch (error) {
+      console.error(`Gemini Fetch Error (${endpoint.model}):`, error);
+      lastError = error;
+    }
   }
+
+  return "Let's keep pushing towards your goals today! Stay focused on your journey.";
 }

@@ -75,6 +75,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-profile'] });
       queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
+      queryClient.refetchQueries({ queryKey: ['profile-readiness'] });
       toast.success("Profile updated!");
       onClose();
     },

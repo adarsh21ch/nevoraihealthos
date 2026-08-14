@@ -110,7 +110,13 @@ export function PersonalizedPlan() {
       toast.success("New plan generated successfully!");
     },
     onError: (err: any) => {
+      console.error("Plan generation error:", err);
       toast.error(err.message || "Failed to generate plan");
+      
+      // If profile is actually incomplete despite readiness check, refresh readiness
+      if (err.message?.includes('Profile incomplete') || err.message?.includes('Missing')) {
+        queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
+      }
     }
   });
 
