@@ -7,6 +7,8 @@ import {
   Heart, Scale, ChevronRight, MessageSquare, Plus, Star, Download
 } from "lucide-react";
 import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon, ProductShowcase, DownloadSection } from "@/components/landing/LandingComponents";
+import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
+
 import { AppLogo } from "@/components/ui/app-logo";
 import { useLoaderData } from "@tanstack/react-router";
 
@@ -243,7 +245,7 @@ function Index() {
                      <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">02</span>
                      Appetite Control
                   </h4>
-                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Garcinia Plus and Aloe Vera Gel.</p>
+                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Forever Garcinia Plus and Forever Aloe Vera Gel.</p>
                 </div>
               </div>
             </div>

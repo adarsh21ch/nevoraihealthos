@@ -69,8 +69,10 @@ function OnboardingPage() {
     sleep_time: "",
     health_concerns: "",
     track: "standard",
-    consent: false
+    consent: false,
+    affiliation_acknowledged: false
   });
+
 
   const { data: me } = useQuery({
     queryKey: ["onboarding-me"],
@@ -148,7 +150,9 @@ function OnboardingPage() {
   };
 
   const finish = async () => {
-    if (!formData.consent) return setError("Must accept disclaimer");
+    if (!formData.affiliation_acknowledged) return setError("Must acknowledge program affiliation disclaimer");
+    if (!formData.consent) return setError("Must accept health disclaimer");
+
     if (!me?.id) return setError("Profile not found");
 
     setIsSaving(true);
@@ -276,11 +280,37 @@ function OnboardingPage() {
               >
                 {/* Welcome */}
                 {currentStep.id === 'welcome' && (
-                  <div className="text-center py-10 space-y-4">
+                  <div className="text-center py-6 space-y-6">
                     <h2 className="text-4xl font-serif italic font-bold text-ink leading-tight">Your health journey<br/>starts here.</h2>
                     <p className="text-sm text-slate-500 leading-relaxed">Let's personalize your program by getting to know you better. This takes about 3 minutes.</p>
+                    
+                    <div className="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 text-left space-y-4">
+                      <div className="flex items-center gap-2 text-emerald-800">
+                        <ShieldCheck className="w-4 h-4" />
+                        <span className="text-[9px] font-black uppercase tracking-widest">Affiliation Disclosure</span>
+                      </div>
+                      <p className="text-[10px] text-emerald-900/60 leading-relaxed font-medium italic">
+                        Fat2Fit is an independent companion app for customers who have purchased Forever Living C9/FIT1/FIT2 products through us. 
+                        We are not affiliated with or endorsed by Forever Living Products.
+                      </p>
+                      <div className="flex items-center space-x-2 pt-2">
+                        <Checkbox 
+                          id="affiliation" 
+                          checked={formData.affiliation_acknowledged} 
+                          onCheckedChange={(checked) => updateField('affiliation_acknowledged', checked === true)}
+                          className="border-emerald-200 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green"
+                        />
+                        <label
+                          htmlFor="affiliation"
+                          className="text-[10px] font-bold text-emerald-800 leading-none cursor-pointer"
+                        >
+                          I understand and acknowledge this affiliation
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 )}
+
 
                 {/* Basics */}
                 {currentStep.id === 'basic' && (

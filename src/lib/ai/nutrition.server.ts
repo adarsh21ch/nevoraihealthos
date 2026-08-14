@@ -50,14 +50,15 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     STRICT RULES FOR PRODUCTS:
     1. You MUST integrate the specific program supplements into the meal slots for EVERY day of the 9-day plan.
     2. For C9 (standard):
-       - Morning Ritual: 2X Garcinia Plus (wait 30 min), then 120ml Aloe Vera Gel + 1X Therm.
-       - Breakfast: 1X Lite Ultra (Shake), 1X Fiber (taken separately with water).
-       - Lunch: 2X Garcinia Plus (wait 30 min), 120ml Aloe Vera Gel + 1X Therm.
-       - Snack: 120ml Aloe Vera Gel.
-       - Dinner: 2X Garcinia Plus (wait 30 min), 120ml Aloe Vera Gel.
+       - Morning Ritual: 2X Forever Garcinia Plus (wait 30 min), then 120ml Forever Aloe Vera Gel + 1X Forever Therm.
+       - Breakfast: 1X Forever Lite Ultra (Shake), 1X Forever Fiber (taken separately with water).
+       - Lunch: 2X Forever Garcinia Plus (wait 30 min), 120ml Forever Aloe Vera Gel + 1X Forever Therm.
+       - Snack: 120ml Forever Aloe Vera Gel.
+       - Dinner: 2X Forever Garcinia Plus (wait 30 min), 120ml Forever Aloe Vera Gel.
     3. Ensure the product names are exact and formatted clearly.
 
-    3. Ensure the product names are exact: "Aloe Vera Gel", "Garcinia Plus", "Lite Ultra", "Therm", "Fiber". (Do NOT use "Forever" prefix).
+    3. Ensure the product names are exact: "Forever Aloe Vera Gel", "Forever Garcinia Plus", "Forever Lite Ultra", "Forever Therm", "Forever Fiber".
+
     4. Portions and timings MUST match the grounding knowledge for the current Day (Reset phase vs Build phase).
     5. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
     2. Indian Diet Focus: Prioritize regional Indian eating patterns and ingredients found in the Indian market (Dal, Sabzi, Paneer, Roti, Curd, Poha). Ensure recipes use spices and items available in general Indian homes (Delhi/Urban focus).

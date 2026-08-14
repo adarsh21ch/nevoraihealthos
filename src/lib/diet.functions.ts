@@ -31,9 +31,10 @@ export const getDietPlan = createServerFn({ method: "POST" })
       notice: "Follow the C9 protocol timings strictly. Use these Indian meal options for your 600-cal window.",
       recipes: recipes || [],
       days3to9: [
-        { id: '1', slot: 'morning', name: 'Morning Protocol', description: '2 Garcinia + 1 Therm (wait 30m) → 120ml Aloe + 1 scoop Lite Ultra.', is_product: true },
-        { id: '2', slot: 'mid_morning', name: 'Fiber Boost', description: '1 Fiber packet in 300ml water. Take separately from nutrients.', is_product: true },
-        { id: '3', slot: 'noon', name: 'Midday Fuel', description: '2 Garcinia + 1 Therm (wait 30m) → 1 scoop Lite Ultra.', is_product: true },
+        { id: '1', slot: 'morning', name: 'Morning Protocol', description: '2 Forever Garcinia + 1 Forever Therm (wait 30m) → 120ml Forever Aloe + 1 scoop Forever Lite Ultra.', is_product: true },
+        { id: '2', slot: 'mid_morning', name: 'Fiber Boost', description: '1 Forever Fiber packet in 300ml water. Take separately from nutrients.', is_product: true },
+        { id: '3', slot: 'noon', name: 'Midday Fuel', description: '2 Forever Garcinia + 1 Forever Therm (wait 30m) → 1 scoop Forever Lite Ultra.', is_product: true },
+
         { id: '4', slot: 'early_evening', name: '600 Cal Meal', description: 'Choose one from the suggested Indian meal set below.', is_product: false }
       ]
     };
