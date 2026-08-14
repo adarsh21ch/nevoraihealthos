@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { ClientOnly } from '@/components/ui/client-only';
 import { supabase } from '@/integrations/supabase/client';
+import { resolveUserDestination } from '@/lib/auth-gate';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -13,22 +14,11 @@ import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
-    const { data: { session }, error: userError } = await supabase.auth.getSession();
-    if (userError || !session?.user) throw redirect({ to: "/login" });
-    const user = session.user;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect({ to: "/login" });
     
-    // Recovery check: platform admins skip the RPC lookup if needed
-    if (user.email === 'teamnevorai@gmail.com') return;
-
-    try {
-      const { data: context, error: rpcError } = await supabase.rpc("get_my_auth_context");
-      const role = (context as any)?.role;
-      if (rpcError || (role !== "platform_admin" && role !== "admin")) {
-        // Redirect back to participant dashboard instead of login loop
-        throw redirect({ to: "/p/fat2fit/today" as any });
-      }
-    } catch (e) {
-      if (e instanceof Error && (e as any).status === 307) throw e;
+    const { role } = await resolveUserDestination(session.user);
+    if (role !== "platform_admin" && role !== "admin") {
       throw redirect({ to: "/p/fat2fit/today" as any });
     }
   },
