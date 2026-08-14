@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowRight } from "lucide-react";
 import { BrandedLoading } from "@/components/ui/branded-loading";
+import { resolveTenantHint } from "@/lib/tenant";
+import { getTenantByHint } from "@/lib/tenant.functions";
 import { AppLogo } from "@/components/ui/app-logo";
 import { toast } from "sonner";
 
@@ -44,6 +46,14 @@ function LoginPage() {
       
       if (session) {
         console.log("Existing session found, performing unified redirect...");
+        // Re-run tenant check if context is empty
+        let tenant = (Route.useRouteContext() as any)?.tenant;
+        if (!tenant) {
+          const hint = resolveTenantHint({ hostname: window.location.hostname, pathname: window.location.pathname, search: window.location.search });
+          const result = await getTenantByHint({ data: hint! });
+          tenant = result.tenant;
+        }
+
         const { to } = await resolveUserDestination(session.user);
         
         // Use client-side navigate if possible, otherwise hard redirect if it's a different domain
