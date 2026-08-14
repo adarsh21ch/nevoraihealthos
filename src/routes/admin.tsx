@@ -38,10 +38,6 @@ function AdminDashboard() {
     <ClientOnly>
       <div className="h-screen bg-slate-50 flex overflow-hidden">
 
-  return (
-    <ClientOnly>
-      <div className="h-screen bg-slate-50 flex overflow-hidden">
-
       {/* Sidebar */}
       <aside className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-800 shrink-0">
         <div className="p-8 space-y-10 flex flex-col h-full">
