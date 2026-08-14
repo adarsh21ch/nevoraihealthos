@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, Droplets, Activity, Utensils, BarChart3, Users, Goal, Award, Plus, ChevronRight, Apple, Clock, ShieldCheck, Heart, Sparkles, Scale } from "lucide-react";
+import { CheckCircle2, Droplets, Activity, Utensils, BarChart3, Users, Goal, Award, Plus, ChevronRight, Apple, Clock, ShieldCheck, Heart, Sparkles, Scale, Download, ExternalLink } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 export const FeatureCard = ({ icon: Icon, title, description, color = "accent" }: { icon: any, title: string, description: string, color?: string }) => (

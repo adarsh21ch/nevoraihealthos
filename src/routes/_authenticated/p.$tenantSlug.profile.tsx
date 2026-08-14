@@ -13,8 +13,11 @@ import {
   AlertCircle,
   TrendingUp,
   Package,
-  BookOpen
+  BookOpen,
+  Download
 } from 'lucide-react';
+import { useLoaderData } from '@tanstack/react-router';
+import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
 import { Button } from '@/components/ui/button';
 import { useServerFn } from '@tanstack/react-start';
 import { getMyProfile, validateProfileReadiness } from '@/lib/profile/profile.functions';
@@ -29,6 +32,8 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug/profile')({
 
 function ProfilePage() {
   const { tenantSlug } = Route.useParams();
+  const { tenant } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' }) as any;
+  const bookletUrl = tenant?.booklet_url || defaultBookletAsset.url;
   const getProfile = useServerFn(getMyProfile);
   const checkReadiness = useServerFn(validateProfileReadiness);
   
@@ -262,6 +267,25 @@ function ProfilePage() {
               </div>
               <ChevronRight className="w-6 h-6 text-slate-200 group-hover:text-health-green transition-all" />
             </button>
+
+            <a 
+              href={bookletUrl}
+
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between bg-emerald-600 p-8 rounded-[2.5rem] border border-emerald-500 shadow-lg shadow-emerald-900/10 group hover:bg-emerald-700 transition-all duration-500"
+            >
+              <div className="flex items-center gap-6 text-white">
+                <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
+                  <Download className="w-8 h-8" />
+                </div>
+                <div className="text-left">
+                  <h4 className="text-lg font-bold">C9 Guidebook 2026</h4>
+                  <p className="text-[11px] font-black uppercase tracking-widest text-emerald-100/60 mt-1">Download official PDF</p>
+                </div>
+              </div>
+              <Download className="w-6 h-6 text-white/40 group-hover:text-white transition-all" />
+            </a>
           </div>
         </div>
 

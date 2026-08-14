@@ -45,7 +45,8 @@ export const getTenantByHint = createServerFn({ method: "GET" })
         name: tenant?.brand_name || 'Fat2Fit',
         tagline: tenant?.tagline,
         primary_color: '#16a34a',
-        logo_url: (tenant as any)?.logo_url || null
+        logo_url: (tenant as any)?.logo_url || null,
+        booklet_url: (tenant as any)?.booklet_url || null
       }
     };
   });
