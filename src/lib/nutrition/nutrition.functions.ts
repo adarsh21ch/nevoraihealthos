@@ -148,7 +148,7 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
         distributor_id: (customer as any).distributor_id,
         status: 'PUBLISHED',
         plan_data: planResult,
-        model_info: 'gemini-1.5-pro',
+        model_info: 'gemini-1.5-flash',
         knowledge_version: planResult.knowledge_version || '1.0'
       })
       .select()
