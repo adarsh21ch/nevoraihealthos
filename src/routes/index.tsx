@@ -243,7 +243,7 @@ function Index() {
                      <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">02</span>
                      Appetite Control
                   </h4>
-                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Forever Garcinia and Aloe Vera Gel.</p>
+                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Garcinia Plus and Aloe Vera Gel.</p>
                 </div>
               </div>
             </div>
