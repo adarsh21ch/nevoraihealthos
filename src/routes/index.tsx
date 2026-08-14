@@ -243,7 +243,7 @@ function Index() {
                      <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">02</span>
                      Appetite Control
                   </h4>
-                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Forever Garcinia and Aloe Vera Gel.</p>
+                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Garcinia Plus and Aloe Vera Gel.</p>
                 </div>
               </div>
             </div>
@@ -304,11 +304,11 @@ function Index() {
               title="The Synergistic C9 Kit"
               description="Each product in Clean 9 is carefully selected to work together synergistically. From metabolic support to digestive health, the kit provides everything your body needs for a complete reset."
               benefits={[
-                "Forever Aloe Vera Gel: Cleanse the digestive system",
-                "Forever Fiber: Promote feelings of fullness",
+                "Aloe Vera Gel: Cleanse the digestive system",
+                "Fiber: Promote feelings of fullness",
                 "Argi+: Support healthy circulation and energy",
-                "Forever Garcinia: Efficient fat burning support",
-                "Forever Lite Ultra: High-quality plant protein (13g)",
+                "Garcinia: Efficient fat burning support",
+                "Lite Ultra: High-quality plant protein (13g)",
                 "Aloe Herbal Infusion: Relaxation and balance"
               ]}
             />
@@ -322,22 +322,22 @@ function Index() {
             />
             <FeatureCard 
               icon={Zap} 
-              title="Forever Fiber" 
+              title="Fiber" 
               description="Water-soluble fiber to promote feelings of fullness and digestive health." 
             />
             <FeatureCard 
               icon={Activity} 
-              title="Forever Therm" 
+              title="Therm" 
               description="Botanical extracts and vitamins to support metabolism and energy levels." 
             />
             <FeatureCard 
               icon={Scale} 
-              title="Forever Garcinia Plus" 
+              title="Garcinia Plus" 
               description="Helps the body burn fat more efficiently and supports healthy appetite levels." 
             />
             <FeatureCard 
               icon={Apple} 
-              title="Forever Lite Ultra" 
+              title="Lite Ultra" 
               description="High-protein shake mix with essential vitamins and minerals for muscle support." 
             />
             <FeatureCard 
@@ -408,8 +408,8 @@ function Index() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <DownloadSection 
-            title="Download the official C9 Booklet 2026"
-            subtitle="Get access to the full 9-day protocol, supplement schedules, and India-specific nutrition guides."
+            title="Download the Fat2Fit Resources"
+            subtitle="Get access to the program guides, supplement schedules, and India-specific nutrition guides."
             pdfUrl={bookletUrl}
           />
         </div>
@@ -461,7 +461,7 @@ function Index() {
           <div>
              <h4 className="font-black text-[10px] uppercase tracking-[0.4em] text-accent mb-8">Resources</h4>
              <ul className="space-y-4 text-slate-400 font-bold uppercase tracking-widest text-[11px]">
-              <li><a href={bookletUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">C9 Booklet</a></li>
+              <li><a href={bookletUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Program Guide</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
             </ul>
