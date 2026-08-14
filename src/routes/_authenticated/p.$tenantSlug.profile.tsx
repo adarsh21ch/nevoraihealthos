@@ -15,7 +15,8 @@ import {
   Package,
   BookOpen,
   Download,
-  Key
+  Key,
+  Languages
 } from 'lucide-react';
 import { useLoaderData } from '@tanstack/react-router';
 import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
@@ -125,6 +126,14 @@ function ProfilePage() {
       fields: [
         { label: 'Allergies (comma separated)', value: profile.allergies?.join(', '), key: 'allergies' },
         { label: 'Health Concerns', value: profile.health_concerns, key: 'health_concerns', type: 'textarea' }
+      ]
+    },
+    {
+      id: 'preferences',
+      title: 'Preferences',
+      icon: Languages,
+      fields: [
+        { label: 'AI Response Language', value: profile.preferred_language, key: 'preferred_language', options: ['English', 'Hindi'] }
       ]
     }
   ];
@@ -318,7 +327,7 @@ function ProfilePage() {
         <div className="space-y-6">
           <h3 className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-400 ml-2">Core Health Data</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {sections.slice(0, 4).map(section => (
+              {sections.slice(0, 5).map(section => (
                   <div key={section.title} className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden group p-8 space-y-6 hover:border-health-green/20 transition-all duration-500">
                       <div className="flex items-center justify-between">
                           <div className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-emerald-50 group-hover:text-health-green transition-colors">
@@ -356,7 +365,7 @@ function ProfilePage() {
             <div className="h-px flex-1 bg-slate-100"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-            {sections.slice(4).map(section => (
+            {sections.slice(5).map(section => (
                 <div key={section.title} className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden group hover:shadow-md transition-all duration-500">
                     <div className="p-10 space-y-8">
                       <div className="flex items-center justify-between">
