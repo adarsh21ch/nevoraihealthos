@@ -376,11 +376,11 @@ export function PersonalizedPlan() {
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Daily Protocol</h3>
            <button 
              onClick={() => {
-               if (window.confirm("This will replace your current AI plan with a new one tailored to your latest profile. Continue?")) {
+               if (window.confirm("This will replace your current AI plan with a new one tailored to your latest profile and C9 products. Continue?")) {
                  generateMutation.mutate();
                }
              }} 
-             className="text-[10px] font-black uppercase tracking-widest text-health-green flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity"
+             className="text-[10px] font-black uppercase tracking-widest text-health-green bg-health-green/10 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-health-green/20 transition-all border border-health-green/20"
            >
              <RefreshCw className={cn("w-3 h-3", generateMutation.isPending && "animate-spin")} />
              Regenerate AI Plan
