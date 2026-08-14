@@ -307,11 +307,12 @@ function Index() {
               description="Each product in Clean 9 is carefully selected to work together synergistically. From metabolic support to digestive health, the kit provides everything your body needs for a complete reset."
               benefits={[
                 "Aloe Vera Gel: Cleanse the digestive system",
-                "Fiber: Promote feelings of fullness",
-                "Argi+: Support healthy circulation and energy",
-                "Garcinia: Efficient fat burning support",
-                "Lite Ultra: High-quality plant protein (13g)",
-                "Aloe Herbal Infusion: Relaxation and balance"
+                "Forever Fiber: Promote feelings of fullness",
+                "Forever Argi+: Support healthy circulation and energy",
+                "Forever Garcinia: Efficient fat burning support",
+                "Forever Lite Ultra: High-quality plant protein (13g)",
+                "Forever Aloe Herbal Infusion: Relaxation and balance"
+
               ]}
             />
           </div>
@@ -319,23 +320,27 @@ function Index() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 pt-20">
             <FeatureCard 
               icon={Droplets} 
-              title="Aloe Drinks" 
-              description="Pure aloe vera to help cleanse the digestive system and maximize absorption of nutrients." 
+              title="Forever Aloe Drinks" 
+              description="Pure Forever Aloe Vera to help cleanse the digestive system and maximize absorption of nutrients." 
+
             />
             <FeatureCard 
               icon={Zap} 
-              title="Fiber" 
-              description="Water-soluble fiber to promote feelings of fullness and digestive health." 
+              title="Forever Fiber" 
+              description="Water-soluble Forever Fiber to promote feelings of fullness and digestive health." 
+
             />
             <FeatureCard 
               icon={Activity} 
-              title="Therm" 
-              description="Botanical extracts and vitamins to support metabolism and energy levels." 
+              title="Forever Therm" 
+              description="Botanical extracts and vitamins including Forever Therm to support metabolism and energy levels." 
+
             />
             <FeatureCard 
               icon={Scale} 
-              title="Garcinia Plus" 
-              description="Helps the body burn fat more efficiently and supports healthy appetite levels." 
+              title="Forever Garcinia Plus" 
+              description="Helps the body burn fat more efficiently with Forever Garcinia Plus and supports healthy appetite levels." 
+
             />
             <FeatureCard 
               icon={Apple} 
@@ -445,7 +450,9 @@ function Index() {
         </div>
       </section>
 
+      <AffiliationDisclaimer />
       <footer className="bg-ink text-white py-20 px-6">
+
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1 md:col-span-2 space-y-8">
             <AppLogo variant="light" />
