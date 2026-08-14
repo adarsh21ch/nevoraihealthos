@@ -1,8 +1,10 @@
-import { Home, Calendar, Trophy, Package, User, MessageCircle } from 'lucide-react';
-import { Link, useLocation } from '@tanstack/react-router';
+import { Home, Calendar, Trophy, Package, User, MessageCircle, LogOut } from 'lucide-react';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { AppLogo } from '@/components/ui/app-logo';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface SidebarProps {
   tenant: {
@@ -13,6 +15,17 @@ interface SidebarProps {
 
 export function ParticipantSidebar({ tenant }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("Logout failed: " + error.message);
+    } else {
+      toast.success("Logged out successfully");
+      navigate({ to: '/auth' });
+    }
+  };
 
   const navItems = [
     { label: 'Today', icon: Home, href: `/p/${tenant.slug}/today` },
@@ -54,7 +67,7 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-8 border-t border-slate-50">
+      <div className="p-8 border-t border-slate-50 space-y-3">
         <Button 
           variant="outline" 
           asChild 
@@ -64,6 +77,15 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
             <MessageCircle className="w-4 h-4" />
             <span className="text-[10px] font-black uppercase tracking-widest">Support</span>
           </a>
+        </Button>
+
+        <Button 
+          variant="ghost" 
+          onClick={handleLogout}
+          className="w-full h-12 rounded-2xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all gap-2 px-4 justify-start"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Logout</span>
         </Button>
       </div>
     </aside>
