@@ -53,7 +53,8 @@ function AuthenticatedLayout() {
 
     const checkSession = async () => {
       // Small stabilization delay to ensure Auth HMR / storage restore
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 200));
+      if (mounted) setIsInitializing(false);
       if (mounted) setIsInitializing(false);
     };
 
