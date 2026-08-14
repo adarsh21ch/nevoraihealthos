@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { Loader2, ArrowRight, ArrowLeft, CheckCircle2, Ruler, Target, Heart, Utensils, Info } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, CheckCircle2, Ruler, Target, Heart, Utensils, Info, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { updateMyProfile } from "@/lib/profile/profile.functions";
@@ -225,7 +225,22 @@ function OnboardingPage() {
         
         {/* Header & Progress */}
         <div className="text-center space-y-6">
-          <AppLogo iconOnly className="mx-auto" />
+          <div className="flex items-center justify-between gap-4">
+            <Link
+              to="/"
+              aria-label="Back to Fat2Fit home"
+              className="flex items-center gap-3 group active:scale-95 transition-transform"
+            >
+              <AppLogo />
+            </Link>
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-health-green transition-colors"
+            >
+              <Home className="w-3.5 h-3.5" />
+              Back to site
+            </Link>
+          </div>
           <div className="space-y-2">
             <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div className="h-full bg-health-green transition-all duration-500 ease-out" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
