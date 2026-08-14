@@ -23,7 +23,7 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
       toast.error("Logout failed: " + error.message);
     } else {
       toast.success("Logged out successfully");
-      navigate({ to: '/auth' });
+      navigate({ to: '/login' });
     }
   };
 
