@@ -52,21 +52,16 @@ function AuthenticatedLayout() {
     let mounted = true;
 
     const checkSession = async () => {
-      // Allow session to hydrate from storage
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (mounted) {
-        // Small stabilization delay
-        setTimeout(() => {
-          if (mounted) setIsInitializing(false);
-        }, 600);
-      }
+      // Small stabilization delay to ensure Auth HMR / storage restore
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (mounted) setIsInitializing(false);
     };
 
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
+        // Use client-side routing if possible, but hard reload is safer for clearing state
         window.location.href = '/login';
       }
     });
