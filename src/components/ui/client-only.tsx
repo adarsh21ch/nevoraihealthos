@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export function ClientOnly({ children }: { children: React.ReactNode }) {
+export function ClientOnly({ children, fallback = null }: { children: React.ReactNode, fallback?: React.ReactNode }) {
   const [hasHydrated, setHasHydrated] = React.useState(false);
 
   React.useEffect(() => {
@@ -8,7 +8,7 @@ export function ClientOnly({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (!hasHydrated) {
-    return null;
+    return <>{fallback}</>;
   }
 
   return <>{children}</>;
