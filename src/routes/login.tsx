@@ -157,6 +157,7 @@ function LoginPage() {
         navigate({ to: "/onboarding" });
       }
     } catch (error: any) {
+      console.error("Login attempt failed:", error);
       setError(error.message || "Incorrect identifier or password");
     } finally {
       setIsLoading(false);
