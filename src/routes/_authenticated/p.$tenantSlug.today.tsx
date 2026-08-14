@@ -150,8 +150,17 @@ function TodayPage() {
 
   const handleToggleTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      // Optimitic UI update is harder with current structure, so we just mutate
-      await toggleTaskFn({
+      // Background signout
+      await supabase.auth.signOut();
+      
+      // Clear session local data
+      window.localStorage.removeItem('sb-fat2fit-auth-token'); 
+      
+      // Navigate to login
+      navigate({ to: '/login', replace: true });
+      toast.success("Logged out successfully");
+    } catch (err) {
+
         data: {
           customerId: customer.id,
           dayTaskId: taskId,
