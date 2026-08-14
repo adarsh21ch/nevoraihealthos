@@ -40,6 +40,11 @@ function DayBuilder() {
     queryFn: () => getDaysFn({ data: { programId } }),
   });
 
+  const { data: products } = useQuery({
+    queryKey: ["admin-products"],
+    queryFn: () => getProductsFn(),
+  });
+
   const dayMutation = useMutation({
     mutationFn: (data: any) => saveDayFn({ data }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["program-days", programId] })
@@ -109,17 +114,43 @@ function DayBuilder() {
 
               <div className="space-y-4">
                 {(activeDay.day_tasks || [])?.sort((a: any, b: any) => a.sort_order - b.sort_order).map((task: any) => (
-                  <div key={task.id} className="flex gap-2 items-center bg-white p-2 rounded-lg border shadow-sm">
-                    <Select defaultValue={task.slot} onValueChange={(v) => taskMutation.mutate({ ...task, slot: v })}>
-                      <SelectTrigger className="w-[120px]"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {["morning", "mid_morning", "noon", "early_evening", "evening", "all_day"].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                    <Input className="flex-1" defaultValue={task.title} onBlur={(e) => taskMutation.mutate({ ...task, title: e.target.value })} />
-                    <Button variant="ghost" size="icon" onClick={() => deleteTaskFn({ data: { id: task.id } }).then(() => queryClient.invalidateQueries({ queryKey: ["program-days", programId] }))}>
-                      <Trash2 className="h-4 w-4 text-red-500" />
-                    </Button>
+                  <div key={task.id} className="space-y-2 bg-white p-4 rounded-lg border shadow-sm">
+                    <div className="flex gap-2 items-center">
+                      <Select defaultValue={task.slot} onValueChange={(v) => taskMutation.mutate({ ...task, slot: v })}>
+                        <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {["morning", "mid_morning", "noon", "early_evening", "evening", "all_day"].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      
+                      <Select 
+                        value={task.product_id || "none"} 
+                        onValueChange={(v) => taskMutation.mutate({ ...task, product_id: v === "none" ? null : v })}
+                      >
+                        <SelectTrigger className="w-[200px]">
+                          <SelectValue placeholder="Link Product" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {(products as any[])?.map((p: any) => (
+                            <SelectItem key={p.id} value={p.id}>{p.short_name || p.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <Input className="flex-1" defaultValue={task.title} placeholder="Task Title" onBlur={(e) => taskMutation.mutate({ ...task, title: e.target.value })} />
+                      
+                      <Button variant="ghost" size="icon" onClick={() => deleteTaskFn({ data: { id: task.id } }).then(() => queryClient.invalidateQueries({ queryKey: ["program-days", programId] }))}>
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                    
+                    <Textarea 
+                      defaultValue={task.detail || ""} 
+                      placeholder="Dosage / Instructions / Details" 
+                      className="text-sm"
+                      onBlur={(e) => taskMutation.mutate({ ...task, detail: e.target.value })} 
+                    />
                   </div>
                 ))}
                 <Button onClick={() => taskMutation.mutate({ program_day_id: activeDay.id, title: "New Task", slot: "morning", sort_order: activeDay.day_tasks?.length || 0 })}>
