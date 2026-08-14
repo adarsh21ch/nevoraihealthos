@@ -92,7 +92,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     if (field.type === 'select' || field.options) {
       return (
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all">
+          <SelectTrigger className="h-14 rounded-2xl border-2 border-slate-100 bg-slate-50/50 px-5 text-sm font-black text-slate-900 focus:ring-0 focus:border-health-green transition-all shadow-sm">
             <SelectValue placeholder={`Select ${field.label}`} />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
@@ -111,7 +111,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         <Textarea 
           value={value} 
           onChange={e => onChange(e.target.value)}
-          className="min-h-[120px] rounded-2xl border-slate-100 bg-slate-50/50 p-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all resize-none"
+          className="min-h-[120px] rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-5 text-sm font-black text-slate-900 focus:ring-0 focus:border-health-green transition-all resize-none shadow-sm"
           placeholder={`Enter ${field.label.toLowerCase()}...`}
         />
       );
@@ -122,7 +122,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         type={field.type || 'text'}
         value={value} 
         onChange={e => onChange(e.target.value)}
-        className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all"
+        className="h-14 rounded-2xl border-2 border-slate-100 bg-slate-50/50 px-5 text-sm font-black text-slate-900 focus:ring-0 focus:border-health-green transition-all shadow-sm"
         placeholder={field.label}
       />
     );
