@@ -108,7 +108,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       distributor_id: customer.distributor_id,
       participant_id: customer.user_id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-1.5-flash-v1-fallback',
+      model: 'gemini-3.7-flash',
       status: 'SUCCESS'
     });
 
@@ -119,7 +119,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       distributor_id: customer.distributor_id,
       participant_id: customer.user_id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-1.5-flash-v1-fallback',
+      model: 'gemini-3.7-flash',
       status: 'FAILURE',
       error_message: error.message
     });
@@ -128,12 +128,11 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 }
 
 async function callGemini(apiKey: string, prompt: string) {
-  // Deep fallback chain with explicit model versions
+  // Updated for 2026: Using Gemini 3.7 Flash as primary
   const attempts = [
-    { version: 'v2', model: 'gemini-2.0-flash' }, // Try the newest model first
-    { version: 'v1', model: 'gemini-1.5-flash' },
-    { version: 'v1beta', model: 'gemini-1.5-flash' },
-    { version: 'v1', model: 'gemini-pro' }
+    { version: 'v1', model: 'gemini-3.7-flash' },
+    { version: 'v1', model: 'gemini-3.5-flash' },
+    { version: 'v1', model: 'gemini-1.5-flash' }
   ];
   
   let lastError: any = null;

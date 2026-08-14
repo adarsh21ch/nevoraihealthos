@@ -130,7 +130,7 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
     // 3. Call Nutrition Engine with Fallback
     const { generateNutritionPlan } = await import("../ai/nutrition.server");
     let planResult: any;
-    let modelUsed = 'gemini-1.5-flash';
+    let modelUsed = 'gemini-3.7-flash';
 
     try {
       planResult = await generateNutritionPlan({

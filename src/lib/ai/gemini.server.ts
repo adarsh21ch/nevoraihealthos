@@ -78,11 +78,11 @@ export async function chatWithAi({ supabase, geminiKey, userMessage, customerNam
  * Low-level Gemini API caller
  */
 async function callGemini(apiKey: string, prompt: string) {
-  // Try multiple model endpoints to ensure maximum compatibility
+  // Updated for 2026: Using Gemini 3.7 Flash as primary
   const endpoints = [
-    { version: 'v1', model: 'gemini-1.5-flash' },
-    { version: 'v1beta', model: 'gemini-1.5-flash' },
-    { version: 'v1', model: 'gemini-pro' } // Backup if flash fails
+    { version: 'v1', model: 'gemini-3.7-flash' },
+    { version: 'v1', model: 'gemini-3.5-flash' },
+    { version: 'v1', model: 'gemini-1.5-flash' }
   ];
 
   let lastError = null;
