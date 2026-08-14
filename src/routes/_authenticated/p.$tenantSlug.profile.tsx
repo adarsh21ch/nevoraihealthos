@@ -14,7 +14,8 @@ import {
   TrendingUp,
   Package,
   BookOpen,
-  Download
+  Download,
+  Key
 } from 'lucide-react';
 import { useLoaderData } from '@tanstack/react-router';
 import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
@@ -286,6 +287,30 @@ function ProfilePage() {
               </div>
               <Download className="w-6 h-6 text-white/40 group-hover:text-white transition-all" />
             </a>
+
+            <button 
+              onClick={() => setActiveSection({
+                id: 'security',
+                title: 'Security',
+                icon: Key,
+                fields: [
+                  { label: 'New Password', key: 'password', type: 'password' },
+                  { label: 'Confirm Password', key: 'confirm_password', type: 'password' }
+                ]
+              })}
+              className="w-full flex items-center justify-between bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm group hover:shadow-md transition-all duration-500"
+            >
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <Key className="w-8 h-8" />
+                </div>
+                <div className="text-left">
+                  <h4 className="text-lg font-bold text-ink group-hover:text-health-green transition-colors">Security & Access</h4>
+                  <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 mt-1">Change your account password</p>
+                </div>
+              </div>
+              <ChevronRight className="w-6 h-6 text-slate-200 group-hover:text-health-green transition-all" />
+            </button>
           </div>
         </div>
 

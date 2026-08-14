@@ -54,7 +54,20 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
   }, [section, profile]);
 
   const mutation = useMutation({
-    mutationFn: (data: Record<string, any>) => {
+    mutationFn: async (data: Record<string, any>) => {
+      // Handle security section (password reset)
+      if (section?.id === 'security') {
+        const { password, confirm_password } = data;
+        if (!password) throw new Error("Password is required");
+        if (password !== confirm_password) throw new Error("Passwords do not match");
+        if (password.length < 8) throw new Error("Password must be at least 8 characters");
+
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        return { success: true, isPasswordUpdate: true };
+      }
+
       // Data scrubbing: Convert numeric strings back to numbers for the server function
       const scrubbedData = { ...data };
       const numericFields = ['height_cm', 'weight_kg', 'waist_cm', 'target_weight_kg'];
@@ -69,14 +82,16 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         scrubbedData['allergies'] = scrubbedData['allergies'].split(',').map(s => s.trim()).filter(Boolean);
       }
 
-
       return updateProfile({ data: scrubbedData });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['my-profile'] });
-      queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
-      queryClient.refetchQueries({ queryKey: ['profile-readiness'] });
-      toast.success("Profile updated!");
+    onSuccess: (res: any) => {
+      if (res?.isPasswordUpdate) {
+        toast.success("Password updated successfully!");
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['my-profile'] });
+        queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
+        toast.success("Profile updated!");
+      }
       onClose();
     },
     onError: (err: any) => {
