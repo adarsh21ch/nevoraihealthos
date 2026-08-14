@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,11 +10,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Plus, Trash2, Key } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/access-codes")({
-  component: AdminAccessCodes,
+export const Route = createFileRoute("/owner/access-codes")({
+  component: OwnerAccessCodes,
 });
 
-function AdminAccessCodes() {
+function OwnerAccessCodes() {
   const queryClient = useQueryClient();
   const [newCode, setNewCode] = useState("");
   
@@ -23,14 +23,14 @@ function AdminAccessCodes() {
   const deleteCodeFn = useServerFn(deleteAccessCode);
 
   const { data: codes, isLoading } = useQuery({
-    queryKey: ["admin-access-codes"],
+    queryKey: ["owner-access-codes"],
     queryFn: () => getCodesFn(),
   });
 
   const generateMutation = useMutation({
     mutationFn: (code: string) => generateCodeFn({ data: { code } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-access-codes"] });
+      queryClient.invalidateQueries({ queryKey: ["owner-access-codes"] });
       setNewCode("");
       toast.success("Access code generated");
     },
@@ -40,7 +40,7 @@ function AdminAccessCodes() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteCodeFn({ data: { id } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-access-codes"] });
+      queryClient.invalidateQueries({ queryKey: ["owner-access-codes"] });
       toast.success("Access code deleted");
     },
   });
@@ -55,8 +55,8 @@ function AdminAccessCodes() {
     <div className="space-y-10 animate-in fade-in duration-500">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-5xl font-bold tracking-tight text-ink leading-none font-serif italic">Access Codes</h1>
-          <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Manage keys for new participant enrollment.</p>
+          <h1 className="text-5xl font-bold tracking-tight text-ink leading-none font-serif italic">My Access Codes</h1>
+          <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Manage keys for your participant enrollment.</p>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ function AdminAccessCodes() {
             <Input 
               value={newCode}
               onChange={(e) => setNewCode(e.target.value.toUpperCase())}
-              placeholder="E.g. SUMMER2026"
+              placeholder="E.g. KRISHNA2026"
               className="h-12 px-6 rounded-xl border-slate-200 max-w-xs font-bold tracking-widest"
             />
             <Button 
@@ -85,7 +85,6 @@ function AdminAccessCodes() {
             <TableHeader>
               <TableRow className="border-slate-100 bg-slate-50/30 hover:bg-slate-50/30">
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Code</TableHead>
-                <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Owner</TableHead>
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Status</TableHead>
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Created</TableHead>
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6 text-right pr-10">Actions</TableHead>
@@ -115,9 +114,6 @@ function AdminAccessCodes() {
                       </div>
                       <span className="font-bold text-ink tracking-widest">{code.code}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-slate-500 text-xs font-bold">
-                    {code.coach_id ? (code.coach_id === 'b1ed3b14-6512-4f44-8adc-3ef6302f5d34' ? 'ADMIN' : 'COACH') : 'SYSTEM'}
                   </TableCell>
                   <TableCell>
                     {code.used_at ? (
