@@ -107,7 +107,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       distributor_id: customer.distributor_id,
       participant_id: customer.user_id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-1.5-pro',
+      model: 'gemini-1.5-flash',
       status: 'SUCCESS'
     });
 
@@ -118,7 +118,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       distributor_id: customer.distributor_id,
       participant_id: customer.user_id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-1.5-pro',
+      model: 'gemini-1.5-flash',
       status: 'FAILURE',
       error_message: error.message
     });
@@ -128,7 +128,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 
 async function callGemini(apiKey: string, prompt: string) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
