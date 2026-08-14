@@ -95,7 +95,8 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
       onClose();
     },
     onError: (err: any) => {
-      toast.error(err.message || "Failed to update profile");
+      const isSecurity = section?.id === 'security';
+      toast.error(err.message || (isSecurity ? "Failed to update password" : "Failed to update profile"));
     }
   });
 
