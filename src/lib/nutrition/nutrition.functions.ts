@@ -127,19 +127,31 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
     }
 
 
-
-    // 3. Call Gemini Nutrition Engine
-
+    // 3. Call Nutrition Engine with Fallback
     const { generateNutritionPlan } = await import("../ai/nutrition.server");
-    const planResult = await generateNutritionPlan({
-      supabase,
-      geminiKey,
-      customer,
-      latestMeasurement,
-      activeProgram
-    });
+    let planResult: any;
+    let modelUsed = 'gemini-1.5-flash';
 
-    // 3. Store the plan
+    try {
+      planResult = await generateNutritionPlan({
+        supabase,
+        geminiKey,
+        customer,
+        latestMeasurement,
+        activeProgram
+      });
+    } catch (aiError) {
+      console.error("[NutritionEngine] AI Failed, activating scientific fallback:", aiError);
+      const { generateFallbackNutritionPlan } = await import("./fallback.server");
+      planResult = generateFallbackNutritionPlan({
+        customer,
+        latestMeasurement,
+        programTrack: (activeProgram?.track === 'DX4' ? 'DX4' : 'C9')
+      });
+      modelUsed = 'scientific-fallback-v1';
+    }
+
+    // 4. Store the plan
     const table: any = "nutrition_plans";
     const { data: newPlan, error: storeError } = await supabase
       .from(table)
@@ -148,7 +160,7 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
         distributor_id: (customer as any).distributor_id,
         status: 'PUBLISHED',
         plan_data: planResult,
-        model_info: 'gemini-1.5-flash-v1-fallback',
+        model_info: modelUsed,
         knowledge_version: planResult.knowledge_version || '1.0'
       })
       .select()

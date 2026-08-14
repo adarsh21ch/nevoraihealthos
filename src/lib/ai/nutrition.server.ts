@@ -127,14 +127,20 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 }
 
 async function callGemini(apiKey: string, prompt: string) {
-  // Use v1beta for better model availability if v1 fails, but try v1 first for stability
-  const apiVersions = ['v1', 'v1beta'];
-  let lastError = null;
+  // Deep fallback chain with explicit model versions
+  const attempts = [
+    { version: 'v1', model: 'gemini-1.5-flash' },
+    { version: 'v1beta', model: 'gemini-1.5-flash' },
+    { version: 'v1', model: 'gemini-pro' }
+  ];
+  
+  let lastError: any = null;
 
-  for (const version of apiVersions) {
+  for (const attempt of attempts) {
     try {
+      console.log(`AI Nutrition: Attempting ${attempt.model} via ${attempt.version}...`);
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/${version}/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/${attempt.version}/models/${attempt.model}:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -151,27 +157,25 @@ async function callGemini(apiKey: string, prompt: string) {
       const data = await response.json();
       
       if (data.error) {
-        console.error(`Gemini API error (${version}):`, data.error);
-        lastError = new Error(`Gemini API error (${version}): ${data.error.message || "Unknown error"}`);
-        // If it's a model not found error, try next version
-        if (data.error.status === 'NOT_FOUND' || data.error.message?.includes('not found')) {
-          continue;
-        }
-        throw lastError;
+        console.error(`AI Nutrition Failure (${attempt.model} ${attempt.version}):`, JSON.stringify(data.error));
+        lastError = data.error;
+        // Continue to next attempt for common availability errors
+        continue;
       }
 
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) {
-        console.error(`Empty Gemini response (${version}):`, JSON.stringify(data, null, 2));
+        console.warn(`AI Nutrition: Empty text from ${attempt.model}`);
         continue;
       }
       
       return JSON.parse(text);
     } catch (err: any) {
       lastError = err;
-      console.warn(`Gemini attempt with ${version} failed:`, err.message);
+      console.error(`AI Nutrition Exception (${attempt.model}):`, err.message);
     }
   }
 
-  throw lastError || new Error("Gemini API call failed after multiple attempts");
+  // If we reach here, all AI attempts failed.
+  throw lastError || new Error("AI Nutrition Engine unavailable");
 }

@@ -105,9 +105,15 @@ export function PersonalizedPlan() {
 
   const generateMutation = useMutation({
     mutationFn: () => generatePlan(),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['my-nutrition-plan'] });
-      toast.success("New plan generated successfully!");
+      queryClient.invalidateQueries({ queryKey: ['profile-readiness'] });
+      
+      if (data.model_info?.includes('fallback')) {
+        toast.info("AI Coach is busy. Generated a scientific template based on your profile!");
+      } else {
+        toast.success("AI Nutrition Plan generated successfully!");
+      }
     },
     onError: (err: any) => {
       console.error("Plan generation error:", err);
@@ -296,7 +302,10 @@ export function PersonalizedPlan() {
               )} />
             ))}
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Personalizing Indian meal options...</span>
+          <div className="space-y-1 text-center">
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Personalizing Indian meal options...</span>
+            <span className="text-[9px] font-medium text-slate-300 block italic">This may take up to 30 seconds</span>
+          </div>
         </div>
       </div>
     );
