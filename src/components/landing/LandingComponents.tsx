@@ -105,3 +105,68 @@ export const StepIcon = ({ day, active, completed }: { day: number, active?: boo
     <span className={`text-[10px] font-bold uppercase tracking-wider ${active ? 'text-accent' : 'text-slate-400'}`}>Day {day}</span>
   </div>
 );
+
+export const ProductShowcase = ({ image, title, description, benefits }: { image: string, title: string, description: string, benefits: string[] }) => (
+  <div className="flex flex-col lg:flex-row gap-16 items-center py-20">
+    <motion.div 
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      className="w-full lg:w-1/2 relative"
+    >
+      <div className="absolute -inset-4 bg-emerald-500/10 rounded-[3rem] blur-3xl -z-10" />
+      <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-slate-50 border border-slate-100 shadow-2xl">
+        <img src={image} alt={title} className="w-full h-full object-cover p-12" />
+      </div>
+    </motion.div>
+    <motion.div 
+      initial={{ opacity: 0, x: 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      className="w-full lg:w-1/2"
+    >
+      <h3 className="text-4xl md:text-5xl font-serif italic text-ink mb-8">{title}</h3>
+      <p className="text-xl text-slate-500 mb-12 leading-relaxed">{description}</p>
+      <div className="space-y-6">
+        {benefits.map((benefit, i) => (
+          <div key={i} className="flex items-start gap-4">
+            <div className="mt-1 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+            <span className="text-lg text-slate-600 font-medium">{benefit}</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  </div>
+);
+
+export const DownloadSection = ({ title, subtitle, pdfUrl }: { title: string, subtitle: string, pdfUrl: string }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="relative p-12 md:p-20 rounded-[3.5rem] bg-emerald-600 text-white overflow-hidden shadow-2xl shadow-emerald-200"
+  >
+    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48" />
+    <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl -ml-48 -mb-48" />
+    
+    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="max-w-2xl text-center md:text-left">
+        <h3 className="text-3xl md:text-5xl font-serif italic mb-6 leading-tight">{title}</h3>
+        <p className="text-lg md:text-xl text-white/80 font-medium">{subtitle}</p>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-6">
+        <a 
+          href={pdfUrl} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="px-10 py-6 bg-white text-emerald-700 rounded-2xl text-lg font-black uppercase tracking-widest shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+        >
+          <Download className="w-5 h-5" />
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </motion.div>
+);
