@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { Loader2, ArrowRight, ArrowLeft, CheckCircle2, Ruler, Target, Heart, Utensils, Info } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, CheckCircle2, Ruler, Target, Heart, Utensils, Info, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServerFn } from "@tanstack/react-start";
 import { updateMyProfile } from "@/lib/profile/profile.functions";
