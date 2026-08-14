@@ -473,9 +473,9 @@ function ProfilePage() {
                             <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{field.label}</span>
                             <span className="text-base font-bold text-ink max-w-[60%] text-right">{field.value || 'Not set'}</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
+            ))}
+        </div>
+      </div>
                 </div>
             ))}
         </div>
