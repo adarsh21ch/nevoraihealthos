@@ -10,12 +10,20 @@ export const verifyC9Seed = createServerFn({ method: "POST" })
       const { count: taskCount } = await supabaseAdmin.from("day_tasks" as any).select("*", { count: 'exact', head: true });
       const { count: foodCount } = await supabaseAdmin.from("free_foods" as any).select("*", { count: 'exact', head: true });
       
-      const { data: migHistory, error: migError } = await supabaseAdmin
-        .from("_migrations" as any)
-        .select("*")
-        .order("version", { ascending: false })
-        .limit(5)
-        .catch(() => ({ data: null, error: { message: "Table not found" } }));
+      let migHistory = null;
+      let migError = null;
+      
+      try {
+        const result = await supabaseAdmin
+          .from("_migrations" as any)
+          .select("*")
+          .order("version", { ascending: false })
+          .limit(5);
+        migHistory = result.data;
+        migError = result.error;
+      } catch (err: any) {
+        migError = { message: err.message };
+      }
 
       return {
         programs: (programs || []).map((p: any) => ({ code: String(p.code), name: String(p.name) })),
