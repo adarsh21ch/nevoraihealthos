@@ -33,6 +33,7 @@ export const getCoachInsights = createServerFn({ method: "GET" })
       const { generateCoachMessage } = await import("./gemini.server");
 
       const message = await generateCoachMessage({
+        supabase,
         geminiKey,
         customer,
         logs: logsRes.data || [],
@@ -78,7 +79,9 @@ export const askAiAssistant = createServerFn({ method: "POST" })
       geminiKey,
       userMessage: data.message,
       customerName: customer?.name || "Participant",
-      track: (customer as any)?.track || "standard"
+      track: (customer as any)?.track || "standard",
+      customerId: userId,
+      distributorId: (customer as any)?.distributor_id
     });
 
     return { response };

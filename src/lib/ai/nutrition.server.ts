@@ -2,6 +2,7 @@
  * Server-only helper for Gemini Nutrition AI integration with Knowledge Grounding.
  */
 import { getRelevantKnowledge, logAiGeneration } from "./knowledge.server";
+import { callGeminiShared } from "./gemini-client.server";
 
 interface NutritionContext {
   supabase: any;
@@ -46,17 +47,17 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     PROGRAM CONTEXT:
     - Track: ${programTrack}
 
-    STRICT RULES FOR SYNERGETIC PRODUCTS (C9/DX4):
+    STRICT RULES FOR PRODUCTS:
     1. You MUST integrate the specific program supplements into the meal slots for EVERY day of the 9-day plan.
     2. For C9 (standard):
-       - Morning Ritual: 2X Forever Garcinia Plus (wait 30 min), then 120ml Forever Aloe Vera Gel + 1X Forever Therm.
-       - Breakfast: 1X Forever Lite Ultra (Shake), 1X Forever Fiber (taken separately with water).
-       - Lunch: 2X Forever Garcinia Plus (wait 30 min), 120ml Forever Aloe Vera Gel + 1X Forever Therm.
-       - Snack: 120ml Forever Aloe Vera Gel.
-       - Dinner: 2X Forever Garcinia Plus (wait 30 min), 120ml Forever Aloe Vera Gel.
+       - Morning Ritual: 2X Garcinia Plus (wait 30 min), then 120ml Aloe Vera Gel + 1X Therm.
+       - Breakfast: 1X Lite Ultra (Shake), 1X Fiber (taken separately with water).
+       - Lunch: 2X Garcinia Plus (wait 30 min), 120ml Aloe Vera Gel + 1X Therm.
+       - Snack: 120ml Aloe Vera Gel.
+       - Dinner: 2X Garcinia Plus (wait 30 min), 120ml Aloe Vera Gel.
     3. Ensure the product names are exact and formatted clearly.
 
-    3. Ensure the product names are exact: "Forever Aloe Vera Gel", "Forever Garcinia Plus", "Forever Lite Ultra", "Forever Therm", "Forever Fiber".
+    3. Ensure the product names are exact: "Aloe Vera Gel", "Garcinia Plus", "Lite Ultra", "Therm", "Fiber". (Do NOT use "Forever" prefix).
     4. Portions and timings MUST match the grounding knowledge for the current Day (Reset phase vs Build phase).
     5. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
     2. Indian Diet Focus: Prioritize regional Indian eating patterns and ingredients found in the Indian market (Dal, Sabzi, Paneer, Roti, Curd, Poha). Ensure recipes use spices and items available in general Indian homes (Delhi/Urban focus).
@@ -97,18 +98,20 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
   `;
 
   try {
-    const result = await callGemini(geminiKey, prompt);
-    
-    // Final check: if AI failed to include products in its JSON, we don't fix it here 
-    // but the prompt is now much stricter.
+    const text = await callGeminiShared(geminiKey, prompt, {
+      temperature: 0.1,
+      responseMimeType: "application/json",
+      maxOutputTokens: 2048
+    });
 
+    const result = JSON.parse(text);
     
     // Log success
     await logAiGeneration(supabase, {
       distributor_id: customer.distributor_id,
-      participant_id: customer.user_id,
+      participant_id: customer.user_id || customer.id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-3.7-flash',
+      model: 'gemini-fallback-chain',
       status: 'SUCCESS'
     });
 
@@ -117,9 +120,9 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     // Log failure
     await logAiGeneration(supabase, {
       distributor_id: customer.distributor_id,
-      participant_id: customer.user_id,
+      participant_id: customer.user_id || customer.id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-3.7-flash',
+      model: 'gemini-fallback-chain',
       status: 'FAILURE',
       error_message: error.message
     });
@@ -127,56 +130,3 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
   }
 }
 
-async function callGemini(apiKey: string, prompt: string) {
-  // Updated for 2026: Using Gemini 3.7 Flash as primary
-  const attempts = [
-    { version: 'v1', model: 'gemini-3.7-flash' },
-    { version: 'v1', model: 'gemini-3.5-flash' },
-    { version: 'v1', model: 'gemini-1.5-flash' }
-  ];
-  
-  let lastError: any = null;
-
-  for (const attempt of attempts) {
-    try {
-      console.log(`AI Nutrition: Attempting ${attempt.model} via ${attempt.version}...`);
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/${attempt.version}/models/${attempt.model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.1,
-              response_mime_type: "application/json",
-            },
-          }),
-        }
-      );
-
-      const data = await response.json();
-      
-      if (data.error) {
-        console.error(`AI Nutrition Failure (${attempt.model} ${attempt.version}):`, JSON.stringify(data.error));
-        lastError = data.error;
-        // If it's a 404 or 400 (model not found / invalid API version for model), try next
-        continue;
-      }
-
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) {
-        console.warn(`AI Nutrition: Empty text from ${attempt.model}`);
-        continue;
-      }
-      
-      return JSON.parse(text);
-    } catch (err: any) {
-      lastError = err;
-      console.error(`AI Nutrition Exception (${attempt.model}):`, err.message);
-    }
-  }
-
-  // If we reach here, all AI attempts failed.
-  throw lastError || new Error("AI Nutrition Engine unavailable");
-}

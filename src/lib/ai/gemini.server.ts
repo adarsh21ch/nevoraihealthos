@@ -2,8 +2,11 @@
  * Server-only helper for Gemini AI integration.
  * This file is excluded from the client bundle by the .server.ts extension.
  */
+import { callGeminiShared } from "./gemini-client.server";
+import { logAiGeneration } from "./knowledge.server";
 
 interface CoachContext {
+  supabase: any; // Added for logging
   geminiKey: string;
   customer: any;
   logs: any[];
@@ -13,7 +16,7 @@ interface CoachContext {
 /**
  * Generates a personalized coaching message using Gemini
  */
-export async function generateCoachMessage({ geminiKey, customer, logs, measurements }: CoachContext) {
+export async function generateCoachMessage({ supabase, geminiKey, customer, logs, measurements }: CoachContext) {
   const prompt = `
     You are an expert health coach for the "Fat2Fit" 9-day metabolic reset program.
     Your tone is premium, professional, encouraging, and slightly editorial.
@@ -33,18 +36,47 @@ export async function generateCoachMessage({ geminiKey, customer, logs, measurem
     Do not use placeholders. Speak directly to them.
   `;
 
-  return callGemini(geminiKey, prompt);
+  try {
+    const text = await callGeminiShared(geminiKey, prompt, {
+      temperature: 0.8,
+      maxOutputTokens: 256
+    });
+
+    await logAiGeneration(supabase, {
+      distributor_id: customer.distributor_id,
+      participant_id: customer.user_id || customer.id,
+      generation_type: 'COACH_MESSAGE',
+      model: 'gemini-fallback-chain',
+      status: 'SUCCESS'
+    });
+
+    return text;
+  } catch (error: any) {
+    console.error("Coach message generation failed:", error);
+    await logAiGeneration(supabase, {
+      distributor_id: customer.distributor_id,
+      participant_id: customer.user_id || customer.id,
+      generation_type: 'COACH_MESSAGE',
+      model: 'gemini-fallback-chain',
+      status: 'FAILURE',
+      error_message: error.message
+    });
+    // Return a user-friendly error state instead of silent fallback
+    return "Your AI Coach is momentarily resting. Please refresh or try again shortly to get your personalized update.";
+  }
 }
 
 /**
  * Handles interactive chat with the AI assistant
  */
-export async function chatWithAi({ supabase, geminiKey, userMessage, customerName, track }: { 
+export async function chatWithAi({ supabase, geminiKey, userMessage, customerName, track, customerId, distributorId }: { 
   supabase: any;
   geminiKey: string; 
   userMessage: string; 
   customerName: string;
   track: string;
+  customerId?: string;
+  distributorId?: string;
 }) {
   // 1. Retrieve relevant knowledge for the chat
   const { getRelevantKnowledge } = await import("./knowledge.server");
@@ -71,56 +103,36 @@ export async function chatWithAi({ supabase, geminiKey, userMessage, customerNam
     USER QUESTION: ${userMessage}
   `;
 
-  return callGemini(geminiKey, prompt);
-}
+  try {
+    const text = await callGeminiShared(geminiKey, prompt, {
+      temperature: 0.7,
+      maxOutputTokens: 512
+    });
 
-/**
- * Low-level Gemini API caller
- */
-async function callGemini(apiKey: string, prompt: string) {
-  // Updated for 2026: Using Gemini 3.7 Flash as primary
-  const endpoints = [
-    { version: 'v1', model: 'gemini-3.7-flash' },
-    { version: 'v1', model: 'gemini-3.5-flash' },
-    { version: 'v1', model: 'gemini-1.5-flash' }
-  ];
-
-  let lastError = null;
-
-  for (const endpoint of endpoints) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/${endpoint.version}/models/${endpoint.model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.7,
-              topK: 40,
-              topP: 0.95,
-              maxOutputTokens: 256,
-            },
-          }),
-        }
-      );
-
-      const data = await response.json();
-      
-      if (data.error) {
-        console.error(`Gemini API Error (${endpoint.model} ${endpoint.version}):`, data.error);
-        lastError = data.error;
-        continue;
-      }
-
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) return text;
-    } catch (error) {
-      console.error(`Gemini Fetch Error (${endpoint.model}):`, error);
-      lastError = error;
+    if (customerId && distributorId) {
+      await logAiGeneration(supabase, {
+        distributor_id: distributorId,
+        participant_id: customerId,
+        generation_type: 'CHAT',
+        model: 'gemini-fallback-chain',
+        status: 'SUCCESS'
+      });
     }
-  }
 
-  return "Let's keep pushing towards your goals today! Stay focused on your journey.";
+    return text;
+  } catch (error: any) {
+    console.error("AI Chat failed:", error);
+    if (customerId && distributorId) {
+      await logAiGeneration(supabase, {
+        distributor_id: distributorId,
+        participant_id: customerId,
+        generation_type: 'CHAT',
+        model: 'gemini-fallback-chain',
+        status: 'FAILURE',
+        error_message: error.message
+      });
+    }
+    return "I'm having trouble connecting to my knowledge base right now. Please try your question again in a moment.";
+  }
 }
+
