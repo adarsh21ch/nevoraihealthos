@@ -9,10 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-} from "@/components/ui/drawer";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -202,25 +198,11 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
   );
 
   return (
-    <>
-      {/* Mobile: Drawer */}
-      <div className="md:hidden">
-        <Drawer open={isOpen} onOpenChange={onClose}>
-          <DrawerContent className="max-h-[92vh] border-none bg-white rounded-t-[3rem] shadow-2xl overflow-hidden">
-            {formContent}
-          </DrawerContent>
-        </Drawer>
-      </div>
-
-      {/* Desktop: Dialog (Modal) */}
-      <div className="hidden md:block">
-        <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-[3rem] bg-white">
-            {formContent}
-          </DialogContent>
-        </Dialog>
-      </div>
-    </>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-[3rem] bg-white sm:rounded-[3rem] w-[92%] sm:w-full">
+        {formContent}
+      </DialogContent>
+    </Dialog>
   );
 }
 
