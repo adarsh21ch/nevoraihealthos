@@ -121,8 +121,6 @@ export const getTestimonials = createServerFn({ method: "GET" })
 
     if (error) throw error;
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
     return await Promise.all(
       (data ?? []).map(async (c: any) => ({
         id: c.id,
@@ -132,7 +130,7 @@ export const getTestimonials = createServerFn({ method: "GET" })
             .filter((p: any) => p.share_consent)
             .sort((a: any, b: any) => a.created_at.localeCompare(b.created_at))
             .map(async (p: any) => {
-              const { data: signed } = await supabaseAdmin.storage
+              const { data: signed } = await supabase.storage
                 .from("progress-photos")
                 .createSignedUrl(p.storage_path, 60 * 60);
               return {
@@ -171,10 +169,9 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     // Private photos: signed URLs, and only when the customer consented to sharing
     let photos: any[] = [];
     if ((row as any).share_consent) {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       photos = await Promise.all(
         (((row as any).progress_photos ?? []) as any[]).map(async (p) => {
-          const { data: signed } = await supabaseAdmin.storage
+          const { data: signed } = await supabase.storage
             .from("progress-photos")
             .createSignedUrl(p.storage_path, 60 * 60);
           return { id: p.id, photo_url: signed?.signedUrl ?? null, created_at: p.created_at };

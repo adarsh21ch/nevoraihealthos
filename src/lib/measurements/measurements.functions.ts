@@ -5,9 +5,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const getMeasurements = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ customerId: z.string() }).parse)
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: measurements, error } = await supabaseAdmin
+  .handler(async ({ context, data }) => {
+    const { supabase } = context;
+    const { data: measurements, error } = await supabase
       .from("measurements")
       .select("*")
       .eq("customer_id", data.customerId)
@@ -30,11 +30,11 @@ export const addMeasurement = createServerFn({ method: "POST" })
     taken_on: z.string().optional(),
     day_number: z.number(), // Required by schema
   }).parse)
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  .handler(async ({ context, data }) => {
+    const { supabase } = context;
     const { customerId, ...rest } = data;
     
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from("measurements")
       .insert({
         customer_id: customerId,

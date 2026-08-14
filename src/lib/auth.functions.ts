@@ -10,10 +10,10 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     password: z.string().min(6),
   }).parse(data))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = await import("@/integrations/supabase/client");
 
     // 1. Check access code
-    const { data: creds, error: credsError } = await supabaseAdmin
+    const { data: creds, error: credsError } = await supabase
       .from("access_codes")
       .select("id")
       .eq("code", data.access_code)
@@ -23,6 +23,8 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     if (credsError || !creds) {
       throw new Error("Invalid or already used access code");
     }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 2. Create Auth User
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -48,13 +50,12 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 4. Create Customer Row (Legacy support)
-    // We now have dropped NOT NULL constraints on phone, distributor_id, track, language
-    const { data: customer, error: customerError } = await supabaseAdmin
+    const { data: customer, error: customerError } = await supabase
       .from("customers")
       .insert({
         user_id: authUser.user.id,
         fbo_id: data.fbo_id,
-        name: data.email.split('@')[0], // Use email prefix as temporary name
+        name: data.email.split('@')[0],
         onboarding_complete: false,
       } as any)
       .select("id")
@@ -67,7 +68,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 5. Mark access code as used
-    await supabaseAdmin
+    await supabase
       .from("access_codes")
       .update({ used_at: new Date().toISOString(), customer_id: customer.id })
       .eq("id", creds.id);
@@ -84,16 +85,17 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
     identifier: z.string(),
   }).parse(data))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = await import("@/integrations/supabase/client");
 
     // Try finding by FBO ID in customers table
-    const { data: customer } = await supabaseAdmin
+    const { data: customer } = await supabase
       .from("customers")
       .select("user_id")
       .eq("fbo_id" as any, data.identifier)
       .maybeSingle();
       
     if (customer && customer.user_id) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
       if (user?.user?.email) {
         return { found: true, method: 'email' as const, value: user.user.email };
@@ -110,7 +112,6 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { supabase } = context;
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     const { data: canAccess, error: accessError } = await supabase.rpc("can_access_customer", { 
       _customer: data.customerId 
@@ -120,7 +121,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
       throw new Error("Unauthorized");
     }
 
-    const { data: customer, error: customerError } = await supabaseAdmin
+    const { data: customer, error: customerError } = await supabase
       .from("customers")
       .select("user_id")
       .eq("id", data.customerId)
@@ -130,6 +131,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
 
     const tempPassword = Math.random().toString(36).slice(-8);
     
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
       customer.user_id,
       { password: tempPassword }

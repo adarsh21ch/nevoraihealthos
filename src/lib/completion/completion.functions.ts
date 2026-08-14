@@ -61,8 +61,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
       stats,
       nextProgram,
       photos: await (async () => {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: photos } = await supabaseAdmin
+        const { data: photos } = await supabase
           .from("progress_photos")
           .select("id, storage_path, created_at")
           .eq("customer_id", customer.id)
@@ -72,7 +71,7 @@ export const getCompletionData = createServerFn({ method: "GET" })
         if (!photos || photos.length === 0) return [];
         
         return await Promise.all((photos as any[]).map(async (p) => {
-          const { data: signed } = await supabaseAdmin.storage
+          const { data: signed } = await supabase.storage
             .from("progress-photos")
             .createSignedUrl(p.storage_path, 3600);
           return {

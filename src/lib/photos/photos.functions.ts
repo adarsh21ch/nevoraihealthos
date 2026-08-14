@@ -6,15 +6,14 @@ export const getProgressPhotos = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ customerId: z.string() }).parse)
   .handler(async ({ data, context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const userId = context.userId;
+    const { supabase } = context;
     
-    const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
+    const { data: allowed } = await supabase.rpc('can_access_customer', {
       _customer: data.customerId
     });
     if (!allowed) throw new Error("Unauthorized");
 
-    const { data: photos, error } = await supabaseAdmin
+    const { data: photos, error } = await supabase
       .from("progress_photos")
       .select("*")
       .eq("customer_id", data.customerId)
@@ -23,7 +22,7 @@ export const getProgressPhotos = createServerFn({ method: "GET" })
     if (error) throw error;
     
     const enrichedPhotos = await Promise.all((photos || []).map(async (photo) => {
-      const { data: signed } = await supabaseAdmin.storage
+      const { data: signed } = await supabase.storage
         .from('progress-photos')
         .createSignedUrl(photo.storage_path, 3600);
         
@@ -45,15 +44,14 @@ export const createProgressPhoto = createServerFn({ method: "POST" })
     dayNumber: z.number(),
   }).parse)
   .handler(async ({ data, context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const userId = context.userId;
+    const { supabase } = context;
     
-    const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
+    const { data: allowed } = await supabase.rpc('can_access_customer', {
       _customer: data.customerId
     });
     if (!allowed) throw new Error("Unauthorized");
 
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from("progress_photos")
       .insert({
         customer_id: data.customerId,
@@ -73,10 +71,9 @@ export const updatePhotoConsent = createServerFn({ method: "POST" })
     shareConsent: z.boolean(),
   }).parse)
   .handler(async ({ data, context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const userId = context.userId;
+    const { supabase } = context;
     
-    const { data: photoData } = await supabaseAdmin
+    const { data: photoData } = await supabase
       .from('progress_photos')
       .select('customer_id')
       .eq('id', data.photoId)
@@ -84,12 +81,12 @@ export const updatePhotoConsent = createServerFn({ method: "POST" })
       
     if (!photoData) throw new Error("Photo not found");
 
-    const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
+    const { data: allowed } = await supabase.rpc('can_access_customer', {
       _customer: photoData.customer_id
     });
     if (!allowed) throw new Error("Unauthorized");
 
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from("progress_photos")
       .update({ share_consent: data.shareConsent })
       .eq("id", data.photoId);
@@ -104,10 +101,9 @@ export const deleteProgressPhoto = createServerFn({ method: "POST" })
     photoId: z.string(),
   }).parse)
   .handler(async ({ data, context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const userId = context.userId;
+    const { supabase } = context;
     
-    const { data: photoData } = await supabaseAdmin
+    const { data: photoData } = await supabase
       .from('progress_photos')
       .select('customer_id, storage_path')
       .eq('id', data.photoId)
@@ -115,16 +111,16 @@ export const deleteProgressPhoto = createServerFn({ method: "POST" })
       
     if (!photoData) throw new Error("Photo not found");
 
-    const { data: allowed } = await supabaseAdmin.rpc('can_access_customer', {
+    const { data: allowed } = await supabase.rpc('can_access_customer', {
       _customer: photoData.customer_id
     });
     if (!allowed) throw new Error("Unauthorized");
 
-    await supabaseAdmin.storage
+    await supabase.storage
       .from('progress-photos')
       .remove([photoData.storage_path]);
 
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from("progress_photos")
       .delete()
       .eq("id", data.photoId);
