@@ -14,6 +14,8 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
   ssr: false,
+  staleTime: 0, // Ensure we check session fresh every time
+
   beforeLoad: async ({ context }) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
@@ -67,12 +69,16 @@ function LoginPage() {
   
   React.useEffect(() => {
     const checkInitialSession = async () => {
-      // Small delay to allow session restoration
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Clear any potential stale state
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Force evaluation of beforeLoad if session exists
+        navigate({ to: '/login', replace: true });
+      }
       setIsAuthChecking(false);
     };
     checkInitialSession();
-  }, []);
+  }, [navigate]);
 
   const resolveIdentifier = useServerFn(resolveLoginIdentifier);
 

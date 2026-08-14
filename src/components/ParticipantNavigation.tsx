@@ -18,12 +18,17 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error("Logout failed: " + error.message);
-    } else {
-      toast.success("Logged out successfully");
-      navigate({ to: '/login' });
+    try {
+      // Optimistic navigation for speed
+      navigate({ to: '/login', replace: true });
+      toast.success("Logging out...");
+      
+      // Background signout
+      await supabase.auth.signOut();
+    } catch (error: any) {
+      console.error("Logout failed:", error);
+      // Even if it fails, we want the user to be on the login page
+      window.location.href = '/login';
     }
   };
 
@@ -133,11 +138,12 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
       <button 
         onClick={async () => {
           if (window.confirm("Are you sure you want to log out?")) {
-            await supabase.auth.signOut();
+            // Optimistic redirect
             window.location.href = '/login';
+            await supabase.auth.signOut();
           }
         }}
-        className="absolute -top-12 right-6 p-2 bg-white/80 backdrop-blur rounded-full text-slate-400 border border-slate-100 shadow-sm active:scale-90"
+        className="absolute -top-12 right-6 p-2 bg-white/80 backdrop-blur rounded-full text-slate-400 border border-slate-100 shadow-sm active:scale-95 transition-transform"
       >
         <LogOut className="w-5 h-5" />
       </button>
