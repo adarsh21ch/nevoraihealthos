@@ -3,7 +3,7 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := '88888888';
+    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- 1. Ensure user exists
     INSERT INTO auth.users (

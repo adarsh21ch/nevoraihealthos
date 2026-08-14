@@ -7,7 +7,7 @@ SET search_path = public
 AS $$
 BEGIN
     -- If user ID matches our admin, return admin context immediately
-    IF auth.uid() = 'b1ed3b14-6512-4f44-8adc-3ef6302f5d34' THEN
+    IF auth.uid() = 'REDACTED_ADMIN_UUID' THEN
         RETURN json_build_object(
             'role', 'platform_admin',
             'onboarding_complete', true,

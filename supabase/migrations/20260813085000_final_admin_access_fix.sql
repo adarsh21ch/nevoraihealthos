@@ -12,7 +12,7 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := '88888888';
+    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- Find or create the user
     SELECT id INTO _user_id FROM auth.users WHERE email = _email;

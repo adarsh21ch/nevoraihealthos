@@ -1,6 +1,6 @@
 -- 1. Ensure the hardwired user b1ed3b14... is in platform_admins
 INSERT INTO public.platform_admins (user_id)
-VALUES ('b1ed3b14-6512-4f44-8adc-3ef6302f5d34')
+VALUES ('REDACTED_ADMIN_UUID')
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 2. Force the RPC to return the correct data for this ID, bypassing all table lookups if needed
@@ -13,7 +13,7 @@ AS $$
 DECLARE
     _user_id UUID := auth.uid();
 BEGIN
-    IF _user_id = 'b1ed3b14-6512-4f44-8adc-3ef6302f5d34' THEN
+    IF _user_id = 'REDACTED_ADMIN_UUID' THEN
         RETURN json_build_object(
             'role', 'platform_admin',
             'onboarding_complete', true,
