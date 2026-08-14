@@ -12,7 +12,7 @@ export function BrandedLoading() {
         </div>
         
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-6 h-6 text-accent animate-spin" />
+          <Loader2 className="w-6 h-6 text-health-green animate-spin" />
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">
             Initializing Evolution
           </span>
