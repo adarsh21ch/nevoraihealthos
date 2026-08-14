@@ -129,6 +129,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 async function callGemini(apiKey: string, prompt: string) {
   // Deep fallback chain with explicit model versions
   const attempts = [
+    { version: 'v2', model: 'gemini-2.0-flash' }, // Try the newest model first
     { version: 'v1', model: 'gemini-1.5-flash' },
     { version: 'v1beta', model: 'gemini-1.5-flash' },
     { version: 'v1', model: 'gemini-pro' }
@@ -159,7 +160,7 @@ async function callGemini(apiKey: string, prompt: string) {
       if (data.error) {
         console.error(`AI Nutrition Failure (${attempt.model} ${attempt.version}):`, JSON.stringify(data.error));
         lastError = data.error;
-        // Continue to next attempt for common availability errors
+        // If it's a 404 or 400 (model not found / invalid API version for model), try next
         continue;
       }
 

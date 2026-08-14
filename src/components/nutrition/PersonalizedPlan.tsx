@@ -375,11 +375,15 @@ export function PersonalizedPlan() {
         <div className="flex items-center justify-between px-2">
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Daily Protocol</h3>
            <button 
-             onClick={() => generateMutation.mutate()} 
+             onClick={() => {
+               if (window.confirm("This will replace your current AI plan with a new one tailored to your latest profile. Continue?")) {
+                 generateMutation.mutate();
+               }
+             }} 
              className="text-[10px] font-black uppercase tracking-widest text-health-green flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity"
            >
              <RefreshCw className={cn("w-3 h-3", generateMutation.isPending && "animate-spin")} />
-             Regenerate
+             Regenerate AI Plan
            </button>
         </div>
 
