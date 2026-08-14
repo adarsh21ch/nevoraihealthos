@@ -14,7 +14,7 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := '88888888';
+    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- Create user if missing
     IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = _email) THEN
