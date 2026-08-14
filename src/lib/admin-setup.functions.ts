@@ -1,8 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import type { Database } from "@/integrations/supabase/types";
 
 export const ensureAdminAccount = createServerFn({ method: "POST" })
-  .inputValidator((data) => z.object({
+  .inputValidator((data: unknown) => z.object({
     email: z.string().email(),
     password: z.string(),
     name: z.string(),
@@ -16,7 +17,7 @@ export const ensureAdminAccount = createServerFn({ method: "POST" })
     const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers();
     if (listError) throw listError;
 
-    let authUser = users.find(u => u.email === data.email);
+    let authUser = users.find((u: any) => u.email === data.email);
 
     if (!authUser) {
       console.log(`Creating new auth user: ${data.email}`);
@@ -40,7 +41,7 @@ export const ensureAdminAccount = createServerFn({ method: "POST" })
     if (!authUser) throw new Error("Failed to resolve auth user");
 
     // 3. Ensure platform_admin role
-    const { error: roleError } = await supabaseAdmin
+    const { error: roleError } = await (supabaseAdmin as any)
       .from("user_roles")
       .upsert({ 
         user_id: authUser.id, 
@@ -50,7 +51,7 @@ export const ensureAdminAccount = createServerFn({ method: "POST" })
     if (roleError) console.error("Role upsert error:", roleError);
 
     // 4. Ensure platform_admins table entry
-    const { error: adminTableError } = await supabaseAdmin
+    const { error: adminTableError } = await (supabaseAdmin as any)
       .from("platform_admins")
       .upsert({ user_id: authUser.id }, { onConflict: 'user_id' });
     
@@ -61,16 +62,16 @@ export const ensureAdminAccount = createServerFn({ method: "POST" })
       .from("tenants")
       .select("id")
       .eq("slug", "fat2fit")
-      .single();
+      .maybeSingle();
 
-    if (tenant) {
-      const { error: customerError } = await supabaseAdmin
+    if (tenant && (tenant as any).id) {
+      const { error: customerError } = await (supabaseAdmin as any)
         .from("customers")
         .upsert({
           user_id: authUser.id,
           name: data.name,
           onboarding_complete: true,
-          tenant_id: tenant.id
+          tenant_id: (tenant as any).id
         }, { onConflict: 'user_id' });
       if (customerError) console.error("Customer upsert error:", customerError);
     }
