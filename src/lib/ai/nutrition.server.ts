@@ -47,13 +47,15 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
     - Track: ${programTrack}
 
     STRICT RULES FOR SYNERGETIC PRODUCTS (C9/DX4):
-    1. You MUST integrate the specific program supplements into the meal slots.
+    1. You MUST integrate the specific program supplements into the meal slots for EVERY day of the 9-day plan.
     2. For C9 (standard):
-       - Morning: 2X Garcinia Plus (30 min before Aloe), 120ml Aloe Vera Gel, 1X Forever Therm.
-       - Breakfast: 1X Forever Lite Ultra (Shake), 1X Forever Fiber (separate from Lite Ultra).
-       - Lunch: 2X Garcinia Plus (30 min before Aloe), 120ml Aloe Vera Gel, 1X Forever Therm.
-       - Snack: 120ml Aloe Vera Gel.
-       - Dinner: 2X Garcinia Plus (30 min before Aloe), 120ml Aloe Vera Gel.
+       - Morning Ritual: 2X Forever Garcinia Plus (wait 30 min), then 120ml Forever Aloe Vera Gel + 1X Forever Therm.
+       - Breakfast: 1X Forever Lite Ultra (Shake), 1X Forever Fiber (taken separately with water).
+       - Lunch: 2X Forever Garcinia Plus (wait 30 min), 120ml Forever Aloe Vera Gel + 1X Forever Therm.
+       - Snack: 120ml Forever Aloe Vera Gel.
+       - Dinner: 2X Forever Garcinia Plus (wait 30 min), 120ml Forever Aloe Vera Gel.
+    3. Ensure the product names are exact and formatted clearly.
+
     3. Ensure the product names are exact: "Forever Aloe Vera Gel", "Forever Garcinia Plus", "Forever Lite Ultra", "Forever Therm", "Forever Fiber".
     4. Portions and timings MUST match the grounding knowledge for the current Day (Reset phase vs Build phase).
     5. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
@@ -96,6 +98,10 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 
   try {
     const result = await callGemini(geminiKey, prompt);
+    
+    // Final check: if AI failed to include products in its JSON, we don't fix it here 
+    // but the prompt is now much stricter.
+
     
     // Log success
     await logAiGeneration(supabase, {

@@ -150,6 +150,7 @@ function TodayPage() {
 
   const handleToggleTask = async (taskId: string, isCompleted: boolean) => {
     try {
+      // Optimitic UI update is harder with current structure, so we just mutate
       await toggleTaskFn({
         data: {
           customerId: customer.id,
@@ -159,11 +160,14 @@ function TodayPage() {
           dayNumber: dayNumber
         }
       });
-      queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] });
-    } catch (err) {
-      toast.error("Failed to update task");
+      // Force immediate refetch
+      await queryClient.invalidateQueries({ queryKey: ['today', tenantSlug] });
+    } catch (err: any) {
+      console.error("Task update error:", err);
+      toast.error(err.message || "Failed to update task");
     }
   };
+
 
   const updateWater = async (count: number) => {
     try {
@@ -371,14 +375,15 @@ function TodayPage() {
                           (c: any) => c.day_task_id === task.id
                         ) || false;
                         return (
-                          <button 
+                          <div 
                             key={task.id}
                             onClick={() => handleToggleTask(task.id, isCompleted)}
                             className={cn(
-                              "w-full flex items-center gap-4 p-5 rounded-[2rem] border transition-all duration-300 text-left",
+                              "w-full flex items-center gap-4 p-5 rounded-[2rem] border transition-all duration-300 text-left cursor-pointer active:scale-[0.98] group",
                               isCompleted ? "bg-slate-50 border-slate-100 opacity-60" : "bg-white border-slate-100 shadow-sm hover:border-health-green/20"
                             )}
                           >
+
                             <div className={cn(
                               "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all border-2",
                               isCompleted ? "bg-health-green border-health-green text-slate-900" : "bg-slate-50 border-slate-100 text-slate-200"
@@ -399,7 +404,8 @@ function TodayPage() {
                                 </p>
                               )}
                             </div>
-                          </button>
+                          </div>
+
                         );
                       })}
                     </div>
@@ -427,17 +433,19 @@ function TodayPage() {
                 { label: 'Steady', icon: Meh, color: 'text-blue-400' },
                 { label: 'High', icon: Smile, color: 'text-health-green' }
             ].map(mood => (
-                <button
+                <div
                     key={mood.label}
                     onClick={() => updateLogFn({ data: { customerId: customer.id, logDate: data.todayStr!, dayNumber, mood: mood.label }})}
                     className={cn(
-                        "flex flex-col items-center gap-4 py-8 rounded-[2rem] transition-all border-2",
+                        "flex flex-col items-center gap-4 py-8 rounded-[2rem] transition-all border-2 cursor-pointer active:scale-[0.98]",
                         dailyLog?.mood === mood.label ? "bg-health-green border-health-green text-slate-900 shadow-xl shadow-health-green/20" : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
                     )}
                 >
+
                     <mood.icon className={cn("w-8 h-8", dailyLog?.mood === mood.label ? "text-white" : mood.color)} />
                     <span className="text-[10px] font-black uppercase tracking-widest">{mood.label}</span>
-                </button>
+                </div>
+
             ))}
         </div>
       </section>
