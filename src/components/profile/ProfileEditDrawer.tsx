@@ -149,7 +149,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         <div className="space-y-8 pb-32">
           {section.fields.map(field => (
             <div key={field.key} className="space-y-3">
-              <Label className="text-[11px] uppercase font-black text-ink tracking-[0.2em] ml-1">{field.label}</Label>
+              <Label className="text-[11px] uppercase font-black text-slate-800 tracking-[0.2em] ml-1">{field.label}</Label>
               <div className="relative group">
                 {renderField(field)}
                 <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-focus-within:border-health-green/20 pointer-events-none transition-all" />
