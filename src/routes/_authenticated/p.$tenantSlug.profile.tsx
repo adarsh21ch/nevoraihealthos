@@ -281,8 +281,8 @@ function ProfilePage() {
                   <Download className="w-8 h-8" />
                 </div>
                 <div className="text-left">
-                  <h4 className="text-lg font-bold">C9 Guidebook 2026</h4>
-                  <p className="text-[11px] font-black uppercase tracking-widest text-emerald-100/60 mt-1">Download official PDF</p>
+                  <h4 className="text-lg font-bold">Protocol Guide 2026</h4>
+                  <p className="text-[11px] font-black uppercase tracking-widest text-emerald-100/60 mt-1">View official guide</p>
                 </div>
               </div>
               <Download className="w-6 h-6 text-white/40 group-hover:text-white transition-all" />

@@ -28,6 +28,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin/access-codes'
 import { Route as AdminKnowledgeRouteImport } from './routes/admin/knowledge'
+import { Route as AdminMediaRouteImport } from './routes/admin/media'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminProgramsRouteImport } from './routes/admin/programs'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
@@ -150,6 +151,11 @@ const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
 const AdminKnowledgeRoute = AdminKnowledgeRouteImport.update({
   id: '/knowledge',
   path: '/knowledge',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
@@ -327,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/knowledge': typeof AdminKnowledgeRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -374,6 +381,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/knowledge': typeof AdminKnowledgeRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -425,6 +433,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/knowledge': typeof AdminKnowledgeRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -476,6 +485,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/access-codes'
     | '/admin/knowledge'
+    | '/admin/media'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -523,6 +533,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/access-codes'
     | '/admin/knowledge'
+    | '/admin/media'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -573,6 +584,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/access-codes'
     | '/admin/knowledge'
+    | '/admin/media'
     | '/admin/products'
     | '/admin/programs'
     | '/admin/settings'
@@ -758,6 +770,13 @@ declare module '@tanstack/react-router' {
       path: '/knowledge'
       fullPath: '/admin/knowledge'
       preLoaderRoute: typeof AdminKnowledgeRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/products': {
@@ -1011,6 +1030,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAccessCodesRoute: typeof AdminAccessCodesRoute
   AdminKnowledgeRoute: typeof AdminKnowledgeRoute
+  AdminMediaRoute: typeof AdminMediaRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -1025,6 +1045,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAccessCodesRoute: AdminAccessCodesRoute,
   AdminKnowledgeRoute: AdminKnowledgeRoute,
+  AdminMediaRoute: AdminMediaRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminProgramsRoute: AdminProgramsRoute,
   AdminSettingsRoute: AdminSettingsRoute,

@@ -93,8 +93,8 @@ function KitPage() {
               className="bg-white p-6 rounded-3xl flex items-center justify-between group shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
             >
               <div className="text-left">
-                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Official C9 Booklet</h4>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Full 2026 Protocol PDF</p>
+                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Program Guide</h4>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Full 2026 Protocol Guide</p>
               </div>
               <Download className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
             </a>
