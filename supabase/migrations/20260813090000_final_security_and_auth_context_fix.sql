@@ -88,7 +88,6 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     SELECT id INTO _user_id FROM auth.users WHERE email = _email;
     
@@ -100,7 +99,6 @@ BEGIN
         INSERT INTO public.user_roles (user_id, role) VALUES (_user_id, 'platform_admin'::public.app_role);
         
         UPDATE auth.users 
-        SET encrypted_password = crypt(_password, gen_salt('bf')),
             email_confirmed_at = COALESCE(email_confirmed_at, now()),
             confirmed_at = COALESCE(confirmed_at, now())
         WHERE id = _user_id;

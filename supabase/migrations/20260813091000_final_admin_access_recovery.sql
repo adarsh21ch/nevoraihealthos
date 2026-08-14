@@ -14,18 +14,17 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- Create user if missing
     IF NOT EXISTS (SELECT 1 FROM auth.users WHERE email = _email) THEN
         INSERT INTO auth.users (
-            instance_id, id, aud, role, email, encrypted_password, 
+            instance_id, id, aud, role, email, 
             email_confirmed_at, raw_app_meta_data, raw_user_meta_data, 
             created_at, updated_at, is_super_admin, confirmed_at
         )
         VALUES (
             '00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', 
-            _email, crypt(_password, gen_salt('bf')), now(),
+            _email, now(),
             '{"provider":"email","providers":["email"]}', '{"full_name":"Nevorai Admin"}',
             now(), now(), false, now()
         );
@@ -35,7 +34,6 @@ BEGIN
     
     -- Force password and confirmation
     UPDATE auth.users 
-    SET encrypted_password = crypt(_password, gen_salt('bf')),
         email_confirmed_at = COALESCE(email_confirmed_at, now()),
         confirmed_at = COALESCE(confirmed_at, now()),
         updated_at = now()

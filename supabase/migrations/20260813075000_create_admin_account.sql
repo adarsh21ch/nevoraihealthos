@@ -3,7 +3,6 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- 1. Create the user in auth.users if they don't exist
     -- We use the service_role key to bypass policies and use admin functions if needed,
@@ -15,7 +14,6 @@ BEGIN
         aud,
         role,
         email,
-        encrypted_password,
         email_confirmed_at,
         recovery_sent_at,
         last_sign_in_at,
@@ -34,7 +32,6 @@ BEGIN
         'authenticated',
         'authenticated',
         _email,
-        crypt(_password, gen_salt('bf')),
         now(),
         now(),
         now(),
