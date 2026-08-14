@@ -23,6 +23,8 @@
   --color-accent: #10B981; /* Health Green (Emerald 500) */
   --color-accent-soft: #ECFDF5;
   --color-primary: #064E3B; /* Deep Forest (Emerald 900) */
+  --color-health-green: #10B981;
+  --color-health-green-dark: #059669;
   --color-surface: #F8FAFC; /* Crisp White/Slate */
   --color-ink: #0F172A; /* Deep Navy Ink */
   --color-muted: #64748B;

@@ -350,7 +350,7 @@ function OnboardingPage() {
                           onClick={() => updateField('goal', g)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.goal === g ? "bg-health-green text-white border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.goal === g ? "bg-health-green text-slate-900 border-health-green shadow-lg shadow-health-green/20" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {g}
@@ -397,11 +397,11 @@ function OnboardingPage() {
                           onClick={() => updateField('activity_level', a.id)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left transition-all",
-                            formData.activity_level === a.id ? "bg-health-green text-white border-health-green shadow-lg" : "border-slate-100 text-slate-600 hover:border-slate-200"
+                            formData.activity_level === a.id ? "bg-health-green text-slate-900 border-health-green shadow-lg" : "border-slate-100 text-slate-600 hover:border-slate-200"
                           )}
                         >
-                          <div className={cn("text-[10px] font-black uppercase tracking-widest mb-1", formData.activity_level === a.id ? "text-white" : "text-ink")}>{a.label}</div>
-                          <div className={cn("text-[10px] font-medium opacity-70", formData.activity_level === a.id ? "text-white" : "text-slate-400")}>{a.desc}</div>
+                          <div className={cn("text-[10px] font-black uppercase tracking-widest mb-1", formData.activity_level === a.id ? "text-slate-900" : "text-ink")}>{a.label}</div>
+                          <div className={cn("text-[10px] font-medium opacity-70", formData.activity_level === a.id ? "text-slate-900" : "text-slate-400")}>{a.desc}</div>
                         </button>
                       ))}
                     </div>
@@ -472,7 +472,7 @@ function OnboardingPage() {
                           onClick={() => updateField('cooking_access', c)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.cooking_access === c ? "bg-health-green text-white border-health-green shadow-lg" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.cooking_access === c ? "bg-health-green text-slate-900 border-health-green shadow-lg" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {c}
@@ -590,13 +590,15 @@ function OnboardingPage() {
             )}
             <Button 
               onClick={step === STEPS.length - 1 ? finish : next} 
-              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
               disabled={isSaving}
             >
               {isSaving ? (
                 <Loader2 className="animate-spin w-5 h-5" />
               ) : (
-                step === STEPS.length - 1 ? "Start Journey" : "Continue"
+                <span className="relative z-10">
+                  {step === STEPS.length - 1 ? "Start Journey" : "Continue"}
+                </span>
               )}
             </Button>
           </div>
