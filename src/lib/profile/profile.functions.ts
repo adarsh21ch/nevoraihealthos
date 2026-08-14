@@ -27,6 +27,7 @@ export interface ParticipantProfile {
   health_concerns: string | null;
   onboarding_complete: boolean;
   track: string | null;
+  preferred_language: string | null;
 }
 
 export const getMyProfile = createServerFn({ method: "GET" })
@@ -67,6 +68,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     meal_timing: z.any().nullable().optional(),
     health_concerns: z.string().nullable().optional(),
     track: z.string().nullable().optional(),
+    preferred_language: z.string().nullable().optional(),
     onboarding_complete: z.boolean().optional()
   }).parse)
   .handler(async ({ context, data }) => {
