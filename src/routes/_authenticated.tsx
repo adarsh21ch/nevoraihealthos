@@ -58,7 +58,13 @@ export const Route = createFileRoute('/_authenticated')({
 
       // Gating logic
       if (location.pathname.startsWith('/admin')) {
-        if (role !== 'platform_admin' && role !== 'admin') throw redirect({ to: '/login' });
+        // Handled by admin route beforeLoad, but for safety:
+        if (role !== 'platform_admin' && role !== 'admin') {
+          // If we are a known admin email but RPC failed, we might be here
+          if (!(user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com')) {
+            throw redirect({ to: '/login' });
+          }
+        }
       } else if (location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
         if (role !== 'tenant_owner' && role !== 'coach' && role !== 'admin' && role !== 'platform_admin') throw redirect({ to: '/login' });
       } else if (location.pathname.startsWith('/p/')) {

@@ -25,25 +25,31 @@ export const Route = createFileRoute("/login")({
       throw redirect({ to: "/admin" });
     }
 
-    const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
+    try {
+      const { data: authContext } = await supabase.rpc("get_my_auth_context");
+      const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
 
-    if (role === "platform_admin") throw redirect({ to: "/admin" });
-    if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
-    
-    if ((role === "customer" || role === "participant") && tenant_slug) {
-      if (context.tenant && context.tenant.slug !== tenant_slug) {
-        const { tenantSiteUrl } = await import("@/lib/tenant");
-        const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
-        window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
-        return;
+      if (role === "platform_admin") throw redirect({ to: "/admin" });
+      if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
+      
+      if ((role === "customer" || role === "participant") && tenant_slug) {
+        if (context.tenant && context.tenant.slug !== tenant_slug) {
+          const { tenantSiteUrl } = await import("@/lib/tenant");
+          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
+          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+          return;
+        }
+
+        throw redirect(
+          onboarding_complete
+            ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
+            : { to: "/onboarding" },
+        );
       }
-
-      throw redirect(
-        onboarding_complete
-          ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
-          : { to: "/onboarding" },
-      );
+    } catch (e) {
+      // If RPC fails or we get a 307 redirect, rethrow it
+      if (e instanceof Error && (e as any).status === 307) throw e;
+      console.warn("Login beforeLoad check failed:", e);
     }
   },
   component: LoginPage,
