@@ -18,8 +18,8 @@ export const Route = createFileRoute('/_authenticated')({
       });
     }
 
-    // Platform Admin Hardcode - Fastest path for main admin
-    if (user.email === 'teamnevorai@gmail.com') {
+    // Platform Admin Hardcode - Fastest path for main admins
+    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
       return { 
         authContext: {
           role: 'platform_admin',
