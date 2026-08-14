@@ -18,8 +18,6 @@ import {
 const LANGUAGES = [
   { label: 'English', value: 'English' },
   { label: 'Hindi', value: 'Hindi' },
-  { label: 'Gujarati', value: 'Gujarati' },
-  { label: 'Marathi', value: 'Marathi' },
 ];
 
 interface SidebarProps {

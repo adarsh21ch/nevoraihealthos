@@ -133,7 +133,7 @@ function ProfilePage() {
       title: 'Preferences',
       icon: Languages,
       fields: [
-        { label: 'AI Response Language', value: profile.preferred_language, key: 'preferred_language', options: ['English', 'Hindi', 'Gujarati', 'Marathi'] }
+        { label: 'AI Response Language', value: profile.preferred_language, key: 'preferred_language', options: ['English', 'Hindi'] }
       ]
     }
   ];
