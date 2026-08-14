@@ -187,6 +187,7 @@ export type Database = {
           name: string
           onboarding_complete: boolean
           phone: string | null
+          preferred_language: string | null
           program_id: string | null
           share_consent: boolean
           start_date: string | null
@@ -225,6 +226,7 @@ export type Database = {
           name?: string
           onboarding_complete?: boolean
           phone?: string | null
+          preferred_language?: string | null
           program_id?: string | null
           share_consent?: boolean
           start_date?: string | null
@@ -263,6 +265,7 @@ export type Database = {
           name?: string
           onboarding_complete?: boolean
           phone?: string | null
+          preferred_language?: string | null
           program_id?: string | null
           share_consent?: boolean
           start_date?: string | null
@@ -718,6 +721,7 @@ export type Database = {
           generated_at: string | null
           id: string
           knowledge_version: string | null
+          language: string | null
           model_info: string | null
           participant_id: string
           plan_data: Json
@@ -735,6 +739,7 @@ export type Database = {
           generated_at?: string | null
           id?: string
           knowledge_version?: string | null
+          language?: string | null
           model_info?: string | null
           participant_id: string
           plan_data: Json
@@ -752,6 +757,7 @@ export type Database = {
           generated_at?: string | null
           id?: string
           knowledge_version?: string | null
+          language?: string | null
           model_info?: string | null
           participant_id?: string
           plan_data?: Json
