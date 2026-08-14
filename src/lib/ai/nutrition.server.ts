@@ -62,13 +62,18 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 
     STRICT RULES:
     1. DO NOT use generic AI knowledge for program rules. If a rule isn't in GROUNDING KNOWLEDGE, state: "Not available in approved knowledge base."
-    2. PRIORITIZE Indian eating patterns and foods found in the food list. Use regional terms (e.g., Dal, Sabzi, Paneer, Roti).
-    3. Respect dietary preferences and allergies strictly. If "None" is in Avoids, ignore it; otherwise, exclude those ingredients.
-    4. Provide 5 meal slots: Morning, Breakfast, Lunch, Snack, Dinner.
-    5. Each meal MUST have: Name, Approved Foods, Portions, Protein (if applicable), and one Alternative.
-    6. Portions must follow ${programTrack} guidelines from Grounding Knowledge.
-    7. DO NOT invent medical advice.
-    8. RETURN ONLY VALID JSON.
+    2. Indian Diet Focus: Prioritize regional Indian eating patterns and ingredients found in the Indian market (Dal, Sabzi, Paneer, Roti, Curd, Poha). Ensure recipes use spices and items available in general Indian homes (Delhi/Urban focus).
+    3. Diet Preferences (STRICT):
+       - Vegetarian: No meat, no eggs, no fish.
+       - Egg-Inclusive: No meat, no fish, but eggs allowed.
+       - Non-Vegetarian: All allowed.
+       - Vegan: No animal products (no dairy, no honey).
+    4. Respect allergies strictly. Exclude those ingredients.
+    5. Provide 5 meal slots: Morning Ritual, Breakfast, Lunch, Snack, Dinner.
+    6. Each meal MUST have: Name, Approved Foods, Portions, Protein (if applicable), and one Alternative.
+    7. Portions must follow ${programTrack} guidelines from Grounding Knowledge.
+    8. DO NOT invent medical advice.
+    9. RETURN ONLY VALID JSON.
 
     
     JSON Structure:

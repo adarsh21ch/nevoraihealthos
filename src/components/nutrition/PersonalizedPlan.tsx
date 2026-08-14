@@ -14,7 +14,8 @@ import {
   Activity,
   Droplets,
   Flame,
-  Clock
+  Clock,
+  UserEdit
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,49 @@ import { getISTDateString } from "@/lib/date-utils";
 import { toast } from "sonner";
 import { Link, useParams } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ProfileEditDrawer } from "@/components/profile/ProfileEditDrawer";
+
+const SECTIONS_CONFIG = [
+  { id: 'personal', title: 'Personal', key: 'personal', fields: ['name', 'dob', 'gender'] },
+  { id: 'body', title: 'Body', key: 'body', fields: ['height_cm', 'weight_kg', 'waist_cm'] },
+  { id: 'goals', title: 'Goals', key: 'goals', fields: ['goal', 'target_weight_kg'] },
+  { id: 'lifestyle', title: 'Lifestyle', key: 'lifestyle', fields: ['activity_level', 'lifestyle'] },
+  { id: 'diet', title: 'Diet', key: 'diet', fields: ['diet_preference', 'cooking_access'] },
+  { id: 'health', title: 'Safety / Health', key: 'health', fields: ['allergies', 'health_concerns'] }
+];
+
+const FIELDS_MAP: Record<string, any> = {
+  name: { label: 'Name', section: 'personal' },
+  dob: { label: 'Date of Birth', section: 'personal', type: 'date' },
+  gender: { label: 'Sex', section: 'personal', options: ['Male', 'Female', 'Other'] },
+  height_cm: { label: 'Height', section: 'body', type: 'number' },
+  weight_kg: { label: 'Weight', section: 'body', type: 'number' },
+  waist_cm: { label: 'Waist', section: 'body', type: 'number' },
+  goal: { label: 'Primary Goal', section: 'goals', options: ['Weight Loss', 'Weight Management', 'Body Composition', 'Energy & Habits'] },
+  target_weight_kg: { label: 'Target Weight', section: 'goals', type: 'number' },
+  activity_level: { label: 'Activity Level', section: 'lifestyle', options: ['sedentary', 'light', 'moderate', 'very'] },
+  lifestyle: { label: 'Lifestyle', section: 'lifestyle', options: ['Office Worker', 'Business Owner', 'Student', 'Homemaker', 'Shift Worker', 'Retired'] },
+  diet_preference: { label: 'Dietary Preference', section: 'diet', options: ['Vegetarian', 'Non-Vegetarian', 'Egg-Inclusive', 'Vegan'] },
+  cooking_access: { label: 'Cooking Access', section: 'diet', options: ['Full Kitchen', 'Basic Access', 'Limited (Hostel/Office)', 'No Cooking'] },
+  allergies: { label: 'Allergies', section: 'health' },
+  health_concerns: { label: 'Health Concerns', section: 'health', type: 'textarea' }
+};
+
+function getSectionForField(fieldKey: string) {
+  const fieldConfig = FIELDS_MAP[fieldKey];
+  if (!fieldConfig) return null;
+  const section = SECTIONS_CONFIG.find(s => s.id === fieldConfig.section);
+  if (!section) return null;
+  
+  return {
+    ...section,
+    fields: section.fields.map(f => ({
+      ...FIELDS_MAP[f],
+      key: f,
+      value: null // Will be populated from profile
+    }))
+  };
+}
 
 export function PersonalizedPlan() {
   const queryClient = useQueryClient();
@@ -86,6 +130,8 @@ export function PersonalizedPlan() {
     }
   });
 
+  const [activeEditSection, setActiveEditSection] = useState<any>(null);
+
   if (isReadinessLoading || (readiness?.ready && isPlanLoading)) {
     return (
       <div className="space-y-10 py-4">
@@ -129,29 +175,56 @@ export function PersonalizedPlan() {
            <div className="space-y-4 pt-2">
              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200 pb-2 block">Missing Information:</span>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-               {readiness.missing.slice(0, 6).map((m: any) => (
-                 <div key={m.field} className="flex items-center gap-2.5 text-slate-700 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
-                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
+               {readiness.missing.slice(0, 10).map((m: any) => (
+                 <button 
+                  key={m.field} 
+                  onClick={() => {
+                    const section = getSectionForField(m.field);
+                    if (section) setActiveEditSection(section);
+                  }}
+                  className="flex items-center gap-2.5 text-slate-700 bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:border-health-green/20 hover:bg-emerald-50/20 transition-all text-left group"
+                 >
+                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 group-hover:text-health-green" />
                     <span className="text-xs font-bold leading-none">{m.label}</span>
-                 </div>
+                 </button>
                ))}
-               {readiness.missing.length > 6 && (
+               {readiness.missing.length > 10 && (
                  <div className="flex items-center justify-center p-3">
-                    <span className="text-[10px] font-bold text-slate-400 italic">+{readiness.missing.length - 6} more details</span>
+                    <span className="text-[10px] font-bold text-slate-400 italic">+{readiness.missing.length - 10} more details</span>
                  </div>
                )}
              </div>
            </div>
         </div>
 
-        <Button 
-          asChild
-          className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100 flex items-center justify-center transition-all duration-300"
-        >
-          <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: tenantSlug as any }}>
-            Complete Profile
-          </Link>
-        </Button>
+        <div className="flex flex-col gap-4">
+          <Button 
+            onClick={() => {
+              const firstMissing = readiness.missing[0]?.field;
+              const section = getSectionForField(firstMissing);
+              if (section) setActiveEditSection(section);
+            }}
+            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green/90 text-white font-bold text-sm shadow-xl shadow-emerald-100 flex items-center justify-center transition-all duration-300"
+          >
+            Complete Profile Now
+          </Button>
+          <Button 
+            variant="ghost" 
+            asChild
+            className="text-[10px] font-black uppercase tracking-widest text-slate-400"
+          >
+            <Link to="/p/$tenantSlug/profile" params={{ tenantSlug: tenantSlug as any }}>
+              View Full Profile
+            </Link>
+          </Button>
+        </div>
+
+        <ProfileEditDrawer 
+          isOpen={!!activeEditSection} 
+          onClose={() => setActiveEditSection(null)} 
+          section={activeEditSection}
+          profile={profile}
+        />
       </div>
     );
   }
