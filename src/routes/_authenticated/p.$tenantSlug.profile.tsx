@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { 
   User, 
@@ -16,16 +16,38 @@ import {
   BookOpen,
   Download,
   Key,
-  Languages
+  Languages,
+  RefreshCcw,
+  AlertTriangle,
+  Mail,
+  Phone,
+  Calendar,
+  Weight,
+  Zap,
+  HelpCircle,
+  Activity
 } from 'lucide-react';
 import { useLoaderData } from '@tanstack/react-router';
 import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
 import { Button } from '@/components/ui/button';
 import { useServerFn } from '@tanstack/react-start';
-import { getMyProfile, validateProfileReadiness } from '@/lib/profile/profile.functions';
+import { getMyProfile, validateProfileReadiness, resetParticipantDay } from '@/lib/profile/profile.functions';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { ProfileEditDrawer } from '@/components/profile/ProfileEditDrawer';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { supabase } from '@/integrations/supabase/client';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/profile')({
   component: ProfilePage,
