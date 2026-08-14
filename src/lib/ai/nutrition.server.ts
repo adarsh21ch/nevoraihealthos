@@ -108,7 +108,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       distributor_id: customer.distributor_id,
       participant_id: customer.user_id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-1.5-flash-v1-fallback',
+      model: 'gemini-3.7-flash',
       status: 'SUCCESS'
     });
 
@@ -119,7 +119,7 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
       distributor_id: customer.distributor_id,
       participant_id: customer.user_id,
       generation_type: 'NUTRITION_PLAN',
-      model: 'gemini-1.5-flash-v1-fallback',
+      model: 'gemini-3.7-flash',
       status: 'FAILURE',
       error_message: error.message
     });
