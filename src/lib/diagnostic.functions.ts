@@ -9,8 +9,10 @@ export const runAdminDiagnostic = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     // 1. Get user by email
-    const { data: { users }, error: authError } = await supabaseAdmin.auth.admin.listUsers();
-    const user = users.find(u => u.email === data.email);
+    const { data: userData, error: authError } = await supabaseAdmin.auth.admin.listUsers();
+    if (authError) return { status: 'error', message: authError.message };
+    
+    const user = userData.users.find((u: any) => u.email === data.email);
     
     if (!user) {
       return { status: 'error', message: `User ${data.email} not found in Auth` };
@@ -29,3 +31,4 @@ export const runAdminDiagnostic = createServerFn({ method: "POST" })
       rolesError
     };
   });
+
