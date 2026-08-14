@@ -150,17 +150,7 @@ function TodayPage() {
 
   const handleToggleTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      // Background signout
-      await supabase.auth.signOut();
-      
-      // Clear session local data
-      window.localStorage.removeItem('sb-fat2fit-auth-token'); 
-      
-      // Navigate to login
-      navigate({ to: '/login', replace: true });
-      toast.success("Logged out successfully");
-    } catch (err) {
-
+      await toggleTaskFn({
         data: {
           customerId: customer.id,
           dayTaskId: taskId,
@@ -176,6 +166,7 @@ function TodayPage() {
       toast.error(err.message || "Failed to update task");
     }
   };
+
 
 
   const updateWater = async (count: number) => {
