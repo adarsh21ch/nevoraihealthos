@@ -65,7 +65,7 @@ function Index() {
             <span className="inline-block px-5 py-2 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-emerald-200">
               9-Day Program
             </span>
-            <h1 className="text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12">
+            <h1 className="text-5xl sm:text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12 break-words sm:break-normal">
               9-Day Reset. <br/><span className="relative inline-block mt-4"><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em]">Get Healthy.</span><motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.8, duration: 0.6 }} className="absolute -bottom-2 left-0 right-0 h-4 bg-emerald-400/20 -z-10 origin-left" /></span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
