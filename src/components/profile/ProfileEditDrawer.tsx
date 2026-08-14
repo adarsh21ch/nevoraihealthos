@@ -92,12 +92,12 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     if (field.type === 'select' || field.options) {
       return (
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all">
+          <SelectTrigger className="h-14 rounded-2xl border-2 border-slate-100 bg-slate-50/50 px-5 text-sm font-black text-slate-900 focus:ring-0 focus:border-health-green transition-all shadow-sm">
             <SelectValue placeholder={`Select ${field.label}`} />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
             {field.options?.map((opt: string) => (
-              <SelectItem key={opt} value={opt} className="rounded-xl py-3 focus:bg-emerald-50 focus:text-health-green font-bold text-sm">
+              <SelectItem key={opt} value={opt} className="rounded-xl py-3 focus:bg-emerald-50 focus:text-emerald-900 font-black text-sm text-slate-800">
                 {opt}
               </SelectItem>
             ))}
@@ -111,7 +111,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         <Textarea 
           value={value} 
           onChange={e => onChange(e.target.value)}
-          className="min-h-[120px] rounded-2xl border-slate-100 bg-slate-50/50 p-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all resize-none"
+          className="min-h-[120px] rounded-2xl border-2 border-slate-100 bg-slate-50/50 p-5 text-sm font-black text-slate-900 focus:ring-0 focus:border-health-green transition-all resize-none shadow-sm"
           placeholder={`Enter ${field.label.toLowerCase()}...`}
         />
       );
@@ -122,7 +122,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         type={field.type || 'text'}
         value={value} 
         onChange={e => onChange(e.target.value)}
-        className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all"
+        className="h-14 rounded-2xl border-2 border-slate-100 bg-slate-50/50 px-5 text-sm font-black text-slate-900 focus:ring-0 focus:border-health-green transition-all shadow-sm"
         placeholder={field.label}
       />
     );
@@ -149,7 +149,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         <div className="space-y-8 pb-32">
           {section.fields.map(field => (
             <div key={field.key} className="space-y-3">
-              <Label className="text-[11px] uppercase font-black text-ink tracking-[0.2em] ml-1">{field.label}</Label>
+              <Label className="text-[11px] uppercase font-black text-slate-800 tracking-[0.2em] ml-1">{field.label}</Label>
               <div className="relative group">
                 {renderField(field)}
                 <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-focus-within:border-health-green/20 pointer-events-none transition-all" />
