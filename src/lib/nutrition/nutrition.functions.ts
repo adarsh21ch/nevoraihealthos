@@ -153,7 +153,7 @@ export const generateMyPersonalizedPlan = createServerFn({ method: "POST" })
       .from(table)
       .insert({
         participant_id: userId,
-        distributor_id: (customer as any).distributor_id,
+        tenant_id: (customer as any).distributor_id, // Map frontend distributor_id to schema tenant_id
         status: 'PUBLISHED',
         plan_data: planResult,
         model_info: modelUsed,
