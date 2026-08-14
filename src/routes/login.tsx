@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import * as React from "react";
 import { resolveLoginIdentifier, createCustomerAccount } from "@/lib/auth.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { resolveUserDestination } from "@/lib/auth-gate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,54 +39,25 @@ function LoginPage() {
   
   React.useEffect(() => {
     const checkInitialSession = async () => {
+      // Synchronous storage check first to avoid timing race
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (session) {
-        console.log("Existing session found, performing role-based redirect...");
+        console.log("Existing session found, performing unified redirect...");
+        const { to } = await resolveUserDestination(session.user);
         
-        // Fast-track redirects for known admins
-        if (session.user.email === 'teamnevorai@gmail.com') {
-          window.location.replace(window.location.origin + '/admin');
-          return;
-        }
-        if (session.user.email === 'krishnaaroraflp@gmail.com') {
-          window.location.replace(window.location.origin + '/owner');
-          return;
-        }
-
-        try {
-          const { data: authContext } = await supabase.rpc("get_my_auth_context");
-          const { role, tenant_slug, onboarding_complete, custom_domain } = (authContext ?? { 
-            role: 'participant', 
-            tenant_slug: 'fat2fit',
-            onboarding_complete: false 
-          }) as any;
-
-          if (role === "platform_admin") {
-            window.location.replace(window.location.origin + '/admin');
-            return;
-          }
-          if (role === "tenant_owner") {
-            window.location.replace(window.location.origin + '/owner');
-            return;
-          }
-          
-          const effectiveSlug = tenant_slug || "fat2fit";
-          const { tenantSiteUrl } = await import("@/lib/tenant");
-          const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
-          const finalPath = onboarding_complete ? "/today" : "/onboarding";
-          
-          // Use replace to avoid back-button loops
-          window.location.replace(`${targetUrl}${finalPath}`);
-        } catch (e) {
-          console.error("Session check failed:", e);
-          setIsAuthChecking(false);
+        // Use client-side navigate if possible, otherwise hard redirect if it's a different domain
+        if (to.startsWith('http')) {
+          window.location.replace(to);
+        } else {
+          navigate({ to: to as any });
         }
       } else {
         setIsAuthChecking(false);
       }
     };
     checkInitialSession();
-  }, []);
+  }, [navigate]);
 
   const resolveIdentifier = useServerFn(resolveLoginIdentifier);
 
@@ -124,49 +96,13 @@ function LoginPage() {
 
       console.log("Authenticated user:", user.email);
 
-      // Hardcoded platform admin redirect
-      if (user.email === 'teamnevorai@gmail.com') {
-        window.location.assign(window.location.origin + '/admin');
-        return;
-      }
-
-      // Krishna Owner Fast-track
-      if (user.email === 'krishnaaroraflp@gmail.com') {
-        window.location.assign(window.location.origin + '/owner');
-        return;
-      }
-
-      const { data: context } = await supabase.rpc("get_my_auth_context");
+      console.log("Login successful, resolving destination...");
+      const { to } = await resolveUserDestination(user);
       
-      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {
-        role: 'participant',
-        tenant_slug: 'fat2fit',
-        onboarding_complete: false
-      }) as any;
-
-      console.log("Identity resolved:", { role, tenant_slug, onboarding_complete });
-
-      if (role === "platform_admin") {
-        navigate({ to: "/admin" });
-      } else if (role === "tenant_owner") {
-        navigate({ to: "/owner" });
-      } else if (role === "participant" || role === "customer" || role === "distributor") {
-        const effectiveSlug = tenant_slug || "fat2fit";
-        
-        if (currentTenant && currentTenant.slug !== effectiveSlug) {
-          const { tenantSiteUrl } = await import("@/lib/tenant");
-          const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
-          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
-          return;
-        }
-
-        if (onboarding_complete) {
-          navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: effectiveSlug } });
-        } else {
-          navigate({ to: "/onboarding" });
-        }
+      if (to.startsWith('http')) {
+        window.location.href = to;
       } else {
-        navigate({ to: "/onboarding" });
+        navigate({ to: to as any });
       }
     } catch (error: any) {
       console.error("Login attempt failed:", error);

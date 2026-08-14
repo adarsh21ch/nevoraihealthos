@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
+import { resolveUserDestination } from '@/lib/auth-gate';
 import { ClientOnly } from '@/components/ui/client-only';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard, Users, LogOut, Key } from 'lucide-react';
@@ -9,20 +10,11 @@ import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/owner')({
   beforeLoad: async () => {
-    const { data: { session }, error: userError } = await supabase.auth.getSession();
-    if (userError || !session?.user) throw redirect({ to: "/login" });
-    const user = session.user;
-
-    if (user.email === 'krishnaaroraflp@gmail.com') return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect({ to: "/login" });
     
-    try {
-      const { data: context, error: rpcError } = await supabase.rpc("get_my_auth_context");
-      const role = (context as any)?.role;
-      if (rpcError || (role !== "tenant_owner" && role !== "admin" && role !== "platform_admin")) {
-        throw redirect({ to: "/p/fat2fit/today" as any });
-      }
-    } catch (e) {
-      if (e instanceof Error && (e as any).status === 307) throw e;
+    const { role } = await resolveUserDestination(session.user);
+    if (role !== "tenant_owner" && role !== "admin" && role !== "platform_admin") {
       throw redirect({ to: "/p/fat2fit/today" as any });
     }
   },
