@@ -70,7 +70,7 @@ export const askAiAssistant = createServerFn({ method: "POST" })
     // Get basic context
     const { data: customer } = await supabase
       .from("customers")
-      .select("name, track, program_id")
+      .select("name, track, program_id, preferred_language, distributor_id")
       .eq("user_id", userId)
       .single();
 
@@ -81,7 +81,8 @@ export const askAiAssistant = createServerFn({ method: "POST" })
       customerName: customer?.name || "Participant",
       track: (customer as any)?.track || "standard",
       customerId: userId,
-      distributorId: (customer as any)?.distributor_id
+      distributorId: (customer as any)?.distributor_id,
+      preferredLanguage: (customer as any)?.preferred_language
     });
 
     return { response };
