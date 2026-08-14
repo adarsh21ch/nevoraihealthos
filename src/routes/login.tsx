@@ -123,11 +123,15 @@ function LoginPage() {
 
       console.log("Authenticated user:", user.email);
 
-      // Hardcoded admin redirect (Highest Priority)
-      if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
-        console.log("Platform admin recognized, redirecting to /admin...");
-        // Use full URL to ensure clean state and bypass router transitions
+      // Hardcoded platform admin redirect
+      if (user.email === 'teamnevorai@gmail.com') {
         window.location.assign(window.location.origin + '/admin');
+        return;
+      }
+
+      // Krishna Owner Fast-track
+      if (user.email === 'krishnaaroraflp@gmail.com') {
+        window.location.assign(window.location.origin + '/owner');
         return;
       }
 
@@ -144,7 +148,7 @@ function LoginPage() {
       if (role === "platform_admin") {
         navigate({ to: "/admin" });
       } else if (role === "tenant_owner") {
-        navigate({ to: "/dashboard" });
+        navigate({ to: "/owner" });
       } else if (role === "participant" || role === "customer" || role === "distributor") {
         const effectiveSlug = tenant_slug || "fat2fit";
         
