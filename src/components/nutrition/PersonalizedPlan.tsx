@@ -163,18 +163,21 @@ export function PersonalizedPlan() {
           </p>
         </div>
         
-        <div className="bg-slate-50 rounded-3xl p-8 space-y-6 text-left border border-slate-100">
-           <div className="flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Profile Completion</span>
-              <span className="text-[11px] font-bold text-health-green bg-emerald-50 px-3 py-1 rounded-full">{readiness.percent || 0}%</span>
-           </div>
-           <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
-             <div className="h-full bg-health-green transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.3)]" style={{ width: `${readiness.percent || 0}%` }} />
+        <div className="bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-10 space-y-8 text-left shadow-sm">
+           <div className="flex justify-between items-center px-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Profile Completion</span>
+              <span className="text-xs font-black text-emerald-700 bg-white border border-emerald-100 px-4 py-1.5 rounded-full shadow-sm">{readiness.percent || 0}%</span>
            </div>
            
-           <div className="space-y-4 pt-2">
-             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200 pb-2 block">Missing Information:</span>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+           <div className="px-2">
+             <div className="w-full h-3 bg-slate-200/60 rounded-full overflow-hidden border border-slate-200/40">
+               <div className="h-full bg-health-green transition-all duration-1000 shadow-[0_0_15px_rgba(16,185,129,0.4)]" style={{ width: `${readiness.percent || 0}%` }} />
+             </div>
+           </div>
+           
+           <div className="space-y-5 px-2">
+             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 border-b-2 border-slate-200 pb-2.5 block">Required Information:</span>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                {readiness.missing.slice(0, 10).map((m: any) => (
                  <button 
                   key={m.field} 
@@ -182,15 +185,17 @@ export function PersonalizedPlan() {
                     const section = getSectionForField(m.field);
                     if (section) setActiveEditSection(section);
                   }}
-                  className="flex items-center gap-2.5 text-slate-700 bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:border-health-green/20 hover:bg-emerald-50/20 transition-all text-left group"
+                  className="flex items-center gap-3 text-ink bg-white p-5 rounded-2xl border-2 border-slate-100 shadow-sm hover:border-health-green hover:shadow-md hover:-translate-y-0.5 transition-all text-left group"
                  >
-                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 group-hover:text-health-green" />
-                    <span className="text-xs font-bold leading-none">{m.label}</span>
+                    <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
+                      <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 group-hover:text-health-green" />
+                    </div>
+                    <span className="text-[13px] font-black tracking-tight">{m.label}</span>
                  </button>
                ))}
                {readiness.missing.length > 10 && (
-                 <div className="flex items-center justify-center p-3">
-                    <span className="text-[10px] font-bold text-slate-400 italic">+{readiness.missing.length - 10} more details</span>
+                 <div className="flex items-center justify-center p-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">+{readiness.missing.length - 10} more details</span>
                  </div>
                )}
              </div>
