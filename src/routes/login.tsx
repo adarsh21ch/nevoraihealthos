@@ -21,7 +21,7 @@ export const Route = createFileRoute("/login")({
     if (!user) return;
 
     // Hardwired redirect if already signed in
-    if (user.email === 'teamnevorai@gmail.com') {
+    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
       throw redirect({ to: "/admin" });
     }
 
@@ -115,10 +115,13 @@ function LoginPage() {
         throw new Error("Authentication failed: No user session found");
       }
 
+      console.log("Authenticated user:", user.email);
+
       // Hardcoded admin redirect (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
-        window.location.href = '/admin'; // Direct navigation to avoid SPA state lag
+        // Use full URL to ensure clean state and bypass router transitions
+        window.location.assign(window.location.origin + '/admin');
         return;
       }
 
@@ -155,6 +158,7 @@ function LoginPage() {
         navigate({ to: "/onboarding" });
       }
     } catch (error: any) {
+      console.error("Login attempt failed:", error);
       setError(error.message || "Incorrect identifier or password");
     } finally {
       setIsLoading(false);

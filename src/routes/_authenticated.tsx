@@ -20,6 +20,7 @@ export const Route = createFileRoute('/_authenticated')({
 
     // Platform Admin Hardcode - Fastest path for main admins
     if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+      console.log("Root middleware recognizing platform admin:", user.email);
       return { 
         authContext: {
           role: 'platform_admin',
