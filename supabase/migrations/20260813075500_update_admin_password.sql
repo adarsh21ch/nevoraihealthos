@@ -3,7 +3,6 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- 1. Get user ID
     SELECT id INTO _user_id FROM auth.users WHERE email = _email;
@@ -11,7 +10,6 @@ BEGIN
     IF _user_id IS NOT NULL THEN
         -- Update password
         UPDATE auth.users 
-        SET encrypted_password = crypt(_password, gen_salt('bf')),
             updated_at = now()
         WHERE id = _user_id;
 
@@ -27,13 +25,13 @@ BEGIN
     ELSE
         -- Create user if not exists (fallback)
         INSERT INTO auth.users (
-            instance_id, id, aud, role, email, encrypted_password, 
+            instance_id, id, aud, role, email, 
             email_confirmed_at, raw_app_meta_data, raw_user_meta_data, 
             created_at, updated_at
         )
         VALUES (
             '00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', 
-            _email, crypt(_password, gen_salt('bf')), now(),
+            _email, now(),
             '{"provider":"email","providers":["email"]}', '{"full_name":"Nevorai Admin"}',
             now(), now()
         )

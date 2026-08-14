@@ -3,7 +3,6 @@ DO $$
 DECLARE
     _user_id UUID;
     _email TEXT := 'teamnevorai@gmail.com';
-    _password TEXT := 'REDACTED_IN_MIGRATION';
 BEGIN
     -- 1. Get user ID
     SELECT id INTO _user_id FROM auth.users WHERE email = _email;
@@ -11,7 +10,6 @@ BEGIN
     IF _user_id IS NOT NULL THEN
         -- Force correct password hash
         UPDATE auth.users 
-        SET encrypted_password = crypt(_password, gen_salt('bf')),
             updated_at = now(),
             email_confirmed_at = COALESCE(email_confirmed_at, now())
         WHERE id = _user_id;
