@@ -102,9 +102,9 @@ function AdminDashboard() {
 
 function RouteContent({ stats }: { stats: any[] }) {
 
-  const isOverview = window.location.pathname === '/admin' || window.location.pathname === '/admin/';
+  const isOverview = window.location.pathname === '/admin' || window.location.pathname === '/admin/' || window.location.pathname.endsWith('/admin') || window.location.pathname.endsWith('/admin/');
   
-  if (!isOverview) return null;
+  if (!isOverview) return <Outlet />;
 
 
   return (
