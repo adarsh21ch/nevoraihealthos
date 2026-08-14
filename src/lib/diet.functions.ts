@@ -10,8 +10,8 @@ export const getDietPlan = createServerFn({ method: "POST" })
     weight: z.number(),
     gender: z.enum(['male', 'female', 'other'])
   }).parse)
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  .handler(async ({ context, data }) => {
+    const { supabase } = context;
     
     const bmr = data.gender === 'male' 
       ? 10 * data.weight + 6.25 * data.height - 5 * data.age + 5
@@ -20,7 +20,7 @@ export const getDietPlan = createServerFn({ method: "POST" })
     const targetCalories = Math.round(bmr * 1.2);
 
     // Fetch Indian recipes
-    const { data: recipes } = await supabaseAdmin
+    const { data: recipes } = await supabase
       .from("recipes")
       .select("name, calories, ingredients, instructions")
       .eq("category", "600_cal")

@@ -10,10 +10,10 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     password: z.string().min(6),
   }).parse(data))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = await import("@/integrations/supabase/client");
 
     // 1. Check access code
-    const { data: creds, error: credsError } = await supabaseAdmin
+    const { data: creds, error: credsError } = await supabase
       .from("access_codes")
       .select("id")
       .eq("code", data.access_code)
@@ -23,6 +23,8 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     if (credsError || !creds) {
       throw new Error("Invalid or already used access code");
     }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 2. Create Auth User
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -84,16 +86,17 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
     identifier: z.string(),
   }).parse(data))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = await import("@/integrations/supabase/client");
 
     // Try finding by FBO ID in customers table
-    const { data: customer } = await supabaseAdmin
+    const { data: customer } = await supabase
       .from("customers")
       .select("user_id")
       .eq("fbo_id" as any, data.identifier)
       .maybeSingle();
       
     if (customer && customer.user_id) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
       if (user?.user?.email) {
         return { found: true, method: 'email' as const, value: user.user.email };
@@ -120,7 +123,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
       throw new Error("Unauthorized");
     }
 
-    const { data: customer, error: customerError } = await supabaseAdmin
+    const { data: customer, error: customerError } = await supabase
       .from("customers")
       .select("user_id")
       .eq("id", data.customerId)

@@ -31,9 +31,7 @@ export const getDistributors = createServerFn({ method: "GET" })
     const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from("distributors")
       .select("*")
       .order("created_at", { ascending: false });
@@ -52,13 +50,12 @@ export const updateAppSettings = createServerFn({ method: "POST" })
     results_disclaimer: z.string(),
   }).parse(data))
   .handler(async ({ context, data }) => {
-    const { userId } = context;
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabaseAdmin.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from("app_settings")
       .update(data)
       .eq("id", true);

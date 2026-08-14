@@ -9,13 +9,12 @@ export const uploadProductImage = createServerFn({ method: "POST" })
     imagePath: z.string(),
   }).parse)
   .handler(async ({ context, data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { userId } = context;
+    const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabaseAdmin.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from("products")
       .update({ image_url: data.imagePath })
       .eq("id", data.productId);
@@ -26,8 +25,8 @@ export const uploadProductImage = createServerFn({ method: "POST" })
 
 export const getProducts = createServerFn({ method: "GET" })
   .handler(async () => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { data, error } = await supabase
       .from("products")
       .select("*")
       .order("sort_order", { ascending: true });

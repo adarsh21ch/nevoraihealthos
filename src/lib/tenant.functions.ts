@@ -3,11 +3,11 @@ import { z } from "zod";
 
 export const getAppSettings = createServerFn({ method: "GET" })
   .handler(async () => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = await import("@/integrations/supabase/client");
     
-    const { data: settings, error } = await supabaseAdmin
+    const { data: settings, error } = await supabase
       .from('app_settings')
-      .select('*')
+      .select('brand_name, tagline, logo_url, booklet_url')
       .eq('id', true)
       .maybeSingle();
       
@@ -25,11 +25,11 @@ export const getTenantByHint = createServerFn({ method: "GET" })
     value: z.string()
   }).parse(data))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = await import("@/integrations/supabase/client");
     
-    const { data: tenant, error } = await supabaseAdmin
+    const { data: tenant, error } = await supabase
       .from('app_settings')
-      .select('*')
+      .select('brand_name, tagline, logo_url, booklet_url')
       .eq('id', true)
       .maybeSingle();
       

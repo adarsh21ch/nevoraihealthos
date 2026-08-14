@@ -19,7 +19,7 @@ export const updateBranding = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ context, data }) => {
     await adminAuth(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabase } = context;
 
     const updateData: any = {};
     if (data.logoUrl !== undefined) updateData.logo_url = data.logoUrl;
@@ -27,7 +27,7 @@ export const updateBranding = createServerFn({ method: "POST" })
     if (data.brandName) updateData.brand_name = data.brandName;
     if (data.tagline !== undefined) updateData.tagline = data.tagline;
 
-    const { error } = await supabaseAdmin
+    const { error } = await supabase
       .from('app_settings')
       .update(updateData)
       .eq('id', true);
