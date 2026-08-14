@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { AppLogo } from '@/components/branding/AppLogo';
+import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/api/public/setup-admins')({
   component: SetupAdminsPage,

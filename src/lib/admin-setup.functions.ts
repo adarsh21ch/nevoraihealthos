@@ -58,7 +58,7 @@ export const ensureAdminAccount = createServerFn({ method: "POST" })
     if (adminTableError) console.error("Platform admins table error:", adminTableError);
 
     // 5. Ensure customer profile
-    const { data: tenant } = await supabase
+    const { data: tenant } = await (supabase as any)
       .from("tenants")
       .select("id")
       .eq("slug", "fat2fit")
