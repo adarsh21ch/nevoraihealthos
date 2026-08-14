@@ -30,15 +30,7 @@ function Index() {
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="relative">
-              <div className="w-12 h-11 bg-ink rounded-xl rotate-3 group-hover:rotate-6 transition-transform flex items-center justify-center shadow-xl overflow-hidden">
-                <AppLogo iconOnly variant="light" className="scale-75" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                 <div className="w-2 h-2 bg-white rounded-full" />
-              </div>
-            </div>
-            <AppLogo className="hidden sm:flex" />
+            <AppLogo />
           </div>
 
           <div className="hidden md:flex items-center gap-8">
