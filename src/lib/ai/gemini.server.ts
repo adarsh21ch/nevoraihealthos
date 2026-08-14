@@ -34,6 +34,7 @@ export async function generateCoachMessage({ supabase, geminiKey, customer, logs
     Focus on their specific progress or offer a small tip relevant to their track.
     If it's their first few days, focus on adaptation. If later, focus on finish line discipline.
     Do not use placeholders. Speak directly to them.
+    STRICT: You must provide the response in ${customer.preferred_language || 'English'} language.
   `;
 
   try {
@@ -69,7 +70,7 @@ export async function generateCoachMessage({ supabase, geminiKey, customer, logs
 /**
  * Handles interactive chat with the AI assistant
  */
-export async function chatWithAi({ supabase, geminiKey, userMessage, customerName, track, customerId, distributorId }: { 
+export async function chatWithAi({ supabase, geminiKey, userMessage, customerName, track, customerId, distributorId, preferredLanguage }: { 
   supabase: any;
   geminiKey: string; 
   userMessage: string; 
@@ -77,6 +78,7 @@ export async function chatWithAi({ supabase, geminiKey, userMessage, customerNam
   track: string;
   customerId?: string;
   distributorId?: string;
+  preferredLanguage?: string;
 }) {
   // 1. Retrieve relevant knowledge for the chat
   const { getRelevantKnowledge } = await import("./knowledge.server");
@@ -101,6 +103,7 @@ export async function chatWithAi({ supabase, geminiKey, userMessage, customerNam
     5. If they ask about medical issues, tell them to consult their doctor.
     
     USER QUESTION: ${userMessage}
+    STRICT: You must respond in ${preferredLanguage || 'English'} language.
   `;
 
   try {
