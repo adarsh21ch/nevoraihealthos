@@ -173,8 +173,8 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
             onClick={() => mutation.mutate(formData)} 
             disabled={mutation.isPending}
             className={cn(
-              "flex-[2] h-14 rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] transition-all duration-300",
-              mutation.isPending ? "bg-slate-100 text-slate-400" : "bg-health-green hover:bg-health-green/90 text-white shadow-xl shadow-health-green/20"
+              "flex-[2] h-14 rounded-2xl font-black text-[12px] uppercase tracking-[0.3em] transition-all duration-300",
+              mutation.isPending ? "bg-slate-100 text-slate-400" : "bg-health-green hover:bg-health-green-dark text-slate-900 shadow-xl shadow-health-green/20"
             )}
           >
             {mutation.isPending ? "Saving..." : "Save Changes"}

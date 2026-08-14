@@ -277,8 +277,9 @@ function OnboardingPage() {
                         <Input 
                           value={formData.name} 
                           onChange={e => updateField('name', e.target.value)} 
-                          className="h-14 rounded-2xl border-slate-200" 
+                          className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 text-ink font-bold focus:border-health-green/30" 
                           placeholder="Name" 
+
                         />
                       </div>
                       <div className="space-y-2">
@@ -287,7 +288,7 @@ function OnboardingPage() {
                           type="date"
                           value={formData.dob} 
                           onChange={e => updateField('dob', e.target.value)} 
-                          className="h-14 rounded-2xl border-slate-200" 
+                          className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 text-ink font-bold focus:border-health-green/30" 
                         />
                       </div>
                       <div className="space-y-2">
@@ -321,19 +322,19 @@ function OnboardingPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1">Height (cm)</Label>
-                        <Input type="number" value={formData.height_cm} onChange={e => updateField('height_cm', e.target.value)} className="h-12 rounded-xl" placeholder="170" />
+                        <Input type="number" value={formData.height_cm} onChange={e => updateField('height_cm', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="170" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1">Weight (kg)</Label>
-                        <Input type="number" value={formData.weight_kg} onChange={e => updateField('weight_kg', e.target.value)} className="h-12 rounded-xl" placeholder="70" />
+                        <Input type="number" value={formData.weight_kg} onChange={e => updateField('weight_kg', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="70" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1">Waist (cm)</Label>
-                        <Input type="number" value={formData.waist_cm} onChange={e => updateField('waist_cm', e.target.value)} className="h-12 rounded-xl" placeholder="85" />
+                        <Input type="number" value={formData.waist_cm} onChange={e => updateField('waist_cm', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="85" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black text-slate-400 ml-1 text-[9px]">Target Weight (kg)</Label>
-                        <Input type="number" value={formData.target_weight_kg} onChange={e => updateField('target_weight_kg', e.target.value)} className="h-12 rounded-xl" placeholder="65" />
+                        <Input type="number" value={formData.target_weight_kg} onChange={e => updateField('target_weight_kg', e.target.value)} className="h-12 rounded-xl bg-slate-50/50 text-ink font-bold" placeholder="65" />
                       </div>
                     </div>
                   </div>
@@ -489,11 +490,11 @@ function OnboardingPage() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Wake up time</Label>
-                        <Input type="time" value={formData.wake_time} onChange={e => updateField('wake_time', e.target.value)} className="h-14 rounded-2xl" />
+                        <Input type="time" value={formData.wake_time} onChange={e => updateField('wake_time', e.target.value)} className="h-14 rounded-2xl bg-slate-50/50 text-ink font-bold" />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Sleep time</Label>
-                        <Input type="time" value={formData.sleep_time} onChange={e => updateField('sleep_time', e.target.value)} className="h-14 rounded-2xl" />
+                        <Input type="time" value={formData.sleep_time} onChange={e => updateField('sleep_time', e.target.value)} className="h-14 rounded-2xl bg-slate-50/50 text-ink font-bold" />
                       </div>
                     </div>
                   </div>
@@ -511,13 +512,13 @@ function OnboardingPage() {
                           placeholder="e.g. Peanuts, Shellfish" 
                           value={formData.allergies.join(', ')} 
                           onChange={e => updateField('allergies', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} 
-                          className="h-14 rounded-2xl"
+                          className="h-14 rounded-2xl bg-slate-50/50 text-ink font-bold"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Other Concerns</Label>
                         <textarea 
-                          className="w-full h-32 p-4 rounded-2xl bg-slate-50 border-none text-sm" 
+                          className="w-full h-32 p-4 rounded-2xl bg-slate-50/50 border border-slate-100 text-ink font-bold text-sm" 
                           placeholder="e.g. Hypertension, Diabetes, etc."
                           value={formData.health_concerns}
                           onChange={e => updateField('health_concerns', e.target.value)}
