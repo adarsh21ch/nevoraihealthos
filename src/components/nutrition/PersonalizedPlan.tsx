@@ -27,6 +27,17 @@ import { toast } from "sonner";
 import { Link, useParams } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileEditDrawer } from "@/components/profile/ProfileEditDrawer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 
 const SECTIONS_CONFIG = [
   { id: 'personal', title: 'Personal', key: 'personal', fields: ['name', 'dob', 'gender'] },
@@ -138,6 +149,8 @@ export function PersonalizedPlan() {
   });
 
   const [activeEditSection, setActiveEditSection] = useState<any>(null);
+  const [isRegenerateAlertOpen, setIsRegenerateAlertOpen] = useState(false);
+
 
   if (isReadinessLoading || (readiness?.ready && isPlanLoading)) {
     return (
@@ -375,16 +388,13 @@ export function PersonalizedPlan() {
         <div className="flex items-center justify-between px-2">
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Daily Protocol</h3>
            <button 
-             onClick={() => {
-               if (window.confirm("This will replace your current AI plan with a new one tailored to your latest profile and C9 products. Continue?")) {
-                 generateMutation.mutate();
-               }
-             }} 
-             className="text-[10px] font-black uppercase tracking-widest text-health-green bg-health-green/10 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-health-green/20 transition-all border border-health-green/20"
+             onClick={() => setIsRegenerateAlertOpen(true)} 
+             className="text-[10px] font-black uppercase tracking-widest text-health-green bg-health-green/10 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-health-green/20 transition-all border border-health-green/20 cursor-pointer"
            >
              <RefreshCw className={cn("w-3 h-3", generateMutation.isPending && "animate-spin")} />
              Regenerate AI Plan
            </button>
+
         </div>
 
         <div className="space-y-6">
@@ -511,6 +521,27 @@ export function PersonalizedPlan() {
           </button>
         </div>
       </div>
+
+      <AlertDialog open={isRegenerateAlertOpen} onOpenChange={setIsRegenerateAlertOpen}>
+        <AlertDialogContent className="rounded-[2.5rem] p-8">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif italic text-2xl">Regenerate AI Plan?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 font-medium">
+              This will replace your current AI plan with a new one tailored to your latest profile and C9 synergetic products.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 gap-3">
+            <AlertDialogCancel className="rounded-2xl h-12 font-bold">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => generateMutation.mutate()}
+              className="rounded-2xl h-12 bg-health-green hover:bg-health-green-dark text-white font-bold"
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
+
