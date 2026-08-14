@@ -50,13 +50,12 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 4. Create Customer Row (Legacy support)
-    // We now have dropped NOT NULL constraints on phone, distributor_id, track, language
-    const { data: customer, error: customerError } = await supabaseAdmin
+    const { data: customer, error: customerError } = await supabase
       .from("customers")
       .insert({
         user_id: authUser.user.id,
         fbo_id: data.fbo_id,
-        name: data.email.split('@')[0], // Use email prefix as temporary name
+        name: data.email.split('@')[0],
         onboarding_complete: false,
       } as any)
       .select("id")
@@ -69,7 +68,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 5. Mark access code as used
-    await supabaseAdmin
+    await supabase
       .from("access_codes")
       .update({ used_at: new Date().toISOString(), customer_id: customer.id })
       .eq("id", creds.id);
