@@ -47,6 +47,7 @@ import { Route as AdminContentIndexRouteImport } from './routes/admin/content.in
 import { Route as AdminTenantsIndexRouteImport } from './routes/admin/tenants.index'
 import { Route as AdminTenantsTenantIdRouteImport } from './routes/admin/tenants.$tenantId'
 import { Route as ApiManifestJsonRouteImport } from './routes/api/manifest.json'
+import { Route as ApiPublicSetupAdminsRouteImport } from './routes/api/public/setup-admins'
 import { Route as DashboardCustomersIndexRouteImport } from './routes/dashboard/customers.index'
 import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
@@ -249,6 +250,11 @@ const ApiManifestJsonRoute = ApiManifestJsonRouteImport.update({
   path: '/api/manifest/json',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSetupAdminsRoute = ApiPublicSetupAdminsRouteImport.update({
+  id: '/api/public/setup-admins',
+  path: '/api/public/setup-admins',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardCustomersIndexRoute = DashboardCustomersIndexRouteImport.update({
   id: '/customers/',
   path: '/customers/',
@@ -351,6 +357,7 @@ export interface FileRoutesByFullPath {
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
+  '/api/public/setup-admins': typeof ApiPublicSetupAdminsRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/admin/content/': typeof AdminContentIndexRoute
   '/admin/tenants/': typeof AdminTenantsIndexRoute
@@ -399,6 +406,7 @@ export interface FileRoutesByTo {
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
+  '/api/public/setup-admins': typeof ApiPublicSetupAdminsRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/admin/content': typeof AdminContentIndexRoute
   '/admin/tenants': typeof AdminTenantsIndexRoute
@@ -451,6 +459,7 @@ export interface FileRoutesById {
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
+  '/api/public/setup-admins': typeof ApiPublicSetupAdminsRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/admin/content/': typeof AdminContentIndexRoute
   '/admin/tenants/': typeof AdminTenantsIndexRoute
@@ -503,6 +512,7 @@ export interface FileRouteTypes {
     | '/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
+    | '/api/public/setup-admins'
     | '/dashboard/customers/$customerId'
     | '/admin/content/'
     | '/admin/tenants/'
@@ -551,6 +561,7 @@ export interface FileRouteTypes {
     | '/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
+    | '/api/public/setup-admins'
     | '/dashboard/customers/$customerId'
     | '/admin/content'
     | '/admin/tenants'
@@ -602,6 +613,7 @@ export interface FileRouteTypes {
     | '/_authenticated/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
+    | '/api/public/setup-admins'
     | '/dashboard/customers/$customerId'
     | '/admin/content/'
     | '/admin/tenants/'
@@ -635,6 +647,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
   ApiManifestJsonRoute: typeof ApiManifestJsonRoute
+  ApiPublicSetupAdminsRoute: typeof ApiPublicSetupAdminsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -905,6 +918,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiManifestJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/setup-admins': {
+      id: '/api/public/setup-admins'
+      path: '/api/public/setup-admins'
+      fullPath: '/api/public/setup-admins'
+      preLoaderRoute: typeof ApiPublicSetupAdminsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/customers/': {
       id: '/dashboard/customers/'
       path: '/customers'
@@ -1110,6 +1130,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
   ApiManifestJsonRoute: ApiManifestJsonRoute,
+  ApiPublicSetupAdminsRoute: ApiPublicSetupAdminsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
