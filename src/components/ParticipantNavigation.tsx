@@ -1,10 +1,26 @@
-import { Home, Calendar, Trophy, Package, User, MessageCircle, LogOut } from 'lucide-react';
+import { Home, Calendar, Trophy, Package, User, MessageCircle, LogOut, Languages, Check, ChevronDown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { AppLogo } from '@/components/ui/app-logo';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getMyProfile, updateMyProfile } from '@/lib/profile/profile.functions';
+import { useServerFn } from '@tanstack/react-start';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANGUAGES = [
+  { label: 'English', value: 'English' },
+  { label: 'Hindi', value: 'Hindi' },
+  { label: 'Gujarati', value: 'Gujarati' },
+  { label: 'Marathi', value: 'Marathi' },
+];
 
 interface SidebarProps {
   tenant: {
@@ -16,6 +32,22 @@ interface SidebarProps {
 export function ParticipantSidebar({ tenant }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const getProfile = useServerFn(getMyProfile);
+  const updateProfile = useServerFn(updateMyProfile);
+
+  const { data: profile } = useQuery({
+    queryKey: ['my-profile'],
+    queryFn: () => getProfile()
+  });
+
+  const langMutation = useMutation({
+    mutationFn: (lang: string) => updateProfile({ preferred_language: lang }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-profile'] });
+      toast.success("Language preference updated");
+    }
+  });
 
   const handleLogout = async () => {
     try {
@@ -42,8 +74,12 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
 
   return (
     <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 bg-white border-r border-slate-100 z-50">
-      <div className="p-8 pb-10">
+      <div className="p-8 pb-10 flex items-center justify-between">
         <AppLogo />
+        <LanguageSelector 
+          currentLanguage={profile?.preferred_language || 'English'} 
+          onSelect={(lang) => langMutation.mutate(lang)}
+        />
       </div>
 
       <nav className="flex-1 px-4 space-y-2">
@@ -99,6 +135,22 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
 
 export function ParticipantBottomNav({ tenant }: SidebarProps) {
   const location = useLocation();
+  const queryClient = useQueryClient();
+  const getProfile = useServerFn(getMyProfile);
+  const updateProfile = useServerFn(updateMyProfile);
+
+  const { data: profile } = useQuery({
+    queryKey: ['my-profile'],
+    queryFn: () => getProfile()
+  });
+
+  const langMutation = useMutation({
+    mutationFn: (lang: string) => updateProfile({ preferred_language: lang }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-profile'] });
+      toast.success("Language updated");
+    }
+  });
 
   const navItems = [
     { label: 'Today', icon: Home, href: `/p/${tenant.slug}/today` },
@@ -134,6 +186,15 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
         })}
       </div>
       
+      {/* Language Selector for mobile */}
+      <div className="absolute -top-12 left-6">
+        <LanguageSelector 
+          currentLanguage={profile?.preferred_language || 'English'} 
+          onSelect={(lang) => langMutation.mutate(lang)}
+          compact
+        />
+      </div>
+
       {/* Logout button for mobile - placed above the nav bar for visibility */}
       <button 
         onClick={async () => {
@@ -148,5 +209,53 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
         <LogOut className="w-5 h-5" />
       </button>
     </nav>
+  );
+}
+
+function LanguageSelector({ 
+  currentLanguage, 
+  onSelect,
+  compact = false
+}: { 
+  currentLanguage: string; 
+  onSelect: (lang: string) => void;
+  compact?: boolean;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size={compact ? "icon" : "sm"}
+          className={cn(
+            "rounded-xl border border-slate-100 bg-white shadow-sm hover:bg-slate-50 transition-all",
+            !compact && "px-3 gap-2 h-9"
+          )}
+        >
+          <Languages className={cn("text-slate-400", compact ? "w-5 h-5" : "w-3.5 h-3.5")} />
+          {!compact && (
+            <>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">{currentLanguage}</span>
+              <ChevronDown className="w-3 h-3 text-slate-300" />
+            </>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="rounded-2xl border-slate-100 p-2 min-w-[140px] shadow-xl">
+        <div className="px-2 py-1.5 mb-1">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Response Language</span>
+        </div>
+        {LANGUAGES.map((lang) => (
+          <DropdownMenuItem
+            key={lang.value}
+            onClick={() => onSelect(lang.value)}
+            className="rounded-xl px-3 py-2 text-xs font-bold text-slate-600 focus:bg-emerald-50 focus:text-health-green flex items-center justify-between cursor-pointer"
+          >
+            {lang.label}
+            {currentLanguage === lang.value && <Check className="w-3 h-3" />}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

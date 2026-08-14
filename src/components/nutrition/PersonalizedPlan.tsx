@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useServerFn } from "@tanstack/react-start";
 import { getMyNutritionPlan, generateMyPersonalizedPlan, logMealStatus, getMealLogs } from "@/lib/nutrition/nutrition.functions";
+import { askAiAssistant } from "@/lib/ai/gemini.functions";
 import { validateProfileReadiness, getMyProfile } from "@/lib/profile/profile.functions";
 import { getISTDateString } from "@/lib/date-utils";
 import { toast } from "sonner";
@@ -91,6 +92,10 @@ export function PersonalizedPlan() {
   const getLogs = useServerFn(getMealLogs);
   const checkReadiness = useServerFn(validateProfileReadiness);
   const getProfile = useServerFn(getMyProfile);
+  const askAssistant = useServerFn(askAiAssistant);
+
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState<{role: 'user' | 'assistant', content: string}[]>([]);
 
   const { data: profile } = useQuery({
     queryKey: ['my-profile'],
@@ -150,6 +155,27 @@ export function PersonalizedPlan() {
 
   const [activeEditSection, setActiveEditSection] = useState<any>(null);
   const [isRegenerateAlertOpen, setIsRegenerateAlertOpen] = useState(false);
+
+  const assistantMutation = useMutation({
+    mutationFn: (message: string) => askAssistant({ data: { message } }),
+    onMutate: (message) => {
+      // Optimistic update for UI feel
+      setChatHistory(prev => [...prev, { role: 'user', content: message }]);
+      setChatMessage("");
+    },
+    onSuccess: (data) => {
+      setChatHistory(prev => [...prev, { role: 'assistant', content: data.response }]);
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "AI Coach failed to respond");
+    }
+  });
+
+  const handleSendMessage = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!chatMessage.trim() || assistantMutation.isPending) return;
+    assistantMutation.mutate(chatMessage);
+  };
 
 
   if (isReadinessLoading || (readiness?.ready && isPlanLoading)) {
@@ -505,21 +531,59 @@ export function PersonalizedPlan() {
       <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 space-y-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3 text-ink">
-            <MessageSquare className="w-6 h-6 text-health-green" />
+            <div className="w-10 h-10 rounded-2xl bg-health-green/10 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-health-green" />
+            </div>
             <h3 className="font-bold text-lg">Nutrition Assistant</h3>
           </div>
           <p className="text-xs text-slate-400 font-medium leading-relaxed">Ask about substitutions, travel tips, or office-friendly metabolic meals.</p>
         </div>
-        <div className="relative">
+
+        {/* Chat History */}
+        {chatHistory.length > 0 && (
+          <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+            {chatHistory.map((msg, i) => (
+              <div 
+                key={i} 
+                className={cn(
+                  "p-5 rounded-[2rem] text-sm animate-in fade-in slide-in-from-bottom-2 duration-500",
+                  msg.role === 'user' 
+                    ? "bg-slate-50 text-slate-600 ml-8 border border-slate-100 rounded-br-none" 
+                    : "bg-emerald-50 text-emerald-900 mr-8 border border-emerald-100 font-serif italic rounded-bl-none"
+                )}
+              >
+                {msg.content}
+              </div>
+            ))}
+            {assistantMutation.isPending && (
+              <div className="bg-emerald-50/50 p-5 rounded-[2rem] mr-8 border border-emerald-100/50 animate-pulse flex gap-2 items-center">
+                <div className="flex gap-1">
+                  <div className="w-1.5 h-1.5 bg-emerald-300 rounded-full animate-bounce" />
+                  <div className="w-1.5 h-1.5 bg-emerald-300 rounded-full animate-bounce delay-75" />
+                  <div className="w-1.5 h-1.5 bg-emerald-300 rounded-full animate-bounce delay-150" />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <form onSubmit={handleSendMessage} className="relative">
           <input 
             type="text" 
-            placeholder="Ask your Fat2Fit Coach AI..."
-            className="w-full h-16 pl-6 pr-16 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-health-green/10 text-sm font-medium"
+            value={chatMessage}
+            onChange={(e) => setChatMessage(e.target.value)}
+            disabled={assistantMutation.isPending}
+            placeholder={assistantMutation.isPending ? "Coach is thinking..." : "Ask your Fat2Fit Coach AI..."}
+            className="w-full h-16 pl-6 pr-16 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-health-green/10 text-sm font-medium transition-all"
           />
-          <button className="absolute right-2 top-2 w-12 h-12 bg-ink text-white rounded-xl flex items-center justify-center shadow-lg transition-transform active:scale-95">
-            <ArrowRight className="w-5 h-5" />
+          <button 
+            type="submit"
+            disabled={!chatMessage.trim() || assistantMutation.isPending}
+            className="absolute right-2 top-2 w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:bg-slate-300"
+          >
+            <ArrowRight className={cn("w-5 h-5", assistantMutation.isPending && "animate-pulse")} />
           </button>
-        </div>
+        </form>
       </div>
 
       <AlertDialog open={isRegenerateAlertOpen} onOpenChange={setIsRegenerateAlertOpen}>
