@@ -127,31 +127,51 @@ export async function generateNutritionPlan({ supabase, geminiKey, customer, lat
 }
 
 async function callGemini(apiKey: string, prompt: string) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.1, // Minimal creativity for strict grounding
-          response_mime_type: "application/json",
-        },
-      }),
-    }
-  );
+  // Use v1beta for better model availability if v1 fails, but try v1 first for stability
+  const apiVersions = ['v1', 'v1beta'];
+  let lastError = null;
 
-  const data = await response.json();
-  if (data.error) {
-    console.error("Gemini API error:", data.error);
-    throw new Error(`Gemini API error: ${data.error.message || "Unknown error"}`);
+  for (const version of apiVersions) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/${version}/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.1,
+              response_mime_type: "application/json",
+            },
+          }),
+        }
+      );
+
+      const data = await response.json();
+      
+      if (data.error) {
+        console.error(`Gemini API error (${version}):`, data.error);
+        lastError = new Error(`Gemini API error (${version}): ${data.error.message || "Unknown error"}`);
+        // If it's a model not found error, try next version
+        if (data.error.status === 'NOT_FOUND' || data.error.message?.includes('not found')) {
+          continue;
+        }
+        throw lastError;
+      }
+
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        console.error(`Empty Gemini response (${version}):`, JSON.stringify(data, null, 2));
+        continue;
+      }
+      
+      return JSON.parse(text);
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`Gemini attempt with ${version} failed:`, err.message);
+    }
   }
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) {
-    console.error("Gemini Response Body:", JSON.stringify(data, null, 2));
-    throw new Error("Empty Gemini response - possible safety filter or quota issue");
-  }
-  
-  return JSON.parse(text);
+
+  throw lastError || new Error("Gemini API call failed after multiple attempts");
 }
