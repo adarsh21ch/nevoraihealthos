@@ -97,7 +97,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
             {field.options?.map((opt: string) => (
-              <SelectItem key={opt} value={opt} className="rounded-xl py-3 focus:bg-emerald-50 focus:text-health-green font-bold text-sm">
+              <SelectItem key={opt} value={opt} className="rounded-xl py-3 focus:bg-emerald-50 focus:text-emerald-900 font-black text-sm text-slate-800">
                 {opt}
               </SelectItem>
             ))}
