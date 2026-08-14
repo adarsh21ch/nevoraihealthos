@@ -536,7 +536,7 @@ function OnboardingPage() {
                         onClick={() => updateField('track', 'standard')}
                         className={cn(
                           "flex-1 p-6 rounded-[2.5rem] border text-center space-y-2 transition-all",
-                          formData.track === 'standard' ? "bg-health-green text-slate-900 border-health-green shadow-xl" : "border-slate-100 text-slate-400"
+                          formData.track === 'standard' ? "bg-health-green text-white border-health-green shadow-xl shadow-health-green/20" : "border-slate-100 text-slate-400"
                         )}
                       >
                         <div className="text-2xl font-serif italic font-bold">C9</div>
@@ -546,7 +546,7 @@ function OnboardingPage() {
                         onClick={() => updateField('track', 'DX4')}
                         className={cn(
                           "flex-1 p-6 rounded-[2.5rem] border text-center space-y-2 transition-all",
-                          formData.track === 'DX4' ? "bg-health-green text-slate-900 border-health-green shadow-xl" : "border-slate-100 text-slate-400"
+                          formData.track === 'DX4' ? "bg-health-green text-white border-health-green shadow-xl shadow-health-green/20" : "border-slate-100 text-slate-400"
                         )}
                       >
                         <div className="text-2xl font-serif italic font-bold">DX4</div>
@@ -591,7 +591,7 @@ function OnboardingPage() {
             )}
             <Button 
               onClick={step === STEPS.length - 1 ? finish : next} 
-              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
               disabled={isSaving}
             >
               {isSaving ? (
