@@ -479,6 +479,7 @@ function ProfilePage() {
                 </div>
             ))}
         </div>
+      </div>
       <div className="h-12" />
 
       {/* Advanced / Danger Zone */}
