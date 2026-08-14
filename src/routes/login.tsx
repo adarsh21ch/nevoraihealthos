@@ -121,7 +121,7 @@ function LoginPage() {
       if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
         // Use full URL to ensure clean state and bypass router transitions
-        window.location.href = window.location.origin + '/admin';
+        window.location.assign(window.location.origin + '/admin');
         return;
       }
 
