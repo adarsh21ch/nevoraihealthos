@@ -16,7 +16,7 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug')({
         id: 'fat-to-fit-id',
         name: 'Fat2Fit',
         slug,
-        primary_color: '#7C3AED',
+        primary_color: '#064E3B',
         tagline: '9-Day Reset Protocol',
         whatsapp: '+919876543210'
       }
@@ -48,7 +48,7 @@ function TenantLayout() {
         <header className="lg:hidden bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 pt-[calc(1rem+env(safe-area-inset-top))] pb-4 border-b border-slate-100 flex items-center justify-between">
 
           <div className="flex items-center gap-2.5">
-            <AppLogo />
+            <AppLogo iconOnly />
           </div>
         </header>
 

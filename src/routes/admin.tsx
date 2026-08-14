@@ -50,9 +50,10 @@ function AdminDashboard() {
       <aside className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-800 shrink-0">
         <div className="p-8 space-y-10 flex flex-col h-full">
           <div className="flex items-center gap-4 px-2">
-              <AppLogo variant="light" />
+              <AppLogo variant="light" iconOnly />
               <div className="flex flex-col">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Admin Portal</span>
+                <span className="text-sm font-black text-white uppercase tracking-tight">Fat2Fit</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Admin Portal</span>
               </div>
           </div>
           
@@ -173,7 +174,7 @@ function NavItem({ icon: Icon, label, to }: any) {
             "w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all font-bold text-sm",
             "text-slate-400 hover:bg-slate-800 hover:text-white"
           )}
-          activeProps={{ className: "bg-accent text-white shadow-lg shadow-purple-900/20" }}
+          activeProps={{ className: "bg-ink text-white shadow-lg shadow-black/20 border-l-4 border-health-green" }}
         >
             <Icon className="w-5 h-5" />
             {label}

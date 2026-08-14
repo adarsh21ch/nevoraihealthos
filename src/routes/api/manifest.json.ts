@@ -8,7 +8,7 @@ export const Route = createFileRoute('/api/manifest/json')({
         const { settings } = await getAppSettings()
         
         const brandName = settings?.brand_name || 'Fat2Fit'
-        const logoUrl = (settings as any)?.logo_url || 'https://nevoraihealthos.lovable.app/__l5e/assets-v1/6707b7b1-6c3f-4fc2-8570-dac0df3e22c8/app-icon.png'
+        const logoUrl = (settings as any)?.logo_url || 'https://nevoraihealthos.lovable.app/__l5e/assets-v1/6b735c02-d961-4608-8e6d-54124036113b/app-icon.png'
 
         
         const manifest = {

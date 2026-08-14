@@ -42,11 +42,9 @@ export function AppLogo({ className, iconOnly = false, variant = 'dark' }: AppLo
       <div className={cn(
         "rounded-xl flex items-center justify-center font-black text-white shadow-lg rotate-3 shrink-0 overflow-hidden",
         iconOnly ? "h-10 w-10" : "w-10 h-10",
-        variant === 'dark' ? "bg-accent shadow-purple-900/20" : "bg-white/20 shadow-black/20"
-
+        variant === 'dark' ? "bg-ink shadow-emerald-900/20" : "bg-white/20 shadow-black/20"
       )}>
         <span className={cn(iconOnly ? "text-[10px]" : "text-xs")}>F2F</span>
-
       </div>
       {!iconOnly && (
         <h1 className={cn(

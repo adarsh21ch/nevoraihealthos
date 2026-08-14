@@ -40,7 +40,7 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group font-bold text-sm",
                 isActive 
-                  ? "bg-emerald-50 text-health-green" 
+                  ? "bg-slate-900 text-white shadow-lg shadow-emerald-900/10 border-l-4 border-health-green" 
                   : "text-slate-400 hover:text-ink hover:bg-slate-50"
               )}
             >
@@ -92,12 +92,12 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
               to={item.href}
               className={cn(
                 "flex flex-col items-center gap-1.5 transition-all group",
-                isActive ? "accent-text" : "text-slate-400"
+                isActive ? "text-health-green" : "text-slate-400"
               )}
             >
               <div className={cn(
                 "p-1.5 rounded-xl transition-all duration-200 active:scale-90",
-                isActive ? "accent-bg-soft" : "group-hover:bg-slate-50"
+                isActive ? "bg-emerald-50" : "group-hover:bg-slate-50"
               )}>
                 <item.icon className="w-6 h-6" />
               </div>

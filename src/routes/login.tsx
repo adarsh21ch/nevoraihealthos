@@ -194,7 +194,7 @@ function LoginPage() {
       <div className="hidden lg:flex flex-1 flex-col justify-between p-12 bg-white border-r border-slate-100">
         <div>
           <div className="flex items-center gap-3 mb-16">
-            <AppLogo className="scale-125 origin-left" />
+            <AppLogo className="scale-125 origin-left" variant="dark" />
           </div>
           <h1 className="text-7xl font-serif italic text-ink mb-8 leading-[0.9]">
             True health,<br/>
@@ -240,7 +240,7 @@ function LoginPage() {
             <button
               onClick={() => { setAuthMode("signin"); setError(null); }}
               className={`py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
-                authMode === "signin" ? "bg-white text-accent shadow-sm" : "text-slate-400 hover:text-slate-600"
+                authMode === "signin" ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
               }`}
             >
               Sign In
@@ -248,7 +248,7 @@ function LoginPage() {
             <button
               onClick={() => { setAuthMode("signup"); setError(null); }}
               className={`py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
-                authMode === "signup" ? "bg-white text-accent shadow-sm" : "text-slate-400 hover:text-slate-600"
+                authMode === "signup" ? "bg-white text-ink shadow-sm" : "text-slate-400 hover:text-slate-600"
               }`}
             >
               Join Program
@@ -271,7 +271,7 @@ function LoginPage() {
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   required
-                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-accent/5 transition-all"
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-ink/5 transition-all"
                 />
               </div>
               <div className="space-y-1.5">
@@ -283,12 +283,13 @@ function LoginPage() {
                   value={signInPassword}
                   onChange={(e) => setSignInPassword(e.target.value)}
                   required
-                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-accent/5 transition-all"
+                  className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-ink/5 transition-all"
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-accent text-white hover:bg-accent/90 font-bold rounded-xl transition-all shadow-lg shadow-purple-200 group mt-4" 
+                className="w-full h-12 bg-ink text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-emerald-900/10 group mt-4" 
+
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -361,7 +362,7 @@ function LoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-accent text-white hover:bg-accent/90 font-bold rounded-xl transition-all shadow-lg shadow-purple-200 group mt-4" 
+                className="w-full h-12 bg-ink text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-emerald-900/10 group mt-4" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -378,7 +379,7 @@ function LoginPage() {
           <div className="pt-8 space-y-4 text-center">
             {authMode === "signin" && (
               <p className="text-xs text-slate-400 font-medium">
-                New here? <button onClick={() => setAuthMode("signup")} className="text-accent font-bold hover:underline">Create a program account.</button>
+                New here? <button onClick={() => setAuthMode("signup")} className="text-ink font-bold hover:underline">Create a program account.</button>
               </p>
             )}
             <div className="space-y-1">
