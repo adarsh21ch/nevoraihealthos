@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, ArrowRight } from "lucide-react";
 import { BrandedLoading } from "@/components/ui/branded-loading";
 import { AppLogo } from "@/components/ui/app-logo";
+import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/login")({
@@ -286,8 +287,20 @@ function LoginPage() {
                   className="h-12 px-4 rounded-xl border-slate-200 bg-white focus:ring-2 focus:ring-ink/5 transition-all"
                 />
               </div>
+              
+              <div className="flex justify-end">
+                <button 
+                  type="button"
+                  onClick={() => toast.info("Please contact your coach or use the profile settings to reset your password.")}
+                  className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-ink transition-colors"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+
               <Button 
                 type="submit" 
+
                 className="w-full h-12 bg-ink text-white hover:bg-slate-800 font-bold rounded-xl transition-all shadow-lg shadow-emerald-900/10 group mt-4" 
 
                 disabled={isLoading}
