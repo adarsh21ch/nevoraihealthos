@@ -109,7 +109,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     if (field.type === 'select' || field.options) {
       return (
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all">
+          <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-2 focus:ring-health-green/20 focus:border-health-green/40 transition-all outline-none">
             <SelectValue placeholder={`Select ${field.label}`} />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
@@ -128,7 +128,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         <Textarea 
           value={value} 
           onChange={e => onChange(e.target.value)}
-          className="min-h-[120px] rounded-2xl border-slate-100 bg-slate-50/50 p-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all resize-none"
+          className="min-h-[120px] rounded-2xl border-slate-100 bg-slate-50/50 p-5 text-sm font-bold text-ink focus:ring-2 focus:ring-health-green/20 focus:border-health-green/40 transition-all resize-none outline-none"
           placeholder={`Enter ${field.label.toLowerCase()}...`}
         />
       );
@@ -139,7 +139,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
           type={field.type || 'text'}
           value={value} 
           onChange={e => onChange(e.target.value)}
-          className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all"
+          className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-2 focus:ring-health-green/20 focus:border-health-green/40 transition-all outline-none"
           placeholder={field.label}
           autoComplete={field.key === 'password' ? 'new-password' : undefined}
         />
@@ -168,9 +168,8 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
           {section.fields.map(field => (
             <div key={field.key} className="space-y-3">
               <Label className="text-[11px] uppercase font-black text-ink tracking-[0.2em] ml-1">{field.label}</Label>
-              <div className="relative group">
+              <div className="relative group rounded-2xl">
                 {renderField(field)}
-                <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-focus-within:border-health-green/20 pointer-events-none transition-all" />
               </div>
             </div>
           ))}
@@ -216,7 +215,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
       {/* Desktop: Dialog (Modal) */}
       <div className="hidden md:block">
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-[3rem]">
+          <DialogContent className="max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-[3rem] bg-white">
             {formContent}
           </DialogContent>
         </Dialog>
