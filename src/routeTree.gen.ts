@@ -46,6 +46,7 @@ import { Route as AdminContentIndexRouteImport } from './routes/admin/content.in
 import { Route as AdminTenantsIndexRouteImport } from './routes/admin/tenants.index'
 import { Route as AdminTenantsTenantIdRouteImport } from './routes/admin/tenants.$tenantId'
 import { Route as ApiManifestJsonRouteImport } from './routes/api/manifest.json'
+import { Route as ApiPublicVerifySeedRouteImport } from './routes/api/public/verify-seed'
 import { Route as DashboardCustomersIndexRouteImport } from './routes/dashboard/customers.index'
 import { Route as DashboardCustomersCustomerIdRouteImport } from './routes/dashboard/customers.$customerId'
 import { Route as AuthenticatedPTenantSlugCompleteRouteImport } from './routes/_authenticated/p.$tenantSlug.complete'
@@ -243,6 +244,11 @@ const ApiManifestJsonRoute = ApiManifestJsonRouteImport.update({
   path: '/api/manifest/json',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicVerifySeedRoute = ApiPublicVerifySeedRouteImport.update({
+  id: '/api/public/verify-seed',
+  path: '/api/public/verify-seed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardCustomersIndexRoute = DashboardCustomersIndexRouteImport.update({
   id: '/customers/',
   path: '/customers/',
@@ -344,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
+  '/api/public/verify-seed': typeof ApiPublicVerifySeedRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/admin/content/': typeof AdminContentIndexRoute
   '/admin/tenants/': typeof AdminTenantsIndexRoute
@@ -391,6 +398,7 @@ export interface FileRoutesByTo {
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
+  '/api/public/verify-seed': typeof ApiPublicVerifySeedRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/admin/content': typeof AdminContentIndexRoute
   '/admin/tenants': typeof AdminTenantsIndexRoute
@@ -442,6 +450,7 @@ export interface FileRoutesById {
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
+  '/api/public/verify-seed': typeof ApiPublicVerifySeedRoute
   '/dashboard/customers/$customerId': typeof DashboardCustomersCustomerIdRoute
   '/admin/content/': typeof AdminContentIndexRoute
   '/admin/tenants/': typeof AdminTenantsIndexRoute
@@ -493,6 +502,7 @@ export interface FileRouteTypes {
     | '/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
+    | '/api/public/verify-seed'
     | '/dashboard/customers/$customerId'
     | '/admin/content/'
     | '/admin/tenants/'
@@ -540,6 +550,7 @@ export interface FileRouteTypes {
     | '/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
+    | '/api/public/verify-seed'
     | '/dashboard/customers/$customerId'
     | '/admin/content'
     | '/admin/tenants'
@@ -590,6 +601,7 @@ export interface FileRouteTypes {
     | '/_authenticated/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
+    | '/api/public/verify-seed'
     | '/dashboard/customers/$customerId'
     | '/admin/content/'
     | '/admin/tenants/'
@@ -623,6 +635,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
   ApiManifestJsonRoute: typeof ApiManifestJsonRoute
+  ApiPublicVerifySeedRoute: typeof ApiPublicVerifySeedRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -886,6 +899,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiManifestJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/verify-seed': {
+      id: '/api/public/verify-seed'
+      path: '/api/public/verify-seed'
+      fullPath: '/api/public/verify-seed'
+      preLoaderRoute: typeof ApiPublicVerifySeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/customers/': {
       id: '/dashboard/customers/'
       path: '/customers'
@@ -1089,6 +1109,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
   ApiManifestJsonRoute: ApiManifestJsonRoute,
+  ApiPublicVerifySeedRoute: ApiPublicVerifySeedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
