@@ -21,6 +21,7 @@ import { Route as MedicalDisclaimerRouteImport } from './routes/medical-disclaim
 import { Route as MovementRouteImport } from './routes/movement'
 import { Route as NutritionRouteImport } from './routes/nutrition'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProgramRouteImport } from './routes/program'
 import { Route as SignupRouteImport } from './routes/signup'
@@ -42,6 +43,8 @@ import { Route as DashboardPlansRouteImport } from './routes/dashboard/plans'
 import { Route as DashboardProductsRouteImport } from './routes/dashboard/products'
 import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder'
 import { Route as DashboardTestimonialsRouteImport } from './routes/dashboard/testimonials'
+import { Route as OwnerIndexRouteImport } from './routes/owner/index'
+import { Route as OwnerAccessCodesRouteImport } from './routes/owner/access-codes'
 import { Route as AuthenticatedPTenantSlugRouteImport } from './routes/_authenticated/p.$tenantSlug'
 import { Route as AdminContentIndexRouteImport } from './routes/admin/content.index'
 import { Route as AdminTenantsIndexRouteImport } from './routes/admin/tenants.index'
@@ -116,6 +119,11 @@ const NutritionRoute = NutritionRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OwnerRoute = OwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -223,6 +231,16 @@ const DashboardTestimonialsRoute = DashboardTestimonialsRouteImport.update({
   path: '/testimonials',
   getParentRoute: () => DashboardRoute,
 } as any)
+const OwnerIndexRoute = OwnerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerAccessCodesRoute = OwnerAccessCodesRouteImport.update({
+  id: '/access-codes',
+  path: '/access-codes',
+  getParentRoute: () => OwnerRoute,
+} as any)
 const AuthenticatedPTenantSlugRoute =
   AuthenticatedPTenantSlugRouteImport.update({
     id: '/p/$tenantSlug',
@@ -327,6 +345,7 @@ export interface FileRoutesByFullPath {
   '/movement': typeof MovementRoute
   '/nutrition': typeof NutritionRoute
   '/onboarding': typeof OnboardingRoute
+  '/owner': typeof OwnerRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/program': typeof ProgramRoute
   '/signup': typeof SignupRoute
@@ -346,8 +365,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
+  '/owner/access-codes': typeof OwnerAccessCodesRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/owner/': typeof OwnerIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
@@ -394,8 +415,10 @@ export interface FileRoutesByTo {
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
+  '/owner/access-codes': typeof OwnerAccessCodesRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/owner': typeof OwnerIndexRoute
   '/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
@@ -427,6 +450,7 @@ export interface FileRoutesById {
   '/movement': typeof MovementRoute
   '/nutrition': typeof NutritionRoute
   '/onboarding': typeof OnboardingRoute
+  '/owner': typeof OwnerRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/program': typeof ProgramRoute
   '/signup': typeof SignupRoute
@@ -446,8 +470,10 @@ export interface FileRoutesById {
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
   '/dashboard/testimonials': typeof DashboardTestimonialsRoute
+  '/owner/access-codes': typeof OwnerAccessCodesRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/owner/': typeof OwnerIndexRoute
   '/_authenticated/p/$tenantSlug': typeof AuthenticatedPTenantSlugRouteWithChildren
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/api/manifest/json': typeof ApiManifestJsonRoute
@@ -479,6 +505,7 @@ export interface FileRouteTypes {
     | '/movement'
     | '/nutrition'
     | '/onboarding'
+    | '/owner'
     | '/privacy'
     | '/program'
     | '/signup'
@@ -498,8 +525,10 @@ export interface FileRouteTypes {
     | '/dashboard/products'
     | '/dashboard/reorder'
     | '/dashboard/testimonials'
+    | '/owner/access-codes'
     | '/admin/'
     | '/dashboard/'
+    | '/owner/'
     | '/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
@@ -546,8 +575,10 @@ export interface FileRouteTypes {
     | '/dashboard/products'
     | '/dashboard/reorder'
     | '/dashboard/testimonials'
+    | '/owner/access-codes'
     | '/admin'
     | '/dashboard'
+    | '/owner'
     | '/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
@@ -578,6 +609,7 @@ export interface FileRouteTypes {
     | '/movement'
     | '/nutrition'
     | '/onboarding'
+    | '/owner'
     | '/privacy'
     | '/program'
     | '/signup'
@@ -597,8 +629,10 @@ export interface FileRouteTypes {
     | '/dashboard/products'
     | '/dashboard/reorder'
     | '/dashboard/testimonials'
+    | '/owner/access-codes'
     | '/admin/'
     | '/dashboard/'
+    | '/owner/'
     | '/_authenticated/p/$tenantSlug'
     | '/admin/tenants/$tenantId'
     | '/api/manifest/json'
@@ -630,6 +664,7 @@ export interface RootRouteChildren {
   MovementRoute: typeof MovementRoute
   NutritionRoute: typeof NutritionRoute
   OnboardingRoute: typeof OnboardingRoute
+  OwnerRoute: typeof OwnerRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   ProgramRoute: typeof ProgramRoute
   SignupRoute: typeof SignupRoute
@@ -721,6 +756,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/owner': {
+      id: '/owner'
+      path: '/owner'
+      fullPath: '/owner'
+      preLoaderRoute: typeof OwnerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -869,6 +911,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/testimonials'
       preLoaderRoute: typeof DashboardTestimonialsRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/owner/': {
+      id: '/owner/'
+      path: '/'
+      fullPath: '/owner/'
+      preLoaderRoute: typeof OwnerIndexRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/access-codes': {
+      id: '/owner/access-codes'
+      path: '/access-codes'
+      fullPath: '/owner/access-codes'
+      preLoaderRoute: typeof OwnerAccessCodesRouteImport
+      parentRoute: typeof OwnerRoute
     }
     '/_authenticated/p/$tenantSlug': {
       id: '/_authenticated/p/$tenantSlug'
@@ -1092,6 +1148,18 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface OwnerRouteChildren {
+  OwnerAccessCodesRoute: typeof OwnerAccessCodesRoute
+  OwnerIndexRoute: typeof OwnerIndexRoute
+}
+
+const OwnerRouteChildren: OwnerRouteChildren = {
+  OwnerAccessCodesRoute: OwnerAccessCodesRoute,
+  OwnerIndexRoute: OwnerIndexRoute,
+}
+
+const OwnerRouteWithChildren = OwnerRoute._addFileChildren(OwnerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -1105,6 +1173,7 @@ const rootRouteChildren: RootRouteChildren = {
   MovementRoute: MovementRoute,
   NutritionRoute: NutritionRoute,
   OnboardingRoute: OnboardingRoute,
+  OwnerRoute: OwnerRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   ProgramRoute: ProgramRoute,
   SignupRoute: SignupRoute,
