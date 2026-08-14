@@ -204,7 +204,7 @@ export function PersonalizedPlan() {
               const section = getSectionForField(firstMissing);
               if (section) setActiveEditSection(section);
             }}
-            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-sm shadow-xl shadow-health-green/20 flex items-center justify-center transition-all duration-300"
+            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-sm shadow-xl shadow-health-green/20 flex items-center justify-center transition-all duration-300"
           >
             Complete Profile Now
           </Button>
@@ -245,7 +245,7 @@ export function PersonalizedPlan() {
         <div className="flex flex-col gap-4">
           <Button 
             onClick={() => generateMutation.mutate()} 
-            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-slate-900 font-black text-sm shadow-xl shadow-health-green/20"
+            className="w-full h-16 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-sm shadow-xl shadow-health-green/20"
           >
             Create My Plan
           </Button>
