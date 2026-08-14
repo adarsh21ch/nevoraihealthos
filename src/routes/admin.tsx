@@ -17,7 +17,7 @@ export const Route = createFileRoute('/admin')({
     if (userError || !user) throw redirect({ to: "/login" });
     
     // Recovery check: platform admins skip the RPC lookup if needed
-    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') return;
+    if (user.email === 'teamnevorai@gmail.com') return;
 
     try {
       const { data: context, error: rpcError } = await supabase.rpc("get_my_auth_context");

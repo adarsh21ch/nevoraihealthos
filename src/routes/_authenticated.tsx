@@ -19,7 +19,7 @@ export const Route = createFileRoute('/_authenticated')({
     }
 
     // Platform Admin Hardcode - Fastest path for main admins
-    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+    if (user.email === 'teamnevorai@gmail.com') {
       console.log("Root middleware recognizing platform admin:", user.email);
       return { 
         authContext: {
@@ -61,7 +61,7 @@ export const Route = createFileRoute('/_authenticated')({
         // Handled by admin route beforeLoad, but for safety:
         if (role !== 'platform_admin' && role !== 'admin') {
           // If we are a known admin email but RPC failed, we might be here
-          if (!(user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com')) {
+          if (!(user.email === 'teamnevorai@gmail.com')) {
             throw redirect({ to: '/login' });
           }
         }
