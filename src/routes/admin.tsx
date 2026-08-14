@@ -13,21 +13,23 @@ import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) throw redirect({ to: "/login" });
+    const { data: { session }, error: userError } = await supabase.auth.getSession();
+    if (userError || !session?.user) throw redirect({ to: "/login" });
+    const user = session.user;
     
     // Recovery check: platform admins skip the RPC lookup if needed
     if (user.email === 'teamnevorai@gmail.com') return;
 
     try {
       const { data: context, error: rpcError } = await supabase.rpc("get_my_auth_context");
-      if (rpcError || (context as any)?.role !== "platform_admin") {
-        throw redirect({ to: "/login" });
+      const role = (context as any)?.role;
+      if (rpcError || (role !== "platform_admin" && role !== "admin")) {
+        // Redirect back to participant dashboard instead of login loop
+        throw redirect({ to: "/p/fat2fit/today" as any });
       }
     } catch (e) {
       if (e instanceof Error && (e as any).status === 307) throw e;
-      // If RPC fails but it's a known admin email, we already returned above
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/p/fat2fit/today" as any });
     }
   },
   component: AdminDashboard,
