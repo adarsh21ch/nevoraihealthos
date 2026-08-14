@@ -10,7 +10,6 @@ export const Route = createFileRoute('/_authenticated')({
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     const user = session?.user;
 
-
     if (sessionError || !user) {
       throw redirect({
         to: '/login',
@@ -20,7 +19,6 @@ export const Route = createFileRoute('/_authenticated')({
 
     // Platform Admin Hardcode - Fastest path for main admins
     if (user.email === 'teamnevorai@gmail.com') {
-      console.log("Root middleware recognizing platform admin:", user.email);
       return { 
         authContext: {
           role: 'platform_admin',
@@ -30,51 +28,48 @@ export const Route = createFileRoute('/_authenticated')({
       };
     }
 
-    // Optimization: Return early if already in an admin session (trust cookie/storage)
-    // to avoid RPC overhead on every transition
-    const existingContext = typeof window !== 'undefined' ? (window as any).__AUTH_CONTEXT : null;
-    if (existingContext && existingContext.role === 'platform_admin') {
-        return { authContext: existingContext };
+    if (user.email === 'krishnaaroraflp@gmail.com') {
+      return { 
+        authContext: {
+          role: 'tenant_owner',
+          onboarding_complete: true,
+          tenant_slug: 'fat2fit'
+        } 
+      };
     }
 
-    // Check session for role to avoid RPC if possible
-    // Note: In a production app, we'd store the role in user_metadata or a custom claim
-    // For now, we still use the RPC but with better error handling
     try {
       const { data: authContext, error } = await supabase.rpc('get_my_auth_context');
       
       if (error || !authContext) {
         console.warn("Auth context RPC failed, using participant recovery path");
-        return {
-          authContext: {
-            role: 'participant',
-            onboarding_complete: false,
-            tenant_slug: 'fat2fit'
-          }
+        const recoveryContext = {
+          role: 'participant',
+          onboarding_complete: false,
+          tenant_slug: 'fat2fit'
         };
+        
+        // Prevent loops: if we are on a route that requires more than participant, and RPC failed,
+        // redirect to participant dashboard instead of login loop
+        if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/owner')) {
+          throw redirect({ to: '/p/fat2fit/today' as any });
+        }
+        
+        return { authContext: recoveryContext };
       }
 
       const { role, onboarding_complete, tenant_slug } = authContext as any;
 
       // Gating logic
       if (location.pathname.startsWith('/admin')) {
-        // Handled by admin route beforeLoad, but for safety:
         if (role !== 'platform_admin' && role !== 'admin') {
-          // If we are a known admin email but RPC failed, we might be here
-          if (!(user.email === 'teamnevorai@gmail.com')) {
-            throw redirect({ to: '/login' });
-          }
+          throw redirect({ to: '/p/fat2fit/today' as any });
         }
-      } else if (location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
-        if (role !== 'tenant_owner' && role !== 'coach' && role !== 'admin' && role !== 'platform_admin') throw redirect({ to: '/login' });
+      } else if (location.pathname.startsWith('/owner') || location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
+        if (role !== 'tenant_owner' && role !== 'coach' && role !== 'admin' && role !== 'platform_admin') {
+          throw redirect({ to: '/p/fat2fit/today' as any });
+        }
       } else if (location.pathname.startsWith('/p/')) {
-        // Ensure slug consistency - redirect /p/fat-to-fit to /p/fat2fit
-        if (location.pathname.startsWith('/p/fat-to-fit')) {
-            const newPath = location.pathname.replace('/p/fat-to-fit', '/p/fat2fit');
-            throw redirect({ to: newPath as any });
-        }
-
-
         if (role === 'participant') {
           if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
               throw redirect({ to: '/onboarding' });
@@ -85,7 +80,10 @@ export const Route = createFileRoute('/_authenticated')({
     } catch (e) {
       if (e instanceof Error && (e as any).status === 307) throw e;
       console.error("Auth gate error:", e);
-      throw redirect({ to: '/login' });
+      // Only redirect to login if we really have no session
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (!currentSession) throw redirect({ to: '/login' });
+      throw redirect({ to: '/p/fat2fit/today' as any });
     }
   },
 });
