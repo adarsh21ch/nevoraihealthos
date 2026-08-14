@@ -479,7 +479,19 @@ function ProfilePage() {
                 </div>
             ))}
         </div>
+      <div className="h-12" />
+
+      {/* Advanced / Danger Zone */}
+      <div className="bg-white rounded-[2.5rem] border border-red-50 p-8 md:p-12 space-y-8 mb-12">
+        <div>
+          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-red-500 mb-2">Protocol Controls</h3>
+          <p className="text-slate-400 text-sm font-medium">Reset your journey to Day 1 if you've missed consecutive days.</p>
+        </div>
+        
+        <ResetDayButton />
       </div>
+
+      <div className="h-20" /> {/* Spacer */}
 
       <ProfileEditDrawer 
         isOpen={!!activeSection} 

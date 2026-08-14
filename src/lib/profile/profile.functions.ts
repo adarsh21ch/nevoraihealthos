@@ -149,6 +149,8 @@ export const validateProfileReadiness = createServerFn({ method: "GET" })
       ready: missing.length === 0,
       missing,
       percent
+    };
+  });
 
 export const resetParticipantDay = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -181,10 +183,13 @@ export const resetParticipantDay = createServerFn({ method: "POST" })
     }
 
     // 3. Clear today's logs and task completions to start fresh
-    await Promise.all([
-      supabase.from("daily_logs").delete().eq("customer_id", (await supabase.from("customers").select("id").eq("user_id", userId).single()).data?.id).eq("log_date", todayStr),
-      supabase.from("task_completions").delete().eq("customer_id", (await supabase.from("customers").select("id").eq("user_id", userId).single()).data?.id).eq("log_date", todayStr)
-    ]);
+    const { data: customer } = await supabase.from("customers").select("id").eq("user_id", userId).single();
+    if (customer) {
+      await Promise.all([
+        supabase.from("daily_logs").delete().eq("customer_id", customer.id).eq("log_date", todayStr),
+        supabase.from("task_completions").delete().eq("customer_id", customer.id).eq("log_date", todayStr)
+      ]);
+    }
 
     return { success: true, newStartDate: todayStr };
   });
