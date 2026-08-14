@@ -10,12 +10,21 @@ export const verifyC9Seed = createServerFn({ method: "POST" })
       const { count: taskCount } = await supabaseAdmin.from("day_tasks").select("*", { count: 'exact', head: true });
       const { count: foodCount } = await supabaseAdmin.from("free_foods").select("*", { count: 'exact', head: true });
       
+      // Attempt to read the migrations table if it exists
+      const { data: migHistory, error: migError } = await supabaseAdmin
+        .from("supabase_migrations")
+        .select("*")
+        .order("version", { ascending: false })
+        .limit(5);
+
       return {
         programs: (programs || []).map(p => ({ code: String(p.code), name: String(p.name) })),
         dayCount: Number(dayCount || 0),
         taskCount: Number(taskCount || 0),
         foodCount: Number(foodCount || 0),
-        status: "success"
+        status: "success",
+        migrations: migHistory || [],
+        migError: migError ? migError.message : null
       };
     } catch (e: any) {
       return { 
