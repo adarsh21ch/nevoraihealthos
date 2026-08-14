@@ -50,9 +50,10 @@ function AdminDashboard() {
       <aside className="w-72 bg-slate-900 text-white flex flex-col border-r border-slate-800 shrink-0">
         <div className="p-8 space-y-10 flex flex-col h-full">
           <div className="flex items-center gap-4 px-2">
-              <AppLogo variant="light" />
+              <AppLogo variant="light" iconOnly />
               <div className="flex flex-col">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">Admin Portal</span>
+                <span className="text-sm font-black text-white uppercase tracking-tight">Fat2Fit</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Admin Portal</span>
               </div>
           </div>
           
