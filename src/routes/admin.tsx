@@ -96,7 +96,7 @@ function NavItem({ icon: Icon, label, to }: any) {
             "w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all font-bold text-sm",
             "text-slate-400 hover:bg-slate-800 hover:text-white"
           )}
-          activeProps={{ className: "bg-ink text-white shadow-lg shadow-black/20 border-l-4 border-health-green" }}
+          activeProps={{ className: "bg-emerald-900 text-white shadow-lg shadow-black/20 border-l-4 border-emerald-500" }}
         >
             <Icon className="w-5 h-5" />
             {label}
