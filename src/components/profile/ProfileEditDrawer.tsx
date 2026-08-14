@@ -9,10 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-} from "@/components/ui/drawer";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -109,7 +105,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
     if (field.type === 'select' || field.options) {
       return (
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all">
+          <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-2 focus:ring-health-green/20 focus:border-health-green/40 transition-all outline-none">
             <SelectValue placeholder={`Select ${field.label}`} />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
@@ -128,7 +124,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         <Textarea 
           value={value} 
           onChange={e => onChange(e.target.value)}
-          className="min-h-[120px] rounded-2xl border-slate-100 bg-slate-50/50 p-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all resize-none"
+          className="min-h-[120px] rounded-2xl border-slate-100 bg-slate-50/50 p-5 text-sm font-bold text-ink focus:ring-2 focus:ring-health-green/20 focus:border-health-green/40 transition-all resize-none outline-none"
           placeholder={`Enter ${field.label.toLowerCase()}...`}
         />
       );
@@ -139,7 +135,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
           type={field.type || 'text'}
           value={value} 
           onChange={e => onChange(e.target.value)}
-          className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-0 focus:border-health-green/30 transition-all"
+          className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 text-sm font-bold text-ink focus:ring-2 focus:ring-health-green/20 focus:border-health-green/40 transition-all outline-none"
           placeholder={field.label}
           autoComplete={field.key === 'password' ? 'new-password' : undefined}
         />
@@ -147,7 +143,7 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
   };
 
   const formContent = (
-    <div className="mx-auto w-full max-w-md flex flex-col h-full bg-white relative">
+    <div className="mx-auto w-full flex flex-col h-full bg-white relative overflow-hidden">
       {/* Header */}
       <div className="sticky top-0 z-20 bg-white px-6 pt-8 pb-4 border-b border-slate-50 flex items-center justify-between">
         <div>
@@ -163,14 +159,13 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
       </div>
       
       {/* Form Content */}
-      <ScrollArea className="flex-1 px-8 py-8 h-[50vh] md:h-auto">
+      <ScrollArea className="flex-1 px-8 py-10 h-[60vh] md:h-auto">
         <div className="space-y-8 pb-32">
           {section.fields.map(field => (
             <div key={field.key} className="space-y-3">
               <Label className="text-[11px] uppercase font-black text-ink tracking-[0.2em] ml-1">{field.label}</Label>
-              <div className="relative group">
+              <div className="relative group rounded-2xl">
                 {renderField(field)}
-                <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-focus-within:border-health-green/20 pointer-events-none transition-all" />
               </div>
             </div>
           ))}
@@ -203,25 +198,11 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
   );
 
   return (
-    <>
-      {/* Mobile: Drawer */}
-      <div className="md:hidden">
-        <Drawer open={isOpen} onOpenChange={onClose}>
-          <DrawerContent className="max-h-[92vh] border-none bg-white rounded-t-[3rem] shadow-2xl overflow-hidden">
-            {formContent}
-          </DrawerContent>
-        </Drawer>
-      </div>
-
-      {/* Desktop: Dialog (Modal) */}
-      <div className="hidden md:block">
-        <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-[3rem]">
-            {formContent}
-          </DialogContent>
-        </Dialog>
-      </div>
-    </>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-[3rem] bg-white sm:rounded-[3rem] w-[92%] sm:w-full">
+        {formContent}
+      </DialogContent>
+    </Dialog>
   );
 }
 
