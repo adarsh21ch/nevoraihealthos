@@ -122,7 +122,7 @@ function TodayPage() {
         
         <div className="flex flex-col gap-3 w-full max-w-[200px]">
           {state === 'not_a_customer' && (
-            <Button onClick={() => navigate({ to: '/onboarding' as any })} className="bg-health-green rounded-2xl text-white w-full">
+            <Button onClick={() => navigate({ to: '/onboarding' as any })} className="bg-health-green rounded-2xl text-slate-900 font-bold w-full">
               Start Onboarding
             </Button>
           )}
@@ -296,7 +296,7 @@ function TodayPage() {
                             onClick={() => updateWater(isActive ? i : i + 1)}
                             className={cn(
                                 "w-12 h-12 rounded-xl flex items-center justify-center transition-all border-2 shrink-0",
-                                isActive ? "bg-health-green border-health-green text-white" : "bg-slate-50 border-transparent text-slate-200 hover:border-slate-100"
+                                isActive ? "bg-health-green border-health-green text-slate-900" : "bg-slate-50 border-transparent text-slate-200 hover:border-slate-100"
                             )}
                         >
                             <Droplets className={cn("w-5 h-5", isActive ? "fill-current" : "")} />
@@ -381,7 +381,7 @@ function TodayPage() {
                           >
                             <div className={cn(
                               "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all border-2",
-                              isCompleted ? "bg-health-green border-health-green text-white" : "bg-slate-50 border-slate-100 text-slate-200"
+                              isCompleted ? "bg-health-green border-health-green text-slate-900" : "bg-slate-50 border-slate-100 text-slate-200"
                             )}>
                               {isCompleted ? <Check className="w-5 h-5" /> : <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />}
                             </div>
@@ -432,7 +432,7 @@ function TodayPage() {
                     onClick={() => updateLogFn({ data: { customerId: customer.id, logDate: data.todayStr!, dayNumber, mood: mood.label }})}
                     className={cn(
                         "flex flex-col items-center gap-4 py-8 rounded-[2rem] transition-all border-2",
-                        dailyLog?.mood === mood.label ? "bg-health-green border-health-green text-white shadow-xl shadow-health-green/20" : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
+                        dailyLog?.mood === mood.label ? "bg-health-green border-health-green text-slate-900 shadow-xl shadow-health-green/20" : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10"
                     )}
                 >
                     <mood.icon className={cn("w-8 h-8", dailyLog?.mood === mood.label ? "text-white" : mood.color)} />
