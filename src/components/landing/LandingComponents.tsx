@@ -146,7 +146,7 @@ export const DownloadSection = ({ title, subtitle, pdfUrl }: { title: string, su
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    className="relative p-12 md:p-20 rounded-[3.5rem] bg-emerald-600 text-white overflow-hidden shadow-2xl shadow-emerald-200"
+    className="relative p-8 md:p-20 rounded-[2.5rem] md:rounded-[3.5rem] bg-emerald-600 text-white overflow-hidden shadow-2xl shadow-emerald-200 mx-auto w-full max-w-[calc(100vw-3rem)] md:max-w-none"
   >
     <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48" />
     <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl -ml-48 -mb-48" />
