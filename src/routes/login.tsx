@@ -118,7 +118,9 @@ function LoginPage() {
       // Hardcoded admin redirect (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
-        window.location.href = '/admin'; // Direct navigation to avoid SPA state lag
+        // Use full URL to ensure clean state and bypass router transitions
+        const target = window.location.origin + '/admin';
+        window.location.href = target;
         return;
       }
 
