@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, X, Check, Loader2, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Check, Loader2, Image as ImageIcon, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getAppSettings } from "@/lib/tenant.functions";
 import { updateBranding } from "@/lib/admin-settings.functions";
@@ -18,6 +18,7 @@ export function BrandingSettings() {
   const updateBrandingFn = useServerFn(updateBranding);
   
   const [uploading, setUploading] = useState(false);
+  const [uploadingBooklet, setUploadingBooklet] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   
   const { data: settingsData, isLoading } = useQuery({
@@ -85,6 +86,41 @@ export function BrandingSettings() {
 
   const handleRemoveLogo = async () => {
     await updateMutation.mutateAsync({ logoUrl: null });
+  };
+
+  const handleBookletUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast.error("Invalid file type. Please upload a PDF.");
+      return;
+    }
+
+    setUploadingBooklet(true);
+    try {
+      const fileName = `c9-booklet-${Math.random().toString(36).substring(7)}.pdf`;
+      const filePath = `documents/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('branding')
+        .upload(filePath, file, {
+          cacheControl: '31536000',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('branding')
+        .getPublicUrl(filePath);
+
+      await updateMutation.mutateAsync({ bookletUrl: publicUrl });
+    } catch (error: any) {
+      toast.error("Booklet upload failed: " + error.message);
+    } finally {
+      setUploadingBooklet(false);
+    }
   };
 
   if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
@@ -211,6 +247,80 @@ export function BrandingSettings() {
                  <li>• Fallback to "F2F" identity if no logo is provided.</li>
                </ul>
              </div>
+          </div>
+        </div>
+
+        <div className="pt-8 border-t border-slate-100">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <FileText className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-ink">Resource Management</h3>
+              <p className="text-sm text-slate-500 font-medium">Upload official guides and booklets for participants.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="space-y-4">
+              <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Official C9 Booklet (PDF)</Label>
+              <div className="flex flex-col gap-4">
+                {settings?.booklet_url && (
+                  <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-red-500">
+                        <FileText className="w-5 h-5" />
+                      </div>
+                      <div className="overflow-hidden">
+                        <p className="text-xs font-bold text-ink truncate max-w-[200px]">C9 Booklet 2026.pdf</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Active Resource</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-slate-400 hover:text-red-500"
+                      onClick={() => updateMutation.mutate({ bookletUrl: null })}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+                <div className="relative">
+                  <Input 
+                    type="file" 
+                    accept=".pdf" 
+                    onChange={handleBookletUpload}
+                    disabled={uploadingBooklet || updateMutation.isPending}
+                    className="hidden" 
+                    id="booklet-upload"
+                  />
+                  <label 
+                    htmlFor="booklet-upload"
+                    className={cn(
+                      "flex items-center justify-center w-full h-24 rounded-3xl border-2 border-dashed border-slate-200 bg-white hover:border-emerald-500 hover:bg-emerald-50 transition-all cursor-pointer gap-3",
+                      (uploadingBooklet || updateMutation.isPending) && "opacity-50 cursor-not-allowed"
+                    )}
+                  >
+                    {uploadingBooklet ? (
+                      <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
+                    ) : (
+                      <>
+                        <Upload className="w-5 h-5 text-slate-400" />
+                        <span className="text-xs font-bold text-ink">Upload Booklet PDF</span>
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-emerald-50 rounded-[2.5rem] p-8 flex flex-col justify-center">
+              <h4 className="text-xs font-black uppercase tracking-widest text-emerald-900 mb-3">Public Access</h4>
+              <p className="text-xs text-emerald-800/70 font-medium leading-relaxed">
+                The uploaded booklet will be automatically available for download on the public landing page and within the participant's Kit and Profile tabs.
+              </p>
+            </div>
           </div>
         </div>
       </CardContent>

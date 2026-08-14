@@ -128,6 +128,7 @@ export type Database = {
       }
       app_settings: {
         Row: {
+          booklet_url: string | null
           brand_name: string
           health_disclaimer: string
           id: boolean
@@ -137,6 +138,7 @@ export type Database = {
           whatsapp_number: string
         }
         Insert: {
+          booklet_url?: string | null
           brand_name?: string
           health_disclaimer?: string
           id?: boolean
@@ -146,6 +148,7 @@ export type Database = {
           whatsapp_number?: string
         }
         Update: {
+          booklet_url?: string | null
           brand_name?: string
           health_disclaimer?: string
           id?: boolean

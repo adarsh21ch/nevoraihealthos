@@ -13,6 +13,7 @@ export const updateBranding = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({
     logoUrl: z.string().url().optional().nullable(),
+    bookletUrl: z.string().url().optional().nullable(),
     brandName: z.string().min(2).optional(),
     tagline: z.string().optional(),
   }).parse(data))
@@ -22,6 +23,7 @@ export const updateBranding = createServerFn({ method: "POST" })
 
     const updateData: any = {};
     if (data.logoUrl !== undefined) updateData.logo_url = data.logoUrl;
+    if (data.bookletUrl !== undefined) updateData.booklet_url = data.bookletUrl;
     if (data.brandName) updateData.brand_name = data.brandName;
     if (data.tagline !== undefined) updateData.tagline = data.tagline;
 

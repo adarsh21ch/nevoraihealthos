@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Package, CheckCircle2, PlayCircle, ShieldCheck, BookOpen, ChevronRight, Info } from 'lucide-react';
+import { Package, CheckCircle2, PlayCircle, ShieldCheck, BookOpen, ChevronRight, Info, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLoaderData } from '@tanstack/react-router';
+import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/kit')({
@@ -11,6 +13,8 @@ export const Route = createFileRoute('/_authenticated/p/$tenantSlug/kit')({
 
 function KitPage() {
   const { tenantSlug } = Route.useParams();
+  const { tenant } = useLoaderData({ from: '/_authenticated/p/$tenantSlug' }) as any;
+  const bookletUrl = tenant?.booklet_url || defaultBookletAsset.url;
   const queryClient = useQueryClient();
 
   const { data: products, isLoading, error } = useQuery({
@@ -81,13 +85,19 @@ function KitPage() {
             <h3 className="font-bold text-xl">Preparation Guide</h3>
           </div>
           <div className="grid grid-cols-1 gap-4">
-            <button className="bg-white p-6 rounded-3xl flex items-center justify-between group shadow-sm transition-all hover:shadow-md active:scale-[0.98]">
+            <a 
+              href={bookletUrl} 
+
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-white p-6 rounded-3xl flex items-center justify-between group shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+            >
               <div className="text-left">
-                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Preparation Checklist</h4>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Essential steps before Day 1</p>
+                <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Official C9 Booklet</h4>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Full 2026 Protocol PDF</p>
               </div>
-              <ChevronRight className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
-            </button>
+              <Download className="w-5 h-5 text-slate-200 group-hover:text-health-green transition-all" />
+            </a>
             <button className="bg-white p-6 rounded-3xl flex items-center justify-between group shadow-sm transition-all hover:shadow-md active:scale-[0.98]">
               <div className="text-left">
                 <h4 className="font-bold text-ink group-hover:text-health-green transition-colors">Supplement Instructions</h4>
