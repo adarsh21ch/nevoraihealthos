@@ -15,6 +15,8 @@ import { getTenantByHint } from "@/lib/tenant.functions";
 import { TenantProvider } from "@/lib/tenant-context";
 import { TenantGate } from "@/components/site/TenantGate";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
+
 
 
 import appCss from "../styles.css?url";
@@ -193,7 +195,9 @@ function RootComponent() {
       <TenantProvider tenant={tenant as any} isCustomDomain={isCustomDomain}>
         <TenantGate isPlatformPage={!isCustomDomain && !tenant}>
           <Outlet />
+          <AffiliationDisclaimer />
           <PWAInstallPrompt />
+
         </TenantGate>
       </TenantProvider>
       <Toaster />

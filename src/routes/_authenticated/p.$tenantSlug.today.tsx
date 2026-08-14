@@ -150,7 +150,6 @@ function TodayPage() {
 
   const handleToggleTask = async (taskId: string, isCompleted: boolean) => {
     try {
-      // Optimitic UI update is harder with current structure, so we just mutate
       await toggleTaskFn({
         data: {
           customerId: customer.id,
@@ -167,6 +166,7 @@ function TodayPage() {
       toast.error(err.message || "Failed to update task");
     }
   };
+
 
 
   const updateWater = async (count: number) => {
