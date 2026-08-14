@@ -42,7 +42,7 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
   });
 
   const langMutation = useMutation({
-    mutationFn: (lang: string) => updateProfile({ preferred_language: lang }),
+    mutationFn: (lang: string) => updateProfile({ data: { preferred_language: lang } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-profile'] });
       toast.success("Language preference updated");
@@ -145,7 +145,7 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
   });
 
   const langMutation = useMutation({
-    mutationFn: (lang: string) => updateProfile({ preferred_language: lang }),
+    mutationFn: (lang: string) => updateProfile({ data: { preferred_language: lang } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-profile'] });
       toast.success("Language updated");
