@@ -90,9 +90,10 @@ function AdminDashboard() {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <div className="p-12 max-w-7xl mx-auto w-full space-y-12">
-          {/* We only show the overview stats on the index route of admin */}
+          {/* Render the overview content ONLY if we are at the base /admin path */}
           <RouteContent stats={stats} />
-          <Outlet />
+          {/* Outlet handles the sub-routes like /admin/access-codes */}
+          {!isOverviewPath() && <Outlet />}
         </div>
       </main>
     </div>
