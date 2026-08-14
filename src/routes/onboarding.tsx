@@ -299,7 +299,7 @@ function OnboardingPage() {
                               onClick={() => updateField('gender', g)}
                               className={cn(
                                 "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
-                                formData.gender === g ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                                formData.gender === g ? "bg-health-green text-slate-900 border-health-green" : "border-slate-100 text-slate-400 hover:border-slate-200"
                               )}
                             >
                               {g}
@@ -371,7 +371,7 @@ function OnboardingPage() {
                           onClick={() => updateField('lifestyle', l)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.lifestyle === l ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.lifestyle === l ? "bg-health-green text-slate-900 border-health-green shadow-md" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {l}
@@ -419,7 +419,7 @@ function OnboardingPage() {
                           onClick={() => updateField('diet_preference', d)}
                           className={cn(
                             "w-full p-4 rounded-2xl border text-left text-[11px] font-black uppercase tracking-widest transition-all",
-                            formData.diet_preference === d ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400 hover:border-slate-200"
+                            formData.diet_preference === d ? "bg-health-green text-slate-900 border-health-green shadow-md" : "border-slate-100 text-slate-400 hover:border-slate-200"
                           )}
                         >
                           {d}
@@ -449,7 +449,7 @@ function OnboardingPage() {
                             }}
                             className={cn(
                               "p-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
-                              isSelected ? "bg-ink text-white border-ink" : "border-slate-100 text-slate-400"
+                              isSelected ? "bg-health-green text-slate-900 border-health-green shadow-sm" : "border-slate-100 text-slate-400"
                             )}
                           >
                             {f}
@@ -535,7 +535,7 @@ function OnboardingPage() {
                         onClick={() => updateField('track', 'standard')}
                         className={cn(
                           "flex-1 p-6 rounded-[2.5rem] border text-center space-y-2 transition-all",
-                          formData.track === 'standard' ? "bg-ink text-white border-ink shadow-xl" : "border-slate-100 text-slate-400"
+                          formData.track === 'standard' ? "bg-health-green text-slate-900 border-health-green shadow-xl" : "border-slate-100 text-slate-400"
                         )}
                       >
                         <div className="text-2xl font-serif italic font-bold">C9</div>
@@ -545,7 +545,7 @@ function OnboardingPage() {
                         onClick={() => updateField('track', 'DX4')}
                         className={cn(
                           "flex-1 p-6 rounded-[2.5rem] border text-center space-y-2 transition-all",
-                          formData.track === 'DX4' ? "bg-ink text-white border-ink shadow-xl" : "border-slate-100 text-slate-400"
+                          formData.track === 'DX4' ? "bg-health-green text-slate-900 border-health-green shadow-xl" : "border-slate-100 text-slate-400"
                         )}
                       >
                         <div className="text-2xl font-serif italic font-bold">DX4</div>
