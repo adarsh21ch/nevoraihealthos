@@ -128,6 +128,21 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
           );
         })}
       </div>
+      
+      {/* Logout button for mobile - placed above the nav bar for visibility */}
+      <button 
+        onClick={() => {
+          if (window.confirm("Are you sure you want to log out?")) {
+            const { supabase } = import.meta.env.DEV 
+              ? { supabase: (window as any).supabase } 
+              : require('@/integrations/supabase/client');
+            supabase.auth.signOut().then(() => window.location.href = '/login');
+          }
+        }}
+        className="absolute -top-12 right-6 p-2 bg-white/80 backdrop-blur rounded-full text-slate-400 border border-slate-100 shadow-sm active:scale-90"
+      >
+        <LogOut className="w-5 h-5" />
+      </button>
     </nav>
   );
 }
