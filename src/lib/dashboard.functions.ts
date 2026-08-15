@@ -67,7 +67,7 @@ export const getCustomers = createServerFn({ method: "GET" })
     let query = supabase
       .from("customers")
       .select(
-        "id, name, phone, created_at, start_date, onboarding_complete, programs(name, duration_days)",
+        "id, name, phone, created_at, start_date, onboarding_complete, programs(name, duration_days), user_roles(role)",
         { count: "exact" },
       )
       .order("name")
@@ -87,6 +87,7 @@ export const getCustomers = createServerFn({ method: "GET" })
       created_at: c.created_at,
       day_number: c.start_date ? istDayNumber(c.start_date) : null,
       program: c.programs,
+      role: c.user_roles?.[0]?.role || 'participant',
     }));
 
     return { customers, total: count || 0 };
