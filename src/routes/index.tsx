@@ -244,7 +244,7 @@ function Index() {
             <AccordionItem value="item-1" className="border-none bg-white rounded-3xl px-8 py-2">
               <AccordionTrigger className="text-lg font-bold hover:no-underline">What is the Fat2Fit program?</AccordionTrigger>
               <AccordionContent className="text-slate-500 text-base leading-relaxed">
-                Fit to Fit is a comprehensive wellness ecosystem that combines data-driven tracking with personalized metabolic coaching to help you achieve sustainable health results.
+                Fat2Fit is a comprehensive wellness ecosystem that combines data-driven tracking with personalized metabolic coaching to help you achieve sustainable health results.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2" className="border-none bg-white rounded-3xl px-8 py-2">
