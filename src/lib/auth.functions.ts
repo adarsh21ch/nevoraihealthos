@@ -12,16 +12,16 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabase } = await import("@/integrations/supabase/client");
 
-    // 1. Check access code
-    const { data: creds, error: credsError } = await supabase
-      .from("access_codes")
+    // 1. Check registration code
+    const { data: regCode, error: regError } = await supabase
+      .from("registration_codes")
       .select("id")
-      .eq("code", data.access_code)
-      .is("used_at", null)
+      .eq("code", data.access_code.toUpperCase())
+      .eq("is_active", true)
       .maybeSingle();
 
-    if (credsError || !creds) {
-      throw new Error("Invalid or already used access code");
+    if (regError || !regCode) {
+      throw new Error("Invalid registration code. Please contact your coach.");
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -67,11 +67,9 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
-    // 5. Mark access code as used
-    await supabase
-      .from("access_codes")
-      .update({ used_at: new Date().toISOString(), customer_id: customer.id })
-      .eq("id", creds.id);
+    // 5. Registration code tracking (optional logging or usage count could go here)
+    // For now we just allow the same code to be used by multiple participants if active
+    console.log("Customer account created using registration code:", data.access_code);
 
     return { 
       success: true, 

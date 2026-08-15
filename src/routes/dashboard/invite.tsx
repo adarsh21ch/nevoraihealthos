@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getAppSettings } from "@/lib/tenant.functions";
+import { getMyTenantAccessCode } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/dashboard/invite")({
   loader: async () => {
@@ -17,20 +18,27 @@ export const Route = createFileRoute("/dashboard/invite")({
 
 function InvitePage() {
   const getSettingsFn = useServerFn(getAppSettings);
+  const fetchAccessCode = useServerFn(getMyTenantAccessCode);
   
   const { data: result } = useQuery({
     queryKey: ["app-settings"],
     queryFn: () => getSettingsFn(),
   });
 
+  const { data: creds } = useQuery({
+    queryKey: ["my-tenant-access-code"],
+    queryFn: () => fetchAccessCode(),
+  });
+
   const settings = result?.settings;
   const brandName = settings?.brand_name || "Fat2Fit";
+  const accessCode = creds?.accessCode || "FAT2FIT";
   
   const joinUrl = typeof window !== 'undefined' 
     ? `${window.location.origin}/login`
     : `/login`;
   
-  const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl} and use Access Code: FAT2FIT to create your account.`;
+  const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl} and use Access Code: ${accessCode} to create your account.`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -54,11 +62,11 @@ function InvitePage() {
               <div className="text-center space-y-1">
                 <code className="text-xs font-bold text-slate-500 break-all px-4 block">/login</code>
                 <div className="text-lg font-black text-slate-900 bg-white px-4 py-2 rounded-xl border border-slate-200 inline-block mt-2">
-                  FAT2FIT
+                  {accessCode}
                 </div>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Access Code</p>
               </div>
-              <Button className="w-full bg-slate-900 text-white font-bold rounded-xl" onClick={() => { navigator.clipboard.writeText(`${joinUrl} (Code: FAT2FIT)`); toast.success("Link & Code copied"); }}>
+              <Button className="w-full bg-slate-900 text-white font-bold rounded-xl" onClick={() => { navigator.clipboard.writeText(`${joinUrl} (Code: ${accessCode})`); toast.success("Link & Code copied"); }}>
                 <Copy className="w-4 h-4 mr-2" /> Copy Invitation
               </Button>
             </div>

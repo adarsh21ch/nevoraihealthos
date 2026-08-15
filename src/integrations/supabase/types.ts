@@ -1012,6 +1012,27 @@ export type Database = {
         }
         Relationships: []
       }
+      registration_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+        }
+        Relationships: []
+      }
       task_completions: {
         Row: {
           completed_at: string
