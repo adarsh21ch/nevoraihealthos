@@ -3,7 +3,7 @@ import { ShieldCheck, Info } from "lucide-react";
 
 export function AffiliationDisclaimer() {
   return (
-    <div className="bg-slate-50 border-t border-slate-100 py-12 px-6">
+    <div className="bg-transparent border-t border-white/5 py-8 px-6">
       <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-6 text-slate-400">
         <ShieldCheck className="w-8 h-8 shrink-0 opacity-20" />
         <div className="space-y-4 text-center md:text-left">
