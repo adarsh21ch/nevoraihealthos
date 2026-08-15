@@ -7,7 +7,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     access_code: z.string(),
     fbo_id: z.string(),
     email: z.string().email(),
-    password: z.string().min(6),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
   }).parse(data))
   .handler(async ({ data }) => {
     const { supabase } = await import("@/integrations/supabase/client");
