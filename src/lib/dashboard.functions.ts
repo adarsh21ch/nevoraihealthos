@@ -58,9 +58,13 @@ export const getCustomers = createServerFn({ method: "GET" })
     
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
     
     if (!isAdmin) throw new Error("Unauthorized");
