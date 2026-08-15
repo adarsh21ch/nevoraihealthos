@@ -624,29 +624,35 @@ function OnboardingPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-4 pt-8">
-            {step > 0 && (
-              <Button 
-                variant="ghost" 
-                onClick={back}
-                className="h-14 px-8 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
-              >
-                Back
-              </Button>
-            )}
-            <Button 
-              onClick={step === STEPS.length - 1 ? finish : next} 
-              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <Loader2 className="animate-spin w-5 h-5" />
-              ) : (
-                <span className="relative z-10">
-                  {step === STEPS.length - 1 ? "Start Journey" : "Continue"}
-                </span>
+          <div className="flex flex-col gap-6 pt-8">
+            <div className="flex gap-4">
+              {step > 0 && (
+                <Button 
+                  variant="ghost" 
+                  onClick={back}
+                  className="h-14 px-8 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
+                >
+                  Back
+                </Button>
               )}
-            </Button>
+              <Button 
+                onClick={step === STEPS.length - 1 ? finish : next} 
+                className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <Loader2 className="animate-spin w-5 h-5" />
+                ) : (
+                  <span className="relative z-10">
+                    {step === STEPS.length - 1 ? "Start Journey" : "Continue"}
+                  </span>
+                )}
+              </Button>
+            </div>
+            
+            <div className="pt-4 border-t border-slate-50 opacity-40">
+              <AffiliationDisclaimer />
+            </div>
           </div>
         </div>
       </div>
