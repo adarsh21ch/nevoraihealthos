@@ -108,7 +108,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 bg-white" id="how-it-works">
+      <section className="py-24 bg-white" id="command-center">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
           <div>
             <SectionHeader centered={false} badge="Daily Experience" title="Your Health OS." subtitle="A comprehensive digital companion for your wellness journey. Track your metrics, access your personalized plan, and connect with your coach in one seamless interface." />
