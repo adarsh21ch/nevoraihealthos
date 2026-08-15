@@ -98,7 +98,6 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
     const { data: { user } } = await supabase.auth.getUser();
-    console.log("[rotateTenantAccessCode] User context:", { userId, email: user?.email });
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     
     let isAdmin = isHardcodedAdmin;

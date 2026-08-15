@@ -74,9 +74,13 @@ function LoginPage() {
       
       if (session) {
         // We already have a session, let the router's beforeLoad handle the redirect logic
-        // But we trigger a reload to ensure the router state is fresh and RPCs run
         const isLoggingOut = new URLSearchParams(window.location.search).get('logout') === 'true';
         if (!isLoggingOut) {
+          // If we have a session but we're on the login page, check if we're the admin
+          if (session.user.email === 'teamnevorai@gmail.com') {
+             window.location.href = '/admin';
+             return;
+          }
           navigate({ to: '/login', replace: true });
         }
       }

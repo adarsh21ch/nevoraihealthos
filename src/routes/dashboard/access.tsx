@@ -109,7 +109,7 @@ function AccessControlPage() {
                       placeholder="ENTER-NEW-CODE" 
                       value={newCode}
                       onChange={(e) => setNewCode(e.target.value.toUpperCase())}
-                      className="h-14 pl-11 rounded-2xl border-slate-200 font-black tracking-widest text-lg focus-visible:ring-slate-900 transition-all uppercase"
+                      className="h-14 pl-11 rounded-2xl border-slate-200 font-black tracking-widest text-lg focus-visible:ring-slate-900 transition-all uppercase placeholder:text-slate-300"
                       maxLength={20}
                     />
                   </div>
