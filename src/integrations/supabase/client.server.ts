@@ -66,7 +66,7 @@ export const supabaseAdmin = new Proxy({} as any, {
     if (_supabaseAdmin === undefined) _supabaseAdmin = createSupabaseAdminClient();
     
     if (_supabaseAdmin === null) {
-      throw new Error("SUPABASE ADMIN CLIENT NOT AVAILABLE: SUPABASE_SERVICE_ROLE_KEY IS MISSING. PLEASE CONNECT SUPABASE IN LOVABLE CLOUD.");
+      throw new Error("SUPABASE ADMIN CLIENT NOT AVAILABLE: This project requires a Service Role Key for admin tasks (like signup). Please provide your SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to the Lovable assistant in chat so they can be securely saved as project secrets.");
     }
     
     const value = Reflect.get(_supabaseAdmin, prop, receiver);
