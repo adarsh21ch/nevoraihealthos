@@ -46,7 +46,7 @@ function AccessControlPage() {
   const [newCode, setNewCode] = useState("");
 
   // Use the distributorId from the query if the loader one is missing
-  const activeTenantId = tenantId || creds?.distributorId;
+  const activeTenantId = loaderTenantId || creds?.distributorId;
 
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
