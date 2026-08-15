@@ -125,7 +125,7 @@ export function BMITool() {
                           <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium">
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-2xl z-[200]">
+                          <SelectContent className="rounded-2xl bg-white border border-slate-200 shadow-2xl z-[200] relative">
                             <SelectItem value="male">Male</SelectItem>
                             <SelectItem value="female">Female</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
@@ -138,7 +138,7 @@ export function BMITool() {
                           <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium">
                             <SelectValue placeholder="Goal" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-2xl z-[200]">
+                          <SelectContent className="rounded-2xl bg-white border border-slate-200 shadow-2xl z-[200] relative">
                             <SelectItem value="weight_loss">Weight Loss</SelectItem>
                             <SelectItem value="muscle_gain">Muscle Gain</SelectItem>
                             <SelectItem value="wellness">General Wellness</SelectItem>
@@ -165,7 +165,7 @@ export function BMITool() {
                         <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium">
                           <SelectValue placeholder="Select Activity Level" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-2xl z-[200]">
+                        <SelectContent className="rounded-2xl bg-white border border-slate-200 shadow-2xl z-[200] relative">
                           <SelectItem value="sedentary">Sedentary (Little/no exercise)</SelectItem>
                           <SelectItem value="light">Lightly Active (1-3 days/week)</SelectItem>
                           <SelectItem value="moderate">Moderately Active (3-5 days/week)</SelectItem>
