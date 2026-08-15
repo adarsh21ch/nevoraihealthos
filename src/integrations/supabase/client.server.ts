@@ -66,7 +66,7 @@ export const supabaseAdmin = new Proxy({} as any, {
     if (_supabaseAdmin === undefined) _supabaseAdmin = createSupabaseAdminClient();
     
     if (_supabaseAdmin === null) {
-      throw new Error("SUPABASE ADMIN CLIENT NOT AVAILABLE: This project requires a Service Role Key for admin tasks (like signup). Please provide your SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to the Lovable assistant in chat so they can be securely saved as project secrets.");
+      throw new Error("SUPABASE CONNECTION REQUIRED: To enable program enrollment (Sign Up), please paste your 'Supabase Project URL' and 'Service Role Key' here in the chat. I will securely save them to fix the connection.");
     }
     
     const value = Reflect.get(_supabaseAdmin, prop, receiver);
