@@ -34,7 +34,10 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       user_metadata: { fbo_id: data.fbo_id }
     });
 
-    if (authError) throw authError;
+    if (authError) {
+      console.error("Supabase Admin createUser error:", authError);
+      throw authError;
+    }
 
     // 3. Assign Role (Participant)
     const { error: roleError } = await supabaseAdmin
