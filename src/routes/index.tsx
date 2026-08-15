@@ -1,8 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import LandingPage from '@/components/site/LandingPage'
 
 export const Route = createFileRoute('/')({
-  component: () => <LandingPage />,
+  component: () => (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-emerald-50 text-emerald-900 p-8">
+      <h1 className="text-6xl font-serif mb-4">Fat2Fit</h1>
+      <p className="text-xl mb-8">Premium 9-Day Metabolic Transformation</p>
+      <a href="/login" className="px-8 py-4 bg-emerald-900 text-white rounded-xl font-bold uppercase tracking-widest">
+        Join the Program
+      </a>
+    </div>
+  ),
   head: () => ({
     title: 'Fat2Fit | Premium 9-Day Metabolic Transformation',
     meta: [
