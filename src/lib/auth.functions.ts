@@ -15,13 +15,26 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     // 1. Check access code
     const { data: creds, error: credsError } = await supabase
       .from("access_codes")
-      .select("id")
+      .select("id, is_permanent")
       .eq("code", data.access_code)
-      .is("used_at", null)
       .maybeSingle();
 
     if (credsError || !creds) {
-      throw new Error("Invalid or already used access code");
+      throw new Error("Invalid access code");
+    }
+
+    // Only check used_at if it's NOT a permanent code
+    if (!creds.is_permanent) {
+      const { data: usageCheck } = await supabase
+        .from("access_codes")
+        .select("used_at")
+        .eq("id", creds.id)
+        .is("used_at", null)
+        .maybeSingle();
+      
+      if (!usageCheck) {
+        throw new Error("This one-time access code has already been used");
+      }
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
