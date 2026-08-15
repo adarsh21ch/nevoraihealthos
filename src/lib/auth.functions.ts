@@ -15,13 +15,29 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     // 1. Check access code
     const { data: creds, error: credsError } = await supabase
       .from("access_codes")
-      .select("id")
+      .select("id, code")
       .eq("code", data.access_code)
-      .is("used_at", null)
       .maybeSingle();
 
     if (credsError || !creds) {
-      throw new Error("Invalid or already used access code");
+      throw new Error("Invalid access code");
+    }
+
+    // Permanent codes (like FAT2FIT) can be used multiple times.
+    // One-time codes must have used_at as null.
+    const isPermanent = creds.code.toUpperCase() === 'FAT2FIT';
+    
+    if (!isPermanent) {
+      const { data: usageCheck } = await supabase
+        .from("access_codes")
+        .select("used_at")
+        .eq("id", creds.id)
+        .is("used_at", null)
+        .maybeSingle();
+      
+      if (!usageCheck) {
+        throw new Error("This one-time access code has already been used");
+      }
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -72,12 +88,13 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
-    // 5. Mark access code as used
-    // Use supabaseAdmin to bypass RLS if needed, as the user isn't session-active yet
-    await supabaseAdmin
-      .from("access_codes")
-      .update({ used_at: new Date().toISOString(), customer_id: customer.id })
-      .eq("id", creds.id);
+    // 5. Mark access code as used (only for one-time codes)
+    if (!isPermanent) {
+      await supabaseAdmin
+        .from("access_codes")
+        .update({ used_at: new Date().toISOString(), customer_id: customer.id })
+        .eq("id", creds.id);
+    }
 
     return { 
       success: true, 
