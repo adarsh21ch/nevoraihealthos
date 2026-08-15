@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getAppSettings } from "@/lib/tenant.functions";
+import { getMyTenantAccessCode } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/dashboard/invite")({
   loader: async () => {
