@@ -1,14 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Settings as SettingsIcon, Shield, Bell, Globe, Sparkles, Key, CheckCircle2, AlertCircle, Database, Lock, Eye, EyeOff, Loader2, Activity } from "lucide-react";
+import { Settings as SettingsIcon, Shield, Bell, Globe, Sparkles, Key, CheckCircle2, AlertCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { checkAiStatus } from "@/lib/admin-settings.functions";
-import { saveSupabaseSecrets, testAdminConnection } from "@/lib/admin-setup.functions";
-import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { BrandingSettings } from "@/components/admin/BrandingSettings";
@@ -25,7 +21,7 @@ function AdminSettings() {
   });
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-10 animate-in fade-in duration-500">
       <div>
         <h1 className="text-5xl font-bold tracking-tight text-ink leading-none font-serif italic">Platform Settings</h1>
         <p className="text-slate-500 mt-4 font-medium text-lg max-w-md">Configure global system parameters and application branding.</p>
@@ -34,8 +30,6 @@ function AdminSettings() {
       <BrandingSettings />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <SupabaseConfigCard />
-        
         {/* AI Integration Card */}
         <Card className="border-slate-200 rounded-[2.5rem] shadow-sm bg-white overflow-hidden md:col-span-2">
           <div className="flex flex-col md:flex-row">
@@ -123,133 +117,3 @@ function SettingsCard({ icon: Icon, title, description }: any) {
   );
 }
 
-function SupabaseConfigCard() {
-  const [url, setUrl] = React.useState("");
-  const [key, setKey] = React.useState("");
-  const [showKey, setShowKey] = React.useState(false);
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [isTesting, setIsTesting] = React.useState(false);
-
-  const saveSecretsFn = useServerFn(saveSupabaseSecrets);
-  const testConnectionFn = useServerFn(testAdminConnection);
-
-  const handleSave = async () => {
-    if (!url || !key) {
-      toast.error("Please provide both URL and Service Role Key");
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      const result = await saveSecretsFn({ data: { supabaseUrl: url, serviceRoleKey: key } });
-      if (result.success) {
-        toast.success(result.message);
-        // Note: The agent will need to be told via chat to run the secret--add_secret tool
-        // This UI verifies the keys work first.
-      }
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleTest = async () => {
-    setIsTesting(true);
-    try {
-      const result = await testConnectionFn({});
-      if (result.success) {
-        toast.success(result.message + ` (${result.userCount} users found)`);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setIsTesting(false);
-    }
-  };
-
-  return (
-    <Card className="border-slate-200 rounded-[2.5rem] shadow-sm bg-white overflow-hidden md:col-span-2">
-      <div className="p-8">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <Database className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-ink">Supabase Core Configuration</h3>
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Database & Admin Auth</span>
-          </div>
-        </div>
-        
-        <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xl mb-8">
-          Manually configure your Supabase connection if the automatic integration is unavailable. These keys enable administrative tasks like user management and onboarding.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="space-y-2">
-            <Label htmlFor="supabase-url" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Supabase Project URL</Label>
-            <Input 
-              id="supabase-url"
-              placeholder="https://xyz.supabase.co"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="rounded-xl border-slate-200"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="supabase-key" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Service Role Secret Key</Label>
-            <div className="relative">
-              <Input 
-                id="supabase-key"
-                type={showKey ? "text" : "password"}
-                placeholder="eyJhbGc..."
-                value={key}
-                onChange={(e) => setKey(e.target.value)}
-                className="rounded-xl border-slate-200 pr-10"
-              />
-              <button 
-                type="button"
-                onClick={() => setShowKey(!showKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-ink transition-colors"
-              >
-                {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button 
-            onClick={handleSave}
-            disabled={isSaving}
-            className="rounded-2xl bg-ink text-white px-8 font-bold min-w-[160px]"
-          >
-            {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
-            Validate & Prep Keys
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={handleTest}
-            disabled={isTesting}
-            className="rounded-2xl border-slate-200 px-8 font-bold"
-          >
-            {isTesting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Activity className="w-4 h-4 mr-2" />}
-            Test Existing Connection
-          </Button>
-        </div>
-
-        <div className="mt-6 p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
-          <div>
-            <p className="text-[10px] font-black text-amber-900 uppercase tracking-tight mb-1">Security Note</p>
-            <p className="text-[10px] text-amber-700 font-medium leading-normal">
-              After clicking "Validate & Prep Keys", you must provide these keys in the chat assistant for me to securely save them to the project environment.
-            </p>
-          </div>
-        </div>
-      </div>
-    </Card>
-  );
-}
