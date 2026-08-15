@@ -12,7 +12,7 @@ const bmiSchema = z.object({
   activity_level: z.string(),
   goal: z.string(),
   consent: z.literal(true, {
-    errorMap: () => ({ message: "Consent is required" }),
+    message: "Consent is required",
   }),
 });
 
