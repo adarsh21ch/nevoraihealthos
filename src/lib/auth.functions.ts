@@ -14,49 +14,36 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     // 1. Check access code
     const normalizedCode = data.access_code.trim().toUpperCase();
+    const isPermanent = normalizedCode === 'FAT2FIT';
     
-    // Permanent multi-use code bypass
-    if (normalizedCode === 'FAT2FIT') {
-      // We still want to ensure a record exists for 'FAT2FIT' in the DB if we use it for foreign keys,
-      // but for validation, we explicitly allow it.
-      const { data: creds } = await supabase
+    let accessCodeId: string | undefined;
+
+    if (isPermanent) {
+      // For the master permanent code, we try to get its ID, but we don't block if missing
+      const { data: permanentRecord } = await supabase
         .from("access_codes")
         .select("id")
         .eq("code", "FAT2FIT")
         .maybeSingle();
-
-      if (!creds) {
-        // Auto-create if missing (using admin to bypass RLS)
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        await supabaseAdmin.from("access_codes").insert({ code: "FAT2FIT" });
-      }
+      
+      accessCodeId = permanentRecord?.id;
     } else {
       // Standard one-time code check
-      const { data: creds, error: credsError } = await supabase
+      const { data: oneTimeCreds, error: oneTimeError } = await supabase
         .from("access_codes")
         .select("id")
         .eq("code", normalizedCode)
         .is("used_at", null)
         .maybeSingle();
 
-      if (credsError || !creds) {
+      if (oneTimeError || !oneTimeCreds) {
         throw new Error("Invalid or already used access code");
       }
+      accessCodeId = oneTimeCreds.id;
     }
 
-    // Re-fetch creds for the ID (needed for the rest of the function)
-    const { data: creds } = await supabase
-      .from("access_codes")
-      .select("id")
-      .eq("code", normalizedCode)
-      .maybeSingle();
-    
-    if (!creds) throw new Error("Access code verification failed");
-
-    const isPermanent = normalizedCode === 'FAT2FIT';
-
-
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
 
     // 2. Create Auth User
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
