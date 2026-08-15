@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, ArrowRight } from "lucide-react";
 import { BrandedLoading } from "@/components/ui/branded-loading";
 import { AppLogo } from "@/components/ui/app-logo";
+import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
 import { toast } from "sonner";
 
 
