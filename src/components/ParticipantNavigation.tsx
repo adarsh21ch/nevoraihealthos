@@ -49,16 +49,22 @@ export function ParticipantSidebar({ tenant }: SidebarProps) {
 
   const handleLogout = async () => {
     try {
-      // Optimistic navigation for speed
-      navigate({ to: '/login', replace: true });
       toast.success("Logging out...");
       
-      // Background signout
+      // 1. Sign out from Supabase first to invalidate the session server-side
       await supabase.auth.signOut();
+      
+      // 2. Clear local storage specifically to prevent stale session persistence
+      const storageKey = Object.keys(window.localStorage).find(key => key.includes('-auth-token'));
+      if (storageKey) {
+        window.localStorage.removeItem(storageKey);
+      }
+      
+      // 3. Hard redirect to login with a flag to prevent auto-login loops
+      window.location.href = '/login?logout=true';
     } catch (error: any) {
       console.error("Logout failed:", error);
-      // Even if it fails, we want the user to be on the login page
-      window.location.href = '/login';
+      window.location.href = '/login?logout=true';
     }
   };
 
@@ -197,9 +203,11 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
       <button 
         onClick={async () => {
           if (window.confirm("Are you sure you want to log out?")) {
-            // Optimistic redirect
-            window.location.href = '/login';
+            toast.success("Logging out...");
             await supabase.auth.signOut();
+            const storageKey = Object.keys(window.localStorage).find(key => key.includes('-auth-token'));
+            if (storageKey) window.localStorage.removeItem(storageKey);
+            window.location.href = '/login?logout=true';
           }
         }}
         className="absolute -top-12 right-6 p-2 bg-white/80 backdrop-blur rounded-full text-slate-400 border border-slate-100 shadow-sm active:scale-95 transition-transform"

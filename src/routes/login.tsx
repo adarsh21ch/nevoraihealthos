@@ -71,9 +71,14 @@ function LoginPage() {
     const checkInitialSession = async () => {
       // Clear any potential stale state
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (session) {
-        // Force evaluation of beforeLoad if session exists
-        navigate({ to: '/login', replace: true });
+        // We already have a session, let the router's beforeLoad handle the redirect logic
+        // But we trigger a reload to ensure the router state is fresh and RPCs run
+        const isLoggingOut = new URLSearchParams(window.location.search).get('logout') === 'true';
+        if (!isLoggingOut) {
+          navigate({ to: '/login', replace: true });
+        }
       }
       setIsAuthChecking(false);
     };
