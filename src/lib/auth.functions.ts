@@ -21,9 +21,18 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error("Invalid registration code. Please contact your coach.");
     }
 
-    // Now we need supabaseAdmin for the sensitive creation operations
+    // Now we need the Admin client for sensitive creation operations
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    // CRITICAL: We need a reliable way to check if supabaseAdmin is functional
+    // before attempting to use it. If keys are missing, we should fail gracefully.
+    try {
+      // Accessing a property on the proxy will trigger the check in client.server.ts
+      const _check = supabaseAdmin.auth; 
+    } catch (e: any) {
+      console.error("Supabase Admin not available:", e.message);
+      throw new Error("Account creation is currently unavailable. Please contact your coach to verify the system setup.");
+    }
 
     // 2. Create Auth User
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -44,7 +53,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       });
     
     if (roleError) {
-        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+        try { await supabaseAdmin.auth.admin.deleteUser(authUser.user.id); } catch (e) {}
         throw roleError;
     }
 
@@ -62,7 +71,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     if (customerError || !customer) {
       console.error("Customer creation error:", customerError);
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+      try { await supabaseAdmin.auth.admin.deleteUser(authUser.user.id); } catch (e) {}
       throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
@@ -93,9 +102,13 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
       
     if (customer && customer.user_id) {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
-      if (user?.user?.email) {
-        return { found: true, method: 'email' as const, value: user.user.email };
+      try {
+        const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
+        if (user?.user?.email) {
+          return { found: true, method: 'email' as const, value: user.user.email };
+        }
+      } catch (e) {
+        console.warn("Failed to lookup user by ID during login resolution (Admin keys likely missing)");
       }
     }
 
@@ -129,12 +142,16 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     const tempPassword = Math.random().toString(36).slice(-8);
     
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
-      customer.user_id,
-      { password: tempPassword }
-    );
+    try {
+      const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
+        customer.user_id,
+        { password: tempPassword }
+      );
+      if (authError) throw authError;
+    } catch (e: any) {
+      throw new Error(`Password reset failed: ${e.message}. Please verify Supabase Admin connection.`);
+    }
 
-    if (authError) throw authError;
 
     return { success: true, tempPassword };
   });
