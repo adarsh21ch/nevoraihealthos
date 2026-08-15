@@ -25,7 +25,7 @@ const bmiFormSchema = z.object({
   activity_level: z.string().min(1, "Activity level is required"),
   goal: z.string().min(1, "Primary goal is required"),
   consent: z.literal(true, {
-    errorMap: () => ({ message: "You must consent to proceed" }),
+    message: "You must consent to proceed",
   }),
 });
 
@@ -41,10 +41,10 @@ export function BMITool() {
     defaultValues: {
       name: "",
       email: "",
-      age: undefined,
+      age: 0,
       gender: "",
-      height_cm: undefined,
-      weight_kg: undefined,
+      height_cm: 0,
+      weight_kg: 0,
       activity_level: "",
       goal: "",
       consent: false as any,
