@@ -66,7 +66,33 @@ export const updateAppSettings = createServerFn({ method: "POST" })
 export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    return { accessCode: "FAT2FIT" }; // Placeholder
+    const { supabase, userId } = context;
+    
+    // Check if user is hardcoded admin or platform admin
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
+    
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    // Fetch the most recent active code
+    const { data, error } = await supabase
+      .from("access_codes")
+      .select("code")
+      .is("used_at", null)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    
+    // Return the code, or a default if none exist
+    return { accessCode: data?.code || "FAT2FIT" };
   });
 
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
@@ -76,5 +102,23 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
     accessCode: z.string()
   }).parse)
   .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+
+    // Check admin status
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.email !== 'teamnevorai@gmail.com') {
+      const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+      if (!isAdmin) throw new Error("Unauthorized");
+    }
+
+    // Insert new code
+    const { error } = await supabase
+      .from("access_codes")
+      .insert({
+        code: data.accessCode.toUpperCase(),
+        created_at: new Date().toISOString()
+      });
+
+    if (error) throw error;
     return { success: true };
   });
