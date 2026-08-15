@@ -2,19 +2,28 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+const ELEVATED_ROLES = ["admin", "platform_admin", "tenant_owner", "coach"] as const;
+
+async function hasElevatedAccess(supabase: any, userId: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user?.email === 'teamnevorai@gmail.com') return true;
+
+  const { data: appAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+  if (appAdmin) return true;
+
+  const { data: roleRows } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId);
+
+  return !!roleRows?.some((r: any) => ELEVATED_ROLES.includes(r.role));
+}
+
 export const checkAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data: { user } } = await supabase.auth.getUser();
-    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
-    
-    let isAdmin = isHardcodedAdmin;
-    if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
-    }
+    const isAdmin = await hasElevatedAccess(supabase, userId);
     
     if (!isAdmin) throw new Error("Unauthorized");
     return { isAdmin: true };
