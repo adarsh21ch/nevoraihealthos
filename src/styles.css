@@ -17,6 +17,9 @@
 }
 
 @theme {
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #0F172A;
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", serif;
 
