@@ -52,13 +52,23 @@ export const SectionHeader = ({ badge, title, subtitle, centered = true, id, dar
   </div>
 );
 
+export const StatBox = ({ label, value, description }: { label: string, value: string, description: string }) => (
+  <motion.div 
+    whileHover={{ y: -5 }}
+    className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 text-center transition-all hover:bg-white hover:shadow-xl group"
+  >
+    <div className="text-[12px] font-black text-accent uppercase tracking-[0.2em] mb-4 group-hover:scale-110 transition-transform">{label}</div>
+    <div className="text-5xl font-black text-ink mb-4 tracking-tighter">{value}</div>
+    <div className="text-base text-slate-500 font-medium leading-relaxed">{description}</div>
+  </motion.div>
+);
+
 export const PhoneMockup = ({ children }: { children: React.ReactNode }) => (
   <div className="relative mx-auto border-[12px] border-slate-900 bg-slate-900 rounded-[3.5rem] h-[700px] w-[350px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-8 bg-slate-900 rounded-b-3xl z-30"></div>
     <div className="absolute top-0 left-0 right-0 bottom-0 bg-white z-20 overflow-hidden flex flex-col">
       {children}
     </div>
-    {/* Screen Glare */}
     <div className="absolute top-0 left-0 right-0 h-full w-full pointer-events-none z-40 bg-gradient-to-tr from-white/0 via-white/5 to-white/10" />
   </div>
 );
@@ -80,17 +90,6 @@ export const PillarCard = ({ number, title, description, icon: Icon }: { number:
     </div>
     <h4 className="text-2xl font-bold text-ink mb-4 relative z-10 group-hover:text-accent transition-colors">{title}</h4>
     <p className="text-slate-500 text-base leading-relaxed relative z-10 group-hover:text-slate-600 transition-colors">{description}</p>
-  </motion.div>
-);
-
-export const StatBox = ({ label, value, description }: { label: string, value: string, description: string }) => (
-  <motion.div 
-    whileHover={{ y: -5 }}
-    className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 text-center transition-all hover:bg-white hover:shadow-xl group"
-  >
-    <div className="text-[12px] font-black text-accent uppercase tracking-[0.2em] mb-4 group-hover:scale-110 transition-transform">{label}</div>
-    <div className="text-5xl font-black text-ink mb-4 tracking-tighter">{value}</div>
-    <div className="text-base text-slate-500 font-medium leading-relaxed">{description}</div>
   </motion.div>
 );
 
@@ -170,3 +169,5 @@ export const DownloadSection = ({ title, subtitle, pdfUrl }: { title: string, su
     </div>
   </motion.div>
 );
+
+
