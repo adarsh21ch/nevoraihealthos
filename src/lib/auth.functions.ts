@@ -21,17 +21,15 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error("Invalid registration code. Please contact your coach.");
     }
 
-    // Now we need the Admin client for sensitive creation operations
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    // CRITICAL: We need a reliable way to check if supabaseAdmin is functional
-    // before attempting to use it. If keys are missing, we should fail gracefully.
+    let supabaseAdmin;
     try {
+      const adminModule = await import("@/integrations/supabase/client.server");
+      supabaseAdmin = adminModule.supabaseAdmin;
       // Accessing a property on the proxy will trigger the check in client.server.ts
       const _check = supabaseAdmin.auth; 
     } catch (e: any) {
       console.error("Supabase Admin not available:", e.message);
-      throw new Error("Account creation is currently unavailable. Please contact your coach to verify the system setup.");
+      throw new Error("Account creation is currently unavailable. Please verify that your coach has connected Supabase in Lovable Cloud.");
     }
 
     // 2. Create Auth User

@@ -33,7 +33,7 @@ function createSupabaseAdminClient() {
       ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
       ...(!SUPABASE_SERVICE_ROLE_KEY ? ['SUPABASE_SERVICE_ROLE_KEY'] : []),
     ];
-    const message = `Supabase Admin client not available: ${missing.join(', ')} is missing. Please connect Supabase in Lovable Cloud.`;
+    const message = `Supabase Admin is not connected. Please go to Lovable Cloud and connect Supabase to enable participant account creation and password resets.`;
     
     // In sandbox/development without keys, we return a proxy that only throws when called,
     // providing a much clearer error message than a generic null dereference.
