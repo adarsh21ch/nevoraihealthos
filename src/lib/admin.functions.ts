@@ -66,15 +66,62 @@ export const updateAppSettings = createServerFn({ method: "POST" })
 export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    return { accessCode: "FAT2FIT" }; // Placeholder
+    const { supabase, userId } = context;
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
+    
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const { data, error } = await supabase
+      .from("registration_codes")
+      .select("code")
+      .eq("is_active", true)
+      .limit(1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return { accessCode: data?.code ?? "FAT2FIT" };
   });
 
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({
-    tenantId: z.string(),
+    tenantId: z.string().optional().nullable(),
     accessCode: z.string()
   }).parse)
   .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data: roleCheck } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!roleCheck;
+    }
+    
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    // Deactivate old codes
+    await supabase
+      .from("registration_codes")
+      .update({ is_active: false })
+      .eq("is_active", true);
+
+    // Insert new code
+    const { error } = await supabase
+      .from("registration_codes")
+      .upsert({ 
+        code: data.accessCode.toUpperCase(), 
+        is_active: true 
+      }, { onConflict: 'code' });
+
+    if (error) throw error;
     return { success: true };
   });
