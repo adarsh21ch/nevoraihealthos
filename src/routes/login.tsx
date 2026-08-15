@@ -416,6 +416,9 @@ function LoginPage() {
               <div className="text-slate-200 text-[8px] font-bold uppercase tracking-[0.2em]">
                 Build by Nevorai Technologies
               </div>
+              <div className="pt-8 opacity-50">
+                <AffiliationDisclaimer />
+              </div>
             </div>
           </div>
         </div>
