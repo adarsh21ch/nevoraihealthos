@@ -13,7 +13,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { updateMyProfile } from "@/lib/profile/profile.functions";
 import { toast } from "sonner";
 import { AppLogo } from "@/components/ui/app-logo";
-
+import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
 
 export const Route = createFileRoute("/onboarding")({
   ssr: false,
