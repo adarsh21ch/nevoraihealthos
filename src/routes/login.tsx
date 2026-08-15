@@ -124,7 +124,7 @@ function LoginPage() {
       if (user.email === 'teamnevorai@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
         // Ensure session is fully written to storage before hard redirect
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         window.location.href = '/admin'; 
         return;
       }
