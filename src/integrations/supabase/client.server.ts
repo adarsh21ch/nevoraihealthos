@@ -34,10 +34,11 @@ function createSupabaseAdminClient() {
       ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
       ...(!SUPABASE_SECRET_KEY ? ['SUPABASE_SECRET_KEYS / SUPABASE_SERVICE_ROLE_KEY'] : []),
     ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
+    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Please connect Supabase in Lovable Cloud (Settings > Integrations > Supabase).`;
     
-    // Return null instead of throwing, allowing module load to succeed
-    console.warn(`[Supabase] ${message} - Admin operations will fail.`);
+    // In production, this error is fatal for admin tasks.
+    // In development/preview, we warn but the Proxy will throw when the client is actually accessed.
+    console.error(`[Supabase Admin Error] ${message}`);
     return null;
   }
 
