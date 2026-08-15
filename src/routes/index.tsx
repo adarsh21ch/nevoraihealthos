@@ -47,7 +47,7 @@ function Index() {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            {['Program', 'How It Works', 'Nutrition', 'FAQ'].map(item => (
+            {['Methodology', 'Command Center', 'FAQ'].map(item => (
               <a key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-[12px] font-bold text-slate-500 hover:text-accent transition-colors uppercase tracking-widest">{item}</a>
             ))}
           </div>
