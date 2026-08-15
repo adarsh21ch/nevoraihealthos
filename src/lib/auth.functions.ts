@@ -102,9 +102,13 @@ export const resolveLoginIdentifier = createServerFn({ method: "POST" })
       
     if (customer && customer.user_id) {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
-      if (user?.user?.email) {
-        return { found: true, method: 'email' as const, value: user.user.email };
+      try {
+        const { data: user } = await supabaseAdmin.auth.admin.getUserById(customer.user_id);
+        if (user?.user?.email) {
+          return { found: true, method: 'email' as const, value: user.user.email };
+        }
+      } catch (e) {
+        console.warn("Failed to lookup user by ID during login resolution (Admin keys likely missing)");
       }
     }
 
