@@ -99,7 +99,7 @@ function Index() {
 
       <section className="py-24 bg-ink text-white" id="program">
         <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader dark title="The Fit to Fit Approach" subtitle="A structured, data-driven methodology to restore metabolic balance and optimize long-term health." />
+          <SectionHeader dark title="The Fat2Fit Approach" subtitle="A structured, data-driven methodology to restore metabolic balance and optimize long-term health." />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
             <PillarCard number={1} title="Metabolic Assessment" description="Precision screening to understand your current health baseline." icon={Activity} />
             <PillarCard number={2} title="Nutritional Strategy" description="Personalized food plans designed for nutrient density and satiety." icon={Utensils} />
