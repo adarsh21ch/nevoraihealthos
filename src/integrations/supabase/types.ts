@@ -1139,6 +1139,7 @@ export type Database = {
       }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
       get_my_auth_context: { Args: never; Returns: Json }
+      has_elevated_access: { Args: { _uid?: string }; Returns: boolean }
       has_role:
         | {
             Args: {
