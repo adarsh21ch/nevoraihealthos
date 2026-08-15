@@ -169,7 +169,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 bg-surface" id="how-it-works">
+      <section className="py-24 bg-surface" id="methodology">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeader badge="Methodology" title="Science-Based Results" subtitle="A structured approach to metabolic health that prioritizes long-term sustainability over quick fixes." />
           
