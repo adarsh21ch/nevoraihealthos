@@ -35,7 +35,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     // 2. Sign up the user (standard auth)
     const { data: authData, error: signupError } = await supabase.auth.signUp({
       email: data.email,
-      password: data.password,
+      password: data.newPassword,
     });
 
     if (signupError) throw signupError;
@@ -47,7 +47,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     // For this project, we assume email confirmation is OFF or handled by the client.
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: data.email,
-      password: data.password,
+      password: data.newPassword,
     });
 
     if (signInError) {
@@ -114,7 +114,7 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     }
     
     const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, {
-      password: data.password,
+      password: data.newPassword,
     });
 
     if (error) throw error;
