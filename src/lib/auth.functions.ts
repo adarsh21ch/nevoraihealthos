@@ -67,11 +67,9 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
-    // 5. Mark access code as used
-    await supabase
-      .from("access_codes")
-      .update({ used_at: new Date().toISOString(), customer_id: customer.id })
-      .eq("id", creds.id);
+    // 5. Registration code tracking (optional logging or usage count could go here)
+    // For now we just allow the same code to be used by multiple participants if active
+    console.log("Customer account created using registration code:", data.access_code);
 
     return { 
       success: true, 
