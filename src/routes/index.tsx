@@ -207,19 +207,16 @@ function Index() {
       <section className="py-24 bg-white" id="nutrition">
         <div className="max-w-7xl mx-auto px-6">
           <div className="bg-ink rounded-[3.5rem] p-12 md:p-24 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
-              <div className="w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent via-transparent to-transparent" />
-            </div>
             <div className="relative z-10 grid md:grid-cols-2 gap-16 items-center">
               <div>
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">9-Day Protocol</span>
-                <h2 className="text-4xl md:text-7xl font-serif italic text-white mb-8 leading-tight">Master your <br/>nutritional <span className="text-accent not-italic">Engine.</span></h2>
+                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-[12px] font-bold uppercase tracking-widest mb-6">Expert Guidance</span>
+                <h2 className="text-4xl md:text-7xl font-serif italic text-white mb-8 leading-tight">Personalized <br/>Nutritional <span className="text-accent not-italic">Support.</span></h2>
                 <div className="space-y-6">
                   {[
-                    "Free Foods list for guilt-free snacking.",
-                    "C9-approved 600-calorie dinner recipes.",
-                    "High-protein meal replacement shakes.",
-                    "Natural metabolism-supporting botanicals."
+                    "Custom meal recommendations.",
+                    "Personalized metabolic targets.",
+                    "1-on-1 coaching support.",
+                    "Science-backed habit tracking."
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-4">
                       <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-white">
@@ -229,29 +226,18 @@ function Index() {
                     </div>
                   ))}
                 </div>
-                <Link to="/login" className="inline-flex mt-12 px-8 py-4 bg-white text-ink rounded-full font-bold hover:bg-accent hover:text-white transition-all items-center gap-2">
-                  View Full Meal Plan <ChevronRight className="w-5 h-5" />
-                </Link>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4 pt-12">
                   <div className="aspect-[4/5] rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col justify-end">
-                    <span className="text-accent font-bold text-2xl">437</span>
-                    <span className="text-white/50 text-sm">Typical Dinner Calories</span>
-                  </div>
-                  <div className="aspect-square rounded-3xl bg-accent p-6 flex flex-col justify-end">
-                    <span className="text-white font-bold text-2xl">17g</span>
-                    <span className="text-white/80 text-sm">Protein Per Shake</span>
+                    <span className="text-accent font-bold text-2xl">100%</span>
+                    <span className="text-white/50 text-sm">Personalized Approach</span>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="aspect-square rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col justify-end">
-                    <span className="text-accent font-bold text-2xl">9</span>
-                    <span className="text-white/50 text-sm">Days to Reset</span>
-                  </div>
-                  <div className="aspect-[4/5] rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col justify-end">
-                    <span className="text-accent font-bold text-2xl">8+</span>
-                    <span className="text-white/50 text-sm">Glasses of Water</span>
+                    <span className="text-accent font-bold text-2xl">24/7</span>
+                    <span className="text-white/50 text-sm">Coach Connectivity</span>
                   </div>
                 </div>
               </div>
@@ -260,38 +246,22 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <DownloadSection 
-            title="Download the Fat2Fit Resources"
-            subtitle="Get access to the program guides, supplement schedules, and India-specific nutrition guides."
-            pdfUrl={bookletUrl}
-          />
-        </div>
-      </section>
-
       <section className="py-24 bg-slate-50" id="faq">
         <div className="max-w-3xl mx-auto px-6 text-center mb-16">
-          <SectionHeader title="Expert Answers" subtitle="Everything you need to know about starting your C9 reset with confidence." />
+          <SectionHeader title="Frequently Asked Questions" subtitle="Common questions about our personalized wellness approach." />
         </div>
         <div className="max-w-3xl mx-auto px-6">
           <Accordion type="single" collapsible className="w-full space-y-4">
             <AccordionItem value="item-1" className="border-none bg-white rounded-3xl px-8 py-2">
-              <AccordionTrigger className="text-lg font-bold hover:no-underline">What is the C9 Nutritional System?</AccordionTrigger>
+              <AccordionTrigger className="text-lg font-bold hover:no-underline">What is the Fit to Fit program?</AccordionTrigger>
               <AccordionContent className="text-slate-500 text-base leading-relaxed">
-                The C9 system is a nine-day nutritional change program designed to help you jump-start your journey to a leaner, healthier you. It combines high-quality supplements with light movement and delicious, low-calorie recipes to reset your metabolic habits.
+                Fit to Fit is a comprehensive wellness ecosystem that combines data-driven tracking with personalized metabolic coaching to help you achieve sustainable health results.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2" className="border-none bg-white rounded-3xl px-8 py-2">
-              <AccordionTrigger className="text-lg font-bold hover:no-underline">How much weight can I expect to lose?</AccordionTrigger>
+              <AccordionTrigger className="text-lg font-bold hover:no-underline">Is this a weight loss program?</AccordionTrigger>
               <AccordionContent className="text-slate-500 text-base leading-relaxed">
-                While results vary for everyone, the C9 program is designed to help contribute to weight loss, a flatter stomach, and becoming leaner by training you to make better decisions about your nutrition and daily movement.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3" className="border-none bg-white rounded-3xl px-8 py-2">
-              <AccordionTrigger className="text-lg font-bold hover:no-underline">What can I eat during the program?</AccordionTrigger>
-              <AccordionContent className="text-slate-500 text-base leading-relaxed">
-                The program includes a specific supplement schedule, high-protein shakes, and a list of 'Free Foods' (low-calorie fruits and vegetables) that can be eaten in moderation. From Day 3 onwards, you'll also enjoy a 600-calorie healthy dinner.
+                While many participants see weight loss, our primary focus is metabolic health, energy levels, and building sustainable lifestyle habits that lead to long-term well-being.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
