@@ -142,10 +142,15 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
     const tempPassword = Math.random().toString(36).slice(-8);
     
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
-      customer.user_id,
-      { password: tempPassword }
-    );
+    try {
+      const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
+        customer.user_id,
+        { password: tempPassword }
+      );
+      if (authError) throw authError;
+    } catch (e: any) {
+      throw new Error(`Password reset failed: ${e.message}. Please verify Supabase Admin connection.`);
+    }
 
     if (authError) throw authError;
 
