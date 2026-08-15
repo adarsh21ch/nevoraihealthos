@@ -84,16 +84,7 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data: { user } } = await supabase.auth.getUser();
-    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
-    
-    let isAdmin = isHardcodedAdmin;
-    if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
-    }
-    
+    const isAdmin = await hasElevatedAccess(supabase, userId);
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data, error } = await supabase
