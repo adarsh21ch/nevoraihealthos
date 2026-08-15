@@ -62,11 +62,11 @@ function InvitePage() {
               <div className="text-center space-y-1">
                 <code className="text-xs font-bold text-slate-500 break-all px-4 block">/login</code>
                 <div className="text-lg font-black text-slate-900 bg-white px-4 py-2 rounded-xl border border-slate-200 inline-block mt-2">
-                  FAT2FIT
+                  {accessCode}
                 </div>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Access Code</p>
               </div>
-              <Button className="w-full bg-slate-900 text-white font-bold rounded-xl" onClick={() => { navigator.clipboard.writeText(`${joinUrl} (Code: FAT2FIT)`); toast.success("Link & Code copied"); }}>
+              <Button className="w-full bg-slate-900 text-white font-bold rounded-xl" onClick={() => { navigator.clipboard.writeText(`${joinUrl} (Code: ${accessCode})`); toast.success("Link & Code copied"); }}>
                 <Copy className="w-4 h-4 mr-2" /> Copy Invitation
               </Button>
             </div>
