@@ -1,0 +1,288 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion, AnimatePresence } from "framer-motion";
+import { useServerFn } from "@tanstack/react-start";
+import { submitBmiLead } from "@/lib/bmi.functions";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2, Scale, Info, ChevronRight, RefreshCw, Mail } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const bmiFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  age: z.number().min(1, "Age must be at least 1").max(120, "Age must be under 120"),
+  gender: z.string().min(1, "Gender is required"),
+  height_cm: z.number().min(100, "Height must be at least 100cm").max(250, "Height must be under 250cm"),
+  weight_kg: z.number().min(25, "Weight must be at least 25kg").max(300, "Weight must be under 300kg"),
+  activity_level: z.string().min(1, "Activity level is required"),
+  goal: z.string().min(1, "Primary goal is required"),
+  consent: z.literal(true, {
+    errorMap: () => ({ message: "You must consent to proceed" }),
+  }),
+});
+
+type BmiFormData = z.infer<typeof bmiFormSchema>;
+
+export function BMITool() {
+  const [result, setResult] = React.useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const submitLead = useServerFn(submitBmiLead);
+
+  const form = useForm<BmiFormData>({
+    resolver: zodResolver(bmiFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      age: undefined,
+      gender: "",
+      height_cm: undefined,
+      weight_kg: undefined,
+      activity_level: "",
+      goal: "",
+      consent: false as any,
+    },
+  });
+
+  const onSubmit = async (data: BmiFormData) => {
+    setIsSubmitting(true);
+    try {
+      const response = await submitLead({ data });
+      setResult(response);
+      toast.success("Assessment complete!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to process your request");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getBmiColor = (category: string) => {
+    if (category.includes("Normal")) return "text-health-green";
+    if (category.includes("Overweight")) return "text-amber-500";
+    if (category.includes("Obese")) return "text-red-500";
+    if (category.includes("Underweight")) return "text-blue-500";
+    return "text-slate-500";
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto px-4 py-12" id="bmi-tool">
+      <Card className="border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
+        <CardContent className="p-0">
+          <div className="grid lg:grid-cols-5 h-full">
+            {/* Form Side */}
+            <div className="lg:col-span-3 p-8 md:p-12">
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-health-green flex items-center justify-center">
+                    <Scale className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Wellness Screening</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-serif italic font-bold text-ink mb-4">Metabolic Check-up</h2>
+                <p className="text-slate-500 text-sm font-medium">Get a science-backed assessment based on WHO Asian-Pacific thresholds.</p>
+              </div>
+
+              <AnimatePresence mode="wait">
+                {!result ? (
+                  <motion.form 
+                    key="form"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    onSubmit={form.handleSubmit(onSubmit)} 
+                    className="space-y-6"
+                  >
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Name</Label>
+                        <Input {...form.register("name")} placeholder="Your Name" className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium focus:ring-2 focus:ring-health-green/20" />
+                        {form.formState.errors.name && <p className="text-[10px] text-red-500 font-bold ml-1">{form.formState.errors.name.message}</p>}
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Email</Label>
+                        <Input {...form.register("email")} type="email" placeholder="email@example.com" className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium focus:ring-2 focus:ring-health-green/20" />
+                        {form.formState.errors.email && <p className="text-[10px] text-red-500 font-bold ml-1">{form.formState.errors.email.message}</p>}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Age</Label>
+                        <Input {...form.register("age", { valueAsNumber: true })} type="number" placeholder="25" className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium" />
+                        {form.formState.errors.age && <p className="text-[10px] text-red-500 font-bold ml-1">{form.formState.errors.age.message}</p>}
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Gender</Label>
+                        <Select onValueChange={(v) => form.setValue("gender", v)}>
+                          <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium">
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2 col-span-2 md:col-span-1">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Goal</Label>
+                        <Select onValueChange={(v) => form.setValue("goal", v)}>
+                          <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium">
+                            <SelectValue placeholder="Goal" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="weight_loss">Weight Loss</SelectItem>
+                            <SelectItem value="muscle_gain">Muscle Gain</SelectItem>
+                            <SelectItem value="wellness">General Wellness</SelectItem>
+                            <SelectItem value="energy">Energy Boost</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Height (cm)</Label>
+                        <Input {...form.register("height_cm", { valueAsNumber: true })} type="number" placeholder="175" className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Weight (kg)</Label>
+                        <Input {...form.register("weight_kg", { valueAsNumber: true })} type="number" placeholder="70" className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Activity Level</Label>
+                      <Select onValueChange={(v) => form.setValue("activity_level", v)}>
+                        <SelectTrigger className="h-12 rounded-xl bg-slate-50 border-none px-4 font-medium">
+                          <SelectValue placeholder="Select Activity Level" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="sedentary">Sedentary (Little/no exercise)</SelectItem>
+                          <SelectItem value="light">Lightly Active (1-3 days/week)</SelectItem>
+                          <SelectItem value="moderate">Moderately Active (3-5 days/week)</SelectItem>
+                          <SelectItem value="active">Very Active (6-7 days/week)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-start space-x-3 pt-4">
+                      <Checkbox 
+                        id="consent" 
+                        onCheckedChange={(checked) => form.setValue("consent", checked as true)}
+                        className="mt-1 border-slate-200 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green"
+                      />
+                      <Label htmlFor="consent" className="text-[10px] text-slate-500 leading-relaxed font-medium">
+                        I consent to the collection of my health data for this wellness assessment. I understand a personalized report will be sent to my email.
+                      </Label>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="w-full h-14 rounded-2xl bg-ink hover:bg-slate-800 text-white font-black text-[12px] uppercase tracking-[0.3em] transition-all shadow-xl shadow-ink/10 group"
+                    >
+                      {isSubmitting ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          Analyze My Profile <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      )}
+                    </Button>
+                  </motion.form>
+                ) : (
+                  <motion.div 
+                    key="result"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-8"
+                  >
+                    <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 text-center">
+                      <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Your Assessment</div>
+                      <div className="text-6xl font-black text-ink mb-2 tracking-tighter">{result.bmiValue}</div>
+                      <div className={cn("text-xl font-black uppercase tracking-widest", getBmiColor(result.bmiCategory))}>
+                        {result.bmiCategory}
+                      </div>
+                      
+                      <div className="mt-10 pt-10 border-t border-slate-200/50">
+                        <div className="grid grid-cols-2 gap-8">
+                          <div>
+                            <div className="text-[9px] font-black uppercase text-slate-400 mb-2">Healthy Range</div>
+                            <div className="text-lg font-bold text-ink">{result.healthyRange.min} - {result.healthyRange.max} kg</div>
+                          </div>
+                          <div>
+                            <div className="text-[9px] font-black uppercase text-slate-400 mb-2">BMI Scale</div>
+                            <div className="text-lg font-bold text-ink">Asian-Pacific</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6 rounded-2xl bg-health-green/5 border border-health-green/10 flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-health-green text-white flex items-center justify-center shrink-0">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-ink text-sm mb-1">Detailed Report Sent</h4>
+                        <p className="text-slate-500 text-[11px] leading-relaxed">We've generated a personalized wellness strategy based on your profile. Check your email inbox for the full report.</p>
+                      </div>
+                    </div>
+
+                    <Button 
+                      onClick={() => {
+                        setResult(null);
+                        form.reset();
+                      }}
+                      variant="ghost"
+                      className="w-full h-12 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-ink"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" /> Start New Assessment
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* info side */}
+            <div className="lg:col-span-2 bg-ink p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl -mr-32 -mt-32" />
+              
+              <div className="relative z-10">
+                <h3 className="text-2xl font-serif italic mb-8">Why BMI Matters</h3>
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <h4 className="text-accent font-black text-[10px] uppercase tracking-widest">Metabolic Screening</h4>
+                    <p className="text-sm text-white/70 leading-relaxed">BMI is a screening tool used to identify potential weight problems for adults. While not a diagnosis, it's a critical starting point for wellness.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-accent font-black text-[10px] uppercase tracking-widest">Asian-Pacific Standards</h4>
+                    <p className="text-sm text-white/70 leading-relaxed">We use lower cutoffs specific to Asian populations, as health risks often appear at a lower BMI in these groups.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative z-10 pt-12">
+                <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-sm">
+                  <div className="flex items-center gap-3 mb-4 text-accent">
+                    <Info className="w-5 h-5" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Clinical Note</span>
+                  </div>
+                  <p className="text-[11px] text-white/50 leading-relaxed">BMI is an indicator only and does not measure body fat directly. It should not be used by professional athletes or those with high muscle mass.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
