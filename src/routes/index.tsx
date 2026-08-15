@@ -22,10 +22,10 @@ export const Route = createFileRoute("/")({
   loader: () => getAppSettings(),
   head: () => ({
     meta: [
-      { title: "Fat2Fit — Your 9-Day Metabolic Reset" },
-      { name: "description", content: "Fat2Fit simplifies your 9-day health journey. Track hydration, movement, and nutrition with expert guidance every step of the way." },
-      { property: "og:title", content: "Fat2Fit — Your 9-Day Metabolic Reset" },
-      { property: "og:description", content: "Fat2Fit simplifies your 9-day health journey. Track hydration, movement, and nutrition with expert guidance every step of the way." },
+      { title: "Fat2Fit — Personalized Wellness Platform" },
+      { name: "description", content: "Understand your metabolic baseline with our science-backed screening tool. Personalized insights for your unique health journey." },
+      { property: "og:title", content: "Fat2Fit — Wellness Screening" },
+      { property: "og:description", content: "Personalized insights for your unique health journey." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
