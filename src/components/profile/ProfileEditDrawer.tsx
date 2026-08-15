@@ -58,11 +58,12 @@ export function ProfileEditDrawer({ isOpen, onClose, section, profile }: EditDra
         if (password !== confirm_password) throw new Error("Passwords do not match");
         if (password.length < 8) throw new Error("Password must be at least 8 characters");
 
+        // Clear local storage for the password field if it was saved by browser (soft optimization)
         const { supabase } = await import("@/integrations/supabase/client");
         const { error } = await supabase.auth.updateUser({ password });
         if (error) throw error;
 
-        // Force a re-authentication check and refresh the session
+        // Force a re-authentication check to ensure token is fresh (optional, but good for security)
         await supabase.auth.getSession();
         
         return { success: true, isPasswordUpdate: true };

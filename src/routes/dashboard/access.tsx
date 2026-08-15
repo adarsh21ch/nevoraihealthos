@@ -39,7 +39,7 @@ function AccessControlPage() {
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
       if (code.length < 4) throw new Error("Access code must be at least 4 characters");
-      return updateCodeFn({ data: { accessCode: code.toUpperCase() } });
+      return updateCodeFn({ data: { tenantId: tenantId!, accessCode: code.toUpperCase() } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-tenant-access-code"] });
@@ -49,7 +49,7 @@ function AccessControlPage() {
     onError: (e: any) => toast.error(e.message)
   });
 
-  const currentCode = creds?.accessCode ?? "FAT2FIT";
+  const currentCode = creds?.accessCode ?? "…";
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -109,7 +109,7 @@ function AccessControlPage() {
                       placeholder="ENTER-NEW-CODE" 
                       value={newCode}
                       onChange={(e) => setNewCode(e.target.value.toUpperCase())}
-                      className="h-14 pl-11 rounded-2xl border-slate-200 font-black tracking-widest text-lg focus-visible:ring-slate-900 transition-all uppercase placeholder:text-slate-300"
+                      className="h-14 pl-11 rounded-2xl border-slate-200 font-black tracking-widest text-lg focus-visible:ring-slate-900 transition-all uppercase"
                       maxLength={20}
                     />
                   </div>

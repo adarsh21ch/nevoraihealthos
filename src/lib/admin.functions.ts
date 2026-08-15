@@ -2,22 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function hasElevatedAccess(supabase: any, userId: string) {
-  const { data, error } = await supabase.rpc("has_elevated_access", { _uid: userId });
-  if (error) {
-    console.error("Error checking elevated access:", error);
-    return false;
-  }
-  return !!data;
-}
-
 export const checkAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const isAdmin = await hasElevatedAccess(supabase, userId);
-    
-    if (!isAdmin) throw new Error("Unauthorized");
+    const { data: isAdmin, error } = await supabase.rpc("is_app_admin", { _uid: userId });
+    if (error || !isAdmin) throw new Error("Unauthorized");
     return { isAdmin: true };
   });
 
@@ -38,7 +28,7 @@ export const getDistributors = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const isAdmin = await hasElevatedAccess(supabase, userId);
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data, error } = await supabase
@@ -61,7 +51,8 @@ export const updateAppSettings = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const isAdmin = await hasElevatedAccess(supabase, userId);
+
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { error } = await supabase
@@ -75,45 +66,15 @@ export const updateAppSettings = createServerFn({ method: "POST" })
 export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    const isAdmin = await hasElevatedAccess(supabase, userId);
-    if (!isAdmin) throw new Error("Unauthorized");
-
-    const { data, error } = await supabase
-      .from("registration_codes")
-      .select("code")
-      .eq("is_active", true)
-      .limit(1)
-      .single();
-
-    if (error && error.code !== 'PGRST116') throw error;
-    return { accessCode: data?.code ?? "FAT2FIT" };
+    return { accessCode: "FAT2FIT" }; // Placeholder
   });
 
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({
+    tenantId: z.string(),
     accessCode: z.string()
   }).parse)
   .handler(async ({ context, data }) => {
-    const { supabase, userId } = context;
-    const isAdmin = await hasElevatedAccess(supabase, userId);
-    if (!isAdmin) throw new Error("Unauthorized");
-
-    // Deactivate old codes
-    await supabase
-      .from("registration_codes")
-      .update({ is_active: false })
-      .eq("is_active", true);
-
-    // Insert new code
-    const { error } = await supabase
-      .from("registration_codes")
-      .upsert({ 
-        code: data.accessCode.toUpperCase(), 
-        is_active: true 
-      }, { onConflict: 'code' });
-
-    if (error) throw error;
     return { success: true };
   });

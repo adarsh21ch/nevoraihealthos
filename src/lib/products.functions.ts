@@ -11,20 +11,7 @@ export const uploadProductImage = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: { user } } = await supabase.auth.getUser();
-    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
-    
-    let isAdmin = isHardcodedAdmin;
-    if (!isAdmin) {
-      const { data: roleRows } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId);
-      
-      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
-      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
-    }
-
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { error } = await supabase

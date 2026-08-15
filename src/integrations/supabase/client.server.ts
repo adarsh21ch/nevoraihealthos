@@ -33,15 +33,11 @@ function createSupabaseAdminClient() {
       ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
       ...(!SUPABASE_SERVICE_ROLE_KEY ? ['SUPABASE_SERVICE_ROLE_KEY'] : []),
     ];
-    const message = `Supabase Admin is not connected. Please go to Lovable Cloud and connect Supabase to enable participant account creation and password resets.`;
+    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
     
-    // In sandbox/development without keys, we return a proxy that only throws when called,
-    // providing a much clearer error message than a generic null dereference.
-    return new Proxy({} as any, {
-      get(_, prop) {
-        throw new Error(message);
-      }
-    });
+    // Log as warning instead of error during the transition, and return null instead of throwing
+    console.warn(`[Supabase] ${message} - Admin operations will fail.`);
+    return null;
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
@@ -61,6 +57,9 @@ let _supabaseAdmin: ReturnType<typeof createSupabaseAdminClient> | undefined;
 export const supabaseAdmin = new Proxy({} as any, {
   get(_, prop, receiver) {
     if (_supabaseAdmin === undefined) _supabaseAdmin = createSupabaseAdminClient();
+    if (_supabaseAdmin === null) {
+      throw new Error("Supabase Admin client not available: SUPABASE_SERVICE_ROLE_KEY is missing. Please connect Supabase in Lovable Cloud.");
+    }
     return Reflect.get(_supabaseAdmin, prop, receiver);
   },
 });

@@ -172,7 +172,6 @@ export type Database = {
           disliked_foods: string[] | null
           distributor_id: string | null
           dob: string | null
-          email: string | null
           fbo_id: string | null
           gender: string | null
           goal: string | null
@@ -212,7 +211,6 @@ export type Database = {
           disliked_foods?: string[] | null
           distributor_id?: string | null
           dob?: string | null
-          email?: string | null
           fbo_id?: string | null
           gender?: string | null
           goal?: string | null
@@ -252,7 +250,6 @@ export type Database = {
           disliked_foods?: string[] | null
           distributor_id?: string | null
           dob?: string | null
-          email?: string | null
           fbo_id?: string | null
           gender?: string | null
           goal?: string | null
@@ -1015,27 +1012,6 @@ export type Database = {
         }
         Relationships: []
       }
-      registration_codes: {
-        Row: {
-          code: string
-          created_at: string | null
-          id: string
-          is_active: boolean | null
-        }
-        Insert: {
-          code: string
-          created_at?: string | null
-          id?: string
-          is_active?: boolean | null
-        }
-        Update: {
-          code?: string
-          created_at?: string | null
-          id?: string
-          is_active?: boolean | null
-        }
-        Relationships: []
-      }
       task_completions: {
         Row: {
           completed_at: string
@@ -1134,10 +1110,6 @@ export type Database = {
         Args: { _code: string; _phone: string }
         Returns: string
       }
-      complete_registration: {
-        Args: { _code: string; _fbo_id: string }
-        Returns: string
-      }
       current_day_number: { Args: { _start_date: string }; Returns: number }
       default_distributor_id: { Args: never; Returns: string }
       get_day_with_tasks: {
@@ -1146,7 +1118,6 @@ export type Database = {
       }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
       get_my_auth_context: { Args: never; Returns: Json }
-      has_elevated_access: { Args: { _uid?: string }; Returns: boolean }
       has_role:
         | {
             Args: {
@@ -1159,9 +1130,7 @@ export type Database = {
       is_app_admin: { Args: { _uid?: string }; Returns: boolean }
       is_my_distributor: { Args: { _customer: string }; Returns: boolean }
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
-      is_registration_code_valid: { Args: { _code: string }; Returns: boolean }
       my_customer_id: { Args: never; Returns: string }
-      validate_registration_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role:
