@@ -119,34 +119,21 @@ function Index() {
         </div>
       </section>
 
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white" id="how-it-works">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
           <div>
-            <SectionHeader centered={false} badge="Daily Experience" title="Everything in your pocket." subtitle="Your daily checklist, meal tracker, hydration log, and movement goals. Stay connected with your coach and monitor your progress in real-time." />
-            <div className="flex gap-4 mb-12">
-              <div className="flex flex-col gap-2">
-                <StepIcon day={1} completed />
-                <div className="w-[1px] h-8 bg-emerald-100 mx-auto" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <StepIcon day={2} completed />
-                <div className="w-[1px] h-8 bg-emerald-100 mx-auto" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <StepIcon day={3} active />
-              </div>
-            </div>
+            <SectionHeader centered={false} badge="Daily Experience" title="Your Health OS." subtitle="A comprehensive digital companion for your wellness journey. Track your metrics, access your personalized plan, and connect with your coach in one seamless interface." />
             
             <div className="grid grid-cols-2 gap-6">
               <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
                 <MessageSquare className="w-8 h-8 text-accent mb-4" />
-                <h4 className="font-bold text-ink mb-2">Direct Coaching</h4>
-                <p className="text-slate-500 text-sm">Real-time feedback and support from your wellness coach.</p>
+                <h4 className="font-bold text-ink mb-2">Expert Coaching</h4>
+                <p className="text-slate-500 text-sm">Real-time feedback and professional accountability.</p>
               </div>
               <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
-                <Star className="w-8 h-8 text-accent mb-4" />
-                <h4 className="font-bold text-ink mb-2">Milestones</h4>
-                <p className="text-slate-500 text-sm">Earn badges and celebrate every victory along the 9 days.</p>
+                <Activity className="w-8 h-8 text-accent mb-4" />
+                <h4 className="font-bold text-ink mb-2">Smart Tracking</h4>
+                <p className="text-slate-500 text-sm">Monitor hydration, movement, and nutrition milestones.</p>
               </div>
             </div>
           </div>
@@ -157,18 +144,18 @@ function Index() {
               <div className="p-8 bg-emerald-50/50 h-full">
                 <div className="flex justify-between items-center mb-8">
                   <AppLogo iconOnly className="h-10 w-11 bg-accent rounded-xl flex items-center justify-center text-white" variant="light" />
-                  <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Day 3 / 9</div>
+                  <div className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-accent uppercase tracking-wider shadow-sm">Daily Status</div>
                 </div>
                 
-                <h3 className="text-3xl font-bold text-ink mb-2 font-serif">Daily Log</h3>
-                <p className="text-slate-500 text-sm mb-8 font-medium">9-Day Reset Companion</p>
+                <h3 className="text-3xl font-bold text-ink mb-2 font-serif">Command Center</h3>
+                <p className="text-slate-500 text-sm mb-8 font-medium">Your Daily Wellness Protocol</p>
                 
                 <div className="space-y-4">
                   {[
-                    { title: 'Morning Supplements', time: '08:00 AM' },
-                    { title: 'Aloe Vera Drink', time: '08:15 AM' },
-                    { title: 'Light Movement', time: '10:00 AM' },
-                    { title: 'Healthy Shake', time: '01:00 PM' }
+                    { title: 'Nutritional Protocol', time: 'Ongoing' },
+                    { title: 'Hydration Target', time: 'Current: 1.5L' },
+                    { title: 'Active Minutes', time: 'Goal: 30m' },
+                    { title: 'Coach Message', time: '1 New' }
                   ].map((task, i) => (
                     <motion.div 
                       key={task.title} 
@@ -186,19 +173,6 @@ function Index() {
                       </div>
                     </motion.div>
                   ))}
-                </div>
-                
-                <div className="mt-8 p-6 bg-emerald-600 rounded-3xl text-white shadow-lg shadow-emerald-200">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Water Intake</span>
-                    <Plus className="w-4 h-4" />
-                  </div>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(glass => (
-                      <div key={glass} className={`h-8 flex-1 rounded-lg ${glass <= 5 ? 'bg-white' : 'bg-white/20'}`} />
-                    ))}
-                  </div>
-                  <div className="mt-4 text-2xl font-bold">5 / 8 <span className="text-sm font-normal opacity-80">Glasses</span></div>
                 </div>
               </div>
             </PhoneMockup>
