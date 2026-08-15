@@ -15,7 +15,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     // 1. Check access code
     const { data: creds, error: credsError } = await supabase
       .from("access_codes")
-      .select("id, is_permanent")
+      .select("id, code")
       .eq("code", data.access_code)
       .maybeSingle();
 
@@ -23,8 +23,11 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error("Invalid access code");
     }
 
-    // Only check used_at if it's NOT a permanent code
-    if (!creds.is_permanent) {
+    // Permanent codes (like FAT2FIT) can be used multiple times.
+    // One-time codes must have used_at as null.
+    const isPermanent = creds.code.toUpperCase() === 'FAT2FIT';
+    
+    if (!isPermanent) {
       const { data: usageCheck } = await supabase
         .from("access_codes")
         .select("used_at")
