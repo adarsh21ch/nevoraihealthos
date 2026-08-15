@@ -6,7 +6,7 @@ export const getAccessCodes = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data, error } = await supabase
@@ -23,7 +23,7 @@ export const generateAccessCode = createServerFn({ method: "POST" })
   .inputValidator(z.object({ code: z.string() }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { error } = await supabase.from("access_codes").insert({ code: data.code });
@@ -36,7 +36,7 @@ export const deleteAccessCode = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string().uuid() }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+    const { data: isAdmin } = await supabase.rpc("is_platform_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { error } = await supabase.from("access_codes").delete().eq("id", data.id);

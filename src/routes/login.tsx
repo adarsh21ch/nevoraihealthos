@@ -21,35 +21,29 @@ export const Route = createFileRoute("/login")({
     if (!user) return;
 
     // Hardwired redirect if already signed in
-    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+    if (user.email === 'teamnevorai@gmail.com') {
       throw redirect({ to: "/admin" });
     }
 
-    try {
-      const { data: authContext } = await supabase.rpc("get_my_auth_context");
-      const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
+    const { data: authContext } = await supabase.rpc("get_my_auth_context");
+    const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
 
-      if (role === "platform_admin") throw redirect({ to: "/admin" });
-      if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
-      
-      if ((role === "customer" || role === "participant") && tenant_slug) {
-        if (context.tenant && context.tenant.slug !== tenant_slug) {
-          const { tenantSiteUrl } = await import("@/lib/tenant");
-          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
-          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
-          return;
-        }
-
-        throw redirect(
-          onboarding_complete
-            ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
-            : { to: "/onboarding" },
-        );
+    if (role === "platform_admin") throw redirect({ to: "/admin" });
+    if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
+    
+    if ((role === "customer" || role === "participant") && tenant_slug) {
+      if (context.tenant && context.tenant.slug !== tenant_slug) {
+        const { tenantSiteUrl } = await import("@/lib/tenant");
+        const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
+        window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+        return;
       }
-    } catch (e) {
-      // If RPC fails or we get a 307 redirect, rethrow it
-      if (e instanceof Error && (e as any).status === 307) throw e;
-      console.warn("Login beforeLoad check failed:", e);
+
+      throw redirect(
+        onboarding_complete
+          ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
+          : { to: "/onboarding" },
+      );
     }
   },
   component: LoginPage,
@@ -121,13 +115,10 @@ function LoginPage() {
         throw new Error("Authentication failed: No user session found");
       }
 
-      console.log("Authenticated user:", user.email);
-
       // Hardcoded admin redirect (Highest Priority)
-      if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+      if (user.email === 'teamnevorai@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
-        // Use full URL to ensure clean state and bypass router transitions
-        window.location.assign(window.location.origin + '/admin');
+        window.location.href = '/admin'; // Direct navigation to avoid SPA state lag
         return;
       }
 
@@ -164,7 +155,6 @@ function LoginPage() {
         navigate({ to: "/onboarding" });
       }
     } catch (error: any) {
-      console.error("Login attempt failed:", error);
       setError(error.message || "Incorrect identifier or password");
     } finally {
       setIsLoading(false);

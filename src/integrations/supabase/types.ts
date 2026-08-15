@@ -1118,15 +1118,13 @@ export type Database = {
       }
       get_ist_day_number: { Args: { _start_date: string }; Returns: number }
       get_my_auth_context: { Args: never; Returns: Json }
-      has_role:
-        | {
-            Args: {
-              _role: Database["public"]["Enums"]["app_role"]
-              _user_id: string
-            }
-            Returns: boolean
-          }
-        | { Args: { _role: string; _user_id: string }; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_app_admin: { Args: { _uid?: string }; Returns: boolean }
       is_my_distributor: { Args: { _customer: string }; Returns: boolean }
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }

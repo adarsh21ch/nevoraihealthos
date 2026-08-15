@@ -5,7 +5,6 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -181,8 +180,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { tenant, isCustomDomain } = Route.useLoaderData();
-  const location = useRouterState({ select: (s) => s.location });
-  const isAdminPage = location.pathname.startsWith('/admin');
 
   React.useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -198,7 +195,7 @@ function RootComponent() {
       <TenantProvider tenant={tenant as any} isCustomDomain={isCustomDomain}>
         <TenantGate isPlatformPage={!isCustomDomain && !tenant}>
           <Outlet />
-          {!isAdminPage && <AffiliationDisclaimer />}
+          <AffiliationDisclaimer />
           <PWAInstallPrompt />
 
         </TenantGate>
