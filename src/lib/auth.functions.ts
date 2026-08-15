@@ -53,7 +53,9 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 4. Create Customer Row (Legacy support)
-    const { data: customer, error: customerError } = await supabase
+    // IMPORTANT: We use supabaseAdmin here because the user is not yet logged in
+    // and RLS policies on 'customers' likely restrict inserts to the user themselves.
+    const { data: customer, error: customerError } = await supabaseAdmin
       .from("customers")
       .insert({
         user_id: authUser.user.id,
@@ -71,7 +73,8 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 5. Mark access code as used
-    await supabase
+    // Use supabaseAdmin to bypass RLS if needed, as the user isn't session-active yet
+    await supabaseAdmin
       .from("access_codes")
       .update({ used_at: new Date().toISOString(), customer_id: customer.id })
       .eq("id", creds.id);
