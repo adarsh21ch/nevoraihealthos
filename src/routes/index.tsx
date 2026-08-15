@@ -7,7 +7,20 @@ import {
   Heart, Scale, ChevronRight, MessageSquare, Plus, Star, Download
 } from "lucide-react";
 import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon, ProductShowcase, DownloadSection } from "@/components/landing/LandingComponents";
-import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
+import { BMITool } from "@/components/landing/BMITool";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useServerFn } from "@tanstack/react-start";
+import { submitBmiLead } from "@/lib/bmi.functions";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
 
 import { AppLogo } from "@/components/ui/app-logo";
 import { useLoaderData } from "@tanstack/react-router";
