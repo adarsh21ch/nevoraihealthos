@@ -13,32 +13,48 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     const { supabase } = await import("@/integrations/supabase/client");
 
     // 1. Check access code
-    const { data: creds, error: credsError } = await supabase
-      .from("access_codes")
-      .select("id, code")
-      .eq("code", data.access_code)
-      .maybeSingle();
-
-    if (credsError || !creds) {
-      throw new Error("Invalid access code");
-    }
-
-    // Permanent codes (like FAT2FIT) can be used multiple times.
-    // One-time codes must have used_at as null.
-    const isPermanent = creds.code.toUpperCase() === 'FAT2FIT';
+    const normalizedCode = data.access_code.trim().toUpperCase();
     
-    if (!isPermanent) {
-      const { data: usageCheck } = await supabase
+    // Permanent multi-use code bypass
+    if (normalizedCode === 'FAT2FIT') {
+      // We still want to ensure a record exists for 'FAT2FIT' in the DB if we use it for foreign keys,
+      // but for validation, we explicitly allow it.
+      const { data: creds } = await supabase
         .from("access_codes")
-        .select("used_at")
-        .eq("id", creds.id)
+        .select("id")
+        .eq("code", "FAT2FIT")
+        .maybeSingle();
+
+      if (!creds) {
+        // Auto-create if missing (using admin to bypass RLS)
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        await supabaseAdmin.from("access_codes").insert({ code: "FAT2FIT" });
+      }
+    } else {
+      // Standard one-time code check
+      const { data: creds, error: credsError } = await supabase
+        .from("access_codes")
+        .select("id")
+        .eq("code", normalizedCode)
         .is("used_at", null)
         .maybeSingle();
-      
-      if (!usageCheck) {
-        throw new Error("This one-time access code has already been used");
+
+      if (credsError || !creds) {
+        throw new Error("Invalid or already used access code");
       }
     }
+
+    // Re-fetch creds for the ID (needed for the rest of the function)
+    const { data: creds } = await supabase
+      .from("access_codes")
+      .select("id")
+      .eq("code", normalizedCode)
+      .maybeSingle();
+    
+    if (!creds) throw new Error("Access code verification failed");
+
+    const isPermanent = normalizedCode === 'FAT2FIT';
+
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
