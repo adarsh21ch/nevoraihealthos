@@ -331,7 +331,8 @@ function LoginPage() {
               {error && (
                 <div className="p-4 rounded-2xl bg-red-50 border border-red-100 text-red-700 text-sm font-medium leading-relaxed">
                   <div className="font-bold text-[10px] uppercase tracking-widest text-red-500 mb-1">
-                    {error.includes("Password") || error.includes("character") ? "Security Requirement" : "Configuration Required"}
+                    {error.includes("Password") || error.includes("character") ? "Security Requirement" : 
+                     error.includes("already exists") || error.includes("taken") ? "Account Issue" : "Requirement"}
                   </div>
                   {error}
                 </div>
