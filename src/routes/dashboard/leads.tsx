@@ -46,7 +46,7 @@ function LeadsPage() {
         ) : leads?.length === 0 ? (
           <div className="p-20 text-center text-slate-400 font-bold uppercase tracking-widest text-[10px]">No leads found yet.</div>
         ) : (
-          leads?.map((lead) => (
+          leads?.map((lead: any) => (
             <Card key={lead.id} className="bg-white border-slate-100 rounded-[2rem] shadow-sm overflow-hidden">
               <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
