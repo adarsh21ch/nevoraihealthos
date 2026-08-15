@@ -195,7 +195,7 @@ function RootComponent() {
       <TenantProvider tenant={tenant as any} isCustomDomain={isCustomDomain}>
         <TenantGate isPlatformPage={!isCustomDomain && !tenant}>
           <Outlet />
-          <AffiliationDisclaimer />
+
           <PWAInstallPrompt />
 
         </TenantGate>
