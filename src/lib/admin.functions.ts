@@ -8,8 +8,6 @@ async function hasElevatedAccess(supabase: any, userId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (user?.email === 'teamnevorai@gmail.com') return true;
 
-  const { data: appAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
-  if (appAdmin) return true;
 
   const { data: roleRows } = await supabase
     .from("user_roles")
