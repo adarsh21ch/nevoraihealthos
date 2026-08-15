@@ -84,15 +84,21 @@ function AccessControlPage() {
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Current Active Code</p>
                 <div className="text-5xl font-black tracking-tighter text-slate-900 flex items-center gap-4">
-                  <span className={!showCode && !loadingCode ? "blur-md select-none transition-all duration-300" : "transition-all duration-300"}>
+                  <span className={(!showCode && !loadingCode) ? "blur-md select-none transition-all duration-300" : "transition-all duration-300"}>
                     {loadingCode ? "••••••" : currentCode}
                   </span>
                   <div className="flex items-center gap-2">
                     <Button 
+                      type="button"
                       variant="ghost" 
                       size="icon" 
-                      onClick={() => setShowCode(!showCode)}
-                      className="rounded-xl hover:bg-slate-200 transition-colors"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Eye button clicked, current showCode:', showCode);
+                        setShowCode(prev => !prev);
+                      }}
+                      className="rounded-xl hover:bg-slate-200 transition-colors z-10"
                       title={showCode ? "Hide code" : "Show code"}
                     >
                       {showCode ? <EyeOff className="w-5 h-5 text-slate-600" /> : <Eye className="w-5 h-5 text-slate-600" />}
