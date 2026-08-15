@@ -32,7 +32,7 @@ export const Route = createFileRoute("/dashboard/access")({
 });
 
 function AccessControlPage() {
-  const { tenantId } = useLoaderData({ from: '/dashboard/access' });
+  const { tenantId: loaderTenantId } = useLoaderData({ from: '/dashboard/access' });
   const queryClient = useQueryClient();
   const fetchAccessCode = useServerFn(getMyTenantAccessCode);
   const updateCodeFn = useServerFn(rotateTenantAccessCode);
@@ -50,8 +50,13 @@ function AccessControlPage() {
 
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
+      const activeTenantId = loaderTenantId || creds?.distributorId;
+      
       if (code.length < 4) throw new Error("Access code must be at least 4 characters");
-      if (!activeTenantId) throw new Error("Could not identify your distributor account. Please try refreshing.");
+      if (!activeTenantId) {
+        console.error("Mutation Error: No tenantId found", { loaderTenantId, creds });
+        throw new Error("Could not identify your account. Please refresh and try again.");
+      }
       
       return updateCodeFn({ data: { tenantId: activeTenantId, accessCode: code.toUpperCase() } });
     },
