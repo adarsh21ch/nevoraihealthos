@@ -49,7 +49,7 @@ function AccessControlPage() {
     onError: (e: any) => toast.error(e.message)
   });
 
-  const currentCode = creds?.accessCode ?? "…";
+  const currentCode = creds?.accessCode ?? "FAT2FIT";
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -83,7 +83,7 @@ function AccessControlPage() {
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Current Active Code</p>
                 <div className="text-5xl font-black tracking-tighter text-slate-900 flex items-center gap-4">
-                  {loadingCode ? "••••••" : (currentCode || "FAT2FIT")}
+                  {loadingCode ? "••••••" : currentCode}
                   <span className="text-[10px] px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full border border-emerald-200 font-bold uppercase tracking-widest h-fit">
                     Active
                   </span>
