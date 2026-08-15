@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { Key, Shield, Save, Loader2, ArrowLeft, Info, AlertCircle } from "lucide-react";
+import { Key, Shield, Save, Loader2, ArrowLeft, Info, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,7 @@ function AccessControlPage() {
   });
 
   const [newCode, setNewCode] = useState("");
+  const [showCode, setShowCode] = useState(false);
 
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
@@ -83,10 +84,23 @@ function AccessControlPage() {
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Current Active Code</p>
                 <div className="text-5xl font-black tracking-tighter text-slate-900 flex items-center gap-4">
-                  {loadingCode ? "••••••" : currentCode}
-                  <span className="text-[10px] px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full border border-emerald-200 font-bold uppercase tracking-widest h-fit">
-                    Active
+                  <span className={!showCode && !loadingCode ? "blur-md select-none transition-all duration-300" : "transition-all duration-300"}>
+                    {loadingCode ? "••••••" : currentCode}
                   </span>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => setShowCode(!showCode)}
+                      className="rounded-xl hover:bg-slate-200 transition-colors"
+                      title={showCode ? "Hide code" : "Show code"}
+                    >
+                      {showCode ? <EyeOff className="w-5 h-5 text-slate-600" /> : <Eye className="w-5 h-5 text-slate-600" />}
+                    </Button>
+                    <span className="text-[10px] px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full border border-emerald-200 font-bold uppercase tracking-widest h-fit">
+                      Active
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="w-full md:w-auto p-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
