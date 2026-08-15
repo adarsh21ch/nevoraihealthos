@@ -182,156 +182,23 @@ function Index() {
 
       <section className="py-24 bg-surface" id="how-it-works">
         <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader badge="The Program" title="How the Clean 9 Engine Works" subtitle="A synergistic 9-day system designed to reset your metabolism and build sustainable habits." />
+          <SectionHeader badge="Methodology" title="Science-Based Results" subtitle="A structured approach to metabolic health that prioritizes long-term sustainability over quick fixes." />
           
-          <div className="mt-20 space-y-32">
-            {/* Phase 1: Reset (Days 1-2) */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-                 <div className="relative aspect-video rounded-[3rem] overflow-hidden bg-ink shadow-2xl group">
-                    <div className="absolute inset-0 bg-emerald-900/40 mix-blend-overlay z-10" />
-                    <div className="absolute inset-0 flex items-center justify-center z-20 p-12 text-center">
-                      <div className="space-y-4">
-                        <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center mx-auto border border-white/20">
-                           <Zap className="w-10 h-10 text-accent" />
-                        </div>
-                        <h3 className="text-4xl font-serif italic text-white">Phase 1: The Reset</h3>
-                        <p className="text-emerald-100/60 font-bold tracking-widest uppercase text-[10px]">Days 1 & 2</p>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-8 z-20 bg-gradient-to-t from-ink to-transparent">
-                      <p className="text-white/80 text-sm leading-relaxed">The first two days are designed to reset your body and mind. You'll focus on cleansing and proving you can take control of your appetite.</p>
-                    </div>
-                 </div>
-              </motion.div>
-              <div className="space-y-8">
-                <div className="grid grid-cols-2 gap-4">
-                  {[1, 2].map(day => (
-                    <div key={day} className="p-6 rounded-3xl bg-white border border-slate-100 shadow-sm">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-accent mb-2 block">Day {day}</span>
-                      <h4 className="font-bold text-ink mb-2">Metabolic Load</h4>
-                      <p className="text-xs text-slate-500">Maximum caloric restriction to initiate cellular autophagy and reset cravings.</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-4">
-                  <h4 className="text-2xl font-bold text-ink flex items-center gap-3">
-                     <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">01</span>
-                     Metabolic Cleanse
-                  </h4>
-                  <p className="text-slate-500 leading-relaxed">Eliminate stored toxins that prevent nutrient absorption. Feel lighter and more energized from day one.</p>
-                </div>
-                <div className="space-y-4">
-                  <h4 className="text-2xl font-bold text-ink flex items-center gap-3">
-                     <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">02</span>
-                     Appetite Control
-                  </h4>
-                  <p className="text-slate-500 leading-relaxed">Break the cycle of cravings with a specialized supplement schedule including Forever Garcinia Plus and Forever Aloe Vera Gel.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Phase 2: Build (Days 3-9) */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div className="order-2 lg:order-1 space-y-8">
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
-                  {[3, 4, 5, 6, 7, 8, 9].map(day => (
-                    <div key={day} className="p-4 rounded-2xl bg-white border border-slate-100 shadow-sm text-center">
-                      <span className="text-[9px] font-black uppercase text-accent">Day {day}</span>
-                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mx-auto mt-1" />
-                    </div>
-                  ))}
-                  <div className="p-4 rounded-2xl bg-accent text-white shadow-lg text-center flex flex-col items-center justify-center">
-                    <Star className="w-3 h-3 mb-1" />
-                    <span className="text-[9px] font-black uppercase">Goal</span>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h4 className="text-2xl font-bold text-ink flex items-center gap-3">
-                     <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">03</span>
-                     Strategic Nutrition
-                  </h4>
-                  <p className="text-slate-500 leading-relaxed">Introduce C9-approved 600-calorie meals and high-protein shakes to support muscle maintenance and sustained energy.</p>
-                </div>
-                <div className="space-y-4">
-                  <h4 className="text-2xl font-bold text-ink flex items-center gap-3">
-                     <span className="w-8 h-8 rounded-full bg-emerald-100 text-accent flex items-center justify-center text-sm font-black">04</span>
-                     Active Lifestyle
-                  </h4>
-                  <p className="text-slate-500 leading-relaxed">With increased caloric intake, your body is ready for moderate activity like brisk walking, swimming, or yoga.</p>
-                </div>
-              </div>
-              <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 lg:order-2">
-                 <div className="relative aspect-video rounded-[3rem] overflow-hidden bg-accent shadow-2xl group">
-                    <div className="absolute inset-0 bg-ink/20 mix-blend-multiply z-10" />
-                    <div className="absolute inset-0 flex items-center justify-center z-20 p-12 text-center">
-                      <div className="space-y-4">
-                        <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center mx-auto border border-white/30">
-                           <BarChart3 className="w-10 h-10 text-white" />
-                        </div>
-                        <h3 className="text-4xl font-serif italic text-white">Phase 2: The Build</h3>
-                        <p className="text-emerald-50 font-bold tracking-widest uppercase text-[10px]">Days 3 to 9</p>
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-8 z-20 bg-gradient-to-t from-emerald-900/60 to-transparent">
-                      <p className="text-white text-sm leading-relaxed font-medium">Transition to sustainable habits. You'll begin to see your body change and feel your vitality return.</p>
-                    </div>
-                 </div>
-              </motion.div>
-            </div>
-          </div>
-
-          <div className="mt-20">
-            <ProductShowcase 
-              image={productsAsset.url}
-              title="The Synergistic C9 Kit"
-              description="Each product in Clean 9 is carefully selected to work together synergistically. From metabolic support to digestive health, the kit provides everything your body needs for a complete reset."
-              benefits={[
-                "Aloe Vera Gel: Cleanse the digestive system",
-                "Forever Fiber: Promote feelings of fullness",
-                "Forever Argi+: Support healthy circulation and energy",
-                "Forever Garcinia: Efficient fat burning support",
-                "Forever Lite Ultra: High-quality plant protein (13g)",
-                "Forever Aloe Herbal Infusion: Relaxation and balance"
-
-              ]}
-            />
-          </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 pt-20">
             <FeatureCard 
-              icon={Droplets} 
-              title="Forever Aloe Drinks" 
-              description="Pure Forever Aloe Vera to help cleanse the digestive system and maximize absorption of nutrients." 
-
-            />
-            <FeatureCard 
-              icon={Zap} 
-              title="Forever Fiber" 
-              description="Water-soluble Forever Fiber to promote feelings of fullness and digestive health." 
-
-            />
-            <FeatureCard 
               icon={Activity} 
-              title="Forever Therm" 
-              description="Botanical extracts and vitamins including Forever Therm to support metabolism and energy levels." 
-
+              title="Metabolic Precision" 
+              description="Analyze your body's specific response to nutrition and exercise." 
             />
             <FeatureCard 
-              icon={Scale} 
-              title="Forever Garcinia Plus" 
-              description="Helps the body burn fat more efficiently with Forever Garcinia Plus and supports healthy appetite levels." 
-
+              icon={Utensils} 
+              title="Nutrient Density" 
+              description="Focus on whole, unprocessed foods that nourish and satisfy." 
             />
             <FeatureCard 
-              icon={Apple} 
-              title="Lite Ultra" 
-              description="High-protein shake mix with essential vitamins and minerals for muscle support." 
-            />
-            <FeatureCard 
-              icon={ShieldCheck} 
-              title="Guided Support" 
-              description="Comprehensive guidebook to track every step of your 9-day journey." 
+              icon={Clock} 
+              title="Sustainable Habits" 
+              description="Build a routine that lasts a lifetime, not just a few days." 
             />
           </div>
         </div>
