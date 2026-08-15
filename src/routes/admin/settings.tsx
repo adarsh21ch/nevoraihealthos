@@ -249,3 +249,6 @@ function SupabaseConfigCard() {
           </div>
         </div>
       </div>
+    </Card>
+  );
+}
