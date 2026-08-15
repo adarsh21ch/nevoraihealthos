@@ -15,15 +15,18 @@ export const getDashboardStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    // Check cache or roles directly
     const { data: { user } } = await supabase.auth.getUser();
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
     
     if (!isAdmin) throw new Error("Unauthorized");
@@ -55,9 +58,13 @@ export const getCustomers = createServerFn({ method: "GET" })
     
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
     
     if (!isAdmin) throw new Error("Unauthorized");
@@ -101,12 +108,18 @@ export const getReorderList = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data: { user } } = await supabase.auth.getUser();
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
+    
     if (!isAdmin) throw new Error("Unauthorized");
 
     // Placeholder until DB functions are created
@@ -119,12 +132,18 @@ export const getAtRiskList = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data: { user } } = await supabase.auth.getUser();
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
+    
     if (!isAdmin) throw new Error("Unauthorized");
 
     // Placeholder until DB functions are created
@@ -137,12 +156,18 @@ export const getTestimonials = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data: { user } } = await supabase.auth.getUser();
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
+    
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data, error } = await supabase
@@ -183,12 +208,18 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data: { user } } = await supabase.auth.getUser();
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
-      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
-      isAdmin = !!roleCheck || !!ownerCheck;
+      const { data: roleRows } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+      
+      const elevatedRoles = ["admin", "platform_admin", "tenant_owner", "coach"];
+      isAdmin = !!roleRows?.some((r: any) => elevatedRoles.includes(r.role));
     }
+    
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data: row, error } = await supabase
