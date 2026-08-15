@@ -13,7 +13,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { updateMyProfile } from "@/lib/profile/profile.functions";
 import { toast } from "sonner";
 import { AppLogo } from "@/components/ui/app-logo";
-
+import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
 
 export const Route = createFileRoute("/onboarding")({
   ssr: false,
@@ -284,29 +284,22 @@ function OnboardingPage() {
                     <h2 className="text-4xl font-serif italic font-bold text-ink leading-tight">Your health journey<br/>starts here.</h2>
                     <p className="text-sm text-slate-500 leading-relaxed">Let's personalize your program by getting to know you better. This takes about 3 minutes.</p>
                     
-                    <div className="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 text-left space-y-4">
-                      <div className="flex items-center gap-2 text-emerald-800">
-                        <ShieldCheck className="w-4 h-4" />
-                        <span className="text-[9px] font-black uppercase tracking-widest">Affiliation Disclosure</span>
-                      </div>
-                      <p className="text-[10px] text-emerald-900/60 leading-relaxed font-medium italic">
-                        Fat2Fit is an independent companion app for customers who have purchased Forever Living C9/FIT1/FIT2 products through us. 
-                        We are not affiliated with or endorsed by Forever Living Products.
-                      </p>
-                      <div className="flex items-center space-x-2 pt-2">
+                    <div className="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
                         <Checkbox 
                           id="affiliation" 
                           checked={formData.affiliation_acknowledged} 
                           onCheckedChange={(checked) => updateField('affiliation_acknowledged', checked === true)}
-                          className="border-emerald-200 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green"
+                          className="w-5 h-5 rounded-md border-emerald-200 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green"
                         />
                         <label
                           htmlFor="affiliation"
-                          className="text-[10px] font-bold text-emerald-800 leading-none cursor-pointer"
+                          className="text-[10px] font-black uppercase tracking-widest text-emerald-800 cursor-pointer"
                         >
-                          I understand and acknowledge this affiliation
+                          Acknowledge Affiliation
                         </label>
                       </div>
+                      <ShieldCheck className="w-5 h-5 text-health-green opacity-40" />
                     </div>
                   </div>
                 )}
@@ -624,29 +617,35 @@ function OnboardingPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-4 pt-8">
-            {step > 0 && (
-              <Button 
-                variant="ghost" 
-                onClick={back}
-                className="h-14 px-8 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
-              >
-                Back
-              </Button>
-            )}
-            <Button 
-              onClick={step === STEPS.length - 1 ? finish : next} 
-              className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <Loader2 className="animate-spin w-5 h-5" />
-              ) : (
-                <span className="relative z-10">
-                  {step === STEPS.length - 1 ? "Start Journey" : "Continue"}
-                </span>
+          <div className="flex flex-col gap-6 pt-8">
+            <div className="flex gap-4">
+              {step > 0 && (
+                <Button 
+                  variant="ghost" 
+                  onClick={back}
+                  className="h-14 px-8 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400"
+                >
+                  Back
+                </Button>
               )}
-            </Button>
+              <Button 
+                onClick={step === STEPS.length - 1 ? finish : next} 
+                className="flex-1 h-14 rounded-2xl bg-health-green hover:bg-health-green-dark text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-health-green/20"
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <Loader2 className="animate-spin w-5 h-5" />
+                ) : (
+                  <span className="relative z-10">
+                    {step === STEPS.length - 1 ? "Start Journey" : "Continue"}
+                  </span>
+                )}
+              </Button>
+            </div>
+            
+            <div className="pt-4 border-t border-slate-50 opacity-40">
+              <AffiliationDisclaimer />
+            </div>
           </div>
         </div>
       </div>

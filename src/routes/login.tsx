@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, ArrowRight } from "lucide-react";
 import { BrandedLoading } from "@/components/ui/branded-loading";
 import { AppLogo } from "@/components/ui/app-logo";
+import { AffiliationDisclaimer } from "@/components/site/AffiliationDisclaimer";
 import { toast } from "sonner";
 
 
@@ -415,6 +416,9 @@ function LoginPage() {
               </div>
               <div className="text-slate-200 text-[8px] font-bold uppercase tracking-[0.2em]">
                 Build by Nevorai Technologies
+              </div>
+              <div className="pt-8 opacity-50">
+                <AffiliationDisclaimer />
               </div>
             </div>
           </div>
