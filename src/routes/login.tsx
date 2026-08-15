@@ -190,7 +190,27 @@ function LoginPage() {
 
       navigate({ to: "/onboarding" });
     } catch (err: any) {
-      setError(err?.message ?? "Could not create your account.");
+      let friendlyMessage = err?.message ?? "Could not create your account.";
+      
+      // Handle Zod error formatting (common for password length)
+      if (typeof friendlyMessage === 'string' && friendlyMessage.includes('[{"code":')) {
+        try {
+          const zodErrors = JSON.parse(friendlyMessage);
+          if (Array.isArray(zodErrors) && zodErrors.length > 0) {
+            const firstError = zodErrors[0];
+            if (firstError.path?.[0] === 'password' && firstError.minimum) {
+              friendlyMessage = `Password must be at least ${firstError.minimum} characters long.`;
+            } else {
+              friendlyMessage = firstError.message || "Invalid input provided.";
+            }
+          }
+        } catch (e) {
+          // Fallback if parsing fails
+          friendlyMessage = "Please check your inputs and try again.";
+        }
+      }
+      
+      setError(friendlyMessage);
     } finally {
       setIsLoading(false);
     }
