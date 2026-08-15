@@ -5,16 +5,18 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const ELEVATED_ROLES = ["admin", "platform_admin", "tenant_owner", "coach"] as const;
 
 async function hasElevatedAccess(supabase: any, userId: string) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user?.email === 'teamnevorai@gmail.com') return true;
-
-
+  // Check user_roles first to avoid calling auth.getUser() which might fail in some contexts
   const { data: roleRows } = await supabase
     .from("user_roles")
     .select("role")
     .eq("user_id", userId);
 
-  return !!roleRows?.some((r: any) => ELEVATED_ROLES.includes(r.role));
+  const hasElevatedRole = !!roleRows?.some((r: any) => ELEVATED_ROLES.includes(r.role));
+  if (hasElevatedRole) return true;
+
+  // Fallback to hardcoded email check
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.email === 'teamnevorai@gmail.com';
 }
 
 export const checkAdminStatus = createServerFn({ method: "GET" })
