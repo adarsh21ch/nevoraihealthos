@@ -44,7 +44,6 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       accessCodeId = oneTimeCreds.id;
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
 
     // 2. Create Auth User
