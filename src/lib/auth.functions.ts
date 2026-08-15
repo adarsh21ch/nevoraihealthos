@@ -88,12 +88,13 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
-    // 5. Mark access code as used
-    // Use supabaseAdmin to bypass RLS if needed, as the user isn't session-active yet
-    await supabaseAdmin
-      .from("access_codes")
-      .update({ used_at: new Date().toISOString(), customer_id: customer.id })
-      .eq("id", creds.id);
+    // 5. Mark access code as used (only for one-time codes)
+    if (!isPermanent) {
+      await supabaseAdmin
+        .from("access_codes")
+        .update({ used_at: new Date().toISOString(), customer_id: customer.id })
+        .eq("id", creds.id);
+    }
 
     return { 
       success: true, 
