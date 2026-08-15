@@ -14,25 +14,27 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     // 1. Check access code
     const normalizedCode = data.access_code.trim().toUpperCase();
-    const isPermanent = normalizedCode === 'FAT2FIT';
     
-    let accessCodeId: string | undefined;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    if (isPermanent) {
-      // For the master permanent code, we try to get its ID, but we don't block if missing
-      const { data: permanentRecord } = await supabase
-        .from("access_codes")
-        .select("id")
-        .eq("code", "FAT2FIT")
-        .maybeSingle();
-      
-      accessCodeId = permanentRecord?.id;
-    } else {
-      // Standard one-time code check
-      const { data: oneTimeCreds, error: oneTimeError } = await supabase
+    // 1. Check if it's a permanent/master code
+    const { data: permanentRecord } = await supabaseAdmin
+      .from("access_codes")
+      .select("id, code")
+      .eq("code", normalizedCode)
+      .eq("is_permanent", true)
+      .maybeSingle();
+    
+    const isPermanent = !!permanentRecord;
+    let accessCodeId = permanentRecord?.id;
+
+    if (!isPermanent) {
+      // 1b. Standard one-time code check
+      const { data: oneTimeCreds, error: oneTimeError } = await supabaseAdmin
         .from("access_codes")
         .select("id")
         .eq("code", normalizedCode)
+        .eq("is_permanent", false)
         .is("used_at", null)
         .maybeSingle();
 
@@ -42,7 +44,6 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       accessCodeId = oneTimeCreds.id;
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
 
     // 2. Create Auth User

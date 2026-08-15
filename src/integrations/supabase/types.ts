@@ -20,8 +20,10 @@ export type Database = {
           code: string
           created_at: string
           customer_id: string | null
+          distributor_id: string | null
           expires_at: string | null
           id: string
+          is_permanent: boolean | null
           phone: string | null
           used_at: string | null
         }
@@ -30,8 +32,10 @@ export type Database = {
           code: string
           created_at?: string
           customer_id?: string | null
+          distributor_id?: string | null
           expires_at?: string | null
           id?: string
+          is_permanent?: boolean | null
           phone?: string | null
           used_at?: string | null
         }
@@ -40,8 +44,10 @@ export type Database = {
           code?: string
           created_at?: string
           customer_id?: string | null
+          distributor_id?: string | null
           expires_at?: string | null
           id?: string
+          is_permanent?: boolean | null
           phone?: string | null
           used_at?: string | null
         }
