@@ -39,7 +39,7 @@ function AccessControlPage() {
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
       if (code.length < 4) throw new Error("Access code must be at least 4 characters");
-      return updateCodeFn({ data: { tenantId: tenantId!, accessCode: code.toUpperCase() } });
+      return updateCodeFn({ data: { accessCode: code.toUpperCase() } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-tenant-access-code"] });
