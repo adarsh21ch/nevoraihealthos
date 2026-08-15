@@ -26,23 +26,24 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 function createSupabaseAdminClient() {
   const SUPABASE_URL = process.env['SUPABASE_URL'];
-  const SUPABASE_SERVICE_ROLE_KEY = process.env['SUPABASE_SERVICE_ROLE_KEY'];
+  // Prefer the newer secret key if available, fallback to the legacy service role key
+  const SUPABASE_SECRET_KEY = process.env['SUPABASE_SECRET_KEYS'] || process.env['SUPABASE_SERVICE_ROLE_KEY'];
 
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
     const missing = [
       ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
-      ...(!SUPABASE_SERVICE_ROLE_KEY ? ['SUPABASE_SERVICE_ROLE_KEY'] : []),
+      ...(!SUPABASE_SECRET_KEY ? ['SUPABASE_SECRET_KEYS / SUPABASE_SERVICE_ROLE_KEY'] : []),
     ];
     const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
     
-    // Log as warning instead of error during the transition, and return null instead of throwing
+    // Return null instead of throwing, allowing module load to succeed
     console.warn(`[Supabase] ${message} - Admin operations will fail.`);
     return null;
   }
 
-  return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  return createClient<Database>(SUPABASE_URL, SUPABASE_SECRET_KEY, {
     global: {
-      fetch: createSupabaseFetch(SUPABASE_SERVICE_ROLE_KEY),
+      fetch: createSupabaseFetch(SUPABASE_SECRET_KEY),
     },
     auth: {
       storage: undefined,
@@ -54,12 +55,23 @@ function createSupabaseAdminClient() {
 
 let _supabaseAdmin: ReturnType<typeof createSupabaseAdminClient> | undefined;
 
+/**
+ * Proxy object that initializes the Supabase Admin client on first property access.
+ * This prevents the entire application from crashing at module load time if 
+ * the SUPABASE_SERVICE_ROLE_KEY is missing (e.g., during signup or non-admin paths).
+ */
 export const supabaseAdmin = new Proxy({} as any, {
-  get(_, prop, receiver) {
+  get(target, prop, receiver) {
     if (_supabaseAdmin === undefined) _supabaseAdmin = createSupabaseAdminClient();
+    
     if (_supabaseAdmin === null) {
-      throw new Error("Supabase Admin client not available: SUPABASE_SERVICE_ROLE_KEY is missing. Please connect Supabase in Lovable Cloud.");
+      throw new Error("SUPABASE ADMIN CLIENT NOT AVAILABLE: SUPABASE_SERVICE_ROLE_KEY IS MISSING. PLEASE CONNECT SUPABASE IN LOVABLE CLOUD.");
     }
-    return Reflect.get(_supabaseAdmin, prop, receiver);
+    
+    const value = Reflect.get(_supabaseAdmin, prop, receiver);
+    if (typeof value === 'function') {
+      return value.bind(_supabaseAdmin);
+    }
+    return value;
   },
 });
