@@ -268,16 +268,15 @@ function Index() {
           <div>
             <h4 className="font-black text-[10px] uppercase tracking-[0.4em] text-accent mb-8">Navigation</h4>
             <ul className="space-y-4 text-slate-400 font-bold uppercase tracking-widest text-[11px]">
-              <li><a href="#program" className="hover:text-white transition-colors">Program</a></li>
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">Supplements</a></li>
-              <li><a href="#nutrition" className="hover:text-white transition-colors">Nutrition</a></li>
+              <li><a href="#methodology" className="hover:text-white transition-colors">Methodology</a></li>
+              <li><a href="#command-center" className="hover:text-white transition-colors">Command Center</a></li>
+              <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
               <li><Link to="/login" className="hover:text-white transition-colors">Login</Link></li>
             </ul>
           </div>
           <div>
              <h4 className="font-black text-[10px] uppercase tracking-[0.4em] text-accent mb-8">Resources</h4>
              <ul className="space-y-4 text-slate-400 font-bold uppercase tracking-widest text-[11px]">
-              <li><a href={bookletUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Program Guide</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
             </ul>
