@@ -478,7 +478,7 @@ function Index() {
         </div>
         <div className="max-w-7xl mx-auto mt-20 pt-10 border-t border-white/5 text-center">
           <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8">&copy; 2026 Fat2Fit. All Rights Reserved.</p>
-          <AffiliationDisclaimer />
+          {/* Affiliation moved to App layouts only */}
         </div>
       </footer>
     </div>
