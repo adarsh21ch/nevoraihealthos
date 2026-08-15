@@ -123,7 +123,9 @@ function LoginPage() {
       // Hardcoded admin redirect (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
-        window.location.href = '/admin'; // Direct navigation to avoid SPA state lag
+        // Ensure session is fully written to storage before hard redirect
+        await new Promise(resolve => setTimeout(resolve, 500));
+        window.location.href = '/admin'; 
         return;
       }
 
