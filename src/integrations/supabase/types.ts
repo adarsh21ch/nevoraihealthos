@@ -165,6 +165,60 @@ export type Database = {
         }
         Relationships: []
       }
+      bmi_leads: {
+        Row: {
+          activity_level: string
+          age: number
+          bmi_category: string
+          bmi_value: number
+          consent_at: string
+          created_at: string | null
+          email: string
+          email_sent_at: string | null
+          gender: string
+          goal: string
+          height_cm: number
+          id: string
+          name: string
+          report_text: string | null
+          weight_kg: number
+        }
+        Insert: {
+          activity_level: string
+          age: number
+          bmi_category: string
+          bmi_value: number
+          consent_at: string
+          created_at?: string | null
+          email: string
+          email_sent_at?: string | null
+          gender: string
+          goal: string
+          height_cm: number
+          id?: string
+          name: string
+          report_text?: string | null
+          weight_kg: number
+        }
+        Update: {
+          activity_level?: string
+          age?: number
+          bmi_category?: string
+          bmi_value?: number
+          consent_at?: string
+          created_at?: string | null
+          email?: string
+          email_sent_at?: string | null
+          gender?: string
+          goal?: string
+          height_cm?: number
+          id?: string
+          name?: string
+          report_text?: string | null
+          weight_kg?: number
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           activity_level: string | null
