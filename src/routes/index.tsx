@@ -70,33 +70,24 @@ function Index() {
         </div>
       </nav>
 
-      <header className="relative pt-48 pb-36 px-6 overflow-hidden">
+      <header className="relative pt-48 pb-12 px-6 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full -z-10 bg-cover bg-center opacity-10" style={{ backgroundImage: `url(${heroAestheticAsset.url})` }} />
         <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-violet-100/50 via-surface to-surface" />
         <div className="max-w-7xl mx-auto text-center relative">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="inline-block px-5 py-2 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-[0.3em] mb-10 border border-emerald-200">
-              9-Day Program
-            </span>
-            <h1 className="text-5xl sm:text-7xl md:text-[10rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12 break-words sm:break-normal">
-              9-Day Reset. <br/><span className="relative inline-block mt-4"><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em]">Get Healthy.</span><motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.8, duration: 0.6 }} className="absolute -bottom-2 left-0 right-0 h-4 bg-emerald-400/20 -z-10 origin-left" /></span>
+            <h1 className="text-5xl sm:text-7xl md:text-[8rem] font-serif italic tracking-tighter text-ink leading-[0.8] mb-12 break-words sm:break-normal">
+              Wellness Screening. <br/><span className="relative inline-block mt-4"><span className="text-accent not-italic font-sans font-black uppercase tracking-[-0.05em]">Start Here.</span><motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.8, duration: 0.6 }} className="absolute -bottom-2 left-0 right-0 h-4 bg-emerald-400/20 -z-10 origin-left" /></span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
-              Join the elite Fat2Fit 9-day reset. A masterclass in metabolic efficiency, designed to transform your cellular energy and reveal your true vitality.
+              Understand your metabolic baseline with our science-backed screening tool. Personalized insights for your unique health journey.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link to="/login" className="group relative px-12 py-6 bg-ink text-white rounded-2xl text-lg font-black uppercase tracking-widest shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-3 overflow-hidden">
-                <span className="relative z-10">Start The Reset</span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-              <a href="#program" className="px-12 py-6 bg-white text-ink border-2 border-slate-100 rounded-2xl text-lg font-bold transition-all hover:border-accent hover:text-accent hover:shadow-xl">
-                The Protocol
-              </a>
-            </div>
           </motion.div>
         </div>
       </header>
+
+      <section className="pb-32 bg-white relative overflow-hidden">
+        <BMITool />
+      </section>
 
       <section className="py-32 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
