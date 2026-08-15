@@ -172,6 +172,7 @@ export type Database = {
           disliked_foods: string[] | null
           distributor_id: string | null
           dob: string | null
+          email: string | null
           fbo_id: string | null
           gender: string | null
           goal: string | null
@@ -211,6 +212,7 @@ export type Database = {
           disliked_foods?: string[] | null
           distributor_id?: string | null
           dob?: string | null
+          email?: string | null
           fbo_id?: string | null
           gender?: string | null
           goal?: string | null
@@ -250,6 +252,7 @@ export type Database = {
           disliked_foods?: string[] | null
           distributor_id?: string | null
           dob?: string | null
+          email?: string | null
           fbo_id?: string | null
           gender?: string | null
           goal?: string | null
@@ -1131,6 +1134,10 @@ export type Database = {
         Args: { _code: string; _phone: string }
         Returns: string
       }
+      complete_registration: {
+        Args: { _code: string; _fbo_id: string }
+        Returns: string
+      }
       current_day_number: { Args: { _start_date: string }; Returns: number }
       default_distributor_id: { Args: never; Returns: string }
       get_day_with_tasks: {
@@ -1154,6 +1161,7 @@ export type Database = {
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
       is_registration_code_valid: { Args: { _code: string }; Returns: boolean }
       my_customer_id: { Args: never; Returns: string }
+      validate_registration_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role:
