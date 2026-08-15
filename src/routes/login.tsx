@@ -74,9 +74,13 @@ function LoginPage() {
       
       if (session) {
         // We already have a session, let the router's beforeLoad handle the redirect logic
-        // But we trigger a reload to ensure the router state is fresh and RPCs run
         const isLoggingOut = new URLSearchParams(window.location.search).get('logout') === 'true';
         if (!isLoggingOut) {
+          // If we have a session but we're on the login page, check if we're the admin
+          if (session.user.email === 'teamnevorai@gmail.com') {
+             window.location.href = '/admin';
+             return;
+          }
           navigate({ to: '/login', replace: true });
         }
       }
@@ -123,7 +127,9 @@ function LoginPage() {
       // Hardcoded admin redirect (Highest Priority)
       if (user.email === 'teamnevorai@gmail.com') {
         console.log("Platform admin recognized, redirecting to /admin...");
-        window.location.href = '/admin'; // Direct navigation to avoid SPA state lag
+        // Ensure session is fully written to storage before hard redirect
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        window.location.href = '/admin'; 
         return;
       }
 
