@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useNavigate, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Package, MessageSquare, Layout, Key } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Package, MessageSquare, Layout, Key, Scale } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -32,6 +32,7 @@ function DashboardLayout() {
     { name: "Access Control", icon: Key, path: "/dashboard/access" },
     { name: "Testimonials", icon: MessageSquare, path: "/dashboard/testimonials" },
     { name: "Invite", icon: Users, path: "/dashboard/invite" },
+    { name: "BMI Leads", icon: Scale, path: "/dashboard/leads" },
     { name: "Settings", icon: Settings, path: "/dashboard/branding" },
   ];
 

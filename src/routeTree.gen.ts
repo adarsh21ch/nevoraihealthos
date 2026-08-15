@@ -38,6 +38,7 @@ import { Route as DashboardAccessRouteImport } from './routes/dashboard/access'
 import { Route as DashboardAtRiskRouteImport } from './routes/dashboard/at-risk'
 import { Route as DashboardBrandingRouteImport } from './routes/dashboard/branding'
 import { Route as DashboardInviteRouteImport } from './routes/dashboard/invite'
+import { Route as DashboardLeadsRouteImport } from './routes/dashboard/leads'
 import { Route as DashboardPlansRouteImport } from './routes/dashboard/plans'
 import { Route as DashboardProductsRouteImport } from './routes/dashboard/products'
 import { Route as DashboardReorderRouteImport } from './routes/dashboard/reorder'
@@ -203,6 +204,11 @@ const DashboardInviteRoute = DashboardInviteRouteImport.update({
   path: '/invite',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardLeadsRoute = DashboardLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPlansRoute = DashboardPlansRouteImport.update({
   id: '/plans',
   path: '/plans',
@@ -342,6 +348,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/leads': typeof DashboardLeadsRoute
   '/dashboard/plans': typeof DashboardPlansRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
@@ -390,6 +397,7 @@ export interface FileRoutesByTo {
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/leads': typeof DashboardLeadsRoute
   '/dashboard/plans': typeof DashboardPlansRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
@@ -442,6 +450,7 @@ export interface FileRoutesById {
   '/dashboard/at-risk': typeof DashboardAtRiskRoute
   '/dashboard/branding': typeof DashboardBrandingRoute
   '/dashboard/invite': typeof DashboardInviteRoute
+  '/dashboard/leads': typeof DashboardLeadsRoute
   '/dashboard/plans': typeof DashboardPlansRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/reorder': typeof DashboardReorderRoute
@@ -494,6 +503,7 @@ export interface FileRouteTypes {
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/invite'
+    | '/dashboard/leads'
     | '/dashboard/plans'
     | '/dashboard/products'
     | '/dashboard/reorder'
@@ -542,6 +552,7 @@ export interface FileRouteTypes {
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/invite'
+    | '/dashboard/leads'
     | '/dashboard/plans'
     | '/dashboard/products'
     | '/dashboard/reorder'
@@ -593,6 +604,7 @@ export interface FileRouteTypes {
     | '/dashboard/at-risk'
     | '/dashboard/branding'
     | '/dashboard/invite'
+    | '/dashboard/leads'
     | '/dashboard/plans'
     | '/dashboard/products'
     | '/dashboard/reorder'
@@ -842,6 +854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInviteRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/leads': {
+      id: '/dashboard/leads'
+      path: '/leads'
+      fullPath: '/dashboard/leads'
+      preLoaderRoute: typeof DashboardLeadsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/plans': {
       id: '/dashboard/plans'
       path: '/plans'
@@ -1065,6 +1084,7 @@ interface DashboardRouteChildren {
   DashboardAtRiskRoute: typeof DashboardAtRiskRoute
   DashboardBrandingRoute: typeof DashboardBrandingRoute
   DashboardInviteRoute: typeof DashboardInviteRoute
+  DashboardLeadsRoute: typeof DashboardLeadsRoute
   DashboardPlansRoute: typeof DashboardPlansRoute
   DashboardProductsRoute: typeof DashboardProductsRoute
   DashboardReorderRoute: typeof DashboardReorderRoute
@@ -1079,6 +1099,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAtRiskRoute: DashboardAtRiskRoute,
   DashboardBrandingRoute: DashboardBrandingRoute,
   DashboardInviteRoute: DashboardInviteRoute,
+  DashboardLeadsRoute: DashboardLeadsRoute,
   DashboardPlansRoute: DashboardPlansRoute,
   DashboardProductsRoute: DashboardProductsRoute,
   DashboardReorderRoute: DashboardReorderRoute,
