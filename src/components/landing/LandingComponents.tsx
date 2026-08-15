@@ -93,17 +93,8 @@ export const PillarCard = ({ number, title, description, icon: Icon }: { number:
   </motion.div>
 );
 
-export const StepIcon = ({ day, active, completed }: { day: number, active?: boolean, completed?: boolean }) => (
-  <div className="flex flex-col items-center gap-2">
-    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold transition-all ${
-      active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' : 
-      completed ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'
-    }`}>
-      {completed ? <CheckCircle2 className="w-6 h-6" /> : day}
-    </div>
-    <span className={`text-[10px] font-bold uppercase tracking-wider ${active ? 'text-accent' : 'text-slate-400'}`}>Day {day}</span>
-  </div>
-);
+export const StepIcon = ({ day, active, completed }: { day: number, active?: boolean, completed?: boolean }) => null;
+
 
 export const ProductShowcase = ({ image, title, description, benefits }: { image: string, title: string, description: string, benefits: string[] }) => (
   <div className="flex flex-col lg:flex-row gap-16 items-center py-20">
@@ -140,34 +131,7 @@ export const ProductShowcase = ({ image, title, description, benefits }: { image
   </div>
 );
 
-export const DownloadSection = ({ title, subtitle, pdfUrl }: { title: string, subtitle: string, pdfUrl: string }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className="relative p-8 md:p-20 rounded-[2.5rem] md:rounded-[3.5rem] bg-emerald-600 text-white overflow-hidden shadow-2xl shadow-emerald-200 mx-auto w-full max-w-[calc(100vw-3rem)] md:max-w-none"
-  >
-    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48" />
-    <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl -ml-48 -mb-48" />
-    
-    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-      <div className="max-w-2xl text-center md:text-left">
-        <h3 className="text-3xl md:text-5xl font-serif italic mb-6 leading-tight">{title}</h3>
-        <p className="text-lg md:text-xl text-white/80 font-medium">{subtitle}</p>
-      </div>
-      <div className="flex flex-col sm:flex-row gap-6">
-        <a 
-          href={pdfUrl} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="px-10 py-6 bg-white text-emerald-700 rounded-2xl text-lg font-black uppercase tracking-widest shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
-        >
-          <Download className="w-5 h-5" />
-          Download PDF
-        </a>
-      </div>
-    </div>
-  </motion.div>
-);
+export const DownloadSection = ({ title, subtitle, pdfUrl }: { title: string, subtitle: string, pdfUrl: string }) => null;
+
 
 

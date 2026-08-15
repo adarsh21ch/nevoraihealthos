@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { createServerFn } from "@tanstack/react-start";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Scale, Mail, Calendar, User, Activity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Scale, Mail, Calendar, User, Activity, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 
 export const getBmiLeads = createServerFn({ method: "GET" }).handler(async () => {
@@ -31,12 +32,17 @@ function LeadsPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-500">
       <div className="flex justify-between items-end">
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="h-1.5 w-1.5 rounded-full bg-health-green"></span>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Lead Generation</span>
+        <div className="flex items-center gap-6">
+          <Link to="/dashboard" className="p-3 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-ink hover:shadow-sm transition-all">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="h-1.5 w-1.5 rounded-full bg-health-green"></span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Lead Generation</span>
+            </div>
+            <h1 className="text-5xl font-bold tracking-tight text-ink leading-none">BMI Leads</h1>
           </div>
-          <h1 className="text-5xl font-bold tracking-tight text-ink leading-none">BMI Leads</h1>
         </div>
       </div>
 
