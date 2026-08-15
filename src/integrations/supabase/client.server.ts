@@ -65,7 +65,7 @@ export const supabaseAdmin = new Proxy({} as any, {
     if (_supabaseAdmin === undefined) _supabaseAdmin = createSupabaseAdminClient();
     
     if (_supabaseAdmin === null) {
-      throw new Error("SUPABASE CONNECTION REQUIRED: To enable program enrollment (Sign Up), please paste your 'Supabase Project URL' and 'Service Role Key' here in the chat. I will securely save them to fix the connection.");
+      throw new Error("SUPABASE CONNECTION ERROR: Admin client could not be initialized. Please verify your HEALTHOS_SUPABASE_URL and HEALTHOS_SERVICE_ROLE_KEY.");
     }
     
     const value = Reflect.get(_supabaseAdmin, prop, receiver);
