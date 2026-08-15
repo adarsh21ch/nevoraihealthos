@@ -85,7 +85,6 @@ function AdminAccessCodes() {
             <TableHeader>
               <TableRow className="border-slate-100 bg-slate-50/30 hover:bg-slate-50/30">
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-10 py-6">Code</TableHead>
-                <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Owner</TableHead>
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Status</TableHead>
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6">Created</TableHead>
                 <TableHead className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] py-6 text-right pr-10">Actions</TableHead>
@@ -115,9 +114,6 @@ function AdminAccessCodes() {
                       </div>
                       <span className="font-bold text-ink tracking-widest">{code.code}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-slate-500 text-xs font-bold">
-                    {code.coach_id ? (code.coach_id === 'b1ed3b14-6512-4f44-8adc-3ef6302f5d34' ? 'ADMIN' : 'COACH') : 'SYSTEM'}
                   </TableCell>
                   <TableCell>
                     {code.used_at ? (

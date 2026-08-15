@@ -40,7 +40,7 @@ function Index() {
   const bookletUrl = settings?.booklet_url || defaultBookletAsset.url;
 
   return (
-    <ClientOnly fallback={<div className="min-h-screen flex items-center justify-center bg-surface"><div className="w-8 h-8 border-4 border-slate-200 border-t-emerald-600 rounded-full animate-spin" /></div>}>
+    <ClientOnly>
       <div className="flex flex-col min-h-screen bg-surface selection:bg-emerald-100">
       <nav className="fixed top-0 left-0 right-0 z-[100] bg-white/80 backdrop-blur-2xl border-b border-slate-100">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">

@@ -1,6 +1,5 @@
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 import { supabase } from '@/integrations/supabase/client';
-import { resolveUserDestination } from '@/lib/auth-gate';
 import * as React from 'react';
 import { BrandedLoading } from '@/components/ui/branded-loading';
 
@@ -8,40 +7,86 @@ export const Route = createFileRoute('/_authenticated')({
   ssr: false,
   component: AuthenticatedLayout,
   beforeLoad: async ({ location }) => {
-    // 1. Storage check (sync) to avoid hydration races
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session?.user) {
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const user = session?.user;
+
+
+    if (sessionError || !user) {
       throw redirect({
         to: '/login',
         search: { redirect: location.href },
       });
     }
 
-    // 2. Resolve destination using unified logic
-    const { to, authContext, role } = await resolveUserDestination(session.user);
-
-    // 3. Authorization check
-    // If unified logic says we should be somewhere else, redirect there
-    // But allow /p/* routes if role is participant, etc.
-    const isDashboardPath = location.pathname.startsWith('/p/') || 
-                          location.pathname === '/today' || 
-                          location.pathname === '/onboarding';
-
-    if (location.pathname.startsWith('/admin') && role !== 'platform_admin' && role !== 'admin') {
-      throw redirect({ to: to as any });
-    }
-    
-    if (location.pathname.startsWith('/owner') && role !== 'tenant_owner' && role !== 'admin' && role !== 'platform_admin') {
-      throw redirect({ to: to as any });
+    // Platform Admin Hardcode - Fastest path for main admins
+    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+      console.log("Root middleware recognizing platform admin:", user.email);
+      return { 
+        authContext: {
+          role: 'platform_admin',
+          onboarding_complete: true,
+          tenant_slug: 'fat2fit'
+        } 
+      };
     }
 
-    // Special case: if we are on login or root and already have a destination
-    if (location.pathname === '/' || location.pathname === '/login') {
-       throw redirect({ to: to as any });
+    // Optimization: Return early if already in an admin session (trust cookie/storage)
+    // to avoid RPC overhead on every transition
+    const existingContext = typeof window !== 'undefined' ? (window as any).__AUTH_CONTEXT : null;
+    if (existingContext && existingContext.role === 'platform_admin') {
+        return { authContext: existingContext };
     }
 
-    return { authContext };
+    // Check session for role to avoid RPC if possible
+    // Note: In a production app, we'd store the role in user_metadata or a custom claim
+    // For now, we still use the RPC but with better error handling
+    try {
+      const { data: authContext, error } = await supabase.rpc('get_my_auth_context');
+      
+      if (error || !authContext) {
+        console.warn("Auth context RPC failed, using participant recovery path");
+        return {
+          authContext: {
+            role: 'participant',
+            onboarding_complete: false,
+            tenant_slug: 'fat2fit'
+          }
+        };
+      }
+
+      const { role, onboarding_complete, tenant_slug } = authContext as any;
+
+      // Gating logic
+      if (location.pathname.startsWith('/admin')) {
+        // Handled by admin route beforeLoad, but for safety:
+        if (role !== 'platform_admin' && role !== 'admin') {
+          // If we are a known admin email but RPC failed, we might be here
+          if (!(user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com')) {
+            throw redirect({ to: '/login' });
+          }
+        }
+      } else if (location.pathname.startsWith('/coach') || location.pathname.startsWith('/dashboard')) {
+        if (role !== 'tenant_owner' && role !== 'coach' && role !== 'admin' && role !== 'platform_admin') throw redirect({ to: '/login' });
+      } else if (location.pathname.startsWith('/p/')) {
+        // Ensure slug consistency - redirect /p/fat-to-fit to /p/fat2fit
+        if (location.pathname.startsWith('/p/fat-to-fit')) {
+            const newPath = location.pathname.replace('/p/fat-to-fit', '/p/fat2fit');
+            throw redirect({ to: newPath as any });
+        }
+
+
+        if (role === 'participant') {
+          if (!onboarding_complete && !location.pathname.includes('/onboarding')) {
+              throw redirect({ to: '/onboarding' });
+          }
+        }
+      }
+      return { authContext };
+    } catch (e) {
+      if (e instanceof Error && (e as any).status === 307) throw e;
+      console.error("Auth gate error:", e);
+      throw redirect({ to: '/login' });
+    }
   },
 });
 
@@ -52,17 +97,21 @@ function AuthenticatedLayout() {
     let mounted = true;
 
     const checkSession = async () => {
-      // Small stabilization delay to ensure Auth HMR / storage restore
-      await new Promise(resolve => setTimeout(resolve, 200));
-      if (mounted) setIsInitializing(false);
-      if (mounted) setIsInitializing(false);
+      // Allow session to hydrate from storage
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (mounted) {
+        // Small stabilization delay
+        setTimeout(() => {
+          if (mounted) setIsInitializing(false);
+        }, 600);
+      }
     };
 
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
-        // Use client-side routing if possible, but hard reload is safer for clearing state
         window.location.href = '/login';
       }
     });

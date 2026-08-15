@@ -3,21 +3,55 @@ import { useServerFn } from "@tanstack/react-start";
 import * as React from "react";
 import { resolveLoginIdentifier, createCustomerAccount } from "@/lib/auth.functions";
 import { supabase } from "@/integrations/supabase/client";
-import { resolveUserDestination } from "@/lib/auth-gate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowRight } from "lucide-react";
 import { BrandedLoading } from "@/components/ui/branded-loading";
-import { resolveTenantHint } from "@/lib/tenant";
-import { getTenantByHint } from "@/lib/tenant.functions";
 import { AppLogo } from "@/components/ui/app-logo";
 import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/login")({
   ssr: false,
-  staleTime: 0,
+  staleTime: 0, // Ensure we check session fresh every time
+
+  beforeLoad: async ({ context }) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Hardwired redirect if already signed in
+    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+      throw redirect({ to: "/admin" });
+    }
+
+    try {
+      const { data: authContext } = await supabase.rpc("get_my_auth_context");
+      const { role, tenant_slug, onboarding_complete } = (authContext ?? { role: 'participant', tenant_slug: 'fat2fit' }) as any;
+
+      if (role === "platform_admin") throw redirect({ to: "/admin" });
+      if (role === "tenant_owner") throw redirect({ to: "/dashboard" });
+      
+      if ((role === "customer" || role === "participant") && tenant_slug) {
+        if (context.tenant && context.tenant.slug !== tenant_slug) {
+          const { tenantSiteUrl } = await import("@/lib/tenant");
+          const targetUrl = tenantSiteUrl({ slug: tenant_slug, custom_domain: (authContext as any).custom_domain });
+          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+          return;
+        }
+
+        throw redirect(
+          onboarding_complete
+            ? { to: "/p/$tenantSlug/today", params: { tenantSlug: tenant_slug } }
+            : { to: "/onboarding" },
+        );
+      }
+    } catch (e) {
+      // If RPC fails or we get a 307 redirect, rethrow it
+      if (e instanceof Error && (e as any).status === 307) throw e;
+      console.warn("Login beforeLoad check failed:", e);
+    }
+  },
   component: LoginPage,
 });
 
@@ -41,30 +75,13 @@ function LoginPage() {
   
   React.useEffect(() => {
     const checkInitialSession = async () => {
-      // Synchronous storage check first to avoid timing race
+      // Clear any potential stale state
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (session) {
-        console.log("Existing session found, performing unified redirect...");
-        // Re-run tenant check if context is empty
-        let tenant = (Route.useRouteContext() as any)?.tenant;
-        if (!tenant) {
-          const hint = resolveTenantHint({ hostname: window.location.hostname, pathname: window.location.pathname, search: window.location.search });
-          const result = await getTenantByHint({ data: hint! });
-          tenant = result.tenant;
-        }
-
-        const { to } = await resolveUserDestination(session.user);
-        
-        // Use client-side navigate if possible, otherwise hard redirect if it's a different domain
-        if (to.startsWith('http')) {
-          window.location.replace(to);
-        } else {
-          navigate({ to: to as any });
-        }
-      } else {
-        setIsAuthChecking(false);
+        // Force evaluation of beforeLoad if session exists
+        navigate({ to: '/login', replace: true });
       }
+      setIsAuthChecking(false);
     };
     checkInitialSession();
   }, [navigate]);
@@ -106,13 +123,45 @@ function LoginPage() {
 
       console.log("Authenticated user:", user.email);
 
-      console.log("Login successful, resolving destination...");
-      const { to } = await resolveUserDestination(user);
+      // Hardcoded admin redirect (Highest Priority)
+      if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') {
+        console.log("Platform admin recognized, redirecting to /admin...");
+        // Use full URL to ensure clean state and bypass router transitions
+        window.location.assign(window.location.origin + '/admin');
+        return;
+      }
+
+      const { data: context } = await supabase.rpc("get_my_auth_context");
       
-      if (to.startsWith('http')) {
-        window.location.href = to;
+      const { role, tenant_slug, onboarding_complete, custom_domain } = (context ?? {
+        role: 'participant',
+        tenant_slug: 'fat2fit',
+        onboarding_complete: false
+      }) as any;
+
+      console.log("Identity resolved:", { role, tenant_slug, onboarding_complete });
+
+      if (role === "platform_admin") {
+        navigate({ to: "/admin" });
+      } else if (role === "tenant_owner") {
+        navigate({ to: "/dashboard" });
+      } else if (role === "participant" || role === "customer" || role === "distributor") {
+        const effectiveSlug = tenant_slug || "fat2fit";
+        
+        if (currentTenant && currentTenant.slug !== effectiveSlug) {
+          const { tenantSiteUrl } = await import("@/lib/tenant");
+          const targetUrl = tenantSiteUrl({ slug: effectiveSlug, custom_domain });
+          window.location.href = onboarding_complete ? `${targetUrl}/today` : `${targetUrl}/onboarding`;
+          return;
+        }
+
+        if (onboarding_complete) {
+          navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: effectiveSlug } });
+        } else {
+          navigate({ to: "/onboarding" });
+        }
       } else {
-        navigate({ to: to as any });
+        navigate({ to: "/onboarding" });
       }
     } catch (error: any) {
       console.error("Login attempt failed:", error);

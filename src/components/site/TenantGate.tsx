@@ -14,15 +14,10 @@ interface TenantGateProps {
 export function TenantGate({ children, isPlatformPage = false }: TenantGateProps) {
   const { tenant, isLoading, isCustomDomain } = useTenant();
 
-  // If we are on a custom domain/subdomain but no tenant was found
-  if (!isLoading && isCustomDomain && !tenant) {
-    return <DomainNotConfigured />;
-  }
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FCFBF8]">
-        <div className="w-12 h-12 border-4 border-slate-100 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin" />
       </div>
     );
   }

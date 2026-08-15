@@ -1,5 +1,5 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { 
   User, 
@@ -16,104 +16,21 @@ import {
   BookOpen,
   Download,
   Key,
-  Languages,
-  RefreshCcw,
-  AlertTriangle,
-  Mail,
-  Phone,
-  Calendar,
-  Weight,
-  Zap,
-  HelpCircle,
-  Activity
+  Languages
 } from 'lucide-react';
 import { useLoaderData } from '@tanstack/react-router';
 import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
 import { Button } from '@/components/ui/button';
 import { useServerFn } from '@tanstack/react-start';
-import { getMyProfile, validateProfileReadiness, resetParticipantDay } from '@/lib/profile/profile.functions';
+import { getMyProfile, validateProfileReadiness } from '@/lib/profile/profile.functions';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { ProfileEditDrawer } from '@/components/profile/ProfileEditDrawer';
-import { toast } from 'sonner';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { supabase } from '@/integrations/supabase/client';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/profile')({
   component: ProfilePage,
 });
 
-
-
-function ResetDayButton() {
-  const resetFn = useServerFn(resetParticipantDay);
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const [isResetting, setIsResetting] = React.useState(false);
-
-  const handleReset = async () => {
-    setIsResetting(true);
-    try {
-      await resetFn();
-      toast.success("Journey reset to Day 1!");
-      queryClient.invalidateQueries();
-      // Use window.location to force a clean state after reset
-      window.location.href = window.location.pathname.replace('/profile', '/today');
-    } catch (error: any) {
-      toast.error(error.message || "Failed to reset journey");
-    } finally {
-      setIsResetting(false);
-    }
-  };
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="w-full h-16 rounded-2xl border-red-100 bg-red-50/30 text-red-600 font-bold hover:bg-red-50 hover:border-red-200 transition-all flex items-center justify-center gap-3"
-        >
-          <RefreshCcw className="w-5 h-5" />
-          Reset Journey to Day 1
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent className="rounded-[2.5rem] p-8 bg-white border-none shadow-2xl">
-        <AlertDialogHeader className="space-y-4">
-          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-2">
-            <AlertTriangle className="w-8 h-8 text-red-500" />
-          </div>
-          <AlertDialogTitle className="text-2xl font-serif italic font-bold text-center text-ink">Reset Your Progress?</AlertDialogTitle>
-          <AlertDialogDescription className="text-slate-500 text-center text-base leading-relaxed">
-            This will set your program start date to today. Your task history for previous days will remain, but your timeline will restart from Day 1.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="flex-col sm:flex-row gap-3 mt-8">
-          <AlertDialogCancel className="flex-1 h-14 rounded-xl border-slate-100 font-bold text-slate-400">Cancel</AlertDialogCancel>
-          <AlertDialogAction 
-            onClick={(e) => {
-              e.preventDefault();
-              handleReset();
-            }}
-            disabled={isResetting}
-            className="flex-1 h-14 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold"
-          >
-            {isResetting ? "Resetting..." : "Yes, Reset Day 1"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
 
 function ProfilePage() {
   const { tenantSlug } = Route.useParams();
@@ -473,26 +390,13 @@ function ProfilePage() {
                             <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{field.label}</span>
                             <span className="text-base font-bold text-ink max-w-[60%] text-right">{field.value || 'Not set'}</span>
                           </div>
-            ))}
-        </div>
-      </div>
+                        ))}
+                      </div>
+                    </div>
                 </div>
             ))}
         </div>
       </div>
-      <div className="h-12" />
-
-      {/* Advanced / Danger Zone */}
-      <div className="bg-white rounded-[2.5rem] border border-red-50 p-8 md:p-12 space-y-8 mb-12">
-        <div>
-          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-red-500 mb-2">Protocol Controls</h3>
-          <p className="text-slate-400 text-sm font-medium">Reset your journey to Day 1 if you've missed consecutive days.</p>
-        </div>
-        
-        <ResetDayButton />
-      </div>
-
-      <div className="h-20" /> {/* Spacer */}
 
       <ProfileEditDrawer 
         isOpen={!!activeSection} 

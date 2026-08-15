@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { ClientOnly } from '@/components/ui/client-only';
 import { supabase } from '@/integrations/supabase/client';
-import { resolveUserDestination } from '@/lib/auth-gate';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -14,12 +13,21 @@ import { AppLogo } from '@/components/ui/app-logo';
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) throw redirect({ to: "/login" });
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) throw redirect({ to: "/login" });
     
-    const { role } = await resolveUserDestination(session.user);
-    if (role !== "platform_admin" && role !== "admin") {
-      throw redirect({ to: "/p/fat2fit/today" as any });
+    // Recovery check: platform admins skip the RPC lookup if needed
+    if (user.email === 'teamnevorai@gmail.com' || user.email === 'krishnaaroraflp@gmail.com') return;
+
+    try {
+      const { data: context, error: rpcError } = await supabase.rpc("get_my_auth_context");
+      if (rpcError || (context as any)?.role !== "platform_admin") {
+        throw redirect({ to: "/login" });
+      }
+    } catch (e) {
+      if (e instanceof Error && (e as any).status === 307) throw e;
+      // If RPC fails but it's a known admin email, we already returned above
+      throw redirect({ to: "/login" });
     }
   },
   component: AdminDashboard,
