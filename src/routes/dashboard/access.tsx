@@ -35,6 +35,7 @@ function AccessControlPage() {
   });
 
   const [newCode, setNewCode] = useState("");
+  const [showCode, setShowCode] = useState(false);
 
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
