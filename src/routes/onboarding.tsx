@@ -11,7 +11,7 @@ export const Route = createFileRoute('/onboarding')({
           We are preparing your personalized 9-day metabolic journey.
         </p>
         <Button 
-          onClick={() => navigate({ to: '/p/fat2fit/journey' })}
+          onClick={() => navigate({ to: '/_authenticated/p.$tenantSlug/journey', params: { tenantSlug: 'fat2fit' } } as any)}
           className="px-8 py-4 bg-emerald-900 text-white rounded-xl font-bold uppercase tracking-widest"
         >
           Continue to Dashboard
