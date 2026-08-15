@@ -89,25 +89,32 @@ function Index() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <SectionHeader title="Stop struggling. Start thriving." subtitle="Fatigue and weight gain are often signals of a metabolic system out of balance. Our reset addresses the root cause." />
           <div className="grid md:grid-cols-3 gap-10 mt-20">
-            <StatBox label="Energy Spike" value="3X" description="Natural energy without the caffeine crash." />
-            <StatBox label="Mental Clarity" value="SHARP" description="Eliminate brain fog and food cravings." />
-            <StatBox label="Metabolism" value="STOKED" description="Ignite your body's fat-burning potential." />
+            <FeatureCard 
+              icon={Activity} 
+              title="Personalized Guidance" 
+              description="Customized wellness protocols tailored to your unique metabolic profile and goals." 
+            />
+            <FeatureCard 
+              icon={ShieldCheck} 
+              title="Science-Backed" 
+              description="Protocols grounded in metabolic research, focusing on sustainable energy and health." 
+            />
+            <FeatureCard 
+              icon={Users} 
+              title="Coach Support" 
+              description="Dedicated guidance to keep you accountable and motivated on your journey." 
+            />
           </div>
         </div>
       </section>
 
       <section className="py-24 bg-ink text-white" id="program">
         <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader dark title="The Fat2Fit C9 Engine" subtitle="A scientifically designed 9-day plan that combines nutritional supplements, guided meal plans, and daily movement for a holistic reset." />
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
-            <PillarCard number={1} title="Goal Setting" description="Start with clarity." icon={Goal} />
-            <PillarCard number={2} title="Guided Intake" description="Program supplement support." icon={Activity} />
-            <PillarCard number={3} title="Hydration" description="Track your 8 glasses." icon={Droplets} />
-            <PillarCard number={4} title="Awareness" description="Measure your progress." icon={BarChart3} />
-            <PillarCard number={5} title="Healthy Meals" description="C9-approved recipes." icon={Utensils} />
-            <PillarCard number={6} title="Movement" description="Light daily activity." icon={Sparkles} />
-            <PillarCard number={7} title="Coaching" description="Stay accountable." icon={Users} />
-            <PillarCard number={8} title="Victory" description="Celebrate small wins." icon={Award} />
+          <SectionHeader dark title="The Fit to Fit Approach" subtitle="A structured, data-driven methodology to restore metabolic balance and optimize long-term health." />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
+            <PillarCard number={1} title="Metabolic Assessment" description="Precision screening to understand your current health baseline." icon={Activity} />
+            <PillarCard number={2} title="Nutritional Strategy" description="Personalized food plans designed for nutrient density and satiety." icon={Utensils} />
+            <PillarCard number={3} title="Lifestyle Integration" description="Building sustainable habits that fit into your daily routine." icon={Sparkles} />
           </div>
         </div>
       </section>
