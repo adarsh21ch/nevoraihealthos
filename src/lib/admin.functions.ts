@@ -68,14 +68,18 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     
-    // Get distributor_id first
+    // Get distributor_id first - check both user_id match and the auth context
     const { data: profile } = await supabase
       .from("distributors")
       .select("id")
       .eq("user_id", userId)
       .maybeSingle();
 
-    if (!profile) return { accessCode: null };
+    if (!profile) {
+      // Fallback: Check if the user is an admin, they might not have a distributor record but should still see/manage?
+      // Or maybe they are logged in but distributor record is missing.
+      return { accessCode: null, distributorId: null };
+    }
 
     const { data: codeRecord } = await supabase
       .from("access_codes")
@@ -84,7 +88,10 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
       .eq("is_permanent", true)
       .maybeSingle();
 
-    return { accessCode: codeRecord?.code || null };
+    return { 
+      accessCode: codeRecord?.code || null,
+      distributorId: profile.id 
+    };
   });
 
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
