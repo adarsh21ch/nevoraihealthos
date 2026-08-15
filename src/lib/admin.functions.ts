@@ -66,15 +66,70 @@ export const updateAppSettings = createServerFn({ method: "POST" })
 export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    return { accessCode: "FAT2FIT" }; // Placeholder
+    const { supabase, userId } = context;
+    
+    // Get distributor_id first
+    const { data: profile } = await supabase
+      .from("distributors")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (!profile) return { accessCode: null };
+
+    const { data: codeRecord } = await supabase
+      .from("access_codes")
+      .select("code")
+      .eq("distributor_id", profile.id)
+      .eq("is_permanent", true)
+      .maybeSingle();
+
+    return { accessCode: codeRecord?.code || null };
   });
 
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({
-    tenantId: z.string(),
-    accessCode: z.string()
-  }).parse)
+  .inputValidator((data) => z.object({
+    tenantId: z.string(), // This is distributor_id
+    accessCode: z.string().min(4)
+  }).parse(data))
   .handler(async ({ context, data }) => {
+    const { supabase, userId } = context;
+
+    // Verify ownership
+    const { data: dist } = await supabase
+      .from("distributors")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("id", data.tenantId)
+      .maybeSingle();
+
+    if (!dist) throw new Error("Unauthorized");
+
+    // Update or Insert permanent code
+    const { data: existing } = await supabase
+      .from("access_codes")
+      .select("id")
+      .eq("distributor_id", data.tenantId)
+      .eq("is_permanent", true)
+      .maybeSingle();
+
+    if (existing) {
+      const { error } = await supabase
+        .from("access_codes")
+        .update({ code: data.accessCode.toUpperCase() })
+        .eq("id", existing.id);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase
+        .from("access_codes")
+        .insert({ 
+          code: data.accessCode.toUpperCase(), 
+          is_permanent: true, 
+          distributor_id: data.tenantId 
+        });
+      if (error) throw error;
+    }
+
     return { success: true };
   });
