@@ -71,7 +71,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
 
     if (customerError || !customer) {
       console.error("Customer creation error:", customerError);
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+      try { await supabaseAdmin.auth.admin.deleteUser(authUser.user.id); } catch (e) {}
       throw new Error(`Failed to create customer profile: ${customerError?.message || 'Unknown error'}`);
     }
 
