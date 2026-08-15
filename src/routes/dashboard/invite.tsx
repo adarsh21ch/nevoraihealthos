@@ -17,20 +17,27 @@ export const Route = createFileRoute("/dashboard/invite")({
 
 function InvitePage() {
   const getSettingsFn = useServerFn(getAppSettings);
+  const fetchAccessCode = useServerFn(getMyTenantAccessCode);
   
   const { data: result } = useQuery({
     queryKey: ["app-settings"],
     queryFn: () => getSettingsFn(),
   });
 
+  const { data: creds } = useQuery({
+    queryKey: ["my-tenant-access-code"],
+    queryFn: () => fetchAccessCode(),
+  });
+
   const settings = result?.settings;
   const brandName = settings?.brand_name || "Fat2Fit";
+  const accessCode = creds?.accessCode || "FAT2FIT";
   
   const joinUrl = typeof window !== 'undefined' 
     ? `${window.location.origin}/login`
     : `/login`;
   
-  const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl} and use Access Code: FAT2FIT to create your account.`;
+  const whatsappMsg = `Hi! Join ${brandName} here: ${joinUrl} and use Access Code: ${accessCode} to create your account.`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
