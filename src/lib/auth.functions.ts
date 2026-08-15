@@ -152,7 +152,6 @@ export const adminResetCustomerPassword = createServerFn({ method: "POST" })
       throw new Error(`Password reset failed: ${e.message}. Please verify Supabase Admin connection.`);
     }
 
-    if (authError) throw authError;
 
     return { success: true, tempPassword };
   });
