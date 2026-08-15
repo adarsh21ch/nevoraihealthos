@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import * as React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Settings as SettingsIcon, Shield, Bell, Globe, Sparkles, Key, CheckCircle2, AlertCircle, Database, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Settings as SettingsIcon, Shield, Bell, Globe, Sparkles, Key, CheckCircle2, AlertCircle, Database, Lock, Eye, EyeOff, Loader2, Activity } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { checkAiStatus } from "@/lib/admin-settings.functions";
