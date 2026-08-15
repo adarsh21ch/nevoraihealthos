@@ -450,7 +450,7 @@ function Index() {
         </div>
       </section>
 
-      <AffiliationDisclaimer />
+      
       <footer className="bg-ink text-white py-20 px-6">
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
