@@ -13,17 +13,26 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard/access")({
-  loader: async () => {
+  loader: async ({ context }) => {
+    // We already have supabase in context from the router if configured, 
+    // but let's use the exported one to be safe and consistent with previous turn
     const { data: authContext } = await supabase.rpc("get_my_auth_context");
-    const ctx = authContext as { tenant_id?: string } | null;
-    if (!ctx?.tenant_id) return { tenantId: null };
-    return { tenantId: ctx.tenant_id };
+    const ctx = authContext as { tenant_id?: string; distributor_id?: string } | null;
+    
+    // In many places we use tenant_id, in some distributor_id. 
+    // The screenshot shows tenantId is being expected as a string but received null.
+    const tId = ctx?.tenant_id || ctx?.distributor_id;
+    
+    console.log("Access Control Loader - Context:", ctx, "Resolved tenantId:", tId);
+    
+    if (!tId) return { tenantId: null };
+    return { tenantId: tId };
   },
   component: AccessControlPage,
 });
 
 function AccessControlPage() {
-  const { tenantId } = useLoaderData({ from: '/dashboard/access' });
+  const { tenantId: loaderTenantId } = useLoaderData({ from: '/dashboard/access' });
   const queryClient = useQueryClient();
   const fetchAccessCode = useServerFn(getMyTenantAccessCode);
   const updateCodeFn = useServerFn(rotateTenantAccessCode);
@@ -36,17 +45,30 @@ function AccessControlPage() {
 
   const [newCode, setNewCode] = useState("");
 
+  // Use the distributorId from the query if the loader one is missing
+  const activeTenantId = loaderTenantId || creds?.distributorId;
+
   const updateMutation = useMutation({
     mutationFn: async (code: string) => {
+      const activeTenantId = loaderTenantId || creds?.distributorId;
+      
       if (code.length < 4) throw new Error("Access code must be at least 4 characters");
-      return updateCodeFn({ data: { tenantId: tenantId!, accessCode: code.toUpperCase() } });
+      if (!activeTenantId) {
+        console.error("Mutation Error: No tenantId found", { loaderTenantId, creds });
+        throw new Error("Could not identify your account. Please refresh and try again.");
+      }
+      
+      return updateCodeFn({ data: { tenantId: activeTenantId, accessCode: code.toUpperCase() } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-tenant-access-code"] });
       setNewCode("");
       toast.success("Access code updated successfully");
     },
-    onError: (e: any) => toast.error(e.message)
+    onError: (e: any) => {
+      console.error("Access Code Update Error:", e);
+      toast.error(e.message || "Failed to update access code");
+    }
   });
 
   const currentCode = creds?.accessCode ?? "…";

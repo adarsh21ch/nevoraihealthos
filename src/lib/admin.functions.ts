@@ -68,14 +68,18 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     
-    // Get distributor_id first
+    // Get distributor_id first - check both user_id match and the auth context
     const { data: profile } = await supabase
       .from("distributors")
       .select("id")
       .eq("user_id", userId)
       .maybeSingle();
 
-    if (!profile) return { accessCode: null };
+    if (!profile) {
+      // Fallback: Check if the user is an admin, they might not have a distributor record but should still see/manage?
+      // Or maybe they are logged in but distributor record is missing.
+      return { accessCode: null, distributorId: null };
+    }
 
     const { data: codeRecord } = await supabase
       .from("access_codes")
@@ -84,7 +88,10 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
       .eq("is_permanent", true)
       .maybeSingle();
 
-    return { accessCode: codeRecord?.code || null };
+    return { 
+      accessCode: codeRecord?.code || null,
+      distributorId: profile.id 
+    };
   });
 
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
@@ -96,15 +103,21 @@ export const rotateTenantAccessCode = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    // Verify ownership
-    const { data: dist } = await supabase
-      .from("distributors")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("id", data.tenantId)
-      .maybeSingle();
+    // Verify ownership or admin status
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    
+    let isOwner = false;
+    if (!isAdmin) {
+      const { data: dist } = await supabase
+        .from("distributors")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("id", data.tenantId)
+        .maybeSingle();
+      isOwner = !!dist;
+    }
 
-    if (!dist) throw new Error("Unauthorized");
+    if (!isAdmin && !isOwner) throw new Error("Unauthorized: You do not have permission to manage this access code.");
 
     // Update or Insert permanent code
     const { data: existing } = await supabase
