@@ -92,11 +92,11 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
     }
 
     // 5. Mark access code as used (only for one-time codes)
-    if (!isPermanent) {
+    if (!isPermanent && accessCodeId) {
       await supabaseAdmin
         .from("access_codes")
         .update({ used_at: new Date().toISOString(), customer_id: customer.id })
-        .eq("id", creds.id);
+        .eq("id", accessCodeId);
     }
 
     return { 
