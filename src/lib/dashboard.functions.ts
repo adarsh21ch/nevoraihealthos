@@ -49,7 +49,15 @@ export const getCustomers = createServerFn({ method: "GET" })
   }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
+    
     if (!isAdmin) throw new Error("Unauthorized");
 
     const pageSize = 25;
@@ -59,7 +67,7 @@ export const getCustomers = createServerFn({ method: "GET" })
     let query = supabase
       .from("customers")
       .select(
-        "id, name, phone, created_at, start_date, onboarding_complete, programs(name, duration_days)",
+        "id, name, phone, created_at, start_date, onboarding_complete, programs(name, duration_days), user_roles(role)",
         { count: "exact" },
       )
       .order("name")
@@ -79,6 +87,7 @@ export const getCustomers = createServerFn({ method: "GET" })
       created_at: c.created_at,
       day_number: c.start_date ? istDayNumber(c.start_date) : null,
       program: c.programs,
+      role: c.user_roles?.[0]?.role || 'participant',
     }));
 
     return { customers, total: count || 0 };
@@ -88,7 +97,13 @@ export const getReorderList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
     if (!isAdmin) throw new Error("Unauthorized");
 
     // Placeholder until DB functions are created
@@ -99,7 +114,13 @@ export const getAtRiskList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
     if (!isAdmin) throw new Error("Unauthorized");
 
     // Placeholder until DB functions are created
@@ -110,7 +131,13 @@ export const getTestimonials = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data, error } = await supabase
@@ -149,7 +176,13 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
   .inputValidator(z.object({ customerId: z.string().uuid() }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: { user } } = await supabase.auth.getUser();
+    const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
+    let isAdmin = isHardcodedAdmin;
+    if (!isAdmin) {
+      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
+      isAdmin = !!data;
+    }
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data: row, error } = await supabase

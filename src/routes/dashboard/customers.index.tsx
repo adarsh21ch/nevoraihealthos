@@ -47,6 +47,7 @@ function CustomersPage() {
             <TableHeader className="bg-slate-50/50">
               <TableRow className="hover:bg-transparent border-slate-100">
                 <TableHead className="px-8 h-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Athlete</TableHead>
+                <TableHead className="h-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Role</TableHead>
                 <TableHead className="h-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Program</TableHead>
                 <TableHead className="h-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Progress</TableHead>
                 <TableHead className="h-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Phone</TableHead>
@@ -57,13 +58,12 @@ function CustomersPage() {
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i} className="animate-pulse border-slate-50">
-                    <TableCell colSpan={5} className="h-20 bg-slate-50/20"></TableCell>
+                    <TableCell colSpan={6} className="h-20 bg-slate-50/20"></TableCell>
                   </TableRow>
                 ))
               ) : data?.customers?.map((customer: any) => {
-                const enrollment = customer.customer_enrollments?.[0];
-                const program = enrollment?.programs;
-                const dayNumber = enrollment?.day_number || 0;
+                const program = customer.program;
+                const dayNumber = customer.day_number || 0;
                 const duration = program?.duration_days || 0;
 
                 return (
@@ -78,6 +78,11 @@ function CustomersPage() {
                         </div>
                         <span className="font-bold text-slate-900 group-hover/link:text-slate-600 transition-colors">{customer.name}</span>
                       </Link>
+                    </TableCell>
+                    <TableCell className="py-5 font-medium text-slate-600">
+                      <span className="capitalize px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-500">
+                        {customer.role || 'User'}
+                      </span>
                     </TableCell>
                     <TableCell className="py-5 font-medium text-slate-600">{program?.name || "No active program"}</TableCell>
                     <TableCell className="py-5">
@@ -107,7 +112,7 @@ function CustomersPage() {
               })}
               {!isLoading && data?.customers?.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-64 text-center">
+                  <TableCell colSpan={6} className="h-64 text-center">
                     <div className="flex flex-col items-center gap-2 text-slate-400">
                       <Search className="h-8 w-8 mb-2" />
                       <p className="font-bold">No customers found</p>
