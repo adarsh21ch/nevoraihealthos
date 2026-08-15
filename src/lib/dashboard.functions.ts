@@ -21,8 +21,9 @@ export const getDashboardStats = createServerFn({ method: "GET" })
     
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
-      isAdmin = !!data;
+      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
+      isAdmin = !!roleCheck || !!ownerCheck;
     }
     
     if (!isAdmin) throw new Error("Unauthorized");
@@ -54,8 +55,9 @@ export const getCustomers = createServerFn({ method: "GET" })
     
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
-      isAdmin = !!data;
+      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
+      isAdmin = !!roleCheck || !!ownerCheck;
     }
     
     if (!isAdmin) throw new Error("Unauthorized");
@@ -101,8 +103,9 @@ export const getReorderList = createServerFn({ method: "GET" })
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
-      isAdmin = !!data;
+      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
+      isAdmin = !!roleCheck || !!ownerCheck;
     }
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -118,8 +121,9 @@ export const getAtRiskList = createServerFn({ method: "GET" })
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
-      isAdmin = !!data;
+      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
+      isAdmin = !!roleCheck || !!ownerCheck;
     }
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -135,8 +139,9 @@ export const getTestimonials = createServerFn({ method: "GET" })
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
-      isAdmin = !!data;
+      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
+      isAdmin = !!roleCheck || !!ownerCheck;
     }
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -180,8 +185,9 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const isHardcodedAdmin = user?.email === 'teamnevorai@gmail.com';
     let isAdmin = isHardcodedAdmin;
     if (!isAdmin) {
-      const { data } = await supabase.rpc("is_app_admin", { _uid: userId });
-      isAdmin = !!data;
+      const { data: roleCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'admin' });
+      const { data: ownerCheck } = await supabase.rpc("has_role", { _user_id: userId, _role: 'tenant_owner' });
+      isAdmin = !!roleCheck || !!ownerCheck;
     }
     if (!isAdmin) throw new Error("Unauthorized");
 
