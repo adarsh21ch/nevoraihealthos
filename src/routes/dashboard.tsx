@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useNavigate, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Package, MessageSquare, Layout, Key } from "lucide-react";
+import { LogOut, LayoutDashboard, Users, TrendingUp, Settings, Building2, HelpCircle, Bell, Package, MessageSquare, Layout, Key, Scale } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
