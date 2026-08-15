@@ -61,9 +61,8 @@ function CustomersPage() {
                   </TableRow>
                 ))
               ) : data?.customers?.map((customer: any) => {
-                const enrollment = customer.customer_enrollments?.[0];
-                const program = enrollment?.programs;
-                const dayNumber = enrollment?.day_number || 0;
+                const program = customer.program;
+                const dayNumber = customer.day_number || 0;
                 const duration = program?.duration_days || 0;
 
                 return (
