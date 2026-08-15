@@ -12,11 +12,16 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabase } = await import("@/integrations/supabase/client");
 
-    // 1. Check registration code via secure RPC
-    const { data: isValid, error: regError } = await supabase
-      .rpc("is_registration_code_valid", { _code: data.access_code });
+    // 1. Check registration code via supabaseAdmin to bypass RLS
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: regCode, error: regError } = await supabaseAdmin
+      .from("registration_codes")
+      .select("id")
+      .eq("code", data.access_code.toUpperCase())
+      .eq("is_active", true)
+      .maybeSingle();
 
-    if (regError || !isValid) {
+    if (regError || !regCode) {
       console.error("Registration code validation error:", regError);
       throw new Error("Invalid registration code. Please contact your coach.");
     }
