@@ -284,29 +284,22 @@ function OnboardingPage() {
                     <h2 className="text-4xl font-serif italic font-bold text-ink leading-tight">Your health journey<br/>starts here.</h2>
                     <p className="text-sm text-slate-500 leading-relaxed">Let's personalize your program by getting to know you better. This takes about 3 minutes.</p>
                     
-                    <div className="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 text-left space-y-4">
-                      <div className="flex items-center gap-2 text-emerald-800">
-                        <ShieldCheck className="w-4 h-4" />
-                        <span className="text-[9px] font-black uppercase tracking-widest">Affiliation Disclosure</span>
-                      </div>
-                      <p className="text-[10px] text-emerald-900/60 leading-relaxed font-medium italic">
-                        Fat2Fit is an independent companion app for customers who have purchased Forever Living C9/FIT1/FIT2 products through us. 
-                        We are not affiliated with or endorsed by Forever Living Products.
-                      </p>
-                      <div className="flex items-center space-x-2 pt-2">
+                    <div className="bg-emerald-50 rounded-3xl p-6 border border-emerald-100 flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
                         <Checkbox 
                           id="affiliation" 
                           checked={formData.affiliation_acknowledged} 
                           onCheckedChange={(checked) => updateField('affiliation_acknowledged', checked === true)}
-                          className="border-emerald-200 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green"
+                          className="w-5 h-5 rounded-md border-emerald-200 data-[state=checked]:bg-health-green data-[state=checked]:border-health-green"
                         />
                         <label
                           htmlFor="affiliation"
-                          className="text-[10px] font-bold text-emerald-800 leading-none cursor-pointer"
+                          className="text-[10px] font-black uppercase tracking-widest text-emerald-800 cursor-pointer"
                         >
-                          I understand and acknowledge this affiliation
+                          Acknowledge Affiliation
                         </label>
                       </div>
+                      <ShieldCheck className="w-5 h-5 text-health-green opacity-40" />
                     </div>
                   </div>
                 )}
