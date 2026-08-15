@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { Key, Shield, Save, Loader2, ArrowLeft, Info, AlertCircle } from "lucide-react";
+import { Key, Shield, Save, Loader2, ArrowLeft, Info, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
