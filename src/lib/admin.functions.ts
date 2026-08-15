@@ -2,21 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const ELEVATED_ROLES = ["admin", "platform_admin", "tenant_owner", "coach"] as const;
-
 async function hasElevatedAccess(supabase: any, userId: string) {
-  // Check user_roles first to avoid calling auth.getUser() which might fail in some contexts
-  const { data: roleRows } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId);
-
-  const hasElevatedRole = !!roleRows?.some((r: any) => ELEVATED_ROLES.includes(r.role));
-  if (hasElevatedRole) return true;
-
-  // Fallback to hardcoded email check
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.email === 'teamnevorai@gmail.com';
+  const { data, error } = await supabase.rpc("has_elevated_access", { _uid: userId });
+  if (error) {
+    console.error("Error checking elevated access:", error);
+    return false;
+  }
+  return !!data;
 }
 
 export const checkAdminStatus = createServerFn({ method: "GET" })
@@ -101,7 +93,6 @@ export const getMyTenantAccessCode = createServerFn({ method: "GET" })
 export const rotateTenantAccessCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({
-    tenantId: z.string().optional().nullable(),
     accessCode: z.string()
   }).parse)
   .handler(async ({ context, data }) => {
