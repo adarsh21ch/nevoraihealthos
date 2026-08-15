@@ -32,6 +32,7 @@ function DashboardLayout() {
     { name: "Access Control", icon: Key, path: "/dashboard/access" },
     { name: "Testimonials", icon: MessageSquare, path: "/dashboard/testimonials" },
     { name: "Invite", icon: Users, path: "/dashboard/invite" },
+    { name: "BMI Leads", icon: Scale, path: "/dashboard/leads" },
     { name: "Settings", icon: Settings, path: "/dashboard/branding" },
   ];
 
