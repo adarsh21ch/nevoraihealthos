@@ -53,7 +53,7 @@ export const createCustomerAccount = createServerFn({ method: "POST" })
       });
     
     if (roleError) {
-        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+        try { await supabaseAdmin.auth.admin.deleteUser(authUser.user.id); } catch (e) {}
         throw roleError;
     }
 
