@@ -68,7 +68,7 @@ function ProductsAdminPage() {
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-slate-900">Program Products</h1>
-          <p className="text-slate-500 mt-2 font-medium">Manage images and details for the C9/Fit2Fit kit.</p>
+          <p className="text-slate-500 mt-2 font-medium">Manage images and details for the protocol kit.</p>
         </div>
       </div>
 

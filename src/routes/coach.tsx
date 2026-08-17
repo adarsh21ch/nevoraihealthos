@@ -102,7 +102,7 @@ function CoachDashboard() {
                                 </div>
                             </td>
                             <td className="px-8 py-6 text-sm text-slate-600 font-medium">
-                                {p.participant_programs?.[0]?.program?.name || 'C9 Reset'}
+                                {p.participant_programs?.[0]?.program?.name || 'Reset'}
                             </td>
                             <td className="px-8 py-6 font-bold text-ink italic font-serif">
                                 Day 1

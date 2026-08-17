@@ -41,7 +41,7 @@ function CompletionPage() {
 
       <header className="space-y-4">
         <h1 className="text-5xl font-bold text-ink tracking-tighter italic font-serif leading-tight">
-            You completed your<br/>C9 journey.
+            You completed your<br/>metabolic journey.
         </h1>
         <p className="text-slate-500 font-medium">9 days of discipline, rebuilding, and focus.</p>
       </header>

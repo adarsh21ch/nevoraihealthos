@@ -46,7 +46,7 @@ function DietPage() {
         <div>
           <div className="flex items-center gap-2 mb-4">
              <Utensils className="w-5 h-5 text-health-green" />
-             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">C9 Nutrition Protocol</span>
+             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Nutrition Protocol</span>
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-ink tracking-tighter italic font-serif leading-none">Diet & Recipes</h1>
         </div>

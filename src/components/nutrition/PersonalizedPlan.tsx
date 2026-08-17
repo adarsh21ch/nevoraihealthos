@@ -591,7 +591,7 @@ export function PersonalizedPlan() {
           <AlertDialogHeader>
             <AlertDialogTitle className="font-serif italic text-3xl text-ink">Regenerate AI Plan?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium text-base pt-2">
-              This will replace your current AI plan with a new one tailored to your latest profile and C9 synergetic products.
+              This will replace your current AI plan with a new one tailored to your latest profile and synergetic protocol products.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-8 gap-4 sm:space-x-4">

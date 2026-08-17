@@ -263,7 +263,7 @@ export function BrandingSettings() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div className="space-y-4">
-              <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Official C9 Booklet (PDF)</Label>
+              <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400">Official Protocol Booklet (PDF)</Label>
               <div className="flex flex-col gap-4">
                 {settings?.booklet_url && (
                   <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100">
@@ -272,7 +272,7 @@ export function BrandingSettings() {
                         <FileText className="w-5 h-5" />
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-xs font-bold text-ink truncate max-w-[200px]">C9 Booklet 2026.pdf</p>
+                        <p className="text-xs font-bold text-ink truncate max-w-[200px]">Program Booklet 2026.pdf</p>
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Active Resource</p>
                       </div>
                     </div>

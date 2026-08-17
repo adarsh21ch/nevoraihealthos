@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Package, CheckCircle2, PlayCircle, ShieldCheck, BookOpen, ChevronRight, Info, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLoaderData } from '@tanstack/react-router';
-import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
+import defaultBookletAsset from "@/assets/landing/wellness-booklet.pdf.asset.json";
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/kit')({
@@ -69,7 +69,7 @@ function KitPage() {
         <div>
           <div className="flex items-center gap-2 mb-4">
              <Package className="w-5 h-5 text-health-green" />
-             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">C9 Protocol Gear</span>
+             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Protocol Gear</span>
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-ink tracking-tighter italic font-serif leading-none">Your Reset Kit</h1>
         </div>
@@ -117,7 +117,7 @@ function KitPage() {
               <h3 className="font-bold text-2xl lg:text-3xl italic font-serif">Certified Quality</h3>
           </div>
           <p className="text-base lg:text-lg text-emerald-100/70 leading-relaxed font-medium relative z-10 max-w-sm">
-              Every component in your C9 kit is designed to work synergistically. Follow the quantities exactly as prescribed in your daily schedule.
+              Every component in your reset kit is designed to work synergistically. Follow the quantities exactly as prescribed in your daily schedule.
           </p>
         </section>
       </div>
