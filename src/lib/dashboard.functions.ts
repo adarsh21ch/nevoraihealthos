@@ -2,13 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+import { getProgramDayNumber } from "./date-utils";
+
 /** Day number of a program in IST (start date = day 1). */
 function istDayNumber(startDate: string): number {
-  const ist = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
-  const today = Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate());
-  const [y, m, d] = startDate.split("-").map(Number);
-  const start = Date.UTC(y!, (m ?? 1) - 1, d ?? 1);
-  return Math.floor((today - start) / 86400000) + 1;
+  return getProgramDayNumber(startDate);
 }
 
 export const getDashboardStats = createServerFn({ method: "GET" })
