@@ -25,7 +25,9 @@ export const Route = createFileRoute('/admin')({
     if ((context as any)?.role !== "platform_admin") {
       throw redirect({ to: "/login" });
     }
+    return { authContext: context };
   },
+
   component: AdminDashboard,
 });
 
