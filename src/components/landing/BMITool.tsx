@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Scale, Info, ChevronRight, RefreshCw, Mail, Calendar } from "lucide-react";
+import { Loader2, Scale, Info, ChevronRight, RefreshCw, Mail, Calendar, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FitnessSelfScore } from "./FitnessSelfScore";
 import { WarningSignsChecklist } from "./WarningSignsChecklist";
