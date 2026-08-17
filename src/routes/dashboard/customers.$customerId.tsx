@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -39,8 +40,7 @@ function CustomerDetailPage() {
   if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
   if (!customer) return <div className="p-8 text-center">Customer not found</div>;
 
-  const enrollment = customer.customer_enrollments?.[0];
-  const program = enrollment?.programs;
+  const program = customer.program;
   
   const weightData = customer.measurements
     ?.sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
@@ -105,16 +105,24 @@ function CustomerDetailPage() {
               </div>
               <div className="pt-4 border-t border-slate-50 space-y-4">
                  <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Program</p>
-                    <p className="font-bold text-slate-900">{program?.name || 'None'}</p>
-                 </div>
-                 <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status</p>
                     <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                      <p className="font-bold text-slate-900 uppercase text-xs tracking-wider">Day {enrollment?.day_number || 0} / {program?.duration_days || 0}</p>
+                      <span className={cn(
+                        "h-2 w-2 rounded-full",
+                        customer.onboarding_complete ? "bg-emerald-500" : "bg-amber-500"
+                      )}></span>
+                      <p className="font-bold text-slate-900 uppercase text-xs tracking-wider">
+                        {customer.onboarding_complete ? "Active" : "Onboarding"}
+                      </p>
                     </div>
                  </div>
+                 {program && (
+                   <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Program</p>
+                      <p className="font-bold text-slate-900">{program.name}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Day {customer.day_number || 0} / {program.duration_days || 0}</p>
+                   </div>
+                 )}
               </div>
             </CardContent>
           </Card>

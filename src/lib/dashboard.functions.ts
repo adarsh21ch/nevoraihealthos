@@ -172,7 +172,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const { data: row, error } = await supabase
       .from("customers")
       .select(
-        `id, name, phone, share_consent, user_id, start_date,
+        `id, name, phone, share_consent, user_id, start_date, onboarding_complete,
          programs(id, name, duration_days),
          measurements(id, weight_kg, waist_cm, hip_cm, chest_cm, thigh_cm, arm_cm, taken_on),
          progress_photos(id, storage_path, created_at),
