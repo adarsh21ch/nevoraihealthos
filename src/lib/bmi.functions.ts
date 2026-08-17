@@ -72,8 +72,10 @@ export const submitBmiLead = createServerFn({ method: "POST" })
     }
 
     return {
+      id: lead.id,
       bmiValue,
       bmiCategory,
+      email_sent_at: lead.email_sent_at,
       healthyRange: {
         min: parseFloat((18.5 * heightM * heightM).toFixed(1)),
         max: parseFloat((22.9 * heightM * heightM).toFixed(1)),

@@ -2,13 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+import { getProgramDayNumber } from "./date-utils";
+
 /** Day number of a program in IST (start date = day 1). */
 function istDayNumber(startDate: string): number {
-  const ist = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
-  const today = Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate());
-  const [y, m, d] = startDate.split("-").map(Number);
-  const start = Date.UTC(y!, (m ?? 1) - 1, d ?? 1);
-  return Math.floor((today - start) / 86400000) + 1;
+  return getProgramDayNumber(startDate);
 }
 
 export const getDashboardStats = createServerFn({ method: "GET" })
@@ -69,7 +67,7 @@ export const getCustomers = createServerFn({ method: "GET" })
     let query = supabase
       .from("customers")
       .select(
-        "id, name, phone, created_at, start_date, onboarding_complete, programs(name, duration_days), user_roles(role)",
+        "id, name, phone, created_at, start_date, onboarding_complete, program_id, programs(name, duration_days), user_roles(role)",
         { count: "exact" },
       )
       .order("name")
@@ -174,7 +172,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
     const { data: row, error } = await supabase
       .from("customers")
       .select(
-        `id, name, phone, share_consent, user_id, start_date,
+        `id, name, phone, share_consent, user_id, start_date, onboarding_complete,
          programs(id, name, duration_days),
          measurements(id, weight_kg, waist_cm, hip_cm, chest_cm, thigh_cm, arm_cm, taken_on),
          progress_photos(id, storage_path, created_at),
@@ -228,7 +226,31 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
 
 export const resetCustomerPassword = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({ customerId: z.string() }).parse)
+  .inputValidator(z.object({ customerId: z.string().uuid() }).parse)
   .handler(async ({ context, data }) => {
-    return { success: true, tempPassword: "fat2fit-reset" };
+    const { supabase, userId } = context;
+
+    // Check if the user is an admin
+    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const { data: customer, error: customerError } = await supabase
+      .from("customers")
+      .select("user_id")
+      .eq("id", data.customerId)
+      .single();
+      
+    if (customerError || !customer || !customer.user_id) throw new Error("Customer not found");
+
+    const tempPassword = Math.random().toString(36).slice(-8);
+    
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
+      customer.user_id,
+      { password: tempPassword }
+    );
+
+    if (authError) throw authError;
+
+    return { success: true, tempPassword };
   });

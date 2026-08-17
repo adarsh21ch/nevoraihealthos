@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Scale, Mail, Calendar, User, Activity, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 
-export const getBmiLeads = createServerFn({ method: "GET" }).handler(async () => {
+export const getBmiLeads = createServerFn({ method: "GET" }).handler(async ({ context }) => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("bmi_leads")
-    .select("*")
+    .select("id, name, email, bmi_value, bmi_category, goal, created_at, email_sent_at, report_text")
     .order("created_at", { ascending: false });
 
   if (error) throw error;

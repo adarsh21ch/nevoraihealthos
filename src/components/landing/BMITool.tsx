@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Scale, Info, ChevronRight, RefreshCw, Mail, Calendar } from "lucide-react";
+import { Loader2, Scale, Info, ChevronRight, RefreshCw, Mail, Calendar, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FitnessSelfScore } from "./FitnessSelfScore";
 import { WarningSignsChecklist } from "./WarningSignsChecklist";
@@ -94,6 +94,11 @@ export function BMITool() {
       const response = await submitLead({ data: finalData });
       setResult(response);
       toast.success("Assessment complete!");
+      
+      // Auto-scroll to result
+      setTimeout(() => {
+        document.getElementById('bmi-tool')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     } catch (error: any) {
       toast.error(error.message || "Failed to process your request");
     } finally {
@@ -158,11 +163,17 @@ export function BMITool() {
 
                     <div className="p-6 rounded-2xl bg-health-green/5 border border-health-green/10 flex items-start gap-4">
                       <div className="w-10 h-10 rounded-full bg-health-green text-white flex items-center justify-center shrink-0">
-                        <Mail className="w-5 h-5" />
+                        {result.email_sent_at ? <CheckCircle2 className="w-5 h-5" /> : <Loader2 className="w-5 h-5 animate-spin" />}
                       </div>
                       <div>
-                        <h4 className="font-bold text-ink text-sm mb-1">Detailed Report Sent</h4>
-                        <p className="text-slate-500 text-[11px] leading-relaxed">We've generated a personalized wellness strategy based on your profile. Check your email inbox.</p>
+                        <h4 className="font-bold text-ink text-sm mb-1">
+                          {result.email_sent_at ? "Official Report Ready" : "Generating AI Report..."}
+                        </h4>
+                        <p className="text-slate-500 text-[11px] leading-relaxed">
+                          {result.email_sent_at 
+                            ? "Your personalized wellness strategy has been sent to your email inbox." 
+                            : "Our AI is analyzing your metabolic markers to build your custom strategy."}
+                        </p>
                       </div>
                     </div>
 

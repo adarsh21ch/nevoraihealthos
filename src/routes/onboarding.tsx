@@ -207,7 +207,7 @@ function OnboardingPage() {
 
 
       toast.success("Profile completed!");
-      navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: 'fat2fit' } as any });
+      navigate({ to: "/p/$tenantSlug/today", params: { tenantSlug: 'fat2fit' } });
     } catch (err: any) {
       setError(err.message);
     } finally {
