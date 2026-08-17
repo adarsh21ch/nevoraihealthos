@@ -1,65 +1,46 @@
-# Fat2Fit — Phase 10: Content Integration & Program Correction
+# Phase 10: Content Integration & Program Correction
 
-Integrate live-session transcript material, build the registration funnel, add self-assessment tools, and correct program data.
+Implement the prospect conversion funnel (session registration), interactive wellness tools (Self-Score, Warning Signs), and correct program product data.
 
 ## User Review Required
-
 > [!IMPORTANT]
-> - Confirm the **Next Session Date/Time** to show on the public site.
-> - Confirm the **Session Link** for the confirmation email.
-> - Confirm if **Resend** is the active email provider (already set up for BMI leads).
+> The public site is now strictly brand-neutral. References to Forever Living and C9 are removed from the landing page.
+
+- **Resend API Key**: Required for BMI report and session registration emails.
+- **Session Dates**: Admin must set upcoming session dates in the new dashboard.
 
 ## Proposed Changes
 
-### 1. Database & Security
-- **New Tables**:
-    - `session_registrations`: `id`, `name`, `email`, `phone`, `consent_at`, `created_at`.
-    - `session_settings`: `id`, `next_session_at`, `session_link`, `updated_at`.
-- **Modifications**:
-    - `bmi_leads`: Add `self_score_data` (JSONB) and `warning_signs_count` (int).
-    - `knowledge_base`: Seed with new educational articles and FAQs.
-    - `products`: Remove `Therm`, add `ARGI+` and `Herbal Infusion`.
-- **Security**:
-    - RLS for `session_registrations` (anon insert, admin select).
-    - RLS for `session_settings` (anon select, admin update).
+### 1. Funnel & Interactive Tools
+- **Session Registration**: New `session_registrations` table and funnel component.
+- **Fitness Self-Score**: 6-pillar assessment (Nutrition, Training, Sleep, etc.) out of 60.
+- **Warning-Signs Checklist**: Neutral 5-item physical indicator screening.
+- **BMI Tool Integration**: BMI assessment now flows into Self-Score -> Warning Signs -> Session Registration.
 
-### 2. Funnel Step: Live Session Registration
-- **Admin Screen**: `/dashboard/session` to set date/link and view registrations.
-- **BMI Hand-off**: Update BMI result view to feature the "Join free live session" CTA.
-- **Registration Flow**: 
-    - Floating/inline form on the landing page.
-    - Confirmation/reminder emails (24h, 1h) via Resend.
+### 2. Branding & Content
+- **Brand Neutrality**: Complete removal of "Forever" and "C9" from public-facing code/text.
+- **Educational Articles**: Seeding knowledge base with Indian Protein Gap, Metabolic Health, and Calories articles.
+- **Founder Story**: Added premium narrative section (career pressure to health optimization).
 
-### 3. Public Interactive Tools
-- **Fitness Self-Score**: 6-slider component (0-10) scoring Nutrition, Training, Sleep, Recovery, Tracking, Consistency. Visual radar/bar feedback.
-- **Warning-Signs Checklist**: 5-point neutral checklist with medical disclaimer and "common signs" feedback.
+### 3. Program Correction (Post-Login)
+- **Product Catalog**: 
+  - Remove: **Therm**
+  - Add: **ARGI+** (Nitric oxide/Blood flow)
+  - Add: **Herbal Infusion** (Tulsi/Cardamom tea)
+- **Task Logic**: Update Day 1-9 tasks to reflect corrected product set.
 
-### 4. Educational Content & Social Proof
-- **Knowledge Base Seeding**: 
-    - "The Indian Protein Gap"
-    - "Metabolic problems at lower BMI"
-    - "Calories Simply"
-    - "Carbs/Fats are not villains"
-    - "The Five Pillars"
-- **Founder Story**: Update landing page with the "arc" (Founder bio section).
-- **Transformations**: Text-only results (weight/timeframe) until photos have explicit consent.
-- **Hard Rule**: Scour public routes for any mention of Forever/C9/Garcinia/Aloe and remove them.
+### 4. Technical Infrastructure
+- **Knowledge Base**: Seed `knowledge_base` with Part A4 educational content to ground the AI Coach.
+- **Lead Expansion**: Update `bmi_leads` to store Self-Score and Warning Signs data.
 
-### 5. Post-Login Fixes (C9 Program)
-- **Product Correction**: Update task list and seeded products.
-- **Self-Score Integration**: Baseline (Day 1) and Completion (Day 10) self-scores for progress tracking.
-- **FAQ Section**: Grounds the AI Coach and public FAQ with transcript-based answers.
+## Verification Plan
 
-## Technical Details
-- **Tables**: `session_registrations`, `session_settings`.
-- **Server Functions**: `submitSessionRegistration`, `updateSessionSettings`, `getSessionSettings`.
-- **UI Components**: `FitnessSelfScore`, `WarningSignsChecklist`, `SessionRegistrationForm`.
-- **AI**: Ground the coach with the new `knowledge_base` entries.
+### Automated Checks
+- `grep` check for brand mentions in public routes.
+- RLS policy verification for anonymous inserts.
+- Zod schema validation for new funnel data.
 
-```text
-Products Update:
-- Remove: Therm
-- Add: ARGI+ (L-arginine)
-- Add: Herbal Infusion (Tea)
-- Tasks: Update all tasks referencing "Therm" to "ARGI+" or appropriate daily timing.
-```
+### Manual Verification
+- Test BMI tool end-to-end flow.
+- Verify product list in database.
+- Check admin visibility of registrations and leads.
