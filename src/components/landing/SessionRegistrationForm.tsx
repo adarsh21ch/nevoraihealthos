@@ -23,7 +23,7 @@ const registrationSchema = z.object({
 
 type RegistrationData = z.infer<typeof registrationSchema>;
 
-export function SessionRegistrationForm({ nextSessionDate }: { nextSessionDate?: string }) {
+export function SessionRegistrationForm({ nextSessionDate }: { nextSessionDate?: string | undefined }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const register = useServerFn(submitSessionRegistration);
