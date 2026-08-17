@@ -69,7 +69,7 @@ export const getCustomers = createServerFn({ method: "GET" })
     let query = supabase
       .from("customers")
       .select(
-        "id, name, phone, created_at, start_date, onboarding_complete, programs(name, duration_days), user_roles(role)",
+        "id, name, phone, created_at, start_date, onboarding_complete, program_id, programs(name, duration_days), user_roles(role)",
         { count: "exact" },
       )
       .order("name")
