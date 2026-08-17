@@ -14,7 +14,10 @@ const bmiSchema = z.object({
   consent: z.literal(true, {
     message: "Consent is required",
   }),
+  self_score_data: z.any().optional(),
+  warning_signs_count: z.number().optional(),
 });
+
 
 export const submitBmiLead = createServerFn({ method: "POST" })
   .inputValidator((data) => bmiSchema.parse(data))
@@ -51,6 +54,8 @@ export const submitBmiLead = createServerFn({ method: "POST" })
         bmi_value: bmiValue,
         bmi_category: bmiCategory,
         consent_at: new Date().toISOString(),
+        self_score_data: data.self_score_data,
+        warning_signs_count: data.warning_signs_count,
       })
       .select()
       .single();
