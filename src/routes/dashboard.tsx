@@ -7,25 +7,26 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/dashboard")({
   ssr: false,
   beforeLoad: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw redirect({ to: "/login" });
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw redirect({ to: "/login" });
     
-    // Check local auth context first to avoid RPC on every transition
-    const localContext = typeof window !== 'undefined' ? (window as any).__AUTH_CONTEXT : null;
-    if (localContext?.role === 'platform_admin' || user.email === 'teamnevorai@gmail.com') {
-      return { authContext: localContext || { role: 'platform_admin' } };
+    // Safety check for primary admin email
+    if (session.user.email === 'teamnevorai@gmail.com') {
+      return { authContext: { role: 'platform_admin' } };
     }
     
+    // Optimized check using a single RPC call
     const { data: context, error } = await supabase.rpc("get_my_auth_context");
     if (error || !context) {
-        if (user.email === 'teamnevorai@gmail.com') return { authContext: { role: 'platform_admin' } };
-        throw redirect({ to: "/login" });
+      throw redirect({ to: "/login" });
     }
 
     const role = (context as any)?.role;
-    if (role !== "tenant_owner" && role !== "platform_admin" && role !== "admin") {
+    const allowedRoles = ["tenant_owner", "platform_admin", "admin", "coach"];
+    if (!allowedRoles.includes(role)) {
       throw redirect({ to: "/login" });
     }
+    
     return { authContext: context };
   },
 
