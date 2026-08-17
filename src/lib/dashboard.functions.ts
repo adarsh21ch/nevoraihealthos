@@ -52,7 +52,7 @@ export const getCustomers = createServerFn({ method: "GET" })
   }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { supabase, userId } = context;
+
     const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     
     if (!isAdmin) throw new Error("Unauthorized");
@@ -95,7 +95,7 @@ export const getReorderList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { supabase, userId } = context;
+
     const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -108,7 +108,7 @@ export const getAtRiskList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { supabase, userId } = context;
+
     const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -121,7 +121,7 @@ export const getTestimonials = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { supabase, userId } = context;
+
     const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -162,7 +162,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
   .inputValidator(z.object({ customerId: z.string().uuid() }).parse)
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
-    const { supabase, userId } = context;
+
     const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
