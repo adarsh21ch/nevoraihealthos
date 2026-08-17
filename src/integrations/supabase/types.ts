@@ -181,6 +181,8 @@ export type Database = {
           id: string
           name: string
           report_text: string | null
+          self_score_data: Json | null
+          warning_signs_count: number | null
           weight_kg: number
         }
         Insert: {
@@ -198,6 +200,8 @@ export type Database = {
           id?: string
           name: string
           report_text?: string | null
+          self_score_data?: Json | null
+          warning_signs_count?: number | null
           weight_kg: number
         }
         Update: {
@@ -215,6 +219,8 @@ export type Database = {
           id?: string
           name?: string
           report_text?: string | null
+          self_score_data?: Json | null
+          warning_signs_count?: number | null
           weight_kg?: number
         }
         Relationships: []
@@ -1093,6 +1099,54 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+        }
+        Relationships: []
+      }
+      session_registrations: {
+        Row: {
+          consent_at: string | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          phone: string | null
+        }
+        Insert: {
+          consent_at?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          phone?: string | null
+        }
+        Update: {
+          consent_at?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      session_settings: {
+        Row: {
+          id: string
+          next_session_at: string | null
+          session_link: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          next_session_at?: string | null
+          session_link?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          next_session_at?: string | null
+          session_link?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
