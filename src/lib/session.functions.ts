@@ -28,8 +28,35 @@ export const submitSessionRegistration = createServerFn({ method: "POST" })
 
     if (dbError) throw new Error("Failed to register. Please try again.");
 
-    // TODO: Send confirmation email via Resend
-    // ...
+    // Send confirmation email via Resend
+    const resendKey = process.env['RESEND_API_KEY'];
+    if (resendKey) {
+      try {
+        const { Resend } = await import('resend');
+        const resend = new Resend(resendKey);
+        
+        await resend.emails.send({
+          from: 'Fat2Fit Wellness <wellness@nevorai.com>',
+          to: data.email,
+          subject: `Session Reserved - ${data.name}`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #064E3B;">Spot Reserved!</h2>
+              <p>Hello ${data.name},</p>
+              <p>You've successfully registered for our upcoming wellness strategy session.</p>
+              <div style="background: #F0FDF4; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                <p>We'll send you the joining link and calendar invite shortly before the session starts.</p>
+              </div>
+              <p>Get ready to transform your metabolic health.</p>
+              <hr style="margin: 30px 0; border: none; border-top: 1px solid #E5E7EB;" />
+              <p style="font-size: 12px; color: #6B7280;">Fat2Fit Wellness</p>
+            </div>
+          `
+        });
+      } catch (e) {
+        console.error("Session registration email failed:", e);
+      }
+    }
 
     return registration;
   });
