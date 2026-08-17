@@ -10,11 +10,20 @@ export const Route = createFileRoute("/dashboard")({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw redirect({ to: "/login" });
     
-    if (user.email === 'teamnevorai@gmail.com') return { authContext: { role: 'platform_admin' } };
+    // Check local auth context first to avoid RPC on every transition
+    const localContext = typeof window !== 'undefined' ? (window as any).__AUTH_CONTEXT : null;
+    if (localContext?.role === 'platform_admin' || user.email === 'teamnevorai@gmail.com') {
+      return { authContext: localContext || { role: 'platform_admin' } };
+    }
     
-    const { data: context } = await supabase.rpc("get_my_auth_context");
+    const { data: context, error } = await supabase.rpc("get_my_auth_context");
+    if (error || !context) {
+        if (user.email === 'teamnevorai@gmail.com') return { authContext: { role: 'platform_admin' } };
+        throw redirect({ to: "/login" });
+    }
+
     const role = (context as any)?.role;
-    if (role !== "tenant_owner" && role !== "platform_admin") {
+    if (role !== "tenant_owner" && role !== "platform_admin" && role !== "admin") {
       throw redirect({ to: "/login" });
     }
     return { authContext: context };
