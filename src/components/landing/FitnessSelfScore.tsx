@@ -41,10 +41,10 @@ export function FitnessSelfScore({ onComplete }: { onComplete: (score: number, d
               <span className="text-sm font-bold text-ink">{scores[pillar.id]}/10</span>
             </div>
             <Slider
-              value={[scores[pillar.id]]}
+              value={[scores[pillar.id] ?? 5]}
               max={10}
               step={1}
-              onValueChange={([val]) => setScores(prev => ({ ...prev, [pillar.id]: val }))}
+              onValueChange={([val]) => setScores(prev => ({ ...prev, [pillar.id]: val ?? 5 }))}
               className="py-4"
             />
           </div>

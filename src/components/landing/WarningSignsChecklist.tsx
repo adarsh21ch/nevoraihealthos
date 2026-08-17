@@ -31,8 +31,8 @@ export function WarningSignsChecklist({ onChange }: { onChange: (count: number) 
           >
             <Checkbox 
               id={sign.id}
-              checked={checked[sign.id]}
-              onCheckedChange={(val) => setChecked(prev => ({ ...prev, [sign.id]: !!val }))}
+              checked={!!checked[sign.id]}
+              onCheckedChange={(val) => setChecked(prev => ({ ...prev, [sign.id]: val === true }))}
               className="h-6 w-6 rounded-lg border-slate-200 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
             />
             <Label htmlFor={sign.id} className="text-sm font-medium text-slate-600 cursor-pointer flex-1 group-hover:text-ink transition-colors">
