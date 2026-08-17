@@ -10,9 +10,9 @@ import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon,
 import { BMITool } from "@/components/landing/BMITool";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ClientOnly } from "@/components/ui/client-only";
-import productsAsset from "@/assets/landing/c9-products.png.asset.json";
-import heroAestheticAsset from "@/assets/landing/c9-hero-aesthetic.png.asset.json";
-import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
+import productsAsset from "@/assets/landing/wellness-products.png.asset.json";
+import heroAestheticAsset from "@/assets/landing/wellness-hero-aesthetic.png.asset.json";
+import defaultBookletAsset from "@/assets/landing/wellness-booklet.pdf.asset.json";
 import { getAppSettings } from "@/lib/tenant.functions";
 import { AppLogo } from "@/components/ui/app-logo";
 import { useLoaderData } from "@tanstack/react-router";
