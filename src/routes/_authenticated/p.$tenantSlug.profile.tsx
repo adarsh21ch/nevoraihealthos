@@ -150,7 +150,7 @@ function ProfilePage() {
         <div className="hidden md:flex gap-4">
           <div className="bg-emerald-50 px-6 py-4 rounded-2xl border border-emerald-100">
             <p className="text-[10px] font-black text-emerald-800 uppercase tracking-widest">Protocol Version</p>
-            <p className="text-sm font-bold text-ink">C9 Reset v1.2</p>
+            <p className="text-sm font-bold text-ink">Reset v1.2</p>
           </div>
         </div>
       </header>
@@ -165,7 +165,7 @@ function ProfilePage() {
               <div>
                   <h2 className="text-3xl lg:text-4xl font-bold text-ink italic font-serif leading-tight">{profile.name}</h2>
                   <div className="flex items-center gap-3 mt-2">
-                    <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{profile.track || 'C9'} PROTOCOL</span>
+                    <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">{profile.track || 'RESET'} PROTOCOL</span>
                     <div className="w-2 h-2 rounded-full bg-health-green" />
                     <span className="text-[11px] font-black uppercase tracking-widest text-health-green">Active Enrollment</span>
                   </div>

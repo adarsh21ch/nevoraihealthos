@@ -577,8 +577,8 @@ function OnboardingPage() {
                           formData.track === 'standard' ? "bg-health-green text-white border-health-green shadow-xl shadow-health-green/20" : "border-slate-100 text-slate-400"
                         )}
                       >
-                        <div className="text-2xl font-serif italic font-bold">C9</div>
-                        <div className="text-[8px] font-black uppercase tracking-widest opacity-60">Standard Reset</div>
+                        <div className="text-2xl font-serif italic font-bold">Standard</div>
+                        <div className="text-[8px] font-black uppercase tracking-widest opacity-60">Full Body Reset</div>
                       </button>
                       <button
                         onClick={() => updateField('track', 'DX4')}
