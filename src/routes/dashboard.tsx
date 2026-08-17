@@ -8,6 +8,8 @@ export const Route = createFileRoute("/dashboard")({
   ssr: false,
   beforeLoad: async () => {
     const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw redirect({ to: "/login" });
+    
     if (user.email === 'teamnevorai@gmail.com') return { authContext: { role: 'platform_admin' } };
     
     const { data: context } = await supabase.rpc("get_my_auth_context");
@@ -16,8 +18,8 @@ export const Route = createFileRoute("/dashboard")({
       throw redirect({ to: "/login" });
     }
     return { authContext: context };
-
   },
+
   component: DashboardLayout,
 });
 
