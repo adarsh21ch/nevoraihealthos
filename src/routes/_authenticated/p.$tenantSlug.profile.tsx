@@ -19,7 +19,7 @@ import {
   Languages
 } from 'lucide-react';
 import { useLoaderData } from '@tanstack/react-router';
-import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
+import defaultBookletAsset from "@/assets/landing/wellness-booklet.pdf.asset.json";
 import { Button } from '@/components/ui/button';
 import { useServerFn } from '@tanstack/react-start';
 import { getMyProfile, validateProfileReadiness } from '@/lib/profile/profile.functions';

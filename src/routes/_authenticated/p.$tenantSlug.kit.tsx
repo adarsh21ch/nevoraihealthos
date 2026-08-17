@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Package, CheckCircle2, PlayCircle, ShieldCheck, BookOpen, ChevronRight, Info, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLoaderData } from '@tanstack/react-router';
-import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
+import defaultBookletAsset from "@/assets/landing/wellness-booklet.pdf.asset.json";
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const Route = createFileRoute('/_authenticated/p/$tenantSlug/kit')({
