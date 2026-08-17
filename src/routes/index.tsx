@@ -10,12 +10,22 @@ import { FeatureCard, SectionHeader, PhoneMockup, PillarCard, StatBox, StepIcon,
 import { BMITool } from "@/components/landing/BMITool";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ClientOnly } from "@/components/ui/client-only";
-import productsAsset from "@/assets/landing/c9-products.png.asset.json";
-import heroAestheticAsset from "@/assets/landing/c9-hero-aesthetic.png.asset.json";
-import defaultBookletAsset from "@/assets/landing/c9-booklet.pdf.asset.json";
+import productsAsset from "@/assets/landing/wellness-products.png.asset.json";
+import heroAestheticAsset from "@/assets/landing/wellness-hero-aesthetic.png.asset.json";
+import defaultBookletAsset from "@/assets/landing/wellness-booklet.pdf.asset.json";
 import { getAppSettings } from "@/lib/tenant.functions";
 import { AppLogo } from "@/components/ui/app-logo";
 import { useLoaderData } from "@tanstack/react-router";
+
+// Feature Article Component
+const ArticleCard = ({ title, content, type }: { title: string, content: string, type: string }) => (
+  <div className="p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:border-accent/30 transition-all group">
+    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mb-4">{type}</div>
+    <h4 className="text-2xl font-serif italic font-bold text-ink mb-4 group-hover:text-accent transition-colors">{title}</h4>
+    <p className="text-slate-500 text-sm leading-relaxed mb-6">{content}</p>
+    <div className="text-[10px] text-slate-400 font-medium italic">General wellness information, not medical advice. Consult a doctor.</div>
+  </div>
+);
 
 
 export const Route = createFileRoute("/")({
@@ -72,6 +82,54 @@ function Index() {
 
       <section className="pb-32 bg-white relative overflow-hidden">
         <BMITool />
+      </section>
+
+      {/* Founder Story Section */}
+      <section className="py-24 bg-slate-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+          <div className="relative">
+            <div className="absolute -inset-4 bg-emerald-500/10 rounded-[3rem] blur-3xl -z-10" />
+            <div className="aspect-[4/5] rounded-[3rem] bg-emerald-900/10 flex items-center justify-center p-12 text-emerald-900/20 italic font-serif text-2xl text-center">
+              "You can buy a car, a house, a phone — you get one body."
+            </div>
+          </div>
+          <div>
+            <SectionHeader 
+              centered={false} 
+              badge="Founder Story" 
+              title="From metabolic burnout to peak performance." 
+              subtitle="At 24, I was told my biological age was 30. Despite career success, my health was failing. This methodology is how I reclaimed my energy and health."
+            />
+            <div className="space-y-6 text-slate-500 font-medium leading-relaxed">
+              <p>Career pressure and poor habits led to flagged BP and cholesterol levels. After failing standard TMT tests, I realized I needed a system that worked at the root cause, not just symptoms.</p>
+              <p>By fixing the five pillars — Nutrition, Sleep, Training, Recovery, and Consistency — I optimized my body fat from 22% to 15% and brought my biological age below my real age.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Educational Articles */}
+      <section className="py-24 bg-white" id="articles">
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionHeader title="Health Fundamentals" subtitle="Science-based education to empower your wellness decisions." />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+            <ArticleCard 
+              type="Protein"
+              title="The Indian Protein Gap"
+              content="Most Indian diets are heavily carb-dominant. A typical day often results in almost zero high-quality protein. Prioritize paneer, dal, chicken, and eggs."
+            />
+            <ArticleCard 
+              type="Research"
+              title="The Asian-Pacific Cutoff"
+              content="Metabolic health issues often appear at a lower BMI in Asian populations. This is why our screening uses specialized WHO thresholds."
+            />
+            <ArticleCard 
+              type="Energy"
+              title="Calories, Simply"
+              content="Weight management is energy balance. Focus on a sustainable deficit and listen to your body's energy signals rather than rigid prescriptions."
+            />
+          </div>
+        </div>
       </section>
 
       <section className="py-32 bg-white relative overflow-hidden">
