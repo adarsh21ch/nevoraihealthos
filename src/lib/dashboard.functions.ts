@@ -15,7 +15,7 @@ export const getDashboardStats = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     
     // Check if the user is a platform admin via public.platform_admins
-    const { data: isAdmin, error: adminError } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin, error: adminError } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     
     if (adminError) {
       console.error("is_app_admin check failed:", adminError);
@@ -55,7 +55,7 @@ export const getCustomers = createServerFn({ method: "GET" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -98,7 +98,7 @@ export const getReorderList = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -111,7 +111,7 @@ export const getAtRiskList = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -124,7 +124,7 @@ export const getTestimonials = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -165,7 +165,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -231,7 +231,7 @@ export const resetCustomerPassword = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // Check if the user is an admin
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data: customer, error: customerError } = await supabase
