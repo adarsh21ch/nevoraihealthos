@@ -50,8 +50,27 @@ function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface text-ink flex font-sans">
-      <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0">
+    <div className="min-h-screen bg-surface text-ink flex flex-col lg:flex-row font-sans overflow-x-hidden">
+      {/* Mobile Top Header for Dashboard */}
+      <header className="lg:hidden h-16 border-b border-slate-200 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md sticky top-0 z-40 w-full pt-safe">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-lg">F</div>
+          <span className="font-bold text-slate-900">Dashboard</span>
+        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={async () => {
+            await supabase.auth.signOut();
+            navigate({ to: "/login" });
+          }}
+          className="text-slate-400"
+        >
+          <LogOut className="h-5 w-5" />
+        </Button>
+      </header>
+
+      <aside className="hidden lg:flex w-64 border-r border-slate-200 bg-white flex-col shrink-0 h-screen sticky top-0">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200">F</div>
@@ -91,8 +110,33 @@ function DashboardLayout() {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col bg-surface">
-        <header className="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+      {/* Mobile Bottom Nav for Dashboard (Optional, but helps with app feel) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-2 py-2 flex justify-around items-center z-40 pb-safe">
+        {navItems.slice(0, 4).map((item) => (
+          <Button
+            key={item.name}
+            variant="ghost"
+            size="sm"
+            className="flex-col h-auto py-2 gap-1 text-[10px] text-slate-500"
+            onClick={() => navigate({ to: item.path })}
+          >
+            <item.icon className="h-5 w-5" />
+            <span>{item.name}</span>
+          </Button>
+        ))}
+        <Button
+            variant="ghost"
+            size="sm"
+            className="flex-col h-auto py-2 gap-1 text-[10px] text-slate-500"
+            onClick={() => navigate({ to: "/dashboard/branding" })}
+          >
+            <Settings className="h-5 w-5" />
+            <span>More</span>
+        </Button>
+      </nav>
+
+      <div className="flex-1 flex flex-col bg-surface min-w-0">
+        <header className="hidden lg:flex h-16 border-b border-slate-200 items-center justify-between px-8 bg-white/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
              <div className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 tracking-wider uppercase">
                Dashboard
@@ -105,7 +149,7 @@ function DashboardLayout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-8 lg:p-12">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-12 pb-24 lg:pb-12 w-full max-w-full">
           <Outlet />
         </main>
       </div>

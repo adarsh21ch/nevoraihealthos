@@ -134,6 +134,8 @@ export const Route = createRootRouteWithContext<{
         { name: "apple-mobile-web-app-capable", content: "yes" },
         { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
         { name: "apple-mobile-web-app-title", content: brandName },
+        { name: "mobile-web-app-capable", content: "yes" },
+        { name: "application-name", content: brandName },
         { title: `${brandName} | Personalized Wellness Protocol` },
         { name: "description", content: "Science-backed metabolic coaching for a healthier you." },
         { name: "author", content: "Nevorai" },
@@ -152,7 +154,7 @@ export const Route = createRootRouteWithContext<{
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap" },
         { rel: "icon", href: logoUrl, type: logoUrl.endsWith('.ico') ? "image/x-icon" : "image/png" },
-        { rel: "manifest", href: "/api/manifest" },
+        { rel: "manifest", href: "/api/manifest/json" },
         { rel: "apple-touch-icon", href: logoUrl },
       ],
     };

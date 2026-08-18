@@ -43,16 +43,15 @@ function TenantLayout() {
     <div className="min-h-screen bg-surface font-sans flex flex-col" style={{ '--accent': primaryColor } as any}>
       <ParticipantSidebar tenant={tenant} />
       
-      <div className="lg:pl-64 flex-1 flex flex-col">
-        {/* Mobile Header - only visible on mobile/tablet */}
-        <header className="lg:hidden bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 pt-[calc(1rem+env(safe-area-inset-top))] pb-4 border-b border-slate-100 flex items-center justify-between">
-
+      <div className="lg:pl-64 flex-1 flex flex-col min-h-screen">
+        {/* Mobile Header - only visible on mobile/tablet browser, hidden in standalone PWA */}
+        <header className="lg:hidden bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 pt-safe pb-4 border-b border-slate-100 flex items-center justify-between standalone:hidden">
           <div className="flex items-center gap-2.5">
             <AppLogo iconOnly />
           </div>
         </header>
 
-        <main className="flex-1 w-full max-w-screen-xl mx-auto p-6 md:p-12">
+        <main className="flex-1 w-full max-w-screen-xl mx-auto p-6 md:p-12 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-12">
           <Outlet />
         </main>
 
