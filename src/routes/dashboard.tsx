@@ -31,6 +31,7 @@ export const Route = createFileRoute("/dashboard")({
   },
 
   component: DashboardLayout,
+  errorComponent: DashboardError,
 });
 
 function DashboardError({ error }: { error: Error }) {
