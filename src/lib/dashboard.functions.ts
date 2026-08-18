@@ -107,9 +107,30 @@ export const getReorderList = createServerFn({ method: "GET" })
     const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
+    const { data: rows, error } = await supabase
+      .from("customers")
+      .select("id, name, phone, start_date, programs(name, duration_days)")
+      .not("start_date", "is", null)
+      .limit(200);
 
-    // Placeholder until DB functions are created
-    return [];
+    if (error) throw error;
+
+    return (rows ?? [])
+      .map((c: any) => {
+        const duration = c.programs?.duration_days ?? 0;
+        const dayNumber = c.start_date ? getProgramDayNumber(c.start_date) : 0;
+        return {
+          id: c.id,
+          name: c.name,
+          phone: c.phone ?? "",
+          program_name: c.programs?.name ?? "Program",
+          duration_days: duration,
+          day_number: dayNumber,
+        };
+      })
+      .filter((c) => c.duration_days > 0 && c.day_number >= c.duration_days - 3)
+      .sort((a, b) => b.day_number - a.day_number)
+      .slice(0, 50);
   });
 
 export const getAtRiskList = createServerFn({ method: "GET" })
@@ -120,9 +141,37 @@ export const getAtRiskList = createServerFn({ method: "GET" })
     const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
+    const [customersRes, logsRes] = await Promise.all([
+      supabase
+        .from("customers")
+        .select("id, name, phone, start_date")
+        .not("start_date", "is", null)
+        .limit(200),
+      supabase
+        .from("daily_logs")
+        .select("customer_id, log_date")
+        .order("log_date", { ascending: false })
+        .limit(1000),
+    ]);
 
-    // Placeholder until DB functions are created
-    return [];
+    if (customersRes.error) throw customersRes.error;
+
+    const lastLog = new Map<string, string>();
+    for (const log of logsRes.data ?? []) {
+      if (!lastLog.has(log.customer_id)) lastLog.set(log.customer_id, log.log_date);
+    }
+
+    const cutoff = Date.now() - 3 * 24 * 60 * 60 * 1000;
+
+    return (customersRes.data ?? [])
+      .map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        phone: c.phone ?? "",
+        last_logged_at: lastLog.get(c.id) ?? null,
+      }))
+      .filter((c) => !c.last_logged_at || new Date(c.last_logged_at).getTime() < cutoff)
+      .slice(0, 50);
   });
 
 export const getTestimonials = createServerFn({ method: "GET" })
