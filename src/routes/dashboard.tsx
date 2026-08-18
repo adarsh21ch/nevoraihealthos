@@ -50,7 +50,7 @@ function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface text-ink flex flex-col lg:flex-row font-sans overflow-x-hidden">
+    <div className="min-h-svh bg-surface text-ink flex flex-col lg:flex-row font-sans overflow-x-hidden">
       {/* Mobile Top Header for Dashboard */}
       <header className="lg:hidden h-16 border-b border-slate-200 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md sticky top-0 z-40 w-full pt-safe">
         <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ function DashboardLayout() {
         </Button>
       </header>
 
-      <aside className="hidden lg:flex w-64 border-r border-slate-200 bg-white flex-col shrink-0 h-screen sticky top-0">
+      <aside className="hidden lg:flex w-64 border-r border-slate-200 bg-white flex-col shrink-0 h-svh sticky top-0">
         <div className="p-6 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-slate-200">F</div>
