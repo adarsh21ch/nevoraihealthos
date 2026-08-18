@@ -51,10 +51,13 @@
 
 @layer base {
   body {
-    @apply bg-surface text-ink antialiased overflow-x-hidden;
+    @apply bg-surface text-ink antialiased overflow-x-hidden w-full;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
   }
   html {
-    @apply overflow-x-hidden;
+    @apply overflow-x-hidden w-full h-full;
+    touch-action: manipulation;
   }
 }
 

@@ -115,12 +115,12 @@ export function BMITool() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-12" id="bmi-tool">
-      <Card className="border-none shadow-2xl rounded-[3rem] overflow-hidden bg-white">
+    <div className="w-full max-w-4xl mx-auto px-4 py-8 lg:py-12" id="bmi-tool">
+      <Card className="border-none shadow-2xl rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden bg-white">
         <CardContent className="p-0">
-          <div className="grid lg:grid-cols-5 h-full min-h-[600px]">
+          <div className="grid lg:grid-cols-5 h-full min-h-[500px] lg:min-h-[600px]">
             {/* Form/Interactive Side */}
-            <div className="lg:col-span-3 p-8 md:p-12 flex flex-col">
+            <div className="lg:col-span-3 p-6 md:p-10 lg:p-12 flex flex-col">
               <div className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-health-green flex items-center justify-center">
@@ -140,22 +140,22 @@ export function BMITool() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="space-y-8"
                   >
-                    <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 text-center">
-                      <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Your Assessment</div>
-                      <div className="text-6xl font-black text-ink mb-2 tracking-tighter">{result.bmiValue}</div>
-                      <div className={cn("text-xl font-black uppercase tracking-widest", getBmiColor(result.bmiCategory))}>
+                    <div className="p-6 lg:p-8 rounded-[2rem] bg-slate-50 border border-slate-100 text-center">
+                      <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 lg:mb-6">Your Assessment</div>
+                      <div className="text-5xl lg:text-6xl font-black text-ink mb-2 tracking-tighter">{result.bmiValue}</div>
+                      <div className={cn("text-lg lg:text-xl font-black uppercase tracking-widest", getBmiColor(result.bmiCategory))}>
                         {result.bmiCategory}
                       </div>
                       
-                      <div className="mt-10 pt-10 border-t border-slate-200/50">
-                        <div className="grid grid-cols-2 gap-8">
+                      <div className="mt-8 lg:mt-10 pt-8 lg:pt-10 border-t border-slate-200/50">
+                        <div className="grid grid-cols-2 gap-4 lg:gap-8">
                           <div>
                             <div className="text-[9px] font-black uppercase text-slate-400 mb-2">Healthy Range</div>
-                            <div className="text-lg font-bold text-ink">{result.healthyRange.min} - {result.healthyRange.max} kg</div>
+                            <div className="text-base lg:text-lg font-bold text-ink">{result.healthyRange.min} - {result.healthyRange.max} kg</div>
                           </div>
                           <div>
                             <div className="text-[9px] font-black uppercase text-slate-400 mb-2">BMI Scale</div>
-                            <div className="text-lg font-bold text-ink">Asian-Pacific</div>
+                            <div className="text-base lg:text-lg font-bold text-ink">Asian-Pacific</div>
                           </div>
                         </div>
                       </div>

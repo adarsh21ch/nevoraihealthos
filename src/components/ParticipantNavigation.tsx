@@ -165,7 +165,7 @@ export function ParticipantBottomNav({ tenant }: SidebarProps) {
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-2xl border-t border-slate-100 px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] z-50 shadow-[0_-8px_30px_rgb(0,0,0,0.04)]">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-2xl border-t border-slate-100 px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] z-50 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] standalone:pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
       <div className="max-w-md mx-auto flex justify-between items-center">
         {navItems.map((item) => {
           const isActive = location.pathname === item.href || location.pathname.startsWith(`${item.href}/`);
