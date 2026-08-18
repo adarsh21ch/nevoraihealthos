@@ -62,28 +62,39 @@ export const getCustomers = createServerFn({ method: "GET" })
     let query = supabase
       .from("customers")
       .select(
-        "id, name, phone, created_at, start_date, onboarding_complete, program_id, programs(name, duration_days), user_roles(role)",
+        "id, name, phone, created_at, start_date, onboarding_complete, program_id, programs(name, duration_days), user_id",
         { count: "exact" },
-      )
-      .order("name")
-      .range(from, to);
+      );
 
     if (data.search) {
       query = query.or(`name.ilike.%${data.search}%,phone.ilike.%${data.search}%`);
     }
 
-    const { data: rows, count, error } = await query;
+    // Fetch customers and their roles separately to avoid relationship errors
+    const { data: rows, count, error } = await query
+      .order("name")
+      .range(from, to);
+
     if (error) throw error;
 
-    const customers = (rows ?? []).map((c: any) => ({
-      id: c.id,
-      name: c.name,
-      phone: c.phone,
-      created_at: c.created_at,
-      day_number: c.start_date ? getProgramDayNumber(c.start_date) : null,
-      program: c.programs,
-      role: c.user_roles?.[0]?.role || 'participant',
-    }));
+    // Fetch roles for these users
+    const userIds = (rows ?? []).map(r => r.user_id).filter((id): id is string => !!id);
+    const { data: roles } = userIds.length > 0 
+      ? await supabase.from("user_roles").select("user_id, role").in("user_id", userIds)
+      : { data: [] };
+
+    const customers = (rows ?? []).map((c: any) => {
+      const userRole = roles?.find(r => r.user_id === c.user_id);
+      return {
+        id: c.id,
+        name: c.name,
+        phone: c.phone,
+        created_at: c.created_at,
+        day_number: c.start_date ? getProgramDayNumber(c.start_date) : null,
+        program: c.programs,
+        role: userRole?.role || 'participant',
+      };
+    });
 
     return { customers, total: count || 0 };
   });
