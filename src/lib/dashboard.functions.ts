@@ -80,7 +80,7 @@ export const getCustomers = createServerFn({ method: "GET" })
       name: c.name,
       phone: c.phone,
       created_at: c.created_at,
-      day_number: c.start_date ? istDayNumber(c.start_date) : null,
+      day_number: c.start_date ? getProgramDayNumber(c.start_date) : null,
       program: c.programs,
       role: c.user_roles?.[0]?.role || 'participant',
     }));
@@ -197,7 +197,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
       phone: (row as any).phone,
       share_consent: (row as any).share_consent,
       user_id: (row as any).user_id,
-      day_number: (row as any).start_date ? istDayNumber((row as any).start_date) : null,
+      day_number: (row as any).start_date ? getProgramDayNumber((row as any).start_date) : null,
       program: (row as any).programs,
       daily_logs: ((row as any).daily_logs ?? []).map((l: any) => ({
         id: l.id,
