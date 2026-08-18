@@ -4,11 +4,6 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 import { getProgramDayNumber } from "./date-utils";
 
-/** Day number of a program in IST (start date = day 1). */
-function istDayNumber(startDate: string): number {
-  return getProgramDayNumber(startDate);
-}
-
 export const getDashboardStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -18,7 +13,7 @@ export const getDashboardStats = createServerFn({ method: "GET" })
     const { data: isAdmin, error: adminError } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     
     if (adminError) {
-      console.error("is_app_admin check failed:", adminError);
+      console.error("is_dashboard_staff check failed:", adminError);
       // Fallback for platform admin if RPC fails but email matches (as a safety net)
       const { data: user } = await supabase.auth.getUser();
       if (user?.user?.email === 'teamnevorai@gmail.com') {
