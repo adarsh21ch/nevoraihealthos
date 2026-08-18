@@ -4,21 +4,16 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 import { getProgramDayNumber } from "./date-utils";
 
-/** Day number of a program in IST (start date = day 1). */
-function istDayNumber(startDate: string): number {
-  return getProgramDayNumber(startDate);
-}
-
 export const getDashboardStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     
     // Check if the user is a platform admin via public.platform_admins
-    const { data: isAdmin, error: adminError } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin, error: adminError } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     
     if (adminError) {
-      console.error("is_app_admin check failed:", adminError);
+      console.error("is_dashboard_staff check failed:", adminError);
       // Fallback for platform admin if RPC fails but email matches (as a safety net)
       const { data: user } = await supabase.auth.getUser();
       if (user?.user?.email === 'teamnevorai@gmail.com') {
@@ -55,7 +50,7 @@ export const getCustomers = createServerFn({ method: "GET" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     
     if (!isAdmin) throw new Error("Unauthorized");
 
@@ -85,7 +80,7 @@ export const getCustomers = createServerFn({ method: "GET" })
       name: c.name,
       phone: c.phone,
       created_at: c.created_at,
-      day_number: c.start_date ? istDayNumber(c.start_date) : null,
+      day_number: c.start_date ? getProgramDayNumber(c.start_date) : null,
       program: c.programs,
       role: c.user_roles?.[0]?.role || 'participant',
     }));
@@ -98,7 +93,7 @@ export const getReorderList = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -111,7 +106,7 @@ export const getAtRiskList = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -124,7 +119,7 @@ export const getTestimonials = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -165,7 +160,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
   .handler(async ({ context, data }) => {
     const { supabase, userId } = context;
 
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
 
@@ -202,7 +197,7 @@ export const getCustomerDetail = createServerFn({ method: "GET" })
       phone: (row as any).phone,
       share_consent: (row as any).share_consent,
       user_id: (row as any).user_id,
-      day_number: (row as any).start_date ? istDayNumber((row as any).start_date) : null,
+      day_number: (row as any).start_date ? getProgramDayNumber((row as any).start_date) : null,
       program: (row as any).programs,
       daily_logs: ((row as any).daily_logs ?? []).map((l: any) => ({
         id: l.id,
@@ -231,7 +226,7 @@ export const resetCustomerPassword = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // Check if the user is an admin
-    const { data: isAdmin } = await supabase.rpc("is_app_admin", { _uid: userId });
+    const { data: isAdmin } = await supabase.rpc("is_dashboard_staff", { _uid: userId });
     if (!isAdmin) throw new Error("Unauthorized");
 
     const { data: customer, error: customerError } = await supabase

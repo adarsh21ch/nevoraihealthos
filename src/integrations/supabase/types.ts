@@ -1271,6 +1271,7 @@ export type Database = {
           }
         | { Args: { _role: string; _user_id: string }; Returns: boolean }
       is_app_admin: { Args: { _uid?: string }; Returns: boolean }
+      is_dashboard_staff: { Args: { _uid?: string }; Returns: boolean }
       is_my_distributor: { Args: { _customer: string }; Returns: boolean }
       is_platform_admin: { Args: { _uid?: string }; Returns: boolean }
       is_registration_code_valid: { Args: { _code: string }; Returns: boolean }
