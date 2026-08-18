@@ -33,6 +33,37 @@ export const Route = createFileRoute("/dashboard")({
   component: DashboardLayout,
 });
 
+function DashboardError({ error }: { error: Error }) {
+  const navigate = useNavigate();
+  const unauthorized = /unauthorized/i.test(error.message);
+  return (
+    <div className="min-h-svh flex items-center justify-center bg-surface px-6">
+      <div className="max-w-md text-center">
+        <h1 className="text-2xl font-bold text-ink mb-3">
+          {unauthorized ? "Access restricted" : "Something went wrong"}
+        </h1>
+        <p className="text-slate-500 mb-6">
+          {unauthorized
+            ? "Your account doesn't have coach or admin access to this workspace."
+            : "We couldn't load the dashboard. Please try again."}
+        </p>
+        <div className="flex gap-3 justify-center">
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate({ to: "/login" });
+            }}
+          >
+            Sign out
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DashboardLayout() {
   const navigate = useNavigate();
 
