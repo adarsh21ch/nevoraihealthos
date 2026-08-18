@@ -72,7 +72,7 @@ export const getCustomers = createServerFn({ method: "GET" })
     if (error) throw error;
 
     // Fetch roles for these users
-    const userIds = (rows ?? []).map(r => r.user_id).filter(Boolean);
+    const userIds = (rows ?? []).map(r => r.user_id).filter((id): id is string => !!id);
     const { data: roles } = userIds.length > 0 
       ? await supabase.from("user_roles").select("user_id, role").in("user_id", userIds)
       : { data: [] };
