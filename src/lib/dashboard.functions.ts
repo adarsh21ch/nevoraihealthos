@@ -59,13 +59,19 @@ export const getCustomers = createServerFn({ method: "GET" })
     const from = data.page * pageSize;
     const to = from + pageSize - 1;
 
-    // Fetch customers and their roles separately to avoid relationship errors
-    const { data: rows, count, error } = await supabase
+    let query = supabase
       .from("customers")
       .select(
         "id, name, phone, created_at, start_date, onboarding_complete, program_id, programs(name, duration_days), user_id",
         { count: "exact" },
-      )
+      );
+
+    if (data.search) {
+      query = query.or(`name.ilike.%${data.search}%,phone.ilike.%${data.search}%`);
+    }
+
+    // Fetch customers and their roles separately to avoid relationship errors
+    const { data: rows, count, error } = await query
       .order("name")
       .range(from, to);
 
